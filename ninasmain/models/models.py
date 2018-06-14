@@ -117,7 +117,7 @@ class TravelRequest(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
     state = fields.Selection(
-        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('validate','Validated')],
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO')],
         string='Status',
         default='new',
         track_visibility='onchange')
@@ -134,7 +134,7 @@ class TravelRequest(models.Model):
     contact_phone = fields.Char(string='Contact Phone')
     contact_name = fields.Char(string='Contact Name')
     traveller_employee_id = fields.Char(string='Travellers Employee ID')
-    purpose = fields.Text(string='Purpose and Benefit of Travel')
+    purpose = fields.Text(string='Purpose and Benefit of Travel', required=True)
     ninas_employee = fields.Boolean(string='Ninas Employee')
     ninas_expert = fields.Boolean(string='Ninas Expert')
     ninas_assesor = fields.Boolean(string='Ninas Assessor')
@@ -162,7 +162,7 @@ class TravelRequest(models.Model):
     traveler_sign = fields.Many2one(
         comodel_name = 'res.users',
         string='Traveler Sign', readonly=True)
-    traveler_date = fields.Datetime(
+    traveler_date = fields.Date(
         string='Date', readonly=True)
     linemanager_sign = fields.Many2one(
         comodel_name = 'res.users',
@@ -176,7 +176,7 @@ class TravelRequest(models.Model):
         string='Date')
     ceo_sign = fields.Many2one(
         comodel_name = 'res.users',
-        string='Line manager Sign', readonly=True)
+        string='CEO Sign', readonly=True)
     ceo_date = fields.Date(
         string='Date')
     
@@ -200,7 +200,7 @@ class TravelRequest(models.Model):
     @api.multi
     def button_approve(self):
         self.write({'state': 'approve'})
-        self.traveler_sign = self._uid
+        self.linemanager_sign = self._uid
         self.linemanager_date = date.today()
         return {}
     
@@ -212,6 +212,15 @@ class TravelRequest(models.Model):
     @api.multi
     def button_validate(self):
         self.write({'state': 'validate'})
+        self.admin_sign = self._uid
+        self.admin_date = date.today()
+        return {}
+    
+    @api.multi
+    def button_ceo(self):
+        self.write({'state': 'ceo'})
+        self.ceo_sign = self._uid
+        self.ceo_date = date.today()
         return {}
     
     @api.model
