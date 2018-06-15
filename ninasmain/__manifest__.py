@@ -25,6 +25,7 @@
     'init_xml':[],
     'data':[
         'data/data.xml',
+        'views/helpdesk_views.xml',
         'views/stock_view.xml',
         'views/views.xml'
         ],

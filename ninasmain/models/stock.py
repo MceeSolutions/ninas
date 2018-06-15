@@ -143,9 +143,20 @@ class PurchaseOrderLine(models.Model):
                 partner_ids.append(partner.id)
             self.order_id.message_post(subject=subject,body=subject,partner_ids=partner_ids)
             
-            
-            
-            
+class JobRec(models.Model):
+    _inherit = "hr.job"
+
+    state = fields.Selection([
+        ('approve', 'Awaiting Approval'),
+        ('recruit', 'Recruitment in Progress'),
+        ('open', 'Not Recruiting')
+    ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='approve', help="Set whether the recruitment process is open or closed for this job position.")
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'recruit'})
+        return {}
+    
             
             
             

@@ -85,22 +85,6 @@
     </record>
     
     
-    <record id="ninas_hr_job_form_view" model="ir.ui.view">
-        <field name="name">hr.job.form</field>
-        <field name="model">hr.job</field>
-        <field name="priority" eval="7" />
-        <field name="inherit_id" ref="hr.view_hr_job_form"/>
-        <field name="arch" type="xml">
-           <xpath expr="//button[@name='set_recruit']" position="before">
-				<button name="button_approve" string="Approve" states="approve" type="object" class="btn btn-primary"/>
-			</xpath>
-			<field name="state" position="replace">
-                <field name="state" widget="statusbar" statusbar_visible="approve,recruit,open"/>
-            </field>
-           </field>
-    </record>
-    
-    
     <record id="purchase_rfq" model="ir.actions.act_window">
         <field name="name">Requests for Quotation</field>
         <field name="type">ir.actions.act_window</field>

@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//models/__init__.py=utf-8
+encoding//models/helpdesk.py=utf-8
 encoding//models/models.py=utf-8
 encoding//models/stock.py=utf-8
 encoding/__init__.py=utf-8
