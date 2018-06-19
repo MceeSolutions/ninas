@@ -1,0 +1,506 @@
+<odoo>
+  <data>
+
+  	<record id="ninas_employee_form_view" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//page[@name='personal_information']" position="after">
+           
+					<page name="next_ofkin" string="Next of Kin">
+						<group string="Full Name" col="4" colspan="4">
+							<field name="fname"/>
+							<field name="lname"/>
+						</group>
+						<group string="Address" col="4" colspan="4">
+							<field name="address"/>
+							<field name="unit"/>
+							<field name="city"/>
+							<field name="state_id"/>
+							<field name="zip_code"/>
+						</group>
+						<group>
+							<field name="telphone"/>
+							<field name="phone_id"/>
+						</group>
+						<group>
+							<field name="relationship"/>
+						</group>
+					</page>
+					
+					<page name="emergencyinfo" string="Emergency Contact Information">
+						<group string="Full Name" col="4" colspan="4">
+							<field name="fname"/>
+							<field name="lname"/>
+						</group>
+						<group string="Address" col="4" colspan="4">
+							<field name="address"/>
+							<field name="unit"/>
+							<field name="city"/>
+							<field name="state_id"/>
+							<field name="zip_code"/>
+						</group>
+						<group>
+							<field name="telphone"/>
+							<field name="phone_id"/>
+						</group>
+						<group>
+							<field name="relationship"/>
+						</group>
+					</page>
+				</xpath>
+ 				
+			 <xpath expr="//page[@name='personal_information']" position="inside">
+	             <group string="Fullname" col="4" colspan="4">
+					<field name="name"/>
+					<field name="lname"/>
+				</group>
+				<group col="4" colspan="4">
+					<field name="city"/>
+					<field name="state_id"/>
+					<field name="zip_code"/>
+				</group>
+				<group col="4" colspan="4">
+					<field name="email"/>
+					<field name="officail_id"/>
+				</group>
+				<group col="4" colspan="4">
+					<field name="spouse_name"/>
+					<field name="spouse_employer"/>
+					<field name="spouse_phone"/>
+				</group>
+             </xpath>
+      	
+       <xpath expr="//page[@name='public']" position="inside">
+	             <group col="4" colspan="4">
+					<field name="title"/>
+					<field name="employee"/>
+					<field name="start_date"/>
+					<field name="salary" widget="monetary"/>
+				</group>
+             </xpath>
+      
+           </field> 
+
+    </record>    
+	
+	<!-- Leave Request -->
+	<record id="ninas_edit_holiday_new" model="ir.ui.view">
+        <field name="name">ninas.hr.holidays</field>
+        <field name="model">hr.holidays</field>
+        <field name="priority" eval="7"/>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+        <field name="arch" type="xml">
+            <field name="department_id" position="after">
+                <field name="assigned_to"/>
+            </field>
+             <field name="name" position="before">
+                <field name="title"/>
+                <field name="agency"/>
+                <field name="planned_leave"/>
+            </field>
+        </field>
+    </record>
+    
+	<!-- template 
+	<template id="ninas_report_header_custom" inherit_id="website_hr_recruitment.apply">
+            <xpath expr="//div" position="after">
+                <div class="col-md-3 col-sm-4 text-right">
+                    <label class="control-label" for="name">First Name</label>
+                </div>
+            </xpath>
+        </template>
+	-->
+	
+    <!-- Loan Request action-->          
+    <record model="ir.actions.act_window" id="LoanRequest_action_window">
+      <field name="name">Loan Request</field>
+      <field name="res_model">loan.request</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    
+    <!-- Travel Request action-->
+    <record model="ir.actions.act_window" id="TravelRequest_action_window">
+      <field name="name">Travel Request</field>
+      <field name="res_model">travel.request</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    
+    <!-- monthly consumable register action-->
+    <record model="ir.actions.act_window" id="Test_action_window">
+      <field name="name">Monthly Consumable Receipt</field>
+      <field name="res_model">month.consumables</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    
+    <!-- Training Tracker action-->
+    <record model="ir.actions.act_window" id="ninas_training_tracker_action">
+		<field name="name">Training Tracker</field>
+		<field name="res_model">ninas.training_tracker</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+    
+    <!-- advance request action-->
+    <record model="ir.actions.act_window" id="ninas_advance_request_action">
+		<field name="name">Advance Request</field>
+		<field name="res_model">ninas.advance_request</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+	
+	<!-- mission request -->
+	<record model="ir.actions.act_window" id="ninas_mission_report_action">
+		<field name="name">Mission Report</field>
+		<field name="res_model">ninas.mission_report</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+    
+    <!-- loan request -->
+    <record id="loan_request_tree_view" model="ir.ui.view">
+		<field name="name">loan.request.tree</field>
+		<field name="model">loan.request</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="name"/>
+			<field name="purpose"/>
+		</field>
+	</record>
+	
+
+    <record id="loan_request_form" model="ir.ui.view">
+    <field name="name">loan.request.form</field>
+    <field name="model">loan.request</field>
+    <field name="priority" eval="2"/>
+    <field name="arch" type="xml">
+        <form string="Loan">
+        	<header>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
+        		<button name="button_reject" string="Rejected" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve" readonly="1"/>
+        	</header>
+			 <sheet>
+				 <group string="Request" col="4" colspan="4">
+				 <field name="name"/>
+				 <field name="purpose"/>
+				 </group>
+				 <group string="Terms Of Loan" col="4" colspan="4">
+				 <field name="loan_amount"/>
+				 <field name="currency"/>
+				 <field name="repayment"/>
+				 <field name="repayment_period"/>
+				 <field name="total"/>
+				 </group>
+				 <group string="Loan Recieved From:" col="4" colspan="4">
+				 <field name="recieved_from"/>
+				 <field name="date"/>
+				 </group>
+				 <group string="Loan Recieved into the Bank:confirmed by:" col="4" colspan="4">
+				 <field name="recieved_from_name"/>
+				 <field name="date"/>
+				 </group>
+			 </sheet>
+			 <div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			        </div>
+        </form>
+    </field>
+    </record>
+    
+    <!-- Travel Request -->
+    <record id="travel_request_tree_view" model="ir.ui.view">
+		<field name="name">travel.request.tree</field>
+		<field name="model">travel.request</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="name"/>
+			<field name="purpose"/>
+			<field name="departure_date"/>
+			<field name="return_date"/>
+		</field>
+	</record>
+    
+    <record id="travel_request_form" model="ir.ui.view">
+    <field name="name">travel.request.form</field>
+    <field name="model">travel.request</field>
+    <field name="priority" eval="2"/>
+    <field name="arch" type="xml">
+        <form string="Travel">
+        	<header>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve" readonly="1"/>
+        	</header>
+			 <sheet>
+				 <group string="General and Traveler Information" col="4" colspan="4">
+					 <field name="today_date"/>
+					 <field name="travelrequest_no"/>
+					 <field name="traveller_email"/>
+					 <field name="name"/>
+					 <field name="traveller_job"/>
+					 <field name="traveller_phone"/>
+					 <field name="traveller_department"/>
+					 <field name="contact_phone"/>
+					 <field name="contact_name"/>
+					 <field name="traveller_employee_id"/>
+				 </group>
+				 <group col="2" colspan="2">
+				 	<field name="purpose"/>
+				 </group>
+				 <group string="Classification of Traveler (check one)" col="4" colspan="4">
+					 <field name="ninas_employee"/>
+					 <field name="ninas_expert"/>
+					 <field name="ninas_assesor"/>
+					 <field name="ninas_guest"/>
+					 <field name="ninas_other"/>
+					 </group>
+				 <group string="Itinerary" col="4" colspan="4">
+					 <field name="departure_place"/>
+					 <field name="destination_place"/>
+					 <field name="departure_date"/>
+					 <field name="return_date"/>
+					 <field name="rental"/>
+					 <field name="residence"/>
+				 </group>
+				 <group string="Additional Employee Travel Information (This section only applies to employee travelers)" col="4" colspan="2">
+					 <field name="non_business_activity"/>
+					 <field name="non_business_yes"/>
+				 </group>
+				 <group string="Estimated Travel Expenditures" col="4" colspan="2">
+				 	<field name="billed_to"/>
+					<field name="reimbursed_by"/>
+					<field name="total_paid"/>
+				 </group>
+				 <notebook>
+						<page name="expense" string="Expense"> 
+							<field name="account_ids">
+							</field>
+						</page>
+					</notebook>
+				<group>
+					<field name="thrid_party"/>
+				</group>
+				<group col="4" colspan="4">
+					<field name="traveler_sign"/>
+					<field name="traveler_date"/>
+					<field name="linemanager_sign"/>
+					<field name="linemanager_date"/>
+					<field name="admin_sign"/>
+					<field name="admin_date"/>
+					<field name="ceo_sign"/>
+					<field name="ceo_date"/>
+				</group>
+			 </sheet>
+			 <div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			        </div>
+        </form>
+    </field>
+    </record>
+	
+	
+	<!-- Monthly Consumable Receipt -->
+	<record id="month_consumable_form_view" model="ir.ui.view">
+            <field name="name">month.consumable.form</field>
+            <field name="model">month.consumables</field>
+            <field eval="14" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Items receipted">
+	                <sheet>
+	                <group col="4" colspan="4">
+	                	<field name="name"/>
+	                	<field name="date"/>
+	                </group>
+	                	<notebook>
+	                		<page name="item" string="Items receipted">
+	                			<field name="month_ids">
+	                				<tree>
+	                					<field name="name_id"/>
+	                					<field name="product_id"/>
+	                					<field name="quantity"/>
+	                				</tree>
+	                			</field>
+	                		</page>
+	                	</notebook>
+	                </sheet>
+                </form>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="ninas_training_tracker_tree_view">
+		<field name="name">ninas.training_tracker.tree</field>
+		<field name="model">ninas.training_tracker</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="provider"/>
+				<field name="training_date"/>
+				<field name="duration"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_training_tracker_form_view">
+		<field name="name">ninas.training_tracker.form</field>
+		<field name="model">ninas.training_tracker</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Employee Training Tracker">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="name"/>
+						<field name="position" readonly="0"/>
+						<field name="provider"/>
+						<field name="training_date"/>
+						<field name="duration"/>
+						<field name="budget"/>
+						<field name="qualification"/>
+						<field name="capability"/>
+						<field name="refresh"/>
+						<field name="review"/>
+						<field name="notes"/>
+					</group>
+				</sheet>
+				<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			        </div>
+			</form>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_advance_request_tree_view">
+		<field name="name">ninas.advance_request.tree</field>
+		<field name="model">ninas.advance_request</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="employee_name"/>
+				<field name="amount"/>
+				<field name="request_date"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_advance_request_form_view">
+		<field name="name">ninas.advance_request.form</field>
+		<field name="model">ninas.advance_request</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Advance Request Form">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="country_id"/>
+						<field name="request_date"/>
+						<field name="vendor"/>
+						<field name="amount"/>
+						<field name="invoice_id"/> 
+						<field name="invoice_date"/>
+						<field name="purpose"/>
+						<field name="project_manager"/>
+						<field name="sponsored"/>
+						<field name="project_manager"/>
+						<field name="fund"/>
+						<field name="grant"/>
+						<field name="cc"/>
+						<field name="sponsored"/>
+						<field name="notes"/>
+					</group>
+					
+					<group col="4" colspan="2">
+						<field name="payment_agent"/>
+						<field name="payee"/>
+						<field name="expected_date"/>
+						<field name="remarks"/>
+						<field name="employee_name"/>
+						<field name="approved_by"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_mission_report_tree_view">
+		<field name="name">ninas.mission_report.tree</field>
+		<field name="model">ninas.mission_report</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="employee_name"/>
+				<field name="position"/>
+				<field name="purpose" string="Purpose"/>
+				<field name="mission_date"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_mission_report_form_view">
+		<field name="name">ninas.mission_report.form</field>
+		<field name="model">ninas.mission_report</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Back-to-office Mission Report">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="employee_name"/>
+						<field name="position"/>
+						<field name="mission_date"/>
+						<field name="places"/>
+						<field name="participants"/>
+					</group>
+					<group colspan="1">
+						<field name="purpose"/>
+						<field name="background"/>
+						<field name="achievement"/>
+						<field name="follow_up"/>
+						<field name="matters"/>
+					</group>
+					<group col="4" colspan="2">
+						<field name="signature"/>
+						<field name="date"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+    
+	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
+    <menuitem name="Loan Request" id="loan_request_menu" parent="request_main_menu"
+              action="LoanRequest_action_window"/>
+   	<menuitem name="Travel Request" id="travel_request_menu" parent="request_main_menu"
+              action="TravelRequest_action_window"/>
+    <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
+              action="ninas_advance_request_action"/>
+    <menuitem name="Mission Request" id="mission_request_menu" parent="request_main_menu"
+              action="ninas_mission_report_action"/>
+              
+    <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
+              
+   	<menuitem name="Receipt Register" id="register_receipt_menu" parent="stock.menu_stock_root"/>
+    <menuitem name="Monthly Consumable Receipt" id="tests_request_menu" parent="register_receipt_menu"
+              action="Test_action_window"/>
+	
+  </data>
+</odoo>

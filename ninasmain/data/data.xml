@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+
+        <record id="seq_customer_code" model="ir.sequence">
+        	<field name="name">Travel Request ID</field>
+        	<field name="code">travel.request</field>
+        	<field name="prefix">TR</field>
+        	<field name="padding">3</field>
+        	<field name="travelrequest_no" eval="False"/>
+        </record>
+        
+    </data>
+</odoo>
