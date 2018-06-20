@@ -31,7 +31,6 @@ class PurchaseOrder(models.Model):
     need_override = fields.Boolean ('Need Budget Override', compute= "_check_override", track_visibility="onchange")
     employee_id = fields.Many2one('hr.employee', 'Employee',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, default=_default_employee)
-    sub_account_id = fields.Many2one('sub.account', string='Sub Account', index=True, ondelete='cascade')
     approval_date = fields.Date(string='Manager Approval Date', readonly=True, track_visibility='onchange')
     manager_approval = fields.Many2one('res.users','Manager Approval Name', readonly=True, track_visibility='onchange')
     
@@ -156,6 +155,98 @@ class JobRec(models.Model):
     def button_approve(self):
         self.write({'state': 'recruit'})
         return {}
+    
+class JobApp(models.Model):
+    _inherit = "hr.applicant"
+    
+    approved = fields.Boolean(
+        string='Approved')
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'approved':True})
+        return {}
+
+class account_invoice(models.Model):
+    _inherit = 'account.invoice'
+
+    applicant = fields.Many2one('res.partner', string='Related Patient', help="Patient Name")
+    
+    
+class CreateInvoice(models.Model):
+    _inherit = "helpdesk.ticket"
+    
+    type = fields.Selection([
+            ('out_invoice','Customer Invoice'),
+            ('in_invoice','Vendor Bill'),
+            ('out_refund','Customer Credit Note'),
+            ('in_refund','Vendor Credit Note'),
+        ], readonly=True, index=True, change_default=True,
+        default=lambda self: self._context.get('type', 'out_invoice'),
+        track_visibility='always')
+    
+    invoice_count = fields.Integer(compute="_invoice_count", string="Invoices")
+    
+    @api.multi
+    def _invoice_count(self):
+        oe_invoice = self.env['account.invoice']
+        for inv in self:
+            invoice_ids = self.env['account.invoice'].search([('applicant', '=', inv.id)])
+            invoices = oe_invoice.browse(invoice_ids)
+            invoice_count = 0
+            for inv_id in invoices:
+                invoice_count+=1
+            inv.invoice_count = invoice_count
+        return True
+
+    
+    @api.multi
+    def action_create_new(self):
+        ctx = self._context.copy()
+        model = 'account.invoice'
+        ctx.update({'journal_type': self.type, 'default_type': 'out_invoice', 'type': 'out_invoice', 'default_journal_id': self.id})
+        if ctx.get('refund'):
+            ctx.update({'default_type':'out_refund', 'type':'out_refund'})
+        view_id = self.env.ref('account.invoice_form').id
+        return {
+            'name': _('Create invoice/bill'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': model,
+            'view_id': view_id,
+            'context': ctx,
+        }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
             
             

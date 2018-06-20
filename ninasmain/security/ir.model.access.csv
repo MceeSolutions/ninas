@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_loan_request_emp,loan.request,model_loan_request,base.group_user,1,1,1,0
+access_travel_request_emp,travel.request,model_travel_request,base.group_user,1,1,1,0
+access_month_consumable_emp,month.consumable,model_month_consumable,base.group_user,1,0,0,0
+access_month_consumable_mang,month.consumable,model_month_consumable,stock.group_stock_manager,1,1,1,0
+access_month_consumables_emp,month.consumables,model_month_consumables,base.group_user,1,0,0,0
+access_month_consumables_mang,month.consumables,model_month_consumables,stock.group_stock_manager,1,1,1,0
+access_ninas_training_tracker_emp,ninas.training_tracker,model_ninas_training_tracker,base.group_user,1,1,1,0
+access_ninas_advance_request_emp,ninas.advance_request,model_ninas_advance_request,base.group_user,1,1,1,0
+access_ninas_mission_report_emp,ninas.mission_report,model_ninas_mission_report,base.group_user,1,1,1,0
+access_ninas_bank_voucher_emp,ninas.bank_voucher,model_ninas_bank_voucher,base.group_user,1,1,1,0
+access_bank_voucher_emp,bank.voucher,model_bank_voucher,base.group_user,1,1,1,0
+access_ninas_expense_claim_emp,ninas.expense_claim,model_ninas_expense_claim,base.group_user,1,1,1,0
+access_expense_claim_emp,expense.claim,model_expense_claim,base.group_user,1,1,1,0

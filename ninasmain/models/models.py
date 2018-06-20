@@ -57,7 +57,7 @@ class LoanRequest(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
     state = fields.Selection(
-        [('new','New'),('submit', 'Submitted'), ('approve','Approved'),('reject','Rejected'), ('validate','Validated')],
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
         string='Status',
         default='new',
         track_visibility='onchange')
@@ -110,6 +110,11 @@ class LoanRequest(models.Model):
     @api.multi
     def button_validate(self):
         self.write({'state': 'validate'})
+        return {}
+    
+    @api.multi
+    def button_ceo(self):
+        self.write({'state': 'ceo'})
         return {}    
     
 class TravelRequest(models.Model):
@@ -117,7 +122,7 @@ class TravelRequest(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
     state = fields.Selection(
-        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO')],
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
         string='Status',
         default='new',
         track_visibility='onchange')
@@ -228,7 +233,7 @@ class TravelRequest(models.Model):
         if vals.get('travelrequest_no', 'New') == 'New':
             vals['travelrequest_no'] = self.env['ir.sequence'].next_by_code('travel.request') or '/'
         return super(TravelRequest, self).create(vals)
-    
+'''    
 class Hrrecruitment(models.Model):
     _name = 'ninas.hr.recruitment'
     _description = 'NiNAS HR Recruitment'
@@ -236,6 +241,27 @@ class Hrrecruitment(models.Model):
 
     name = fields.Char(
         string='Application ID')
+'''
+
+class ConsRecpted(models.Model):
+    _name = 'month.consumable'
+
+    name_id = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Staff', required=True)
+    product_id = fields.Many2one(
+        comodel_name='product.template', 
+        string='Product', required=True)
+    date = fields.Date(string="Date", required=True)
+    
+    quantity = fields.Selection(
+        [(i, i) for i in range(100)],
+        string='Quantity',
+        required=False)
+    
+    order_id = fields.Many2one(
+        comodel_name='month.consumables',
+        string='order id')
 
 class ConsRecpt(models.Model):
     _name = 'month.consumables'
@@ -246,22 +272,11 @@ class ConsRecpt(models.Model):
     
     month_ids = fields.One2many(
         comodel_name = 'month.consumable',
-        inverse_name = 'name_id', 
+        inverse_name = 'order_id', 
         string = 'Product')
     
     date = fields.Date(string="Date")
     
-class ConsRecpted(models.Model):
-    _name = 'month.consumable'
-
-    name_id = fields.Many2one(
-        comodel_name='hr.employee',
-        string='Staff')
-    product_id = fields.Many2one(
-        comodel_name='product.template', 
-        string='Product')
-    date = fields.Date(string="Date")
-    quantity = fields.Char(string="Quantity")
 
 class TrainingTracker(models.Model):
     _name = 'ninas.training_tracker'
@@ -329,11 +344,16 @@ class TrainingTracker(models.Model):
 class AdvanceRequest(models.Model):
     _name = 'ninas.advance_request'
     _description = 'Advance Request Form'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
 #    _sql_constraints = [('student_uniq',
 #                         'UNIQUE(name)',
 #                         'Student name must be unique!')]
 #    _inherit = 'mail.thread'
-    
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
     #link to actual employee_id
     employee_name = fields.Char(
         #comodel_name = 'hr.employee',
@@ -412,11 +432,46 @@ class AdvanceRequest(models.Model):
         string = 'Approved by: (to be signed by Allotment Holder/Project Manager)'
         )
     
+    @api.multi
+    def button_reset(self):
+        self.write({'state': 'new'})
+        return {}
+    
+    @api.multi
+    def button_submit(self):
+        self.write({'state': 'submit'})
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state': 'reject'})
+        return {}
+    
+    @api.multi
+    def button_validate(self):
+        self.write({'state': 'validate'})
+        return {}
+    
+    @api.multi
+    def button_ceo(self):
+        self.write({'state': 'ceo'})
+        return {}
+    
 class MissionReport(models.Model):
     _name = 'ninas.mission_report'
     _description = 'Back-to-office Mission Report'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
 
-
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
     #link to actual employee_id
     employee_name = fields.Char(
         #comodel_name = 'hr.employee',
@@ -462,6 +517,359 @@ class MissionReport(models.Model):
     date = fields.Date(
         string= 'Date',
         readonly=1
+        )
+    
+    @api.multi
+    def button_reset(self):
+        self.write({'state': 'new'})
+        return {}
+    
+    @api.multi
+    def button_submit(self):
+        self.write({'state': 'submit'})
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state': 'reject'})
+        return {}
+    
+    @api.multi
+    def button_validate(self):
+        self.write({'state': 'validate'})
+        return {}
+    
+    @api.multi
+    def button_ceo(self):
+        self.write({'state': 'ceo'})
+        return {}
+    
+class NinasBankVoucher(models.Model):
+    _name = 'ninas.bank_voucher'
+    _description = 'Bank Payment Voucher'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    #link to actual employee_id
+    employee_id = fields.Many2one(
+        comodel_name = 'hr.employee',
+        string ='Name of Payee',
+        required=1
+        )
+    method = fields.Selection(
+        [('cash','Cash'),('chq','Cheque')],
+        string='Payment Method',
+        required=1
+        )
+    chq_number = fields.Integer(
+        string='Cheque Number',
+        required=1
+        )
+    voucher_number = fields.Integer(
+        string='Voucher Number',
+        required=1
+        )
+    item_date = fields.Date(
+        string = 'Date',
+        required=1
+        )
+    item = fields.Char(
+        string='Item (Description)',
+        required=0
+        )
+    ref_number = fields.Integer(
+        string='Ref. No.',
+        )
+    unit_code = fields.Char(
+        string='Unit Code',
+        required=1
+        )
+    fund_code = fields.Char(
+        string ='Fund Code'
+        )
+    budget_line = fields.Char(
+        string = 'Activity/Budget Line Code'
+        )
+    account_code = fields.Char(
+        string= 'Account Code'
+        ) 
+    
+    currency_id = fields.Many2one('res.currency', 'Currency', required=True,\
+        default=lambda self: self.env.user.company_id.currency_id.id)
+    
+    amount = fields.Monetary(
+        string = 'Amount (NGN)'
+        )
+    
+    total = fields.Monetary(
+        string='Total Amount',
+        store=True, readonly=True
+        )
+    
+    prepared = fields.Char(
+        string='Prepared by',
+        required=1
+        )
+    reviewed = fields.Char(
+        string ='Reviewed by'
+        )
+    authorised = fields.Char(
+        string = 'Authorised Manager/Signatory'
+        )
+    account_number = fields.Char(
+        string= 'Account Number'
+        ) 
+    tin = fields.Integer(
+        string = 'TIN'
+        )
+    bank = fields.Char(
+        string ='Bank Name'
+        )
+    signature = fields.Char(
+        string = 'Signature'
+        )
+    date = fields.Date(
+        string= 'Date'
+        )
+    bank_voucher = fields.One2many(
+        comodel_name='bank.voucher',
+        inverse_name='employee_id',
+        string='Bank Voucher'
+        )
+    
+    @api.multi
+    def button_reset(self):
+        self.write({'state': 'new'})
+        return {}
+    
+    @api.multi
+    def button_submit(self):
+        self.write({'state': 'submit'})
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state': 'reject'})
+        return {}
+    
+    @api.multi
+    def button_validate(self):
+        self.write({'state': 'validate'})
+        return {}
+    
+    @api.multi
+    def button_ceo(self):
+        self.write({'state': 'ceo'})
+        return {}
+    
+class BankVoucher(models.Model):
+    _name = 'bank.voucher'
+    
+    employee_id = fields.Many2one(
+        comodel_name = 'hr.employee',
+        string ='Name of Payee'
+        )
+    item_date = fields.Date(
+        string = 'Date',
+        required=1
+        )
+    item = fields.Char(
+        string='Item (Description)',
+        required=0
+        )
+    ref_number = fields.Integer(
+        string='Ref. No.',
+        )
+    unit_code = fields.Char(
+        string='Unit Code',
+        required=1
+        )
+    fund_code = fields.Char(
+        string ='Fund Code'
+        )
+    budget_line = fields.Char(
+        string = 'Activity/Budget Line Code'
+        )
+    account_code = fields.Char(
+        string= 'Account Code'
+        ) 
+    amount = fields.Integer(
+        string = 'Amount (NGN)'
+        )
+    total = fields.Integer(
+        string='Total Amount',
+        )
+    
+    
+class NinasExpenseClaim(models.Model):
+    _name = 'ninas.expense_claim'
+    _description = 'Expense Claim form'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    #link to actual employee_id
+    employee_id = fields.Many2one(
+        comodel_name = 'hr.employee',
+        string ='Name of Payee',
+        required=1
+        )
+    employee_code = fields.Integer(
+        string='Employee Code',
+        )
+    ref_number = fields.Integer(
+        string='Ref. No. (Receipts to be numbered serially)',
+        )
+    amount_received = fields.Float(
+        string='Amount Received From Finance'
+        )
+    item_date = fields.Date(
+        string = 'Date',
+        required=1
+        )
+    item = fields.Char(
+        string='Item (Description)',
+        required=0
+        )
+    unit_code = fields.Char(
+        string='Unit Code',
+        required=1
+        )
+    fund_code = fields.Char(
+        string ='Fund Code'
+        )
+    budget_line = fields.Char(
+        string = 'Activity/Budget Line Code'
+        )
+    account_code = fields.Char(
+        string= 'Account Code'
+        ) 
+    amount = fields.Integer(
+        string = 'Amount (NGN)'
+        )
+    total = fields.Integer(
+        string='Total Amount Spent',
+        )
+    balance = fields.Float(
+        string='Balance (Due to)/ Due from Employee'
+        )
+    prepared = fields.Char(
+        string='Prepared by',
+        required=1
+        )
+    reviewed = fields.Char(
+        string ='Reviewed by'
+        )
+    authorised = fields.Char(
+        string = 'Authorised Manager/Signatory'
+        )
+    account_number = fields.Char(
+        string= 'Account Number'
+        ) 
+    tin = fields.Integer(
+        string = 'TIN'
+        )
+    bank = fields.Char(
+        string ='Bank Name'
+        )
+    signature = fields.Char(
+        string = 'Signature'
+        )
+    date = fields.Date(
+        string= 'Date'
+        )
+    expense_claim = fields.One2many(
+        comodel_name='expense.claim',
+        inverse_name='employee_id',
+        string='Expense Claim'
+        )
+    
+    @api.multi
+    def button_reset(self):
+        self.write({'state': 'new'})
+        return {}
+    
+    @api.multi
+    def button_submit(self):
+        self.write({'state': 'submit'})
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state': 'reject'})
+        return {}
+    
+    @api.multi
+    def button_validate(self):
+        self.write({'state': 'validate'})
+        return {}
+    
+    @api.multi
+    def button_ceo(self):
+        self.write({'state': 'ceo'})
+        return {}
+    
+class ExpenseClaim(models.Model):
+    _name = 'expense.claim'
+    
+    employee_id = fields.Many2one(
+        comodel_name = 'hr.employee',
+        string ='Name of Payee', required=True
+        )
+    ref_number = fields.Integer(
+        string='Ref. No.'
+        )
+    employee_code = fields.Integer(
+        string='Employee Code'
+        )
+    item_date = fields.Date(
+        string = 'Date',
+        required=1
+        )
+    item = fields.Char(
+        string='Item (Description)',
+        required=0
+        )
+    unit_code = fields.Char(
+        string='Unit Code',
+        required=1
+        )
+    fund_code = fields.Char(
+        string ='Fund Code'
+        )
+    budget_line = fields.Char(
+        string = 'Activity/Budget Line Code'
+        )
+    account_code = fields.Char(
+        string= 'Account Code'
+        ) 
+    amount = fields.Integer(
+        string = 'Amount (NGN)'
+        )
+    total = fields.Integer(
+        string='Total Amount',
         )
     
     

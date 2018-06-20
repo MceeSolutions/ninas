@@ -11,22 +11,25 @@
                    """,
     'author':'Mcee',               
     'website': 'https://mceesolutions.com',
-    'category': 'Ninas',
-    'version':'11.0.0.0.2',
+    'category': 'ninas',
+    'version':'11.0.0.0.1',
     'application': True,
     'insatallable': True,
     'auto-install': False,
         
-    'depends': ['base', 'hr', 'hr_holidays', 'hr_recruitment', 'website', 'stock', 'mail', 'sale', 'purchase', 'account_budget'],
+    'depends': ['base', 'hr', 'hr_holidays', 'hr_recruitment', 'website', 'stock', 'mail', 'sale', 'purchase', 'account_budget', 'hr_payroll', 'helpdesk'],
     'external_dependencies': {
         'python': [],
         'bin': []
         },
     'init_xml':[],
     'data':[
+        'security/ninas_security.xml',
+        'security/ir.model.access.csv',
         'data/data.xml',
-        'views/helpdesk_views.xml',
+#        'views/helpdesk_views.xml',
         'views/stock_view.xml',
+        'views/hr_views.xml',
         'views/views.xml'
         ],
     'css':[],

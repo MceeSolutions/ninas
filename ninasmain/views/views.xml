@@ -155,7 +155,7 @@
 		<field name="context">{}</field>
 	</record>
 	
-	<!-- mission request -->
+	<!-- mission request action -->
 	<record model="ir.actions.act_window" id="ninas_mission_report_action">
 		<field name="name">Mission Report</field>
 		<field name="res_model">ninas.mission_report</field>
@@ -165,7 +165,27 @@
 		<field name="context">{}</field>
 	</record>
     
-    <!-- loan request -->
+    <!-- bank voucher action -->
+    <record model="ir.actions.act_window" id="ninas_bank_voucher_action">
+		<field name="name">Bank Payment Voucher</field>
+		<field name="res_model">ninas.bank_voucher</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+    
+    <!-- expense claim action-->
+	<record model="ir.actions.act_window" id="ninas_expense_claim_action">
+		<field name="name">Expense Claim Form</field>
+		<field name="res_model">ninas.expense_claim</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+    
+    <!-- loan request  tree view-->
     <record id="loan_request_tree_view" model="ir.ui.view">
 		<field name="name">loan.request.tree</field>
 		<field name="model">loan.request</field>
@@ -175,7 +195,6 @@
 			<field name="purpose"/>
 		</field>
 	</record>
-	
 
     <record id="loan_request_form" model="ir.ui.view">
     <field name="name">loan.request.form</field>
@@ -189,7 +208,7 @@
         		<button name="button_reject" string="Rejected" type="object" class="btn btn-danger" states="submit"/>
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
         		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
-        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve" readonly="1"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 			 <sheet>
 				 <group string="Request" col="4" colspan="4">
@@ -247,7 +266,7 @@
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
         		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
         		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
-        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve" readonly="1"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 			 <sheet>
 				 <group string="General and Traveler Information" col="4" colspan="4">
@@ -319,7 +338,20 @@
     </record>
 	
 	
-	<!-- Monthly Consumable Receipt -->
+	<!-- Monthly Consumable Receipt 
+	
+	<record model="ir.ui.view" id="ninas_expense_claim_tree_view">
+		<field name="name">month.consumables.tree</field>
+		<field name="model">month.consumables</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="date"/>
+			</tree>
+		</field>
+	</record>-->
+	
 	<record id="month_consumable_form_view" model="ir.ui.view">
             <field name="name">month.consumable.form</field>
             <field name="model">month.consumables</field>
@@ -338,6 +370,7 @@
 	                					<field name="name_id"/>
 	                					<field name="product_id"/>
 	                					<field name="quantity"/>
+	                					<field name="date"/>
 	                				</tree>
 	                			</field>
 	                		</page>
@@ -347,6 +380,7 @@
         </field>
     </record>
     
+    <!-- training tracker -->
     <record model="ir.ui.view" id="ninas_training_tracker_tree_view">
 		<field name="name">ninas.training_tracker.tree</field>
 		<field name="model">ninas.training_tracker</field>
@@ -391,6 +425,7 @@
 		</field>
 	</record>
 	
+	<!-- advance request -->
 	<record model="ir.ui.view" id="ninas_advance_request_tree_view">
 		<field name="name">ninas.advance_request.tree</field>
 		<field name="model">ninas.advance_request</field>
@@ -410,6 +445,15 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Advance Request Form">
+				<header>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+        	</header>
 				<sheet>
 					<group col="4" colspan="2">
 						<field name="country_id"/>
@@ -438,10 +482,16 @@
 						<field name="approved_by"/>
 					</group>
 				</sheet>
+				<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			        </div>
 			</form>
 		</field>
 	</record>
 	
+	<!-- mission report -->
 	<record model="ir.ui.view" id="ninas_mission_report_tree_view">
 		<field name="name">ninas.mission_report.tree</field>
 		<field name="model">ninas.mission_report</field>
@@ -462,6 +512,15 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Back-to-office Mission Report">
+			<header>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+        	</header>
 				<sheet>
 					<group col="4" colspan="2">
 						<field name="employee_name"/>
@@ -482,6 +541,196 @@
 						<field name="date"/>
 					</group>
 				</sheet>
+				<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			        </div>
+			</form>
+		</field>
+	</record>
+    
+    <!-- bank voucher -->
+    <record model="ir.ui.view" id="ninas_bank_voucher_tree_view">
+		<field name="name">ninas.bank_voucher.tree</field>
+		<field name="model">ninas.bank_voucher</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="employee_id"/>
+				<field name="item"/>
+				<field name="item_date"/>
+				<field name="total"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_bank_voucher_form_view">
+		<field name="name">ninas.bank_voucher.form</field>
+		<field name="model">ninas.bank_voucher</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Bank Payment Voucher">
+			<header>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+        	</header>
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="employee_id"/>
+						<field name="method"/>
+						<field name="chq_number"/>
+						<field name="voucher_number"/>
+					</group>
+					
+					<notebook>
+					<page name="bank_voucher" string="Bank Voucher">
+						<field name="bank_voucher">
+							<tree>
+								<field name="item_date"/>
+								<field name="item"/>
+								<field name="ref_number"/>
+								<field name="unit_code"/>
+								<field name="fund_code"/>
+								<field name="budget_line"/>
+								<field name="account_code"/>
+								<field name="amount"/>
+							</tree>
+						</field>
+					<group class="oe_subtotal_footer oe_right">
+					<div class="oe_subtotal_footer_separator oe_inline">
+                        <label for="total"/>
+                    </div>
+						<field name="total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+					</group>
+					
+					<group col="4" colspan="2">
+						<field name="prepared"/>
+						<field name="date"/>
+						<field name="reviewed"/>
+						<field name="date"/>
+						<field name="authorised"/>
+						<field name="date"/>
+					</group>	
+					<group col="6" colspan="2">
+						<field name="tin"/>
+						<field name="account_number"/>
+						<field name="bank"/>
+					</group>
+					</page>
+				
+					<page name="finance" string="Finance Only">
+					<group>
+						<field name="reviewed"/>
+					</group>
+					<group col="4" colspan="2">
+						<field name="signature"/>
+						<field name="date"/>
+					</group>
+					</page>
+					</notebook>
+				</sheet>
+				<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			        </div>
+			</form>
+		</field>
+	</record>
+	
+	<!-- expense claim -->
+	<record model="ir.ui.view" id="ninas_expense_claim_tree_view">
+		<field name="name">ninas.expense_claim.tree</field>
+		<field name="model">ninas.expense_claim</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="employee_id"/>
+				<field name="item"/>
+				<field name="item_date"/>
+				<field name="total"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_expense_claim_form_view">
+		<field name="name">ninas.expense_claim.form</field>
+		<field name="model">ninas.expense_claim</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Expense Claim Form">
+			<header>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+        	</header>
+				<sheet>
+					<group col="6" colspan="2">
+						<field name="employee_id"/>
+						<field name="employee_code"/>
+						<field name="ref_number"/>
+						<field name="amount_received"/>
+					</group>
+					
+					<notebook>
+					<page name="expense_claim" string="Expense Claim">
+						<field name="expense_claim">
+							<tree>
+								<field name="item_date"/>
+								<field name="item"/>
+								<field name="ref_number"/>
+								<field name="unit_code"/>
+								<field name="fund_code"/>
+								<field name="budget_line"/>
+								<field name="account_code"/>
+								<field name="amount"/>
+							</tree>
+						</field>
+						<group class="oe_subtotal_footer oe_right">
+                                <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="balance"/>
+                                </div>
+                                <field name="balance" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+						<group col="4" colspan="2">
+							<field name="prepared"/>
+							<field name="date"/>
+							<field name="reviewed"/>
+							<field name="date"/>
+							<field name="authorised"/>
+							<field name="date"/>
+							<field name="account_number"/>
+							<field name="bank"/>
+						</group>
+					</page>
+					
+					<page name="finance" string="Finance Only">
+						<group>
+							<field name="reviewed"/>
+						</group>
+						<group col="4" colspan="2">
+							<field name="signature"/>
+							<field name="date"/>
+						</group>
+					</page>
+					</notebook>
+				</sheet>
+				<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			        </div>
 			</form>
 		</field>
 	</record>
@@ -493,8 +742,12 @@
               action="TravelRequest_action_window"/>
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
-    <menuitem name="Mission Request" id="mission_request_menu" parent="request_main_menu"
+    <menuitem name="Mission Report" id="mission_request_menu" parent="request_main_menu"
               action="ninas_mission_report_action"/>
+    <menuitem name="bank voucher" id="bank_voucher_menu" parent="request_main_menu"
+              action="ninas_bank_voucher_action"/>
+    <menuitem name="expense claims" id="expense_claim_menu" parent="request_main_menu"
+              action="ninas_expense_claim_action"/>
               
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
               
