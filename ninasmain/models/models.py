@@ -33,6 +33,12 @@ class Employee(models.Model):
     employee = fields.Char(string='Employee ID')
     start_date = fields.Date(string='Start Date')
     salary = fields.Char(string='Salary')
+    Training_date = fields.Date(string='Training Date')
+
+class HrAppraisals(models.Model):
+    _inherit = "hr.appraisal"
+    
+    Training_date = fields.Date(string='Training Date')
     
 class Holidays(models.Model):
     _name = "hr.holidays"

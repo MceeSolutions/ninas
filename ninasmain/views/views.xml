@@ -77,6 +77,7 @@
 	             <group col="4" colspan="4">
 					<field name="title"/>
 					<field name="employee"/>
+					<field name="Training_date"/>
 					<field name="start_date"/>
 					<field name="salary" widget="monetary"/>
 				</group>
@@ -85,6 +86,20 @@
            </field> 
 
     </record>    
+	
+	<!-- hr appraisal Request 
+	<record id="ninas_hr_appraisal" model="ir.ui.view">
+        <field name="name">ninas.hr.appraisal</field>
+        <field name="model">hr.appraisal</field>
+        <field name="priority" eval="7"/>
+        <field name="inherit_id" ref="hr_appraisal.hr_employee_view_form"/>
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='periodic_appraisal']" position="after">
+        	<field name="Training_date"/>
+        </xpath>
+        </field>
+    </record>-->
+	
 	
 	<!-- Leave Request -->
 	<record id="ninas_edit_holiday_new" model="ir.ui.view">
@@ -795,7 +810,7 @@
 			             <field name="message_follower_ids" widget="mail_followers"/>
 			             <field name="activity_ids" widget="mail_activity"/>
 			             <field name="message_ids" widget="mail_thread"/>
-			        </div>
+			     </div>
 			</form>
 		</field>
 	</record>
@@ -808,12 +823,8 @@
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
               
-    <menuitem name="Mission Report" id="mission_request_menu" parent="request_main_menu"
-              action="ninas_mission_report_action"/>
     <menuitem name="bank voucher" id="bank_voucher_menu" parent="request_main_menu"
               action="ninas_bank_voucher_action"/>
-    <menuitem name="expense claims" id="expense_claim_menu" parent="request_main_menu"
-              action="ninas_expense_claim_action"/>
               
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
               
@@ -821,6 +832,11 @@
     <menuitem name="Monthly Consumable Receipt" id="tests_request_menu" parent="register_receipt_menu"
               action="Test_action_window"/>
               
-	
+	<menuitem name="Expense Request" id="expense_request_menuitem" parent="hr_expense.menu_hr_expense_root"/>
+	<menuitem name="Expense claims" id="expense_claim_menu" parent="expense_request_menuitem"
+              action="ninas_expense_claim_action"/>
+	<menuitem name="Mission Report" id="mission_request_menu" parent="expense_request_menuitem"
+              action="ninas_mission_report_action"/>
+              
   </data>
 </odoo>
