@@ -823,7 +823,8 @@
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
               
-    <menuitem name="bank voucher" id="bank_voucher_menu" parent="request_main_menu"
+    <menuitem name="Bank Voucher" id="bank_vouchert_main_menu" parent="account.menu_finance_receivables"/>          
+    <menuitem name="Bank voucher" id="bank_voucher_menu" parent="bank_vouchert_main_menu"
               action="ninas_bank_voucher_action"/>
               
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
