@@ -207,28 +207,41 @@
         		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
         		<button name="button_reject" string="Rejected" type="object" class="btn btn-danger" states="submit"/>
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
-        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
-        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+        		<button name="button_paid" string="Paid" type="object" class="btn btn-primary" states="approve"/>
+        		<button name="button_confirm" string="Confirm Payment" type="object" class="btn btn-primary" states="paid"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve" readonly="1"/>
         	</header>
 			 <sheet>
 				 <group string="Request" col="4" colspan="4">
 				 <field name="name"/>
 				 <field name="purpose"/>
 				 </group>
-				 <group string="Terms Of Loan" col="4" colspan="4">
-				 <field name="loan_amount"/>
-				 <field name="currency"/>
-				 <field name="repayment"/>
-				 <field name="repayment_period"/>
-				 <field name="total"/>
-				 </group>
+				 <notebook>
+					 <page string="Terms Of Loan">
+					 	<field name="loan_line_ids">
+							<tree>
+								<field name="loan_amount"/>
+								<field name="naira_currency"/>
+								<field name="naira_dollar"/>
+							</tree>
+						</field>
+						<group class="oe_subtotal_footer oe_right">
+                           <field name="total_ng" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                           <field name="total_usd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+					 </page>
+				 </notebook>
+				 <group col="4" colspan="4">
+						 <field name="repayment"/>
+						 <field name="repayment_period"/>
+				</group>
 				 <group string="Loan Recieved From:" col="4" colspan="4">
 				 <field name="recieved_from"/>
-				 <field name="date"/>
+				 <field name="date_recevfrom"/>
 				 </group>
 				 <group string="Loan Recieved into the Bank:confirmed by:" col="4" colspan="4">
 				 <field name="recieved_from_name"/>
-				 <field name="date"/>
+				 <field name="date_recevfromname"/>
 				 </group>
 			 </sheet>
 			 <div class="oe_chatter">
@@ -742,6 +755,7 @@
               action="TravelRequest_action_window"/>
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
+              
     <menuitem name="Mission Report" id="mission_request_menu" parent="request_main_menu"
               action="ninas_mission_report_action"/>
     <menuitem name="bank voucher" id="bank_voucher_menu" parent="request_main_menu"
@@ -754,6 +768,7 @@
    	<menuitem name="Receipt Register" id="register_receipt_menu" parent="stock.menu_stock_root"/>
     <menuitem name="Monthly Consumable Receipt" id="tests_request_menu" parent="register_receipt_menu"
               action="Test_action_window"/>
+              
 	
   </data>
 </odoo>

@@ -17,7 +17,7 @@
     'insatallable': True,
     'auto-install': False,
         
-    'depends': ['base', 'hr', 'hr_holidays', 'hr_recruitment', 'website', 'stock', 'mail', 'sale', 'purchase', 'account_budget', 'hr_payroll', 'helpdesk'],
+    'depends': ['base', 'hr', 'hr_holidays', 'hr_recruitment', 'website', 'stock', 'mail', 'sale', 'purchase', 'account_budget', 'hr_payroll', 'helpdesk', 'hr_expense'],
     'external_dependencies': {
         'python': [],
         'bin': []

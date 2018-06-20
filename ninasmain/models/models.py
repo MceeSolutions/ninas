@@ -57,7 +57,7 @@ class LoanRequest(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
     state = fields.Selection(
-        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('paid','Paid'), ('confirm','Confirmed')],
         string='Status',
         default='new',
         track_visibility='onchange')
@@ -67,7 +67,7 @@ class LoanRequest(models.Model):
     purpose = fields.Char(
         string='Purpose of Loan')
     terms_ofloan = fields.Char(
-        string='Terma of Loan')
+        string='Terms of Loan')
     loan_amount = fields.Char(string='Loan Amount')
     currency = fields.Selection([
         ('naira','Naira'),('dollar','Dollar')],
@@ -82,10 +82,23 @@ class LoanRequest(models.Model):
         string='Repayment Period')
     recieved_from = fields.Many2one(
         comodel_name="hr.employee",
-        string='Recieved Name', required=True)
-    recieved_from_name = fields.Char(
-        string='Name')
-    date = fields.Date(string='Date')
+        string='Recieved Name', readonly=True)
+    recieved_from_name = fields.Many2one(
+        comodel_name="hr.employee",
+        string='Name', readonly=True)
+    date_recevfrom = fields.Date(string='Date', readonly=True)
+    date_recevfromname = fields.Date(string='Date', readonly=True)
+    
+    currency_id = fields.Many2one('res.currency', 'Currency', required=False,\
+        default=lambda self: self.env.user.company_id.currency_id.id)
+    total_ng = fields.Monetary(
+        string='Total (NGN)', readonly=True)
+    total_usd = fields.Monetary(
+        string='Total (USD)', readonly=True)
+    
+    loan_line_ids = fields.One2many(
+        comodel_name='loan.req',
+        inverse_name='currency_id')
     
     @api.multi
     def button_reset(self):
@@ -98,6 +111,20 @@ class LoanRequest(models.Model):
         return {}
     
     @api.multi
+    def button_paid(self):
+        self.write({'state': 'paid'})
+        self.recieved_from = self._uid
+        self.date_recevfrom = date.today()
+        return {}
+    
+    @api.multi
+    def button_confirm(self):
+        self.write({'state': 'confirm'})
+        self.recieved_from_name = self._uid
+        self.date_recevfromname = date.today()
+        return {}
+    
+    @api.multi
     def button_approve(self):
         self.write({'state': 'approve'})
         return {}
@@ -106,16 +133,22 @@ class LoanRequest(models.Model):
     def button_reject(self):
         self.write({'state': 'reject'})
         return {}
+
+class LoanReq(models.Model):
+    _name = 'loan.req'
     
-    @api.multi
-    def button_validate(self):
-        self.write({'state': 'validate'})
-        return {}
+    loan_amount = fields.Char(string='Loan Amount', required=True)
+    currency_id = fields.Many2one('res.currency', 'Currency', required=True,\
+        default=lambda self: self.env.user.company_id.currency_id.id)
     
-    @api.multi
-    def button_ceo(self):
-        self.write({'state': 'ceo'})
-        return {}    
+
+    naira_currency = fields.Monetary(
+        string = 'Naira (NGN)'
+        )
+    naira_dollar = fields.Monetary(
+        string = 'Dollar (USD)'
+        )
+        
     
 class TravelRequest(models.Model):
     _name = 'travel.request'
@@ -153,7 +186,7 @@ class TravelRequest(models.Model):
     residence = fields.Char(string='Hotel Name or Type "Private Residence"')
     non_business_activity = fields.Selection([
         ('yes','Yes'),('no','No')],
-        string='Will any days be spent primarily on non-business activities (Yes or No)?')
+        string='Will any days be spent primarily on non-business activities (Yes or No)?', default='no')
     non_business_yes = fields.Char(
         string='If yes, type the dates of non-business activity.')
     billed_to = fields.Char(
