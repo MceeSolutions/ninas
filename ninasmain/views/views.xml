@@ -114,6 +114,58 @@
         </template>
 	-->
 	
+	<!-- Job Application Form -->
+	<template id="ninas_report_header_custom" inherit_id="website_hr_recruitment.apply">
+		<xpath expr="//h1" position="replace">
+            <h1 class="text-center">Recruitment Form</h1>
+        </xpath>
+		<xpath expr="//h1" position="after">
+			<h4 class="text-center">Please send your completed form to hr@ninas.ng</h4>
+			<h5 class="text-center">Please note CV will not be accepted</h5>
+			<div class="text-center">Job Reference/Vacancy ID: "job_id" </div>
+			<group col="4" colspan="2">
+				<field name="job_discovery"/>
+			</group>
+		</xpath>
+		<xpath expr="//div[@class='form-group form-field o_website_form_required_custom']" position="replace">
+			<div class="form-group form-field o_website_form_required_custom">
+				<div class="col-md-3 col-sm-4 text-right">
+					<label class="control-label" for="first_name">Name</label>
+				</div>
+				<div class="col-md-7 col-sm-8">
+					<input type="text" class="form-control o_website_form_input" name="first_name" required=""/>
+				</div>
+			</div>
+			<div class="form-group form-field o_website_form_required_custom">
+				<div class="col-md-3 col-sm-4 text-right">
+					<label class="control-label" for="address">Address</label>
+				</div>
+				<div class="col-md-7 col-sm-8">
+					<input type="text" class="form-control o_website_form_input" name="address" required=""/>
+				</div>
+			</div>
+		</xpath>
+		<xpath expr="//div[@class='form-group form-field o_website_form_custom']" position="after">
+			<div class="form-group form-field o_website_form_custom">
+				<div class="col-md-3 col-sm-4 text-right">
+					<label class="control-label" for="Resume">Other Attachments</label>
+				</div>
+				<div class="col-md-7 col-sm-8">
+					<input type="file" class="form-control o_website_form_input" name="other_attachments"/>
+				</div>
+			</div>
+		</xpath>
+		<xpath expr="//div[@class='form-group']" position="replace">
+			<div class="form-group">
+				<div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+					<span class="btn btn-primary btn-lg o_website_form_send">Next</span>
+					<span id="o_website_form_result"></span>
+				</div>
+			</div>
+		</xpath>
+    </template>
+	
+	
     <!-- Loan Request action-->          
     <record model="ir.actions.act_window" id="LoanRequest_action_window">
       <field name="name">Loan Request</field>

@@ -266,15 +266,20 @@ class TravelRequest(models.Model):
         if vals.get('travelrequest_no', 'New') == 'New':
             vals['travelrequest_no'] = self.env['ir.sequence'].next_by_code('travel.request') or '/'
         return super(TravelRequest, self).create(vals)
-'''    
+    
 class Hrrecruitment(models.Model):
     _name = 'ninas.hr.recruitment'
     _description = 'NiNAS HR Recruitment'
     _inherit = 'hr.applicant'
 
-    name = fields.Char(
-        string='Application ID')
-'''
+    name = fields.Char(string='Application ID')
+    first_name = fields.Char(string='First Name')
+    last_name = fields.Char(string='Last Name')
+    address = fields.Char(string='Address')
+    job_discovery = fields.Selection([('',''),('newspaper','Newspaper'),('website', 'Website'), ('word of mouth','Word of Mouth')],
+        string='How did you hear about this post or where did you see it advertised:',
+        default='',
+        track_visibility='onchange')
 
 class ConsRecpted(models.Model):
     _name = 'month.consumable'
