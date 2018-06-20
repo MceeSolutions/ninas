@@ -1,6 +1,6 @@
 <odoo>
   <data>
-  
+  <!-- 
   	<record id="ninas_purchase_tree_view" model="ir.ui.view">
         <field name="name">ninas.purchase.tree</field>
         <field name="model">purchase.order</field>
@@ -11,7 +11,8 @@
 	        </field>	
         </field>
     </record>
-  
+  	 -->
+  	 
   	<record id="ninas_purchase_form_view" model="ir.ui.view">
         <field name="name">ninas.purchase.form</field>
         <field name="model">purchase.order</field>
@@ -19,10 +20,12 @@
         <field name="arch" type="xml">
         	<button name="print_quotation" position="attributes"> <attribute name="groups">purchase.group_purchase_user</attribute></button>
         	<button name="action_rfq_send" position="attributes"> <attribute name="groups">purchase.group_purchase_user</attribute></button>
-        	<field name="name" position="before">
+        	
+        	<!-- <field name="name" position="before">
             	<field name= "need_override" invisible = "1"/>
             	<h3 attrs="{'invisible': [('need_override', '=', False)]}"><b>Needs Budget Override, The Budget Dept. has been notified </b></h3>
-            </field>
+            </field>-->
+            
         	<xpath expr="//button[@name='action_view_picking']" position="replace">
         		<button type="object"
                             name="action_view_picking"
@@ -40,11 +43,13 @@
                      <field name='invoice_ids' invisible="1"/>
                  </button>
         	</xpath>
-        	<xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+        	
+        	<!-- <xpath expr="//field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
             	<field name= "need_override" attrs="{'invisible': [('need_override', '=', False)]}" />
             	<field name= "override_budget" attrs="{'invisible': [('need_override', '=', False)]}"/>
             	<button name="action_override_budget" type="object" string="Override Budget" attrs="{'invisible': ['|',('need_override', '=', False),('override_budget', '=', True)]}"/>
-            </xpath>
+            </xpath>-->
+            
         	<xpath expr="//button[@name='action_rfq_send']" position="before">
         		<button name="button_submit" string="Submit to Manager" type="object" states="draft" groups="base.group_user"/>
         	</xpath>
@@ -97,6 +102,45 @@
 			<field name="state" position="replace">
                 <field name="state" widget="statusbar" statusbar_visible="approve,recruit,open"/>
             </field>
+           </field>
+    </record>
+
+    <record id="ninas_hr_recruitment_crm_case_form_view_job" model="ir.ui.view">
+        <field name="name">hr.applicant.form</field>
+        <field name="model">hr.applicant</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
+        <field name="arch" type="xml">
+           <xpath expr="//button[@name='create_employee_from_applicant']" position="before">
+				<button name="button_approve" string="Approve" type="object" class="btn btn-primary" attrs="{'invisible': [('approved', '=', True)]}"/>
+			</xpath>
+				<xpath expr="//button[@name='create_employee_from_applicant']" position="replace">
+					<button string="Create Employee" name="create_employee_from_applicant" type="object"
+	                        class="oe_highlight" attrs="{'invisible': ['|','|',('approved', '=', False),('emp_id', '!=', False),('active', '=', False)]}"/>
+				</xpath>
+			<xpath expr="//button[@name='archive_applicant']" position="replace">
+				<button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': ['|',('approved', '=', False),('active', '=', False)]}"/>
+			</xpath>
+			<field name="department_id" position="after">
+                <field name="approved"/>
+            </field>
+           </field>
+    </record>
+    
+    <record id="ninas_helpdesk_view_form_view" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//button[@name='assign_ticket_to_self']" position="before">
+                	<button type="object" name="action_create_new" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new"/>
+			</xpath>
+			<xpath expr="//button[@name='toggle_active']" position="before">
+		    	<button type="action" class="oe_stat_button" name="%(account.action_invoice_tree1)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
+                                <field string="Invoices" name="invoice_count" widget="statinfo"/>
+                            </button>
+			</xpath>
            </field>
     </record>
     
