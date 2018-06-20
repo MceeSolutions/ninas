@@ -47,7 +47,7 @@ class Holidays(models.Model):
 
     assigned_to = fields.Many2one(
         comodel_name="hr.employee",
-        string='Duties Assigned To', required=True)
+        string='Duties Assigned To', required=False)
     title = fields.Char(string='Title Name')
     agency = fields.Selection(
         [('unido','UNIDO'),('other', 'Others')],

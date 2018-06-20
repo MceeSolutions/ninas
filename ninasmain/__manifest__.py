@@ -15,7 +15,7 @@
     'version':'11.0.0.0.2',
     'application': True,
     'insatallable': True,
-    'auto-install': False,
+    'auto-install': True,
         
     'depends': ['base', 'hr', 'hr_holidays', 'hr_recruitment', 'website', 'stock', 'mail', 'sale', 'purchase', 'account_budget', 'hr_payroll', 'helpdesk', 'hr_expense'],
     'external_dependencies': {
