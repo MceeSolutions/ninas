@@ -137,7 +137,7 @@
                 	<button type="object" name="action_create_new" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new"/>
 			</xpath>
 			<xpath expr="//button[@name='toggle_active']" position="before">
-		    	<button type="action" class="oe_stat_button" name="%(account.action_invoice_tree1)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
+		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
                 	<field string="Checklist" name="checklist_count" widget="statinfo"/>
                </button>
 			</xpath>
@@ -161,25 +161,25 @@
 		</field>
 	</record>
 
-    <record id="loan_request_form" model="ir.ui.view">
+    <record id="checklist_ticket_form_view" model="ir.ui.view">
     <field name="name">checklist.ticket.form</field>
     <field name="model">checklist.ticket</field>
     <field name="priority" eval="2"/>
     <field name="arch" type="xml">
-        <form string="Loan">
+        <form string="Check List">
 			 <sheet>
-				 <group string="Request" col="4" colspan="4">
+				 <group col="4" colspan="4">
 				 <field name="name"/>
 				 <field name="current_stage"/>
 				 </group>
 				 <notebook>
-					 <page>
-					 <group>
-					<field name="stage_one"/>
-				 	<field name="stage_two"/>
-				 	<field name="stage_three"/>
-				 	<field name="stage_four"/>
-				 	</group>
+					<page name="stages" string="Stages">
+						 <group>
+							<field name="stage_one"/>
+						 	<field name="stage_two"/>
+						 	<field name="stage_three"/>
+						 	<field name="stage_four"/>
+					 	</group>
 					 </page>
 				 </notebook>
 			 </sheet>
