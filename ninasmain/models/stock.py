@@ -186,6 +186,7 @@ class CreateInvoice(models.Model):
         track_visibility='always')
     
     invoice_count = fields.Integer(compute="_invoice_count", string="Invoices")
+    checklist_count = fields.Integer(string="Checklist")
     
     @api.multi
     def _invoice_count(self):
@@ -219,8 +220,26 @@ class CreateInvoice(models.Model):
         }
     
     
+class Checklist(models.Model):
+    _name = "checklist.ticket"
     
+    name = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Employee')
+    current_stage = fields.Selection(
+        [(i, i) for i in range(13)],
+        string='Curent Stage')
     
+    stage_one = fields.Boolean(
+        string='Stage One')
+    stage_two = fields.Boolean(
+        string='Stage Two')
+    stage_three = fields.Boolean(
+        string='Stage Three')
+    stage_four = fields.Boolean(
+        string='Stage Four')
+    stage_five = fields.Boolean(
+        string='Stage Five')
     
     
     

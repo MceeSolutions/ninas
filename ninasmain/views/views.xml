@@ -129,7 +129,7 @@
         </template>
 	-->
 	
-	<!-- Job Application Form -->
+	<!-- Job Application Form 
 	<template id="ninas_report_header_custom" inherit_id="website_hr_recruitment.apply">
 		<xpath expr="//h1" position="replace">
             <h1 class="text-center">Recruitment Form</h1>
@@ -178,7 +178,7 @@
 				</div>
 			</div>
 		</xpath>
-    </template>
+    </template>-->
 	
 	
     <!-- Loan Request action-->          

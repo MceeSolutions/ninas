@@ -138,12 +138,64 @@
 			</xpath>
 			<xpath expr="//button[@name='toggle_active']" position="before">
 		    	<button type="action" class="oe_stat_button" name="%(account.action_invoice_tree1)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
+                	<field string="Checklist" name="checklist_count" widget="statinfo"/>
+               </button>
+			</xpath>
+			<xpath expr="//button[@name='toggle_active']" position="before">
+		    	<button type="action" class="oe_stat_button" name="%(account.action_invoice_tree1)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
                                 <field string="Invoices" name="invoice_count" widget="statinfo"/>
                             </button>
 			</xpath>
            </field>
     </record>
     
+    
+    <!-- checklist.ticket  tree view-->
+    <record id="checklist_ticket_tree_view" model="ir.ui.view">
+		<field name="name">checklist.ticket.tree</field>
+		<field name="model">checklist.ticket</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="name"/>
+			<field name="current_stage"/>
+		</field>
+	</record>
+
+    <record id="loan_request_form" model="ir.ui.view">
+    <field name="name">checklist.ticket.form</field>
+    <field name="model">checklist.ticket</field>
+    <field name="priority" eval="2"/>
+    <field name="arch" type="xml">
+        <form string="Loan">
+			 <sheet>
+				 <group string="Request" col="4" colspan="4">
+				 <field name="name"/>
+				 <field name="current_stage"/>
+				 </group>
+				 <notebook>
+					 <page>
+					 <group>
+					<field name="stage_one"/>
+				 	<field name="stage_two"/>
+				 	<field name="stage_three"/>
+				 	<field name="stage_four"/>
+				 	</group>
+					 </page>
+				 </notebook>
+			 </sheet>
+        </form>
+    </field>
+    </record>
+    
+    <!-- checklist ticket action-->
+    <record model="ir.actions.act_window" id="ninas_checklist_ticket_action">
+		<field name="name">checklist ticket</field>
+		<field name="res_model">checklist.ticket</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
     
     <record id="purchase_rfq" model="ir.actions.act_window">
         <field name="name">Requests for Quotation</field>
