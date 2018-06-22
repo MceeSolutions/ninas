@@ -3,4 +3,4 @@
 from . import models
 from . import stock
 from . import hr
-#from . import helpdesk
+from . import helpdesk

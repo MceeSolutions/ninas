@@ -27,7 +27,7 @@
         'security/ninas_security.xml',
         'security/ir.model.access.csv',
         'data/data.xml',
-#        'views/helpdesk_views.xml',
+        'views/helpdesk_views.xml',
         'views/stock_view.xml',
         'views/hr_views.xml',
         'views/views.xml'
