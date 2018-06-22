@@ -174,7 +174,7 @@
 				 </group>
 				 <notebook>
 					<page name="stages" string="Stages">
-						 <group>
+						 <group col="4" colspan="2">
 							<field name="stage_one"/>
 						 	<field name="stage_two"/>
 						 	<field name="stage_three"/>
