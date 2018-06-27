@@ -71,15 +71,9 @@ class LoanRequest(models.Model):
         comodel_name="hr.employee",
         string='Person Requesting Loan', required=True)
     purpose = fields.Char(
-        string='Purpose of Loan')
+        string='Purpose of Loan', required=True)
     terms_ofloan = fields.Char(
         string='Terms of Loan')
-    loan_amount = fields.Char(string='Loan Amount')
-    currency = fields.Selection([
-        ('naira','Naira'),('dollar','Dollar')],
-        string='Currency')
-    total = fields.Char(
-        string='Total')
     repayment = fields.Selection([
         ('soon','As soon as there is funding'),('other','Other')],
         string='Repayment')
@@ -95,16 +89,13 @@ class LoanRequest(models.Model):
     date_recevfrom = fields.Date(string='Date', readonly=True)
     date_recevfromname = fields.Date(string='Date', readonly=True)
     
-    currency_id = fields.Many2one('res.currency', 'Currency', required=False,\
-        default=lambda self: self.env.user.company_id.currency_id.id)
-    total_ng = fields.Monetary(
-        string='Total (NGN)', readonly=True)
-    total_usd = fields.Monetary(
-        string='Total (USD)', readonly=True)
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    amount_total = fields.Monetary(compute='_total_naira',
+        string='Total Amount', readonly=True, store=True)
     
     loan_line_ids = fields.One2many(
         comodel_name='loan.req',
-        inverse_name='currency_id')
+        inverse_name='employee_id')
     
     @api.multi
     def button_reset(self):
@@ -139,21 +130,22 @@ class LoanRequest(models.Model):
     def button_reject(self):
         self.write({'state': 'reject'})
         return {}
+    
+    @api.depends('loan_line_ids.loan_amount')
+    def _total_naira(self):
+        amount_total = 0.0
+        for line in self.loan_line_ids:
+            self.amount_total += line.loan_amount
 
 class LoanReq(models.Model):
     _name = 'loan.req'
     
-    loan_amount = fields.Char(string='Loan Amount', required=True)
-    currency_id = fields.Many2one('res.currency', 'Currency', required=True,\
-        default=lambda self: self.env.user.company_id.currency_id.id)
+    loan_amount = fields.Monetary(string='Loan Amount')
     
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    
+    employee_id = fields.Many2one('loan.request', 'Employee', invisible=True)
 
-    naira_currency = fields.Monetary(
-        string = 'Naira (NGN)'
-        )
-    naira_dollar = fields.Monetary(
-        string = 'Dollar (USD)'
-        )
         
     
 class TravelRequest(models.Model):
@@ -217,12 +209,12 @@ class TravelRequest(models.Model):
         comodel_name = 'res.users',
         string='Admin and Finance', readonly=True)
     admin_date = fields.Date(
-        string='Date')
+        string='Date', readonly=True)
     ceo_sign = fields.Many2one(
         comodel_name = 'res.users',
         string='CEO Sign', readonly=True)
     ceo_date = fields.Date(
-        string='Date')
+        string='Date', readonly=True)
     
     account_ids = fields.Many2many(
         comodel_name='account.account')

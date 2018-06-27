@@ -12,3 +12,5 @@ access_ninas_bank_voucher_emp,ninas.bank_voucher,model_ninas_bank_voucher,base.g
 access_bank_voucher_emp,bank.voucher,model_bank_voucher,base.group_user,1,1,1,0
 access_ninas_expense_claim_emp,ninas.expense_claim,model_ninas_expense_claim,base.group_user,1,1,1,0
 access_expense_claim_emp,expense.claim,model_expense_claim,base.group_user,1,1,1,0
+access_ninas_loan_req_emp,loan.req,model_loan_req,base.group_user,1,1,1,0
+access_ninas_checklist_ticket_emp,checklist.ticket,model_checklist_ticket,base.group_user,1,1,1,0

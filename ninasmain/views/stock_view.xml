@@ -137,14 +137,14 @@
                 	<button type="object" name="action_create_new" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new"/>
 			</xpath>
 			<xpath expr="//button[@name='toggle_active']" position="before">
-		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
+		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
                 	<field string="Checklist" name="checklist_count" widget="statinfo"/>
                </button>
 			</xpath>
 			<xpath expr="//button[@name='toggle_active']" position="before">
 		    	<button type="action" class="oe_stat_button" name="%(account.action_invoice_tree1)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
-                                <field string="Invoices" name="invoice_count" widget="statinfo"/>
-                            </button>
+                   <field string="Invoices" name="invoice_count" widget="statinfo"/>
+               </button>
 			</xpath>
            </field>
     </record>
