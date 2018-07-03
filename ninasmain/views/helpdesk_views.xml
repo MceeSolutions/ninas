@@ -107,7 +107,7 @@
            <xpath expr="//button[@class='btn btn-primary']" position="replace">
                         <button class="btn btn-primary" name="128" type="action">Applications</button>
 			</xpath>
-			 <!-- <xpath expr="//a[@name='120']" position="replace">
+			<xpath expr="//a[@name='120']" position="replace">
 	                 <a name="120" type="action" context="{'search_default_team_id': active_id, 'default_team_id': active_id}"><t t-esc="record.upcoming_sla_fail_tickets.raw_value"/> Applications to Review</a>
 			</xpath>
 			<xpath expr="//a[@name='129']" position="replace">
@@ -115,7 +115,7 @@
 			</xpath>
 			<xpath expr="//a[@name='133']" position="replace">
 	                <a name="133" type="action">Opened Application Analysis</a>
-			</xpath>-->
+			</xpath>
 			<xpath expr="//div[@class='o_kanban_card_manage_title']" position="replace">
 				<div class="o_kanban_card_manage_title">
                     <span>View Applications</span>
