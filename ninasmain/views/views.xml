@@ -76,6 +76,7 @@
        <xpath expr="//page[@name='public']" position="inside">
 	             <group col="4" colspan="4">
 					<field name="title"/>
+					<field name="levelof_exp" widget="priority"/>
 					<field name="employee"/>
 					<field name="Training_date"/>
 					<field name="start_date"/>
@@ -270,12 +271,12 @@
     <field name="arch" type="xml">
         <form string="Loan">
         	<header>
-        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
-        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
-        		<button name="button_reject" string="Rejected" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit" groups="ninasmain.group_hr_line_manager"/>
+        		<button name="button_reject" string="Rejected" type="object" class="btn btn-danger" states="submit" groups="ninasmain.group_hr_line_manager"/>
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
-        		<button name="button_paid" string="Paid" type="object" class="btn btn-primary" states="approve"/>
-        		<button name="button_confirm" string="Confirm Payment" type="object" class="btn btn-primary" states="paid"/>
+        		<button name="button_paid" string="Paid" type="object" class="btn btn-primary" states="approve" groups="ninasmain.group_admin_finance_officer"/>
+        		<button name="button_confirm" string="Confirm Payment" type="object" class="btn btn-primary" states="paid" groups="base.group_user"/>
         		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve" readonly="1"/>
         	</header>
 			 <sheet>
@@ -286,15 +287,13 @@
 				 <notebook>
 					 <page string="Terms Of Loan">
 					 	<field name="loan_line_ids">
-							<tree>
+							<tree editable="True">
 								<field name="loan_amount"/>
-								<field name="naira_currency"/>
-								<field name="naira_dollar"/>
+								<field name="currency_id"/>
 							</tree>
 						</field>
 						<group class="oe_subtotal_footer oe_right">
-                           <field name="total_ng" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                           <field name="total_usd" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                           <field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
 					 </page>
 				 </notebook>
@@ -340,12 +339,12 @@
     <field name="arch" type="xml">
         <form string="Travel">
         	<header>
-        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
-        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
-        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit" groups="ninasmain.group_hr_line_manager"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit" groups="ninasmain.group_hr_line_manager"/>
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
-        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
-        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve" groups="ninasmain.group_admin_finance_officer"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate" groups="ninasmain.group_ceo"/>
         		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 			 <sheet>
@@ -526,12 +525,12 @@
 		<field name="arch" type="xml">
 			<form string="Advance Request Form">
 				<header>
-        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
-        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
-        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit" groups="ninasmain.group_hr_line_manager"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit" groups="ninasmain.group_hr_line_manager"/>
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
-        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
-        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve" groups="ninasmain.group_admin_finance_officer"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate" groups="ninasmain.group_ceo"/>
         		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 				<sheet>
@@ -593,12 +592,12 @@
 		<field name="arch" type="xml">
 			<form string="Back-to-office Mission Report">
 			<header>
-        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
-        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
-        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit" groups="ninasmain.group_hr_line_manager"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit" groups="ninasmain.group_hr_line_manager"/>
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
-        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
-        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve" groups="ninasmain.group_admin_finance_officer"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate" groups="ninasmain.group_ceo"/>
         		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 				<sheet>
@@ -652,12 +651,12 @@
 		<field name="arch" type="xml">
 			<form string="Bank Payment Voucher">
 			<header>
-        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
-        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
-        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit" groups="ninasmain.group_hr_line_manager"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit" groups="ninasmain.group_hr_line_manager"/>
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
-        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
-        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve" groups="ninasmain.group_admin_finance_officer"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate" groups="ninasmain.group_ceo"/>
         		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 				<sheet>
@@ -746,12 +745,12 @@
 		<field name="arch" type="xml">
 			<form string="Expense Claim Form">
 			<header>
-        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
-        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
-        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit"/>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit" groups="ninasmain.group_hr_line_manager"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit" groups="ninasmain.group_hr_line_manager"/>
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
-        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve"/>
-        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate"/>
+        		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve" groups="ninasmain.group_admin_finance_officer"/>
+        		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate" groups="ninasmain.group_ceo"/>
         		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 				<sheet>
