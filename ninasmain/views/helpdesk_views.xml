@@ -1,9 +1,9 @@
 <odoo>
   <data>
   
-  	<menuitem id="menu_helpdesk_root" name="Accreditation"
+  	<menuitem id="helpdesk.menu_helpdesk_root" name="Accreditation"
         sequence="25"
-        web_icon="helpdesk,static/description/icon.png"
+        web_icon="ninasmain,static/icon/ninas-logo.png"
         groups="helpdesk.group_helpdesk_user"/>
   
 	<template id="ninas_website_helpdesk_form_ticket_submit" inherit_id="website_helpdesk_form.ticket_submit">
