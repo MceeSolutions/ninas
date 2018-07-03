@@ -36,10 +36,10 @@
            		
            		<div class="form-group form-field o_website_form_custom">
                 	<div class="col-md-3 col-sm-4 text-right">
-                 		<label class="control-label" for="attachment_ids">Attachments</label>
+                 		<label class="control-label" for="attachments">Attachments</label>
 	               </div>
 	               <div class="col-md-7 col-sm-8">
-	                 <input type="file" class="form-control o_website_form_input" name="attachment_ids" required="1" multiple=""/>
+	                 <input type="file" class="form-control o_website_form_input" name="attachments" required="1" multiple=""/>
 	               </div>
 	          </div> 
 	          
@@ -97,6 +97,23 @@
             
         </template>
         
+        
+        
+        <!-- function -->
+        
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+        <value>helpdesk.ticket</value>
+        <value eval="[
+            'partner_name',
+            'partner_email',
+            'name',
+            'description',
+            'team_id',
+            'partner_id',
+            'funding',
+            'assesment_type'
+        ]"/>
+    </function>
         
        <record id="ninas_helpdesk_team_view_kanban" model="ir.ui.view">
         <field name="name">helpdesk.team.form</field>
