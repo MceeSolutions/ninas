@@ -186,13 +186,14 @@ class CreateInvoice(models.Model):
         track_visibility='always')
     
     invoice_count = fields.Integer(compute="_invoice_count", string="Invoices")
-    checklist_count = fields.Integer(string="Checklist")
+    checklist_count = fields.Integer(compute="_checklist_count",string="Checklist")
+    car_count = fields.Integer(compute="_car_count",string="C.A.R")
     
     @api.multi
     def _invoice_count(self):
         oe_invoice = self.env['account.invoice']
         for inv in self:
-            invoice_ids = self.env['account.invoice'].search([('applicant', '=', inv.id)])
+            invoice_ids = self.env['account.invoice'].search([('applicant', '=',inv.id)])
             invoices = oe_invoice.browse(invoice_ids)
             invoice_count = 0
             for inv_id in invoices:
@@ -200,6 +201,31 @@ class CreateInvoice(models.Model):
             inv.invoice_count = invoice_count
         return True
 
+    @api.multi
+    def _checklist_count(self):
+        oe_checklist = self.env['checklist.ticket']
+        for pa in self:
+            domain = [('ticket_id', '=', pa.id)]
+            pres_ids = oe_checklist.search(domain)
+            pres = oe_checklist.browse(pres_ids)
+            pres_count = 0
+            for pr in pres:
+                pres_count+=1
+            pa.checklist_count = pres_count
+        return True
+    
+    @api.multi
+    def _car_count(self):
+        car_rep = self.env['car.report']
+        for car in self:
+            domain = [('ticket_id', '=', car.id)]
+            car_ids = car_rep.search(domain)
+            cars = car_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.car_count = car_count
+        return True
     
     @api.multi
     def action_create_new(self):
@@ -230,6 +256,8 @@ class Checklist(models.Model):
         [(i, i) for i in range(13)],
         string='Curent Stage')
     
+    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
+    
     stage_one = fields.Boolean(
         string='Stage One')
     stage_two = fields.Boolean(
@@ -242,13 +270,25 @@ class Checklist(models.Model):
         string='Stage Five')
     
     
+class CarReport(models.Model):
+    _name = 'car.report'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
-    
-    
-    
-    
-    
-    
+    name = fields.Char(string='Organization Name')
+    ref_no = fields.Integer(string='Reference No:')
+    faculty_rep = fields.Char(string='Name/Signature of Facility Representative:')
+    scope_assessed = fields.Char(string='Scope Assessed:')
+    rel_equip = fields.Char(string='Relevant Standard Requirement')
+    name_lead =fields.Char(string='Name/Signature of Lead Assessor / Date')
+    name_rep = fields.Char(string='Name /Signature of Representative/ Date')
+    root_cause = fields.Text(string='(Root Cause Analysis)')
+    corrective_action = fields.Text(string='Clearly indicate what corrective action was taken and attach supporting evidence')
+    rep_sign = fields.Date(string='Signature of Representative/ Date')
+    assessor_nc = fields.Text(string='Comment on the effectiveness of clearance of the NC')
+    assessor_sign = fields.Date(string='Signature of Assessor/ Date')
+    implemantation = fields.Text(string='Comment on the implementation of the corrective actions')
+    sign_assessor = fields.Date(string='Signature of Assessor/ Date')
+    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
     
     
     

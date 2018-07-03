@@ -1,18 +1,172 @@
 <odoo>
   <data>
   
+  	<menuitem id="helpdesk.menu_helpdesk_root" name="Accreditation"
+        sequence="25"
+        web_icon="ninasmain,static/icon/ninas-logo.png"
+        groups="helpdesk.group_helpdesk_user"/>
+  
 	<template id="ninas_website_helpdesk_form_ticket_submit" inherit_id="website_helpdesk_form.ticket_submit">
             <xpath expr="//div[@class='form-group']" position="before">
+           		
+           		<div class="form-group form-field o_website_form_required">
+		              <div class="col-md-3 col-sm-4 text-right">
+		                  <label class="control-label" for="funding">Funding</label>
+		              </div>
+		              <div class="col-md-7 col-sm-8">
+		              	<select name="funding">
+							  <option value="not">Not Funded</option>
+							  <option value="part">Partly Funded</option>
+							  <option value="full">Fully Funded</option>
+						</select>
+		              </div>
+		          </div>
+		          
+		          <div class="form-group form-field o_website_form_required">
+		              <div class="col-md-3 col-sm-4 text-right">
+		                  <label class="control-label" for="assesment_type">Assesment TYpe</label>
+		              </div>
+		              <div class="col-md-7 col-sm-8">
+		              	<select name="assesment_type">
+							  <option value="iso2">ISO 2</option>
+							  <option value="iso1">ISO 1</option>
+						</select>
+		              </div>
+		          </div>
+           		
            		<div class="form-group form-field o_website_form_custom">
                 	<div class="col-md-3 col-sm-4 text-right">
-                 		<label class="control-label" for="attachment_ids">Attachment</label>
+                 		<label class="control-label" for="attachments">Attachments</label>
 	               </div>
 	               <div class="col-md-7 col-sm-8">
-	                 <input type="file" class="form-control o_website_form_input" name="attachment_ids"/>
+	                 <input type="file" class="form-control o_website_form_input" name="attachments" required="1" multiple=""/>
 	               </div>
 	          </div> 
+	          
+	          <!-- <div class="form-group form-field o_website_form_custom">
+                	<div class="col-md-3 col-sm-4 text-right">
+                 		<label class="control-label" for="attachment_id">Attachment two</label>
+	               </div>
+	               <div class="col-md-7 col-sm-8">
+	                 <input type="file" class="form-control o_website_form_input" name="attachment_id" required="1"/>
+	               </div>
+	          </div>  -->
+            </xpath>
+            
+            
+        <xpath expr="//t[@t-set='additional_title']" position="replace">
+	         	<t t-set="additional_title">Applications</t>
+       </xpath>
+            
+  	</template>
+        
+        
+        <template id="ninas_website_helpdesk_form_ticket_submited" inherit_id="website_helpdesk_form.ticket_submited">
+            <xpath expr="//div[@class='container']" position="replace">
+           		<div clas="row">
+                        <t t-if="request.session.get('form_builder_model_model', '') == 'helpdesk.ticket'">
+                            <t t-set="ticket" t-value="request.website._website_form_last_record().sudo()"/>
+                        </t>
+                        <h1 class="text-center"><i class="fa fa-check-circle fa-2x text-success" /></h1>
+                        <t t-if="ticket">
+                            <h1 class="text-center">Your Application Number is <a t-if="request.session.uid" t-attf-href="/helpdesk/ticket/#{ticket.id}">#<span t-field="ticket.id"/></a><t t-if="not request.session.get('uid')">#<span t-field="ticket.id"/></t>.</h1>
+                        </t>
+                        <h1 class="text-center">Thank you for submitting your Application, our team will get right on it!</h1>
+                    </div>
             </xpath>
         </template>
+        
+        <template id="ninas_team" inherit_id="website_helpdesk.team">
+            <xpath expr="//div[@class='navbar-header']" position="replace">
+           		 <div class="navbar-header">
+                        <div class="navbar-brand">Accreditation</div>
+                    </div>
+            </xpath>
+            
+            <xpath expr="//a[@t-attf-href='/helpdesk/#{team.id}/submit']" position="replace">
+                 	<a id="submit-ticket" t-attf-href="/helpdesk/#{team.id}/submit">
+                    	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">Submit an Application</button>
+                    </a>
+            </xpath>
+            
+            <xpath expr="//a[@t-attf-href='/my/tickets']" position="replace">
+                 	<a id="submit-ticket" t-attf-href="/my/tickets">
+                    	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">View my Application</button>
+                  	</a>
+            </xpath>
+            
+        </template>
+        
+        
+        
+        <!-- function -->
+        
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+        <value>helpdesk.ticket</value>
+        <value eval="[
+            'partner_name',
+            'partner_email',
+            'name',
+            'description',
+            'team_id',
+            'partner_id',
+            'funding',
+            'assesment_type'
+        ]"/>
+    </function>
+        
+       <record id="ninas_helpdesk_team_view_kanban" model="ir.ui.view">
+        <field name="name">helpdesk.team.form</field>
+        <field name="model">helpdesk.team</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_kanban"/>
+        <field name="arch" type="xml">
+           <!-- <xpath expr="//button[@class='btn btn-primary']" position="replace">
+                        <button class="btn btn-primary" name="128" type="action">Applications</button>
+			</xpath>
+			 <xpath expr="//a[@name='120']" position="replace">
+	                 <a name="120" type="action" context="{'search_default_team_id': active_id, 'default_team_id': active_id}"><t t-esc="record.upcoming_sla_fail_tickets.raw_value"/> Applications to Review</a>
+			</xpath>
+			<xpath expr="//a[@name='129']" position="replace">
+	                <a name="129" type="action" context="{'search_default_team_id': active_id, 'default_team_id': active_id}"><t t-esc="record.unassigned_tickets.raw_value"/> Unassigned Applications</a>
+			</xpath>
+			<xpath expr="//a[@name='133']" position="replace">
+	                <a name="133" type="action">Opened Application Analysis</a>
+			</xpath>-->
+			<xpath expr="//div[@class='o_kanban_card_manage_title']" position="replace">
+				<div class="o_kanban_card_manage_title">
+                    <span>View Applications</span>
+                </div>
+	        </xpath>
+		</field>
+    </record>
+        
+        <record id="ninas_helpdesk_ticket_view_form" model="ir.ui.view">
+        <field name="name">ninas.helpdesk.ticket</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority" eval="7"/>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <field name="team_id" position="replace">
+                <field name="team_id" invisible="1"/>
+            </field>
+            <field name="team_id" position="after">
+                <field name="assesmentteam_id" widget="many2many_tags"/>
+            </field>
+             <field name="ticket_type_id" position="replace">
+                <field name="ticket_type_id" invisible="1"/>
+            </field>
+            <field name="ticket_type_id" position="after">
+                <field name="assesment_type"/>
+            </field>
+            <field name="ticket_type_id" position="after">
+                <field name="funding"/>
+            </field>
+        </field>
+    </record>
+    
+    
+    
         
   </data>
 </odoo>
