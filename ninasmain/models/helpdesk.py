@@ -8,7 +8,7 @@ import datetime
 from datetime import date, timedelta
 from odoo import api, fields, models
 #from gevent._ssl3 import name
-from plainbox.impl.unit import file
+#from plainbox.impl.unit import file
 
 
 class Accreditation(models.Model):
