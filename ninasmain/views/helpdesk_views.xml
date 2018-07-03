@@ -104,10 +104,10 @@
         <field name="priority" eval="7" />
         <field name="inherit_id" ref="helpdesk.helpdesk_team_view_kanban"/>
         <field name="arch" type="xml">
-            <!-- <xpath expr="//button[@name='128']" position="replace">
-	                <button class="btn btn-primary" name="128" type="action">Applications</button>
+           <xpath expr="//button[@class='btn btn-primary']" position="replace">
+                        <button class="btn btn-primary" name="128" type="action">Applications</button>
 			</xpath>
-			<xpath expr="//a[@name='120']" position="replace">
+			 <!-- <xpath expr="//a[@name='120']" position="replace">
 	                 <a name="120" type="action" context="{'search_default_team_id': active_id, 'default_team_id': active_id}"><t t-esc="record.upcoming_sla_fail_tickets.raw_value"/> Applications to Review</a>
 			</xpath>
 			<xpath expr="//a[@name='129']" position="replace">
