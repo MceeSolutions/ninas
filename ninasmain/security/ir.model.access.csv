@@ -14,3 +14,4 @@ access_ninas_expense_claim_emp,ninas.expense_claim,model_ninas_expense_claim,bas
 access_expense_claim_emp,expense.claim,model_expense_claim,base.group_user,1,1,1,0
 access_ninas_loan_req_emp,loan.req,model_loan_req,base.group_user,1,1,1,0
 access_ninas_checklist_ticket_emp,checklist.ticket,model_checklist_ticket,base.group_user,1,1,1,0
+access_ninas_car_report_assessor,car.report,model_car_report,base.group_user,1,1,1,0

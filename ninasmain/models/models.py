@@ -34,6 +34,12 @@ class Employee(models.Model):
     start_date = fields.Date(string='Start Date')
     salary = fields.Char(string='Salary')
     Training_date = fields.Date(string='Training Date')
+    levelof_exp = fields.Selection([
+        ('0', 'All'),
+        ('1', 'Beginner'),
+        ('2', 'Intermediate'),
+        ('3', 'Professional')], string='Level Of Expertise',
+        default='1')
 
 class HrAppraisals(models.Model):
     _inherit = "hr.appraisal"
@@ -907,17 +913,48 @@ class ExpenseClaim(models.Model):
     total = fields.Integer(
         string='Total Amount',
         )
+
+class StoreReqEdit(models.Model):
+    _name = "stock.picking"
+    _inherit = 'stock.picking'
     
+    location_id = fields.Many2one(
+        'stock.location', "Source Location",
+        default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_src_id,
+        readonly=False, required=True,
+        states={'draft': [('readonly', False)]})
+    location_dest_id = fields.Many2one(
+        'stock.location', "Destination Location",
+        default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_dest_id,
+        readonly=True, required=True,
+        states={'draft': [('readonly', False)]})
     
+    @api.multi
+    def manager_confirm(self):
+        for order in self:
+            order.write({'man_confirm': True})
+        return True
     
+    def _default_owner(self):
+        return self.env.context.get('default_employee_id') or self.env['res.users'].browse(self.env.uid).partner_id
     
+    def _default_employee(self):
+        self.env['hr.employee'].search([('user_id','=',self.env.uid)])
+        return self.env['hr.employee'].search([('user_id','=',self.env.uid)])
     
+    owner_id = fields.Many2one('res.partner', 'Owner',
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, default=_default_owner,
+        help="Default Owner")
     
+    employee_id = fields.Many2one('hr.employee', 'Employee',
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, default=_default_employee,
+        help="Default Owner")
     
+    man_confirm = fields.Boolean('Manager Confirmation', track_visibility='onchange')
     
+    @api.multi
+    def button_reset(self):
+        self.mapped('move_lines')._action_cancel()
+        self.write({'state': 'draft'})
+        return {}
     
-    
-    
-    
-    
-   

@@ -76,6 +76,7 @@
        <xpath expr="//page[@name='public']" position="inside">
 	             <group col="4" colspan="4">
 					<field name="title"/>
+					<field name="levelof_exp" widget="priority"/>
 					<field name="employee"/>
 					<field name="Training_date"/>
 					<field name="start_date"/>
