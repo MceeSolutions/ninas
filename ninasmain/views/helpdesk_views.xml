@@ -15,22 +15,23 @@
 		              </div>
 		              <div class="col-md-7 col-sm-8">
 		              	<select name="funding">
-							  <option value="not">Not Funded</option>
-							  <option value="part">Partly Funded</option>
-							  <option value="full">Fully Funded</option>
+							  <option value="not_funded">Not Funded</option>
+							  <option value="partly_funded">Partly Funded</option>
+							  <option value="fully_funded">Fully Funded</option>
 						</select>
 		              </div>
 		          </div>
 		          
 		          <div class="form-group form-field o_website_form_required">
 		              <div class="col-md-3 col-sm-4 text-right">
-		                  <label class="control-label" for="assesment_type">Assesment TYpe</label>
+		                  <label class="control-label" for="assessment_type">Assessment Type</label>
 		              </div>
 		              <div class="col-md-7 col-sm-8">
-		              	<select name="assesment_type">
-							  <option value="iso2">ISO 2</option>
-							  <option value="iso1">ISO 1</option>
-						</select>
+		              	<select class="form-control" name="assessment_type_id">
+						     <t t-foreach="assessment_type_id" t-as="assessment_type">
+						          <option t-attf-value="#{assessment_type.id}"><t t-esc="assessment_type.name"/></option>
+						     </t>
+						 </select>
 		              </div>
 		          </div>
            		
@@ -111,7 +112,7 @@
             'team_id',
             'partner_id',
             'funding',
-            'assesment_type'
+            'assessment_type_id'
         ]"/>
     </function>
         
@@ -151,13 +152,13 @@
                 <field name="team_id" invisible="1"/>
             </field>
             <field name="team_id" position="after">
-                <field name="assesmentteam_id" widget="many2many_tags"/>
+                <field name="assessment_team_id" widget="many2many_tags"/>
             </field>
              <field name="ticket_type_id" position="replace">
                 <field name="ticket_type_id" invisible="1"/>
             </field>
             <field name="ticket_type_id" position="after">
-                <field name="assesment_type"/>
+                <field name="assessment_type_id"/>
             </field>
             <field name="ticket_type_id" position="after">
                 <field name="funding"/>
@@ -165,8 +166,33 @@
         </field>
     </record>
     
+    <record id="ninas_assessment_type_form_view" model="ir.ui.view">
+    <field name="name">assessment.type.form</field>
+    <field name="model">assessment.type</field>
+    <field name="priority" eval="2"/>
+    <field name="arch" type="xml">
+        <form string="Assessment Type">
+			 <sheet>
+				 <group>
+				 <field name="name"/>
+					 <field name="attachment_ids" widget="many2many_binary"/>
+				 </group>
+			 </sheet>
+        </form>
+    </field>
+    </record>
     
+  <!-- assessment type action -->
+    <record model="ir.actions.act_window" id="ninas_assessment_type_action">
+		<field name="name">Assessment Type</field>
+		<field name="res_model">assessment.type</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
     
+  <menuitem name="Assesment Type" id="ninas_assessment_type" parent="helpdesk.helpdesk_menu_config" action="ninas_assessment_type_action"/>
         
   </data>
 </odoo>
