@@ -7,6 +7,8 @@ import datetime
 
 from datetime import date, timedelta
 from odoo import api, fields, models
+#from gevent._ssl3 import name
+from plainbox.impl.unit import file
 
 
 class Accreditation(models.Model):
@@ -14,19 +16,34 @@ class Accreditation(models.Model):
     
     attachment_ids = fields.Many2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'helpdesk.ticket')], string='Attachments')
 
-    assesmentteam_id = fields.Many2many(comodel_name='res.users',
-                                     string='Assesment Team')
+    assessment_team_id = fields.Many2many(comodel_name='res.users',
+                                     string='Assessment Team')
     
-    assesment_type = fields.Selection(
-        [('iso2','ISO 2'),('iso1', 'ISO 1')],
+    assessment_type_id = fields.Many2one(
+        comodel_name='assessment.type',
         string='Assesment Type',
-        default='iso2',
         track_visibility='onchange')
     
     funding = fields.Selection(
-        [('not','Not Funded'),('part', 'Partly Funded'),('full', 'Fully Funded')],
+        [('not_funded','Not Funded'),('partly_funded', 'Partly Funded'),('fully_funded', 'Fully Funded')],
         string='Funding',
-        default='not',
+        default='not_funded',
         track_visibility='onchange')
     
     user_id = fields.Many2one('res.users', string='Lead Assesor', track_visibility='onchange', domain=lambda self: [('groups_id', 'in', self.env.ref('helpdesk.group_helpdesk_user').id)])
+
+
+class AssessmentType(models.Model):
+    _name = 'assessment.type'
+    
+    name = fields.Char(string='Assessment Type')
+    attachment_ids = fields.Many2many(
+        comodel_name='ir.attachment',
+        relation='ninas_assessment_type_rel',
+        column1='assessment_type_id',
+        column2='attachment_id',
+        string='Attachment')
+    
+
+    
+    
