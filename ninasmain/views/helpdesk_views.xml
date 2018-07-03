@@ -98,13 +98,13 @@
         </template>
         
         
-        s<record id="ninas_helpdesk_team_view_kanban" model="ir.ui.view">
+       <record id="ninas_helpdesk_team_view_kanban" model="ir.ui.view">
         <field name="name">helpdesk.team.form</field>
         <field name="model">helpdesk.team</field>
         <field name="priority" eval="7" />
         <field name="inherit_id" ref="helpdesk.helpdesk_team_view_kanban"/>
         <field name="arch" type="xml">
-           <xpath expr="//button[@name='128']" position="replace">
+            <!-- <xpath expr="//button[@name='128']" position="replace">
 	                <button class="btn btn-primary" name="128" type="action">Applications</button>
 			</xpath>
 			<xpath expr="//a[@name='120']" position="replace">
@@ -115,7 +115,7 @@
 			</xpath>
 			<xpath expr="//a[@name='133']" position="replace">
 	                <a name="133" type="action">Opened Application Analysis</a>
-			</xpath>
+			</xpath>-->
 			<xpath expr="//div[@class='o_kanban_card_manage_title']" position="replace">
 				<div class="o_kanban_card_manage_title">
                     <span>View Applications</span>
