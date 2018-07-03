@@ -1,5 +1,26 @@
 <odoo>
   <data>
+  
+   <!-- Car Report action-->
+    <record model="ir.actions.act_window" id="ninas_car_report_action">
+		<field name="name">Car Report</field>
+		<field name="res_model">car.report</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+    
+    <!-- checklist ticket action-->
+    <record model="ir.actions.act_window" id="ninas_checklist_ticket_action">
+		<field name="name">checklist ticket</field>
+		<field name="res_model">checklist.ticket</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+  
   <!-- 
   	<record id="ninas_purchase_tree_view" model="ir.ui.view">
         <field name="name">ninas.purchase.tree</field>
@@ -396,25 +417,7 @@
     </field>
     </record>
     
-     <!-- Car Report action-->
-    <record model="ir.actions.act_window" id="ninas_car_report_action">
-		<field name="name">Car Report</field>
-		<field name="res_model">car.report</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[]</field>
-		<field name="context">{}</field>
-	</record>
     
-    <!-- checklist ticket action-->
-    <record model="ir.actions.act_window" id="ninas_checklist_ticket_action">
-		<field name="name">checklist ticket</field>
-		<field name="res_model">checklist.ticket</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[]</field>
-		<field name="context">{}</field>
-	</record>
 	
     
     <record id="purchase_rfq" model="ir.actions.act_window">
