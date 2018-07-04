@@ -152,7 +152,7 @@
                 <field name="team_id" invisible="1"/>
             </field>
             <field name="team_id" position="after">
-                <field name="assessment_team_id" widget="many2many_tags"/>
+                <field name="assessment_team_ids" widget="many2many_tags" domain="[('category_ids.is_assessor','=',True)]"/>
             </field>
              <field name="ticket_type_id" position="replace">
                 <field name="ticket_type_id" invisible="1"/>
@@ -163,6 +163,13 @@
             <field name="ticket_type_id" position="after">
                 <field name="funding"/>
             </field>
+            <field name="user_id" position="replace">
+                <field name="user_id" invisible="1"/>
+            </field>
+            <field name="user_id" position="after">
+                <field name="Lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]"/>
+            </field>
+            
         </field>
     </record>
     

@@ -1,5 +1,9 @@
 # -*-coding:utf-8-*-
 from odoo import models, fields
 
-class Employee(models.Model):
-    _inherit = 'hr.employee'
+class EmployeeCategory(models.Model):
+    _inherit = 'hr.employee.category'
+    
+    is_assessor = fields.Boolean(
+        string='Assessor?'
+        )
