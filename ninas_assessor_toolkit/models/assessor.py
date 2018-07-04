@@ -6,9 +6,8 @@ from odoo import api, fields, models
 import time
 
 
-"""class AssessorToolkit(models.Model):
+class AssessorToolkit(models.Model):
     _name = 'ninas.assessor.toolkit'
-"""
 
 
 class AssessmentFeedback(models.Model):
