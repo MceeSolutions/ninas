@@ -152,11 +152,120 @@
         <field name="domain">[]</field>
         <field name="context">{}</field>
     </record>
+
+
+    <record id="ninas_witness_template_form_view" model="ir.ui.view">
+        <field name="name">ninas.witness.template.form</field>
+        <field name="model">ninas.witness.template</field>
+        <field name="arch" type="xml">
+            <form string="Witness Template">
+                <header>
+                    <button name="lead_approve" string="Lead Approve" type="object" class="btn btn-primary" states="new,refused"/>
+                    <button name="technical_approve" string="Technical Approve" type="object" class="btn btn-primary" states="lead_approved"/>
+                    <button name="draft" string="Set to New" type="object" states="refused,lead_approved,technical_approved"/>
+                    <button name="refuse" string="Refuse" type="object" class="btn btn-danger" states="new"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="application_id"/>
+                        <field name="institution_name" readonly="1"/>
+                        <field name="institution_representative" readonly="1"/>
+                        <field name="lead_assessor_id" readonly="1" string=""/>
+                        <field name="assessment_date"/>
+                        <field name="person_observed"/>
+                    </group>
+                    <notebook>
+                        <page name="page_description" string="Description">
+                            <group string="Identification (as described on assessment schedule) and brief description of method/operation evaluated">
+                                <field name="description" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page name="page_comments" string="Detailed Comments">
+                            <group string="Detailed comments, observations and/or reference to assessor’s notes.Indicate what was demonstrated and/or talked through as applicable.">
+                                <field name="comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_additional_comments" string="Additional Comments">
+                            <group string="Additional /General Comments ( This space may also be used to expand on comments in specific sections)">
+                                <field name="additional_comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_internal_comments" string="Internal Comments">
+                            <group string="Comments on internal control procedures witnessed, and acceptability of the outcome (as applicable)">
+                                <field name="internal_comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_reference_comments" string="Internal Comments">
+                            <group string="Comments on the traceability of reference standards/materials, and the calibration and/or maintenance of measuring equipment (as applicable)">
+                                <field name="reference_comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_uncertainty_comments" string="Uncertainty Comments">
+                            <group string="Comments on uncertainty of measurement and validation data for the method/procedure as applicable (Not applicable to Inspection Bodies)">
+                                <field name="uncertainty_comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_training_comments" string="Training Comments">
+                            <group string="Comments on training, qualifications, competency and authorization record of the staff member witnessed, and the availability of a current job description.">
+                                <field name="training_comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_accomodation_comments" string="Accomodation Comments">
+                            <group string="Accommodation and environmental conditions (where applicable)">
+                                <field name="accomodation_comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_recommendation_comments" string="Recommendation Comments">
+                            <group string="Recommendation/conclusions of the assessor with regards to competence of the person and the method witnessed.">
+                                <field name="recommendation_comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>  
+
+    <record id="ninas_witness_template_tree_view" model="ir.ui.view">
+        <field name="name">ninas.witness.template.tree</field>
+        <field name="model">ninas.witness.template</field>
+        <field name="arch" type="xml">
+            <tree string="Ninas Witness Template">
+                <field name="name"/>
+                <field name="application_id"/>
+                <field name="institution_name"/>
+                <field name="institution_representative"/>
+                <field name="lead_assessor_id"/>
+                <field name="assessment_date"/>
+                <field name="person_observed"/>
+            </tree>
+        </field>
+    </record>  
+    
+    
+    <record model="ir.actions.act_window" id="ninas_witness_template_action">
+        <field name="name">Witness Template</field>
+        <field name="res_model">ninas.witness.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
     
     <menuitem name="Toolkits" id="ninas_toolkit_main_menu"/>
+
+    <menuitem name="Tools" id="ninas_toolkit_tools_main_menu" parent="ninas_toolkit_main_menu"/>
     
-    <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_main_menu" groups="base.group_portal"/>
+    <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_portal" sequence="1"/>
     
-    <menuitem name="Assessment Feedback" id="assessment_assessor_feedback_main_menu" action="ninas_assessment_assessor_action" parent="ninas_toolkit_main_menu" groups="base.group_user"/>
+    <menuitem name="Assessment Feedback" id="assessment_assessor_feedback_main_menu" action="ninas_assessment_assessor_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="2"/>
+
+    <menuitem name="Witness Template" id="witness_template_menu" action="ninas_witness_template_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="3"/>
   </data>
 </odoo>

@@ -10,9 +10,9 @@ class AssessorToolkit(models.Model):
     _name = 'ninas.assessor.toolkit'
 
 
-class AssessmentClientFeedback(models.Model):
-    _name = 'ninas.assessment.client.feedback'
-    _description = 'Ninas Assessment Client Feedback'
+class BasicToolkitData(models.Model):
+    _name = 'ninas.basic.toolkit.data'
+    _description = 'Ninas Basic Toolkit Data'
     _inherit = ['mail.thread']
 
     name = fields.Char(
@@ -57,6 +57,15 @@ class AssessmentClientFeedback(models.Model):
     comments = fields.Text(
         string='Comments', track_visibility='onchange')
 
+
+
+class AssessmentClientFeedback(models.Model):
+    _name = 'ninas.assessment.client.feedback'
+    _description = 'Ninas Assessment Client Feedback'
+    _inherit = 'ninas.basic.toolkit.data'
+
+    
+
     action_completed = fields.Text(
         string='Action Completed', track_visibility='onchange',)
 
@@ -93,16 +102,72 @@ class AssessmentAssessorFeedback(models.Model):
     matter_raised = fields.Selection(
         [('technical_committee','Technical Committee'), ('ninas_director','NiNAS Director'),
          ('ninas_administrator', 'NiNAS Administrator')],
-         string='Matters to be raise with the:')
+         string='Matters to be raise with the:',track_visibility='onchange')
 
     organization_change = fields.Boolean(
-        string='Change in organization details')
+        string='Change in organization details',track_visibility='onchange')
 
     details = fields.Text(
-        string='Details')
-
-    comments = fields.Text(
-        string='Comments')
+        string='Details',track_visibility='onchange')
 
 
 
+class AssessmentWitnessTemplate(models.Model):
+    _name = 'ninas.witness.template'
+    _description = 'Ninas Witness Template'
+    _inherit = 'ninas.basic.toolkit.data'
+
+    description = fields.Text(
+        string='Identification Description')
+
+    person_observed = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Name of Person Observed',
+        track_visibility='onchange')
+
+    additional_comments = fields.Text(
+        string='Additional Comments',
+        track_visibility='onchange')
+
+    internal_comments = fields.Text(
+        string='Internal Comments',
+        track_visibility='onchange')
+
+    reference_comments = fields.Text(
+        string='Reference Comments',
+        track_visibility='onchange')
+
+    uncertainty_comments = fields.Text(
+        string='Uncertainty Comments',
+        track_visibility='onchange')
+
+    training_comments = fields.Text(
+        string='Training Comments',
+        track_visibility='onchange')
+
+    accomodation_comments = fields.Text(
+        string='Accomodation Comments',
+        track_visibility='onchange')
+
+    recommendation_comments = fields.Text(
+        string='Recommendation Comments',
+        track_visibility='onchange')
+
+    state = fields.Selection(
+        [('new','New'),('refused','Refused'),('lead_approved','Lead Approved'), 
+        ('technical_approved','Technical Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+
+    def lead_approve(self):
+        self.write({'state':'lead_approved'})
+
+    def technical_approve(self):
+        self.write({'state':'technical_approved'})
+
+    def draft(self):
+        self.write({'state':'new', 'approval_date':False})
+
+    def refuse(self):
+        self.write({'state':'refused'})
