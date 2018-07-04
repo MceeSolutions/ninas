@@ -2,8 +2,7 @@
 # © 2018 Intelligenti <http://www.intelligenti.io>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-#'security/ninas_security.xml',
-#'security/ir.model.access.csv',
+#
 
 {
     'name': 'Ninas Assessor ToolKit',
@@ -21,6 +20,8 @@
         
     'depends': ['ninasmain'],
     'data':[
+        'security/ninas_security.xml',
+        'security/ir.model.access.csv',
         'views/assessor_view.xml'
         ],    
 }
