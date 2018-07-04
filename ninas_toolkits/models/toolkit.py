@@ -11,8 +11,8 @@ class AssessorToolkit(models.Model):
 
 
 class AssessmentFeedback(models.Model):
-    _name = 'ninas.assessment.feedback'
-    _description = 'Ninas Assessment Feedback'
+    _name = 'ninas.assessment.client.feedback'
+    _description = 'Ninas Assessment Client Feedback'
     _inherit = ['mail.thread']
 
     name = fields.Char(

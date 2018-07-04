@@ -1,10 +1,10 @@
 <odoo>
   <data>
-  	<record id="ninas_assessor_form_view" model="ir.ui.view">
-        <field name="name">ninas.assessment.feedback.form</field>
-        <field name="model">ninas.assessment.feedback</field>
+  	<record id="ninas_assessment_client_form_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.client.feedback.form</field>
+        <field name="model">ninas.assessment.client.feedback</field>
         <field name="arch" type="xml">
-            <form string="Assessment Feedback">
+            <form string="Assessment Client Feedback">
                 <header>
                     <button name="approve" string="Approve" type="object" class="btn btn-primary" states="new,refused"/>
                     <button name="draft" string="Set to New" type="object" states="refused,approved"/>
@@ -47,11 +47,11 @@
         </field>
     </record>  
 
-    <record id="ninas_assessor_tree_view" model="ir.ui.view">
-        <field name="name">ninas.assessment.feedback.tree</field>
-        <field name="model">ninas.assessment.feedback</field>
+    <record id="ninas_assessment_client_tree_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.client.feedback.tree</field>
+        <field name="model">ninas.assessment.client.feedback</field>
         <field name="arch" type="xml">
-            <tree string="Assessment Feedback">
+            <tree string="Assessment Client Feedback">
                 <field name="name"/>
                 <field name="application_id"/>
                 <field name="institution_name"/>
@@ -64,16 +64,16 @@
     </record>  
 	
 	
-	<record model="ir.actions.act_window" id="ninas_assessor_action">
-		<field name="name">Assessment Feedback</field>
-		<field name="res_model">ninas.assessment.feedback</field>
+	<record model="ir.actions.act_window" id="ninas_assessment_client_action">
+		<field name="name">Assessment Client Feedback</field>
+		<field name="res_model">ninas.assessment.client.feedback</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[]</field>
 		<field name="context">{}</field>
 	</record>
     
-    <menuitem name="Assessor Toolkits" id="ninas_assessor_toolkit_main_menu"/>
-    <menuitem name="Assessment Feedback" id="ninas_assessor_menu" action="ninas_assessor_action" parent="ninas_assessor_toolkit_main_menu"/>
+    <menuitem name="Toolkits" id="ninas_toolkit_main_menu"/>
+    <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_main_menu"/>
   </data>
 </odoo>
