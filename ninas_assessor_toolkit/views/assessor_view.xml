@@ -1,0 +1,72 @@
+<odoo>
+  <data>
+  	<record id="ninas_assessor_form_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.feedback.form</field>
+        <field name="model">ninas.assessment.feedback</field>
+        <field name="arch" type="xml">
+            <form string="Assessment Feedback">
+                <header>
+                    
+                </header>
+           	    <sheet>
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="application_id"/>
+                        <field name="institution_name" readonly="1"/>
+                        <field name="institution_representative" readonly="1"/>
+                        <field name="assessment_team_ids" widget="many2many_tags" readonly="1"/>
+                        <field name="lead_assessor_id"/>
+                        <field name="assessment_date"/>
+                    </group>
+                    <notebook>
+                        <page name="page_comments" string="Detailed Comments">
+                            <group string="Detailed comments, observations and/or reference to assessors or assessment process">
+                                <field name="comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_action_completed" string="Actions Completed">
+                            <group string="Actions Completed:">
+                                <field name="action_completed" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_feedback" string="Feedback">
+                            <group string="Feedback provided: (Please complete when and to whom feedback was given)">
+                                <field name="feedback" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>  
+
+    <record id="ninas_assessor_tree_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.feedback.tree</field>
+        <field name="model">ninas.assessment.feedback</field>
+        <field name="arch" type="xml">
+            <tree string="Assessment Feedback">
+                <field name="name"/>
+                <field name="application_id"/>
+                <field name="institution_name"/>
+                <field name="institution_representative"/>
+                <field name="assessment_team_ids"/>
+                <field name="lead_assessor_id"/>
+                <field name="assessment_date"/>
+            </tree>
+        </field>
+    </record>  
+	
+	
+	<record model="ir.actions.act_window" id="ninas_assessor_action">
+		<field name="name">Assessment Feedback</field>
+		<field name="res_model">ninas.assessment.feedback</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+    
+    <menuitem name="Assessor Toolkits" id="ninas_assessor_toolkit_main_menu"/>
+    <menuitem name="Assessment Feedback" id="ninas_assessor_menu" action="ninas_assessor_action" parent="ninas_assessor_toolkit_main_menu"/>
+  </data>
+</odoo>

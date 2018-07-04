@@ -167,7 +167,7 @@
                 <field name="user_id" invisible="1"/>
             </field>
             <field name="user_id" position="after">
-                <field name="Lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]"/>
+                <field name="lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]"/>
             </field>
             
         </field>
