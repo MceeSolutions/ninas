@@ -30,7 +30,7 @@ class Accreditation(models.Model):
         default='not_funded',
         track_visibility='onchange')
     
-    Lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assesor', track_visibility='onchange', domain=lambda self: [('groups_id', 'in', self.env.ref('helpdesk.group_helpdesk_user').id)])
+    lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor', track_visibility='onchange', domain=lambda self: [('groups_id', 'in', self.env.ref('helpdesk.group_helpdesk_user').id)])
 
 
 class AssessmentType(models.Model):
