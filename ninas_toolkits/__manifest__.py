@@ -5,15 +5,15 @@
 #
 
 {
-    'name': 'Ninas Assessor ToolKit',
-    'summary': 'Ninas Assessor ToolKit',
+    'name': 'Ninas ToolKits',
+    'summary': 'Ninas ToolKits',
     'Description': """
-                        Ninas Assessor ToolKit
+                        Ninas ToolKits
                    """,
     'author':'intelligenti.io',               
     'website': 'http://www.intelligenti.io',
     'category': 'ninas',
-    'version':'11.0.0.0.6',
+    'version':'11.0.0.0.10',
     'application': True,
     'insatallable': True,
     'auto-install': True,
@@ -21,7 +21,7 @@
     'depends': ['ninasmain'],
     'data':[
         'security/ir.model.access.csv',
-        'views/assessor_view.xml'
+        'views/toolkit_view.xml'
         ],    
 }
 

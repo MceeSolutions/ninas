@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ninas_assessment_client_feedback_user,ninas.assessment.client.feedback,model_ninas_assessment_client_feedback,base.group_user,1,1,1,0
+access_ninas_toolkit_user,ninas.assessor.toolkit,model_ninas_assessor_toolkit,base.group_user,1,1,1,0
