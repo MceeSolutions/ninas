@@ -18,7 +18,7 @@
                         <field name="institution_name" readonly="1"/>
                         <field name="institution_representative" readonly="1"/>
                         <field name="assessment_team_ids" widget="many2many_tags" readonly="1"/>
-                        <field name="lead_assessor_id"/>
+                        <field name="lead_assessor_id" readonly="1"/>
                         <field name="assessment_date"/>
                     </group>
                     <notebook>
