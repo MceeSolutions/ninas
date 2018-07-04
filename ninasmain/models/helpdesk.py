@@ -16,7 +16,7 @@ class Accreditation(models.Model):
     
     attachment_ids = fields.Many2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'helpdesk.ticket')], string='Attachments')
 
-    assessment_team_id = fields.Many2many(comodel_name='res.users',
+    assessment_team_ids = fields.Many2many(comodel_name='hr.employee',
                                      string='Assessment Team')
     
     assessment_type_id = fields.Many2one(
@@ -30,7 +30,7 @@ class Accreditation(models.Model):
         default='not_funded',
         track_visibility='onchange')
     
-    user_id = fields.Many2one('res.users', string='Lead Assesor', track_visibility='onchange', domain=lambda self: [('groups_id', 'in', self.env.ref('helpdesk.group_helpdesk_user').id)])
+    Lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assesor', track_visibility='onchange', domain=lambda self: [('groups_id', 'in', self.env.ref('helpdesk.group_helpdesk_user').id)])
 
 
 class AssessmentType(models.Model):

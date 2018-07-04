@@ -69,8 +69,19 @@
                 </field>
             </field>
         </record>
-
-        
+		
+        <!-- Employee Category  Assessor-->
+		<record id="ninas_view_employee_category_list" model="ir.ui.view">
+	        <field name="name">ninas.hr.employee.category</field>
+	        <field name="model">hr.employee.category</field>
+	        <field name="priority" eval="7"/>
+	        <field name="inherit_id" ref="hr.view_employee_category_form"/>
+	        <field name="arch" type="xml">
+	             <field name="name" position="after">
+	                <field name="is_assessor"/>
+	            </field>
+	        </field>
+	    </record>
 
         <record id="netcom_open_view_employee_profile" model="ir.actions.act_window">
             <field name="name">My Profile</field>
