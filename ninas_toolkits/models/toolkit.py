@@ -10,7 +10,7 @@ class AssessorToolkit(models.Model):
     _name = 'ninas.assessor.toolkit'
 
 
-class AssessmentFeedback(models.Model):
+class AssessmentClientFeedback(models.Model):
     _name = 'ninas.assessment.client.feedback'
     _description = 'Ninas Assessment Client Feedback'
     _inherit = ['mail.thread']
@@ -82,3 +82,27 @@ class AssessmentFeedback(models.Model):
 
     def refuse(self):
         self.write({'state':'refused'})
+
+
+class AssessmentAssessorFeedback(models.Model):
+    _name = 'ninas.assessment.assessor.feedback'
+    _inherit = 'ninas.assessment.client.feedback'
+    _description = 'Ninas Assessment Assessor Feedback'
+
+
+    matter_raised = fields.Selection(
+        [('technical_committee','Technical Committee'), ('ninas_director','NiNAS Director'),
+         ('ninas_administrator', 'NiNAS Administrator')],
+         string='Matters to be raise with the:')
+
+    organization_change = fields.Boolean(
+        string='Change in organization details')
+
+    details = fields.Text(
+        string='Details')
+
+    comments = fields.Text(
+        string='Comments')
+
+
+

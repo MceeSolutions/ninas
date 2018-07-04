@@ -72,8 +72,91 @@
 		<field name="domain">[]</field>
 		<field name="context">{}</field>
 	</record>
+
+    <record id="ninas_assessment_assessor_form_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.assessor.feedback.form</field>
+        <field name="model">ninas.assessment.assessor.feedback</field>
+        <field name="arch" type="xml">
+            <form string="Assessment Assessor Feedback">
+                <header>
+                    <button name="approve" string="Approve" type="object" class="btn btn-primary" states="new,refused"/>
+                    <button name="draft" string="Set to New" type="object" states="refused,approved"/>
+                    <button name="refuse" string="Refuse" type="object" class="btn btn-danger" states="new"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="application_id"/>
+                        <field name="institution_name" readonly="1"/>
+                        <field name="institution_representative" readonly="1"/>
+                        <field name="assessment_team_ids" widget="many2many_tags" readonly="1"/>
+                        <field name="lead_assessor_id" readonly="1"/>
+                        <field name="assessment_date"/>
+                        <field name="matter_raised"/>
+                        <field name="organization_change"/>
+                    </group>
+                    <notebook>
+                        <page name="page_details" string="Details">
+                            <field name="details" attrs="{'invisible':[('organization_change','=',False)], 'required':[('organization_change','!=',False)]}"/>
+                        </page>
+                        <page name="page_comments" string="Detailed Comments">
+                            <group string="Detailed comments, observations and/or reference to assessor’s notes. Indicate what was demonstrated and/or talked through as applicable.">
+                                <field name="comments" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_action_completed" string="Actions Completed">
+                            <group string="Actions Completed:">
+                                <field name="action_completed" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                        <page name="page_feedback" string="Feedback">
+                            <group string="Feedback provided: (Please complete when and to whom feedback was given)">
+                                <field name="feedback" nolabel="1" widget="html"/> 
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>  
+
+    <record id="ninas_assessment_assessor_tree_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.assessor.feedback.tree</field>
+        <field name="model">ninas.assessment.assessor.feedback</field>
+        <field name="arch" type="xml">
+            <tree string="Assessment Assessor Feedback">
+                <field name="name"/>
+                <field name="application_id"/>
+                <field name="institution_name"/>
+                <field name="institution_representative"/>
+                <field name="assessment_team_ids"/>
+                <field name="lead_assessor_id"/>
+                <field name="assessment_date"/>
+                <field name="matter_raised"/>
+                <field name="organization_change"/>
+            </tree>
+        </field>
+    </record>  
+    
+    
+    <record model="ir.actions.act_window" id="ninas_assessment_assessor_action">
+        <field name="name">Assessment Assessor Feedback</field>
+        <field name="res_model">ninas.assessment.assessor.feedback</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
     
     <menuitem name="Toolkits" id="ninas_toolkit_main_menu"/>
-    <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_main_menu"/>
+    
+    <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_main_menu" groups="base.group_portal"/>
+    
+    <menuitem name="Assessment Feedback" id="assessment_assessor_feedback_main_menu" action="ninas_assessment_assessor_action" parent="ninas_toolkit_main_menu" groups="base.group_user"/>
   </data>
 </odoo>
