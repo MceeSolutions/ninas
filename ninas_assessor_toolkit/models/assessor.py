@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+import time
 
 
 class AssessorToolkit(models.Model):
@@ -71,3 +72,12 @@ class AssessmentFeedback(models.Model):
         [('new','New'),('approved','Approved'),('refused','Refused')],
         string='Status',
         default='new')
+
+    def approve(self):
+        self.write({'state':'approved', 'approval_date':lambda *a: time.strftime('%Y-%m-%d')})
+
+    def draft(self):
+        self.write({'state':'new', 'approval_date':False})
+
+    def refuse(self):
+        self.write({'state':'refused'})

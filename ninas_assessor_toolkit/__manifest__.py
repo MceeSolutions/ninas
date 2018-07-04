@@ -14,7 +14,7 @@
     'author':'intelligenti.io',               
     'website': 'http://www.intelligenti.io',
     'category': 'ninas',
-    'version':'11.0.0.0.0',
+    'version':'11.0.0.0.1',
     'application': True,
     'insatallable': True,
     'auto-install': True,
