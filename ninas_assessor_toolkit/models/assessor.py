@@ -12,49 +12,62 @@ class AssessorToolkit(models.Model):
 class AssessmentFeedback(models.Model):
     _name = 'ninas.assessment.feedback'
     _description = 'Ninas Assessment Feedback'
+    _inherit = ['mail.thread']
 
     name = fields.Char(
         string='Reference No', 
-        required=True)
+        required=True,
+        track_visibility='onchange',)
 
     application_id = fields.Many2one(
         comodel_name='helpdesk.ticket', 
         string='Accreditation ID',
-        required=True)
+        required=True,
+        track_visibility='onchange',)
 
     institution_name = fields.Char(
         related='application_id.partner_id.company_name',
         string='Institution',
-        store=True)
+        store=True,
+        track_visibility='onchange',)
 
     institution_representative = fields.Char(
         related='application_id.partner_id.name',
         string='Institution Representative',
-        store=True)
+        store=True,
+        track_visibility='onchange',)
 
     assessment_team_ids = fields.Many2many(
         related='application_id.assessment_team_ids',
+        track_visibility='onchange',
         )
 
     lead_assessor_id = fields.Many2one(
         related='application_id.lead_assessor_id',
-        store=True)  
+        store=True,
+        track_visibility='onchange',)  
 
     assessment_date = fields.Date(
         string='Assessment Date', 
-        required=True)
+        required=True, 
+        track_visibility='onchange',)
 
     comments = fields.Text(
-        string='Comments')
+        string='Comments', track_visibility='onchange')
 
     action_completed = fields.Text(
-        string='Action Completed')
+        string='Action Completed', track_visibility='onchange',)
 
     feedback = fields.Text(
-        string='Feedback provided')
+        string='Feedback provided', track_visibility='onchange',)
 
     notes = fields.Text(
-        string='Note')
+        string='Note', track_visibility='onchange',)
 
     approval_date = fields.Date(
-        string='Approval Date')
+        string='Approval Date', track_visibility='onchange',)
+
+    state = fields.Selection(
+        [('new','New'),('approved','Approved'),('refused','Refused')],
+        string='Status',
+        default='new')
