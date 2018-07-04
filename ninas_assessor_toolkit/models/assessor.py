@@ -6,8 +6,9 @@ from odoo import api, fields, models
 import time
 
 
-class AssessorToolkit(models.Model):
+"""class AssessorToolkit(models.Model):
     _name = 'ninas.assessor.toolkit'
+"""
 
 
 class AssessmentFeedback(models.Model):
@@ -51,7 +52,8 @@ class AssessmentFeedback(models.Model):
     assessment_date = fields.Date(
         string='Assessment Date', 
         required=True, 
-        track_visibility='onchange',)
+        track_visibility='onchange',
+        default=lambda *a: time.strftime('%Y-%m-%d'))
 
     comments = fields.Text(
         string='Comments', track_visibility='onchange')
