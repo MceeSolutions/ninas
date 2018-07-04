@@ -7,7 +7,7 @@
             <form string="Assessment Feedback">
                 <header>
                     <button name="approve" string="Approve" type="object" class="btn btn-primary" states="new,refused"/>
-                    <button name="draft" string="Set to New" type="object" states="refused"/>
+                    <button name="draft" string="Set to New" type="object" states="refused,approved"/>
                     <button name="refuse" string="Refuse" type="object" class="btn btn-danger" states="new"/>
                     <field name="state" widget="statusbar"/>
                 </header>

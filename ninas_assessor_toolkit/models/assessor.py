@@ -3,6 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+import time
 
 
 class AssessorToolkit(models.Model):
@@ -68,6 +69,15 @@ class AssessmentFeedback(models.Model):
         string='Approval Date', track_visibility='onchange',)
 
     state = fields.Selection(
-        [('new','New'),('approved','Approved'),('refused','Refused')],
+        [('new','New'),('refused','Refused'),('approved','Approved')],
         string='Status',
         default='new')
+
+    def approve(self):
+        self.write({'state':'approved', 'approval_date':time.strftime('%Y-%m-%d')})
+
+    def draft(self):
+        self.write({'state':'new', 'approval_date':False})
+
+    def refuse(self):
+        self.write({'state':'refused'})
