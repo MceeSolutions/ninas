@@ -6,10 +6,10 @@
 #'security/ir.model.access.csv',
 
 {
-    'name': 'Ninas Accessor ToolKit',
-    'summary': 'Ninas Accessor ToolKit',
+    'name': 'Ninas Assessor ToolKit',
+    'summary': 'Ninas Assessor ToolKit',
     'Description': """
-                        Ninas Accessor ToolKit
+                        Ninas Assessor ToolKit
                    """,
     'author':'intelligenti.io',               
     'website': 'http://www.intelligenti.io',
@@ -21,7 +21,7 @@
         
     'depends': ['ninasmain'],
     'data':[
-        'views/accessor_view.xml'
+        'views/assessor_view.xml'
         ],    
 }
 

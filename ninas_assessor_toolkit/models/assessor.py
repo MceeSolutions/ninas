@@ -5,8 +5,8 @@
 from odoo import api, fields, models
 
 
-class AccessorToolkit(models.Model):
-    _name = 'ninas.accessor.toolkit'
+class AssessorToolkit(models.Model):
+    _name = 'ninas.assessor.toolkit'
 
 
 class AssessmentFeedback(models.Model):
@@ -34,23 +34,23 @@ class AssessmentFeedback(models.Model):
 
     assessment_team_ids = fields.Many2many(
         related='application_id.assessment_team_ids',
-        store=True)
+        )
 
-    lead_accessor_id = fields.Many2one(
-        related='application_id.lead_accessor_id',
+    lead_assessor_id = fields.Many2one(
+        related='application_id.lead_assessor_id',
         store=True)  
 
     assessment_date = fields.Date(
         string='Assessment Date', 
         required=True)
 
-    comments = fields.Html(
+    comments = fields.Text(
         string='Comments')
 
-    action_completed = fields.Html(
+    action_completed = fields.Text(
         string='Action Completed')
 
-    feedback = fields.Html(
+    feedback = fields.Text(
         string='Feedback provided')
 
     notes = fields.Text(
