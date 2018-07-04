@@ -69,12 +69,12 @@ class AssessmentFeedback(models.Model):
         string='Approval Date', track_visibility='onchange',)
 
     state = fields.Selection(
-        [('new','New'),('approved','Approved'),('refused','Refused')],
+        [('new','New'),('refused','Refused'),('approved','Approved')],
         string='Status',
         default='new')
 
     def approve(self):
-        self.write({'state':'approved', 'approval_date':lambda *a: time.strftime('%Y-%m-%d')})
+        self.write({'state':'approved', 'approval_date':time.strftime('%Y-%m-%d')})
 
     def draft(self):
         self.write({'state':'new', 'approval_date':False})
