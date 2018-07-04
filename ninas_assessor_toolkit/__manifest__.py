@@ -13,14 +13,13 @@
     'author':'intelligenti.io',               
     'website': 'http://www.intelligenti.io',
     'category': 'ninas',
-    'version':'11.0.0.0.4',
+    'version':'11.0.0.0.5',
     'application': True,
     'insatallable': True,
     'auto-install': True,
         
     'depends': ['ninasmain'],
     'data':[
-        'security/ninas_security.xml',
         'security/ir.model.access.csv',
         'views/assessor_view.xml'
         ],    
