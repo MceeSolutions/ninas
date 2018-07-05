@@ -320,7 +320,7 @@ class SurveillanceReport(models.Model):
             end_date = values['end_date']
         start_date = datetime.strptime(start_date, '%Y-%m-%d')
         end_date = datetime.strptime(end_date, '%Y-%m-%d')
-        duration = abs((end_date-start_date).days) + 1
+        duration = abs((end_date-start_date).days)+1
         return duration
 
     @api.model
