@@ -4,6 +4,8 @@
 
 from odoo import api, fields, models
 import time
+from datetime import datetime
+
 
 ISO_STANDARD = [('iso1','ISO1'),('iso2','ISO2')]
 
@@ -67,8 +69,6 @@ class AssessmentClientFeedback(models.Model):
     _description = 'Ninas Assessment Client Feedback'
     _inherit = 'ninas.basic.toolkit.data'
 
-    
-
     action_completed = fields.Text(
         string='Action Completed', track_visibility='onchange',)
 
@@ -121,35 +121,43 @@ class AssessmentWitnessTemplate(models.Model):
     _inherit = 'ninas.basic.toolkit.data'
 
     description = fields.Text(
-        string='Identification Description')
+        string='Identification Description',
+        track_visibility='onchange')
 
     person_observed = fields.Many2one(
         comodel_name='hr.employee',
         string='Name of Person Observed',
+        track_visibility='onchange',
         track_visibility='onchange')
 
     additional_comments = fields.Text(
         string='Additional Comments',
+        track_visibility='onchange',
         track_visibility='onchange')
 
     internal_comments = fields.Text(
         string='Internal Comments',
+        track_visibility='onchange',
         track_visibility='onchange')
 
     reference_comments = fields.Text(
         string='Reference Comments',
+        track_visibility='onchange',
         track_visibility='onchange')
 
     uncertainty_comments = fields.Text(
         string='Uncertainty Comments',
+        track_visibility='onchange',
         track_visibility='onchange')
 
     training_comments = fields.Text(
         string='Training Comments',
+        track_visibility='onchange',
         track_visibility='onchange')
 
     accomodation_comments = fields.Text(
         string='Accomodation Comments',
+        track_visibility='onchange',
         track_visibility='onchange')
 
     recommendation_comments = fields.Text(
@@ -180,20 +188,28 @@ class SurveillanceReport(models.Model):
     _name = 'ninas.surveillance.report'
     _description = 'Ninas Surveillance Report'
     _inherit = 'ninas.basic.toolkit.data'
+    _sql_constraints = [
+        ('date_check', "CHECK ( (start_date <= end_date))", "The start date must be anterior to the end date.")
+    ]
 
     location = fields.Char(
-        string='Location')
+        string='Location',
+        track_visibility='onchange')
 
     start_date = fields.Date(
         string='Start Date',
-        required=True)
+        required=True,
+        default=lambda *a: time.strftime('%Y-%m-%d'),
+        track_visibility='onchange')
 
     end_date = fields.Date(
         string='End Date',
-        required=True)
+        required=True,
+        track_visibility='onchange')
 
     duration = fields.Integer(
-        string='Duration (days)')
+        string='Duration (days)',
+        track_visibility='onchange')
 
     assessment_type = fields.Selection(
         [('initial_assessment','Initial Assessment'),
@@ -202,69 +218,88 @@ class SurveillanceReport(models.Model):
          ('on_site_clearance','On-site clearance of findings visit'),
          ('others','Other (specify)')], 
         string='Type of Assessment',
-        required=True)
+        required=True,
+        track_visibility='onchange')
 
     others = fields.Char(
-        string='Others')
+        string='Others',
+        track_visibility='onchange')
 
     accreditation_standard = fields.Selection(
         ISO_STANDARD,
         string='Accreditation Standard',
-        required=True)
+        required=True,
+        track_visibility='onchange')
 
     program_type = fields.Char(
-        string='Program Type')
+        string='Program Type',
+        track_visibility='onchange')
 
     scope = fields.Char(
         string='Scope/Field',
-        required=True)
+        required=True,
+        track_visibility='onchange')
 
     previous_corrective_actions = fields.Selection(
         [('cleared','Cleared'),('not_cleared','Not Cleared')],
-        string='Previous Corrective Actions')
+        string='Previous Corrective Actions',
+        track_visibility='onchange')
 
     previous_corrective_action_comments = fields.Text(
-        string='Comments')
+        string='Comments',
+        track_visibility='onchange')
 
     num_of_conformites = fields.Integer(
-        string='Number of non-conformities')
+        string='Number of non-conformities',
+        track_visibility='onchange')
 
     unconditional_accreditation = fields.Boolean(
-        string='Unconditional accreditation/renewal of accreditation to be granted')
+        string='Unconditional accreditation/renewal of accreditation to be granted',
+        track_visibility='onchange')
 
     accreditation_cleared = fields.Boolean(
-        string='Accreditation/renewal of acreditation to be deferred until all non-conformances is not recommended')
+        string='Accreditation/renewal of acreditation to be deferred until all non-conformances is not recommended',
+        track_visibility='onchange')
 
     accreditation_recommended = fields.Boolean(
-        string='Accreditation/renewal of accreditation is not recommended')
+        string='Accreditation/renewal of accreditation is not recommended',
+        track_visibility='onchange')
 
     re_assessment_only = fields.Boolean(
         string="""For re-assessment only: Suspension of accreditation status or part thereof. \n<b>Note: </b>
-        The period of suspension shall not extend beyond the date of expiry of the Certificate of Accreditation""")
+        The period of suspension shall not extend beyond the date of expiry of the Certificate of Accreditation""",
+        track_visibility='onchange')
 
     all_corrective_actions = fields.Boolean(
-        string='All corrective actions have been implemented')
+        string='All corrective actions have been implemented',
+        track_visibility='onchange')
 
     corrective_actions = fields.Boolean(
-        string='Corrective actions have not all been implemented/effectively implemented')
+        string='Corrective actions have not all been implemented/effectively implemented',
+        track_visibility='onchange')
 
     nominated_representative_id = fields.Many2one(
         comodel_name='hr.employee',
-        string='Nominated Representative (NR)')
+        string='Nominated Representative (NR)',
+        track_visibility='onchange')
 
     surveillance_report_witness_ids = fields.One2many(
         comodel_name='ninas.surveillance.report.witness',
         inverse_name='surveillance_report_id',
-        string='Surveillance Report Witnesses')
+        string='Surveillance Report Witnesses',
+        track_visibility='onchange')
 
     brief_conclusion = fields.Text(
-        string='Brief Conclusion')
+        string='Brief Conclusion',
+        track_visibility='onchange')
 
     initial_assessment_date = fields.Date(
-        string='Initial Assessments, extension of scopes')
+        string='Initial Assessments, extension of scopes',
+        track_visibility='onchange')
 
     re_assessment_date = fields.Date(
-        string='Re-assessment visits')
+        string='Re-assessment visits',
+        track_visibility='onchange')
 
     state = fields.Selection(
         [('new','New'),('refused','Refused'),('lead_approved','Lead Approved'), 
@@ -286,14 +321,30 @@ class SurveillanceReport(models.Model):
         self.write({'state':'refused'})
 
 
+    def compute_duration(self, values):
+        duration = 0
+        start_date = self.start_date
+        end_date = self.end_date
+        if 'start_date' in values.keys():
+            start_date = values['start_date']
+        if 'end_date' in values.keys():
+            end_date = values['end_date']
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        duration = abs((end_date-start_date).days)+1
+        return duration
 
+    @api.model
     def create(self, values):
-        #calculate duration with start_date and end_date
+        duration = self.compute_duration(values)
+        values.update({'duration':duration})
         report = super(SurveillanceReport, self).create(values)
         return report
 
+    @api.multi
     def write(self, values):
-        #calculate duration with start_date and end_date
+        duration = self.compute_duration(values)
+        values.update({'duration':duration})
         super(SurveillanceReport, self).write(values)
         return True
 

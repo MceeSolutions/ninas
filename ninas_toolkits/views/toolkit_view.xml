@@ -279,6 +279,8 @@
                         <field name="lead_assessor_id" readonly="1" string="Lead Assessor"/>
                         <field name="assessment_team_ids" readonly="1" widget="many2many_tags"/>
                         <field name="location"/>
+                    </group>
+                    <group col="4" colspan="4">
                         <field name="start_date"/>
                         <field name="end_date"/>
                         <field name="duration" readonly="1"/>
@@ -333,8 +335,7 @@
                             <span>1. Corrective actions with supporting evidence must be submitted to NiNAS simultaneously before or on the due date.</span><br/>
                             <span>2. Facilities are exposed to a level of risk for suspension if submitting corrective actions after the due date.</span><br/>
                             <span>3. Where suspension has been recommended at a re-assessment, corrective actions relating to the cause of the suspension must be submitted to NiNAS and cleared, before the date of expiry of the certificate of accreditation.</span>
-                        </page>
-                        <page string="Assessment Dates">
+
                             <group>
                                 <field name="initial_assessment_date"/>
                                 <field name="re_assessment_date"/>
