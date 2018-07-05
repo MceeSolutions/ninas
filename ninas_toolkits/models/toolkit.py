@@ -11,10 +11,6 @@ ISO_STANDARD = [('iso1','ISO1'),('iso2','ISO2')]
 
 
 
-class AssessorToolkit(models.Model):
-    _name = 'ninas.assessor.toolkit'
-
-
 class BasicToolkitData(models.Model):
     _name = 'ninas.basic.toolkit.data'
     _description = 'Ninas Basic Toolkit Data'
