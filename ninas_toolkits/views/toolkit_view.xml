@@ -172,7 +172,7 @@
                         <field name="application_id"/>
                         <field name="institution_name" readonly="1"/>
                         <field name="institution_representative" readonly="1"/>
-                        <field name="lead_assessor_id" readonly="1" string=""/>
+                        <field name="lead_assessor_id" readonly="1" string="Technical Assessor"/>
                         <field name="assessment_date"/>
                         <field name="person_observed"/>
                     </group>
