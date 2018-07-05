@@ -4,10 +4,11 @@
 
 from odoo import api, fields, models
 import time
+from datetime import datetime
 
 
-class AssessorToolkit(models.Model):
-    _name = 'ninas.assessor.toolkit'
+ISO_STANDARD = [('iso1','ISO1'),('iso2','ISO2')]
+
 
 
 class BasicToolkitData(models.Model):
@@ -30,7 +31,7 @@ class BasicToolkitData(models.Model):
         related='application_id.partner_id.company_name',
         string='Institution',
         store=True,
-        track_visibility='onchange',)
+        track_visibility='onchange')
 
     institution_representative = fields.Char(
         related='application_id.partner_id.name',
@@ -63,8 +64,6 @@ class AssessmentClientFeedback(models.Model):
     _name = 'ninas.assessment.client.feedback'
     _description = 'Ninas Assessment Client Feedback'
     _inherit = 'ninas.basic.toolkit.data'
-
-    
 
     action_completed = fields.Text(
         string='Action Completed', track_visibility='onchange',)
@@ -118,7 +117,8 @@ class AssessmentWitnessTemplate(models.Model):
     _inherit = 'ninas.basic.toolkit.data'
 
     description = fields.Text(
-        string='Identification Description')
+        string='Identification Description',
+        track_visibility='onchange')
 
     person_observed = fields.Many2one(
         comodel_name='hr.employee',
@@ -167,7 +167,187 @@ class AssessmentWitnessTemplate(models.Model):
         self.write({'state':'technical_approved'})
 
     def draft(self):
-        self.write({'state':'new', 'approval_date':False})
+        self.write({'state':'new'})
 
     def refuse(self):
         self.write({'state':'refused'})
+
+
+class SurveillanceReport(models.Model):
+    _name = 'ninas.surveillance.report'
+    _description = 'Ninas Surveillance Report'
+    _inherit = 'ninas.basic.toolkit.data'
+    _sql_constraints = [
+        ('date_check', "CHECK ( (start_date <= end_date))", "The start date must be anterior to the end date.")
+    ]
+
+    location = fields.Char(
+        string='Location',
+        track_visibility='onchange')
+
+    start_date = fields.Date(
+        string='Start Date',
+        required=True,
+        default=lambda *a: time.strftime('%Y-%m-%d'),
+        track_visibility='onchange')
+
+    end_date = fields.Date(
+        string='End Date',
+        required=True,
+        track_visibility='onchange')
+
+    duration = fields.Integer(
+        string='Duration (days)',
+        track_visibility='onchange')
+
+    assessment_type = fields.Selection(
+        [('initial_assessment','Initial Assessment'),
+         ('re_assessment','Re-assessment'),
+         ('extension_scope','Extension Scope'),
+         ('on_site_clearance','On-site clearance of findings visit'),
+         ('others','Other (specify)')], 
+        string='Type of Assessment',
+        required=True,
+        track_visibility='onchange')
+
+    others = fields.Char(
+        string='Others',
+        track_visibility='onchange')
+
+    accreditation_standard = fields.Selection(
+        ISO_STANDARD,
+        string='Accreditation Standard',
+        required=True,
+        track_visibility='onchange')
+
+    program_type = fields.Char(
+        string='Program Type',
+        track_visibility='onchange')
+
+    scope = fields.Char(
+        string='Scope/Field',
+        required=True,
+        track_visibility='onchange')
+
+    previous_corrective_actions = fields.Selection(
+        [('cleared','Cleared'),('not_cleared','Not Cleared')],
+        string='Previous Corrective Actions',
+        track_visibility='onchange')
+
+    previous_corrective_action_comments = fields.Text(
+        string='Comments',
+        track_visibility='onchange')
+
+    num_of_conformites = fields.Integer(
+        string='Number of non-conformities',
+        track_visibility='onchange')
+
+    unconditional_accreditation = fields.Boolean(
+        string='Unconditional accreditation/renewal of accreditation to be granted',
+        track_visibility='onchange')
+
+    accreditation_cleared = fields.Boolean(
+        string='Accreditation/renewal of acreditation to be deferred until all non-conformances is not recommended',
+        track_visibility='onchange')
+
+    accreditation_recommended = fields.Boolean(
+        string='Accreditation/renewal of accreditation is not recommended',
+        track_visibility='onchange')
+
+    re_assessment_only = fields.Boolean(
+        string="""For re-assessment only: Suspension of accreditation status or part thereof. \n<b>Note: </b>
+        The period of suspension shall not extend beyond the date of expiry of the Certificate of Accreditation""",
+        track_visibility='onchange')
+
+    all_corrective_actions = fields.Boolean(
+        string='All corrective actions have been implemented',
+        track_visibility='onchange')
+
+    corrective_actions = fields.Boolean(
+        string='Corrective actions have not all been implemented/effectively implemented',
+        track_visibility='onchange')
+
+    nominated_representative_id = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Nominated Representative (NR)',
+        track_visibility='onchange')
+
+    surveillance_report_witness_ids = fields.One2many(
+        comodel_name='ninas.surveillance.report.witness',
+        inverse_name='surveillance_report_id',
+        string='Surveillance Report Witnesses',
+        track_visibility='onchange')
+
+    brief_conclusion = fields.Text(
+        string='Brief Conclusion',
+        track_visibility='onchange')
+
+    initial_assessment_date = fields.Date(
+        string='Initial Assessments, extension of scopes',
+        track_visibility='onchange')
+
+    re_assessment_date = fields.Date(
+        string='Re-assessment visits',
+        track_visibility='onchange')
+
+    state = fields.Selection(
+        [('new','New'),('refused','Refused'),('lead_approved','Lead Approved'), 
+        ('director_approved','Director Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+
+    def lead_approve(self):
+        self.write({'state':'lead_approved'})
+
+    def director_approve(self):
+        self.write({'state':'director_approved'})
+
+    def draft(self):
+        self.write({'state':'new'})
+
+    def refuse(self):
+        self.write({'state':'refused'})
+
+
+    def compute_duration(self, values):
+        duration = 0
+        start_date = self.start_date
+        end_date = self.end_date
+        if 'start_date' in values.keys():
+            start_date = values['start_date']
+        if 'end_date' in values.keys():
+            end_date = values['end_date']
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        duration = abs((end_date-start_date).days)+1
+        return duration
+
+    @api.model
+    def create(self, values):
+        duration = self.compute_duration(values)
+        values.update({'duration':duration})
+        report = super(SurveillanceReport, self).create(values)
+        return report
+
+    @api.multi
+    def write(self, values):
+        duration = self.compute_duration(values)
+        values.update({'duration':duration})
+        super(SurveillanceReport, self).write(values)
+        return True
+
+
+class SurveillanceReportWitness(models.Model):
+    _name = 'ninas.surveillance.report.witness'
+
+    surveillance_report_id = fields.Many2one(
+        comodel_name='ninas.surveillance.report',
+        string='Surveillance Report', ondelete='cascade')
+
+    witness_id = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Witnessed technical analyst / mythologist')
+
+    witness_scope = fields.Text(
+        string='Witness scopes')
