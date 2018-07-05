@@ -322,6 +322,10 @@
                                         <field name="witness_id"/>
                                         <field name="witness_scope"/>
                                     </tree>
+                                    <form>
+                                        <field name="witness_id"/>
+                                        <field name="witness_scope"/>
+                                    </form>
                                 </field>
                             </group>
                             <group string="Provide brief conclusion with respect to the effectivenesss of the organization's system specificially on the adequancy of the internal organization and procedures adopted by the CAB to give confidence in its competence, as determined through its fulfillment of the requirements for accreditation (Positive/Negative feedback:)">
