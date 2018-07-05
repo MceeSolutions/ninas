@@ -123,37 +123,30 @@ class AssessmentWitnessTemplate(models.Model):
     person_observed = fields.Many2one(
         comodel_name='hr.employee',
         string='Name of Person Observed',
-        track_visibility='onchange',
         track_visibility='onchange')
 
     additional_comments = fields.Text(
         string='Additional Comments',
-        track_visibility='onchange',
         track_visibility='onchange')
 
     internal_comments = fields.Text(
         string='Internal Comments',
-        track_visibility='onchange',
         track_visibility='onchange')
 
     reference_comments = fields.Text(
         string='Reference Comments',
-        track_visibility='onchange',
         track_visibility='onchange')
 
     uncertainty_comments = fields.Text(
         string='Uncertainty Comments',
-        track_visibility='onchange',
         track_visibility='onchange')
 
     training_comments = fields.Text(
         string='Training Comments',
-        track_visibility='onchange',
         track_visibility='onchange')
 
     accomodation_comments = fields.Text(
         string='Accomodation Comments',
-        track_visibility='onchange',
         track_visibility='onchange')
 
     recommendation_comments = fields.Text(
