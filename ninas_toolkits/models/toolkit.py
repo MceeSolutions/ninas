@@ -5,6 +5,8 @@
 from odoo import api, fields, models
 import time
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from pandas.tseries.offsets import BDay
 
 
 ISO_STANDARD = [('iso1','ISO1'),('iso2','ISO2')]
@@ -337,6 +339,14 @@ class SurveillanceReport(models.Model):
         super(SurveillanceReport, self).write(values)
         return True
 
+
+    @api.onchange('start_date')
+    def update_assessment_date(self):
+        if self.start_date:
+            start_date = datetime.strptime(self.start_date, '%Y-%m-%d')
+            self.initial_assessment_date =  start_date + relativedelta(months=+3)
+            days = ((start_date + BDay(25)) - start_date).days
+            self.re_assessment_date =  start_date + relativedelta(days=+days)
 
 class SurveillanceReportWitness(models.Model):
     _name = 'ninas.surveillance.report.witness'
