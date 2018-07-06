@@ -361,3 +361,162 @@ class SurveillanceReportWitness(models.Model):
 
     witness_scope = fields.Text(
         string='Witness scopes')
+
+
+class DocumentReviewReport(models.Model):
+    _name='ninas.document.review.report'
+    _description='Ninas Document Review Report'
+    _inherit='ninas.basic.toolkit.data'
+
+    documentation_received = fields.Text(
+        string='Documentation Received',
+        track_visibility='onchange'
+    )
+
+    review_date = fields.Date(
+        string='Review Date',
+        track_visibility='onchange'
+    )
+
+    recommendations = fields.Text(
+        string='Recommendations',
+        track_visibility='onchange'
+    )
+
+    accreditation_standard = fields.Selection(
+        ISO_STANDARD,
+        string='Accreditation Standard',
+        required=True,
+        track_visibility='onchange')
+    
+    report_requirement_ids = fields.One2many(
+        comodel_name='ninas.document.review.report.requirement',
+        inverse_name='review_report_id',
+        string='Report Requirements',
+        track_visibility='onchange'
+    )
+
+    state = fields.Selection(
+        [('new','New'),('refused','Refused'),('reviewed','Reviewed')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+
+    def review(self):
+        self.write({'state':'reviewed', 'review_date':time.strftime('%Y-%m-%d')})
+
+    def draft(self):
+        self.write({'state':'new'})
+
+    def refuse(self):
+        self.write({'state':'refused'})
+
+class DocumentReviewReportRequirement(models.Model):
+    _name='ninas.document.review.report.requirement'
+    _description='Ninas Document Review Report Requirements'
+    _order = 'code ASC'
+
+    name = fields.Many2one(
+        comodel_name='ninas.document.review.config',
+        string='Title',
+        required=True
+    )
+
+    code = fields.Char(
+        string='Code',
+        required=True
+    )
+
+    title_ids = fields.Many2many(
+        related='name.title_ids'
+    )
+
+    review_report_id = fields.Many2one(
+        comodel_name='ninas.document.review.report',
+        string='Review Report',
+        ondelete='cascade'
+    )
+
+    requirement_section_ids = fields.One2many(
+        comodel_name='ninas.document.review.report.requirement.section',
+        inverse_name='requirement_id',
+        string='Requirement Subsections'
+    )
+
+class DocumentReviewReportRequirementSection(models.Model):
+    _name = 'ninas.document.review.report.requirement.section'
+    _description = 'Ninas Document Review Report Requirement Sections'
+    _order = 'code ASC'
+
+    code = fields.Char(
+        string='Code',
+        required=True
+    )
+
+    name = fields.Many2one(
+        comodel_name='ninas.document.review.subconfig',
+        string='Title',
+        required=True
+    )
+
+    requirement_id = fields.Many2one(
+        comodel_name='ninas.document.review.report.requirement',
+        string='Document Review Report Requirement',
+        ondelete='cascade'
+    )
+
+    subsection_ids = fields.One2many(
+        comodel_name='ninas.document.review.report.requirement.subsection',
+        inverse_name='section_id',
+        string='Subsections'
+    )
+
+class DocumentReviewReportRequirementSubSection(models.Model):
+    _name = 'ninas.document.review.report.requirement.subsection'
+    _description = 'Ninas Document Review Report Requirement Subsections'
+    _order = 'code ASC'
+
+    code = fields.Char(
+        string='Code',
+        required=True
+    )
+
+    name = fields.Text(
+        string='Description',
+        required=True
+    )
+
+    section_id = fields.Many2one(
+        comodel_name='ninas.document.review.report.requirement.section',
+        string='Document Review Report Requirement Section',
+        ondelete='cascade'
+    )
+
+class DocumentReviewReportConfig(models.Model):
+    _name = 'ninas.document.review.config'
+    _description = 'Ninas Document Review Config'
+    _inherit = ['mail.thread']
+
+    name = fields.Char(
+        string='Title',
+        track_visibility='onchange'
+    )
+
+    title_ids = fields.Many2many(
+        comodel_name='ninas.document.review.subconfig',
+        relation='ninas_document_review_subconfig_rel',
+        column1='title',
+        column2='sub_title',
+        string='Sub Titles',
+        track_visibility='onchange'
+    )
+
+class DocumentReviewReportSubConfig(models.Model):
+    _name = 'ninas.document.review.subconfig'
+    _description = 'Ninas Document Review Subconfig'
+
+    name = fields.Char(
+        string='Title',
+        track_visibility='onchange'
+    )
+

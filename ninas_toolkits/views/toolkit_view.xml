@@ -383,16 +383,181 @@
         <field name="domain">[]</field>
         <field name="context">{}</field>
     </record>
+
+    <record id="ninas_document_review_report_form_view" model="ir.ui.view">
+        <field name="name">ninas.document.review.report.form</field>
+        <field name="model">ninas.document.review.report</field>
+        <field name="arch" type="xml">
+            <form string="Review Report">
+                <header>
+                    <button name="review" string="Review" type="object" class="btn btn-primary" states="new"/>
+                    <button name="draft" string="Set to New" type="object" states="refused,reviewed"/>
+                    <button name="refuse" string="Refuse" type="object" class="btn btn-danger" states="new"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="application_id"/>
+                        <field name="institution_name" readonly="1"/>
+                        <field name="institution_representative" readonly="1"/>
+                        <field name="lead_assessor_id" readonly="1" string="Lead Assessor"/>
+                        <field name="assessment_team_ids" readonly="1" widget="many2many_tags"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="accreditation_standard"/>
+                        <field name="documentation_received"/>
+                        <field name="review_date" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page name="page_report_requirement" string="Requirements">
+                            <group>
+                                <field name="report_requirement_ids" nolabel="1">
+                                    <tree>
+                                        <field name="code"/>
+                                        <field name="name"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="code"/>
+                                            <field name="name" options="{'no_create': True}"/>
+                                            <field name="title_ids" widget="many2many_tags" readonly="1"/>
+                                        </group>
+                                        <notebook>
+                                            <page name="page_sections" string="Sections">
+                                                <field name="requirement_section_ids">
+                                                    <tree>
+                                                        <field name="code"/>
+                                                        <field name="name"/>
+                                                    </tree>
+                                                    <form>
+                                                        <group>
+                                                            <field name="code"/>
+                                                            <field name="name" domain="[('id','in',parent.title_ids)]"/>
+                                                        </group>
+                                                        <notebook>
+                                                            <page name="page_section" string="Subsections">
+                                                                <field name="subsection_ids">
+                                                                    <tree>
+                                                                        <field name="code"/>
+                                                                        <field name="name"/>
+                                                                    </tree>
+                                                                    <form>
+                                                                        <group>
+                                                                            <field name="code"/>
+                                                                            <field name="name"/>
+                                                                        </group>
+                                                                    </form>
+                                                                </field>
+                                                            </page>
+                                                        </notebook>
+                                                    </form>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </form>
+                                </field>
+                            </group>
+                        </page>
+                         <page name="page_comments" string="Comments">
+                            <field name="comments" widget="html"/>
+                        </page>
+                        <page name="page_recommendations" string="Recommendations">
+                            <field name="recommendations" widget="html"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>  
+
+    <record id="ninas_document_review_report_tree_view" model="ir.ui.view">
+        <field name="name">ninas.document.review.report.tree</field>
+        <field name="model">ninas.document.review.report</field>
+        <field name="arch" type="xml">
+            <tree string="NiNaS Review Report">
+                <field name="name"/>
+                <field name="application_id"/>
+                <field name="institution_name"/>
+                <field name="institution_representative"/>
+                <field name="lead_assessor_id"/>
+                <field name="accreditation_standard"/>
+                <field name="documentation_received"/>
+                <field name="review_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>  
+    
+    
+    <record model="ir.actions.act_window" id="ninas_document_review_report_action">
+        <field name="name">Document Review Report</field>
+        <field name="res_model">ninas.document.review.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="ninas_document_review_config_form_view" model="ir.ui.view">
+        <field name="name">ninas.document.review.config.form</field>
+        <field name="model">ninas.document.review.config</field>
+        <field name="arch" type="xml">
+            <form string="Document Review Report Config">
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="title_ids" widget="many2many_tags">
+                            <form>
+                                <group>
+                                    <field name="name"/>
+                                </group>
+                            </form>
+                        </field> 
+                    </group>  
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>  
+
+    <record id="ninas_document_review_config_tree_view" model="ir.ui.view">
+        <field name="name">ninas.document.review.config.tree</field>
+        <field name="model">ninas.document.review.config</field>
+        <field name="arch" type="xml">
+            <tree string="NiNaS Review Report Config">
+                <field name="name"/>
+                <field name="title_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>  
+    
+    
+    <record model="ir.actions.act_window" id="ninas_document_review_config_action">
+        <field name="name">Document Review Report Config</field>
+        <field name="res_model">ninas.document.review.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
     <menuitem name="Toolkits" id="ninas_toolkit_main_menu"/>
-
     <menuitem name="Tools" id="ninas_toolkit_tools_main_menu" parent="ninas_toolkit_main_menu"/>
-    
     <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_portal" sequence="1"/>
-    
     <menuitem name="Assessment Feedback" id="assessment_assessor_feedback_main_menu" action="ninas_assessment_assessor_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="2"/>
-
     <menuitem name="Witness Template" id="witness_template_menu" action="ninas_witness_template_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="3"/>
-
     <menuitem name="Surveillance Report" id="surveillance_report_menu" action="ninas_surveillance_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="4"/>
+    <menuitem name="Document Review Report" id="ninas_document_review_report_menu" action="ninas_document_review_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="5"/>
+    
+    <menuitem name="Configuration" id="ninas_toolkit_configuration_main_menu" parent="ninas_toolkit_main_menu"/>
+    <menuitem name="Document Review Report Config" id="ninas_document_review_report_config_menu" action="ninas_document_review_config_action" parent="ninas_toolkit_configuration_main_menu" groups="base.group_user" sequence="5"/>
   </data>
 </odoo>
