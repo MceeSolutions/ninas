@@ -10,7 +10,7 @@ from pandas.tseries.offsets import BDay
 
 
 ISO_STANDARD = [('iso1','ISO1'),('iso2','ISO2')]
-
+COMPLIANCE = [('C','Compliance'),('NC', 'Non-Compliance'),('NA','Not Applicable')]
 
 
 class BasicToolkitData(models.Model):
@@ -519,4 +519,182 @@ class DocumentReviewReportSubConfig(models.Model):
         string='Title',
         track_visibility='onchange'
     )
+
+class VerticalAssessmentLaboratory(models.Model):
+    _name = 'ninas.vertical.assessment.lab'
+    _description = 'Ninas Vertial Assessment Laboratory'
+    _inherit = 'ninas.basic.toolkit.data'
+
+    evaluation_date = fields.Date(
+        string='Date of Evaluation',
+        default=lambda *a: time.strftime('%Y-%m-%d'), 
+        track_visibility='onchange')
+
+    laboratory = fields.Char(
+        string='Laboratory',
+        track_visibility='onchange'
+    )
+
+    operation_area = fields.Char(
+        string='Field / Area of Operation',
+        track_visibility='onchange'
+    )
+
+    lab_representative = fields.Char(
+        string='Lab Representative',
+        track_visibility='onchange'
+    )
+
+    certificate_report = fields.Text(
+        string='Certificate / Report',
+        track_visibility='onchange'
+    )
+
+    technical_record_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='4.13.2.1 - Raw data/original observations, calculations, derivations',
+        track_visibility='onchange'
+    )
+
+    technical_record_text_2 = fields.Selection(
+        COMPLIANCE,
+        string='4.13.2.1 - Traceability to the person performing the test /',
+        track_visibility='onchange'
+    )
+
+    technical_record_text_3 = fields.Selection(
+        COMPLIANCE,
+        string='4.13.2.3 - calibration Records permanent, corrections legible and',
+        track_visibility='onchange'
+    )
+
+    technical_record_text_4 = fields.Selection(
+        COMPLIANCE,
+        string='5.4.7.1 - authorized Appropriate calculation checks. Randomly re',
+        track_visibility='onchange'
+    )
+
+    technical_record_text_5 = fields.Selection(
+        COMPLIANCE,
+        string='5.4.7.1 - – calculate',
+        track_visibility='onchange'
+    )
+
+    correctness = fields.Text(
+        string='Randomly check correctness of data transfers. Laboratory’s control checks appropriate/effective.',
+        track_visibility='onchange'
+    )
+
+    training_record_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='5.2.5 - Operator/s identified as competent for the work and is proof of competence available.',
+        track_visibility='onchange'
+    )
+
+    training_record_text_2 = fields.Selection(
+        COMPLIANCE,
+        string='5.2.5 - Proven competent at the time that the work was',
+        track_visibility='onchange'
+    )
+
+    training_record_text_3 = fields.Selection(
+        COMPLIANCE,
+        string='5.2.5 - performed. Appropriate method of determination ofcompetence.',
+        track_visibility='onchange'
+    )
+
+    performance_capability_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='5.4.2 - Proof of confirmation of proper operation of standard methods',
+        track_visibility='onchange'
+    )
+
+    performance_capability_text_2 = fields.Selection(
+        COMPLIANCE,
+        string='5.4.3 - Proof of confirmation of proper operation of laboratory developed methods',
+        track_visibility='onchange'
+    )
+
+    performance_capability_text_3 = fields.Selection(
+        COMPLIANCE,
+        string='5.4.4 - Proof of confirmation of proper operation of non-standard methods',
+        track_visibility='onchange'
+    )
+
+    performance_capability_text_4 = fields.Selection(
+        COMPLIANCE,
+        string='5.4.5.2 - Methods validated and availability of performance capability',
+        track_visibility='onchange'
+    )
+
+    performance_capability_text_5 = fields.Selection(
+        COMPLIANCE,
+        string='5.4.5.3 - Capability appropriate for use. Statistical application appropriate – (e.g. where relevant significant figure or rounding off policy for final results)',
+        track_visibility='onchange'
+    )
+
+    performance_capability_text_6 = fields.Selection(
+        COMPLIANCE,
+        string='5.4.5.6.2 - Testing laboratories – Method uncertainty or specification tolerances',
+        track_visibility='onchange'
+    )
+
+    performance_capability_text_7 = fields.Selection(
+        COMPLIANCE,
+        string='5.4.6.1 -  Calibration laboratories – Results within MC and availability of supporting calculations',
+        track_visibility='onchange'
+    )
+
+    assurance_validity_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='a -  Indicate how the laboratory monitors results',
+        track_visibility='onchange'
+    )
+
+    assurance_validity_text_2 = fields.Selection(
+        COMPLIANCE,
+        string='b - Appropriate and effective for ensuring the controlled performance of the accredited work',
+        track_visibility='onchange'
+    )
+
+    assurance_validity_text_3 = fields.Selection(
+        COMPLIANCE,
+        string='c - Monitoring data suitably recorded (e.g. control charts), evaluated reviewed',
+        track_visibility='onchange'
+    )
+
+    assurance_validity_text_4 = fields.Selection(
+        COMPLIANCE,
+        string='d - Effective control limits or tolerances been established',
+        track_visibility='onchange'
+    )
+
+    assurance_validity_text_5 = fields.Selection(
+        COMPLIANCE,
+        string='e - Evidence of actions implemented when breaches have occurred',
+        track_visibility='onchange'
+    )
+
+    proficiency_testing_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='Appropriateness for the work performed',
+        track_visibility='onchange'
+    )
+
+    proficiency_testing_text_2 = fields.Selection(
+        COMPLIANCE,
+        string='Evaluate results – action on anomalies or outliers',
+        track_visibility='onchange'
+    )
+
+    additional_comments = fields.Text(
+        string='Additional Comments',
+        track_visibility='onchange'
+    )
+
+
+ 
+
+
+
 

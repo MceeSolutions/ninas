@@ -549,6 +549,108 @@
         <field name="context">{}</field>
     </record>
 
+    <record id="ninas_vertical_assessment_lab_form_view" model="ir.ui.view">
+        <field name="name">ninas.vertical.assessment.lab.form</field>
+        <field name="model">ninas.vertical.assessment.lab</field>
+        <field name="arch" type="xml">
+            <form string="Vertical Assessment Lab">
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="application_id"/>
+                        <field name="institution_name"/>
+                        <field name="institution_representative"/>
+                        <field name="lead_assessor_id"/>
+                        <field name="evaluation_date"/>
+                        <field name="laboratory"/>
+                        <field name="operation_area"/>
+                        <field name="lab_representative"/>
+                        <field name="certificate_report"/>
+                    </group>
+                    <span><strong>REQUIREMENTS &amp; COMMENTS</strong> Compliance = C , Non-Compliance = NC, Not Applicable = NA</span><br/>
+                    <span>NB: Indicate WHAT has been checked and HOW requirements have been implemented. 
+                    The order of assessment need not follow the order of the checklist. 
+                    Assessors are expected to know &amp; have the standard, this checklist is designed as 
+                    guidance to prompt detailed recording of the process. 
+                    REFER TO ISO/IEC 17025 FOR DETAIL AND FOR CLARIFICATION NOTES.</span>
+                    <group colspan="15" string="4.13.2 / 5.4.7 Technical Records (state which data and calculations were checked)">
+                        <field name="technical_record_text_1"/>
+                        <field name="technical_record_text_2"/>
+                        <field name="technical_record_text_3"/>
+                        <field name="technical_record_text_4"/>
+                        <field name="technical_record_text_5"/>
+                    </group>
+                    <group>
+                        <field name="correctness"/>
+                    </group>
+                    <span>5.2 Training check training records of identified operator(s) for accredited work from selected results</span>
+                    <group>
+                        <field name="training_record_text_1"/>
+                        <field name="training_record_text_2"/>
+                        <field name="training_record_text_3"/>
+                    </group>
+                    <group string="Additional / General Comments">
+                        <field name="comments" nolabel="1"/>
+                    </group>
+                    <span>5.4.1.6 Performance capability of selected methods</span>
+                    <group>
+                        <field name="performance_capability_text_1"/>
+                        <field name="performance_capability_text_2"/>
+                        <field name="performance_capability_text_3"/>
+                        <field name="performance_capability_text_4"/>
+                        <field name="performance_capability_text_5"/>
+                        <field name="performance_capability_text_6"/>
+                        <field name="performance_capability_text_7"/>
+                    </group>
+                    <span>5.9 Assurance of validity of results</span>
+                    <group>
+                        <field name="assurance_validity_text_1"/>
+                        <field name="assurance_validity_text_2"/>
+                        <field name="assurance_validity_text_3"/>
+                        <field name="assurance_validity_text_4"/>
+                        <field name="assurance_validity_text_5"/>
+                    </group>
+                    <span>5.9 Proficiency testing/ Interlaboratory comparisons / Calibration measurement audit sample</span>
+                    <group>
+                        <field name="proficiency_testing_text_1"/>
+                        <field name="proficiency_testing_text_2"/>
+                    </group>
+                    <group string="Additional / General Comments">
+                        <field name="additional_comments" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>  
+
+    <record id="ninas_vertical_assessment_lab_tree_view" model="ir.ui.view">
+        <field name="name">ninas.vertical.assessment.lab.tree</field>
+        <field name="model">ninas.vertical.assessment.lab</field>
+        <field name="arch" type="xml">
+            <tree string="Vertical Assessment Lab">
+                <field name="application_id"/>
+                <field name="institution_name"/>
+                <field name="institution_representative"/>
+                <field name="lead_assessor_id"/>
+                <field name="evaluation_date"/>
+
+            </tree>
+        </field>
+    </record>  
+    
+    
+    <record model="ir.actions.act_window" id="ninas_vertical_assessment_lab_action">
+        <field name="name">Vertical Assessment Lab</field>
+        <field name="res_model">ninas.vertical.assessment.lab</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
     <menuitem name="Toolkits" id="ninas_toolkit_main_menu"/>
     <menuitem name="Tools" id="ninas_toolkit_tools_main_menu" parent="ninas_toolkit_main_menu"/>
     <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_portal" sequence="1"/>
@@ -556,7 +658,8 @@
     <menuitem name="Witness Template" id="witness_template_menu" action="ninas_witness_template_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="3"/>
     <menuitem name="Surveillance Report" id="surveillance_report_menu" action="ninas_surveillance_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="4"/>
     <menuitem name="Document Review Report" id="ninas_document_review_report_menu" action="ninas_document_review_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="5"/>
-    
+    <menuitem name="Vertical Assessment Laboratory" id="ninas_vertical_assessment_lab_menu" action="ninas_vertical_assessment_lab_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="6"/>
+
     <menuitem name="Configuration" id="ninas_toolkit_configuration_main_menu" parent="ninas_toolkit_main_menu"/>
     <menuitem name="Document Review Report Config" id="ninas_document_review_report_config_menu" action="ninas_document_review_config_action" parent="ninas_toolkit_configuration_main_menu" groups="base.group_user" sequence="5"/>
   </data>
