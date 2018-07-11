@@ -570,13 +570,7 @@ class VerticalAssessmentLaboratory(models.Model):
 
     technical_record_text_4 = fields.Selection(
         COMPLIANCE,
-        string='5.4.7.1 - authorized Appropriate calculation checks. Randomly re',
-        track_visibility='onchange'
-    )
-
-    technical_record_text_5 = fields.Selection(
-        COMPLIANCE,
-        string='5.4.7.1 - – calculate',
+        string='5.4.7.1 - authorized Appropriate calculation checks. Randomly recalculate',
         track_visibility='onchange'
     )
 
@@ -593,13 +587,7 @@ class VerticalAssessmentLaboratory(models.Model):
 
     training_record_text_2 = fields.Selection(
         COMPLIANCE,
-        string='5.2.5 - Proven competent at the time that the work was',
-        track_visibility='onchange'
-    )
-
-    training_record_text_3 = fields.Selection(
-        COMPLIANCE,
-        string='5.2.5 - performed. Appropriate method of determination ofcompetence.',
+        string='5.2.5 - Proven competent at the time that the work was performed. Appropriate method of determination ofcompetence.',
         track_visibility='onchange'
     )
 
@@ -692,8 +680,65 @@ class VerticalAssessmentLaboratory(models.Model):
         track_visibility='onchange'
     )
 
+    calibration_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='5.5.2 Appropriateness of calibration and verification programmes, cover operating range',
+        track_visibility='onchange'
+    )
+    calibration_text_2 = fields.Selection(
+        COMPLIANCE,
+        string='5.5.8 Calibration status',
+        track_visibility='onchange'
+    )
+    calibration_text_3 = fields.Selection(
+        COMPLIANCE,
+        string='5.5.5 Records of calibration and verification complete, tolerances appropriate',
+        track_visibility='onchange'
+    )
+    calibration_text_4 = fields.Selection(
+        COMPLIANCE,
+        string='5.5.10 In-house verification techniques sufficient to ensure validity of calibration',
+        track_visibility='onchange'
+    )
+    calibration_text_5 = fields.Selection(
+        COMPLIANCE,
+        string='5.5.11 Suitable application of correction factors',
+        track_visibility='onchange'
+    )
+    calibration_text_6 = fields.Selection(
+        COMPLIANCE,
+        string='5.6.2.1 Traceability to national standards',
+        track_visibility='onchange'
+    )
+    calibration_text_7 = fields.Selection(
+        COMPLIANCE,
+        string='5.6.2.2 Traceability to appropriate measurement standards',
+        track_visibility='onchange'
+    )
+    calibration_text_8 = fields.Selection(
+        COMPLIANCE,
+        string='5.6.2.1.1 External calibration services used – demonstrated competence, measurement capability and traceability, certificates contain measurement results, measurement uncertainty',
+        track_visibility='onchange'
+    )
 
- 
+    calibration_text_9 = fields.Selection(
+        COMPLIANCE,
+        string='5.6.3.1 Reference standards traceable calibration, not invalidate performance when used',
+        track_visibility='onchange'
+    )
+
+    calibration_text_10 = fields.Selection(
+        COMPLIANCE,
+        string='5.6.3.2 Reference materials – traceable, SI, CRMs, Internal reference materials – checked',
+        track_visibility='onchange'
+    )
+    
+    calibration_text_11 = fields.Selection(
+        COMPLIANCE,
+        string='5.6.3.3 Intermediated checks – reference, primary, transfer and working standards',
+        track_visibility='onchange'
+    )
+
 
 
 
