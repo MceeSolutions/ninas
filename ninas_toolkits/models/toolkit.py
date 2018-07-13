@@ -739,6 +739,130 @@ class VerticalAssessmentLaboratory(models.Model):
         track_visibility='onchange'
     )
 
+    calibration_text_12 = fields.Selection(
+        COMPLIANCE,
+        string='5.5 / 5.6 Equipment maintenance and operation',
+        track_visibility='onchange'
+    )
+
+    calibration_text_13 = fields.Selection(
+        COMPLIANCE,
+        string='5.5.3 Instructions on use and maintenance',
+        track_visibility='onchange'
+    )
+
+    calibration_text_14 = fields.Selection(
+        COMPLIANCE,
+        string='5.5.5 Records complete',
+        track_visibility='onchange'
+    )
+
+    calibration_text_15 = fields.Selection(
+        COMPLIANCE,
+        string='5.5.6 - 5.5.3.4 Handling / transport / storage / use to prevent contamination/deterioration of –equipment and standard/ reference materials',
+        track_visibility='onchange'
+    )
+
+    calibration_comments = fields.Text(
+        string='Additional / General Comments',
+        track_visibility='onchange'
+    )
+
+    accomodation_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='5.3.1 - Critical areas of accommodation/environmental control which would affect the performance of the accredited work. (e.g. Special room, Dust filtration, Positive pressure, Lighting, Static, Electric screening, Air lock entrance, Cleanliness, Vibration level, EMI, Dedicated Earth, etc.)',
+        track_visibility='onchange'
+    )
+
+    accomodation_text_2 = fields.Selection(
+        COMPLIANCE,
+        string='5.3.3 -  Monitored, controlled and auctioned when required',
+        track_visibility='onchange'
+    )
+
+    accomodation_text_3 = fields.Selection(
+        COMPLIANCE,
+        string='5.3.4 -  Effective segregation of tests/ equipment/ standards and consumables Adequate storage areas',
+        track_visibility='onchange'
+    )
+
+    accomodation_comments = fields.Text(
+        string='Accomodation Comments',
+        track_visibility='onchange'
+    )
+
+    purchasing_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='4.6.2 - Supplies verified prior to use to meet the quality criteria as required for the methods accredited',
+        track_visibility='onchange'
+    )
+
+    purchasing_text_2 = fields.Selection(
+        COMPLIANCE,
+        string='4.6 - System ensure supplies for the uninterrupted performance of work documented and effective – e.g. stock control, requisitioning, ordering and storage',
+        track_visibility='onchange'
+    )
+
+    purchasing_comments = fields.Text(
+        string='Purchasing Comments',
+        track_visibility='onchange'
+    )
+
+    calibration_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='5.8.2 - Uniquely identified, ensure that there can be no confusion regarding the identify at any time',
+        track_visibility='onchange'
+    )
+
+    calibration_text_2 = fields.Selection(
+        COMPLIANCE,
+        string='5.8.3 - Condition of the item noted, where applicable',
+        track_visibility='onchange'
+    )
+
+    calibration_text_3 = fields.Selection(
+        COMPLIANCE,
+        string='5.8.4 - System avoid deterioration/ damage during storage, handling, preparation, and calibration or test',
+        track_visibility='onchange'
+    )
+
+    calibration_comments = fields.Text(
+        string='Calibration Comments',
+        track_visibility='onchange'
+    )
+
+    report_text_1 = fields.Selection(
+        COMPLIANCE,
+        string='5.10 - If not full report, written agreement and all data available in laboratory',
+        track_visibility='onchange'
+    )
+
+    report_comments = fields.Text(
+        string='Report Comments',
+        track_visibility='onchange'
+    )
+
+    state = fields.Selection(
+        [('new','New'),('refused','Refused'),('lead_approved','Lead Approved'), 
+        ('technical_approved','Technical Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+
+    def lead_approve(self):
+        self.write({'state':'lead_approved'})
+
+    def technical_approve(self):
+        self.write({'state':'technical_approved'})
+
+    def draft(self):
+        self.write({'state':'new'})
+
+    def refuse(self):
+        self.write({'state':'refused'})
+
+
+
 
 
 

@@ -554,6 +554,13 @@
         <field name="model">ninas.vertical.assessment.lab</field>
         <field name="arch" type="xml">
             <form string="Vertical Assessment Lab">
+                <header>
+                    <button name="lead_approve" string="Lead Approve" type="object" class="btn btn-primary" states="new,refused"/>
+                    <button name="technical_approve" string="Technical Approve" type="object" class="btn btn-primary" states="lead_approved"/>
+                    <button name="draft" string="Set to New" type="object" states="refused,lead_approved,technical_approved"/>
+                    <button name="refuse" string="Refuse" type="object" class="btn btn-danger" states="new"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
                 <sheet>
                     <group col="4" colspan="4">
                         <field name="application_id"/>
@@ -628,6 +635,36 @@
                         <field name="calibration_text_9"/>
                         <field name="calibration_text_10"/>
                         <field name="calibration_text_11"/>
+                        <field name="calibration_text_12"/>
+                        <field name="calibration_text_13"/>
+                        <field name="calibration_text_14"/>
+                        <field name="calibration_text_15"/>
+                        <field name="calibration_comments"/>
+                    </group>
+                    <span>5.3 Accommodation and environmental conditions</span>
+                    <group>
+                        <field name="accomodation_text_1"/>
+                        <field name="accomodation_text_2"/>
+                        <field name="accomodation_text_3"/>
+                        <field name="accomodation_comments"/>
+                    </group>
+                    <span>4.6 Purchasing of supplies (e.g. Reference materials, critical consumables, etc.)</span>
+                    <group>
+                        <field name="purchasing_text_1"/>
+                        <field name="purchasing_text_2"/>
+                        <field name="purchasing_comments"/>
+                    </group>
+                     <span>5.8 Handling of calibration or test items</span>
+                    <group>
+                        <field name="calibration_text_1"/>
+                        <field name="calibration_text_2"/>
+                        <field name="calibration_text_3"/>
+                        <field name="calibration_comments"/>
+                    </group>
+                    <span>5.10 Reporting of the results [See detailed requirements in 5.10 of ISO/IEC 17025:2005</span>
+                    <group>
+                        <field name="report_text_1"/>
+                        <field name="report_comments"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
