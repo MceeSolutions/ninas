@@ -957,4 +957,126 @@ class StoreReqEdit(models.Model):
         self.mapped('move_lines')._action_cancel()
         self.write({'state': 'draft'})
         return {}
+
+
+class Petty(models.Model):
+    _name = 'ninas.petty.cash'
+
+    date_entered=fields.Date(
+        string='Date',
+        required=True
+        )
+    ref_no=fields.Char(
+        string='Ref No'
+        )
+    name_of_payee=fields.Char(
+        string='Name of Payee',
+        required=True
+        )
+    amount_naira=fields.Float(
+        string='Amount (Naira)',
+        required=True
+        )
+    description=fields.Text(
+        string='Description of Payment'
+        )
+    accounts_charge=fields.Char(
+        string='Account Chargeable'
+        )
+    grant=fields.Char(
+        string='Grant'
+        )
+    budget_line=fields.Char(
+        string='Budget line'
+        )
+    GL=fields.Char(
+        string='GL'
+        )
+    prepared_by=fields.Char(
+        string='Prepared by',
+        required=True)
     
+    
+class DieselConsumption(models.Model):
+    _name = 'ninas.diesel.consumption'
+
+    date_input=fields.Date(
+        string='Date',
+        required=True
+        )
+    diesel_level_start=fields.Float(
+        string='Diesel Level Start',
+        default=0,
+        )
+    time_started=fields.Datetime(
+        string='Time Started',
+        default=0,
+        )
+    engine_temp_start=fields.Float(
+        string='Engine Temperature',
+        default=0,
+        )
+    oil_level_start=fields.Float(
+        string='Oil Level',
+        default=0,
+        )
+    battery_voltage_start=fields.Float(
+        string='Battery Voltage',
+        default=0,
+        )
+    diesel_level_end=fields.Float(
+        string='Diesel Level End',
+        default=0,
+        )
+    time_ended=fields.Datetime(
+        string='Time Ended',
+        default=0,
+        )
+    engine_temp_end=fields.Float(
+        string='Engine Temperature',
+        default=0,
+        )
+    oil_level_end=fields.Float(
+        string='Oil Level',
+        default=0,
+        )
+    battery_voltage_end=fields.Float(
+        string='Battery Voltage',
+        default=0,
+        )
+    diesel_available=fields.Float(
+        compute='_subtract_',
+        string='Diesel Level'
+        )
+
+    @api.multi
+    def _subtract_(self):
+        for num in self:
+            diesel_available = num.diesel_level_start - num.diesel_level_end
+            num.diesel_available = diesel_available
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

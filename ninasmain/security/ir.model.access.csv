@@ -20,3 +20,5 @@ access_ninas_application_account_emp,application.account,model_application_accou
 access_ninas_test_method_emp,test.method,model_test_method,base.group_user,1,1,1,0
 access_assessment_type,assessment.type,model_assessment_type,base.group_user,1,1,1,0
 access_ninas_hr_recruitment,ninas.hr.recruitment,model_ninas_hr_recruitment,base.group_user,1,1,1,0
+access_ninas_petty_cash,ninas.petty.cash,model_ninas_petty_cash,base.group_user,1,1,1,0
+access_ninas_diesel_consumption,ninas.diesel.consumption,model_ninas_diesel_consumption,base.group_user,1,1,1,0
