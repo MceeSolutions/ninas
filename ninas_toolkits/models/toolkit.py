@@ -6,7 +6,7 @@ from odoo import api, fields, models
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-#from pandas.tseries.offsets import BDay
+from pandas.tseries.offsets import BDay
 
 
 ISO_STANDARD = [('iso1','ISO1'),('iso2','ISO2')]
