@@ -4,7 +4,7 @@ from odoo import http
 from odoo.http import request
 
 class Accreditation(http.Controller):
-    @http.route('''/helpdesk/<model("helpdesk.team", "[('use_website_helpdesk_form','=',True)]"):team>/submit''', type='http', auth="public", website=True)
+    @http.route('''/helpdesk/<model("helpdesk.team", "[('use_website_helpdesk_form','=',True)]"):team>/submit''', type='http', auth="user", website=True)
     
     def index(self, **kw):
         default_values = {}
