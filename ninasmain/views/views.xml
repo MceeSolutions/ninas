@@ -253,6 +253,29 @@
 		<field name="context">{}</field>
 	</record>
     
+    <!-- petty cash action -->
+    <record model="ir.actions.act_window" id="ninas_petty_cash_action">
+			<field name="name">Petty Cash Voucher</field>
+			<field name="res_model">ninas.petty.cash</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="context">{}</field>
+		</record>
+		
+	<!-- diesel consumption action -->
+		
+	<record model="ir.actions.act_window" id="ninas_diesel_consumption_action">
+            <field name="name">Diesel Consumption</field>
+            <field name="res_model">ninas.diesel.consumption</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+	
+    
+    
     <!-- loan request  tree view-->
     <record id="loan_request_tree_view" model="ir.ui.view">
 		<field name="name">loan.request.tree</field>
@@ -813,6 +836,103 @@
 			</form>
 		</field>
 	</record>
+	
+	<!-- petty cash -->
+    
+    <record model="ir.ui.view" id="ninas_petty_cash_tree_view">
+			<field name="name">ninas.petty.cash.tree</field>
+			<field name="model">ninas.petty.cash</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="ref_no"/>
+				<field name="name_of_payee"/>
+                <field name="amount_naira"/>
+                <field name="prepared_by"/>
+			</field>	
+		</record>
+    
+    <record model="ir.ui.view" id="ninas_petty_cash_form_view">
+			<field name="name">ninas.petty.cash.form</field>
+			<field name="model">ninas.petty.cash</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Petty Cash Voucher">
+					<sheet>
+						<group string="Petty Cash Voucher" col="4" colspan="4">
+							<field name="date_entered"/>
+							<field name="ref_no"/>
+							<field name="name_of_payee"/>
+							<field name="amount_naira"/>
+							<field name="prepared_by"/>
+						</group>
+						<notebook>
+							<page name="Description" string="Description of Payment">
+								<field name="description"/>
+							</page>
+							<page name="Accounts" string="Accounts">
+								<group col="4" colspan="4">
+									<field name="accounts_charge"/>
+									<field name="grant"/>
+									<field name="budget_line"/>
+									<field name="GL"/>
+								</group>
+							</page>	
+						</notebook>
+					</sheet>
+				</form>	
+			</field>
+		</record>
+
+	<!-- diesel consumption -->    
+	
+	<record model="ir.ui.view" id="ninas_diesel_consumption_tree_view">
+			<field name="name">ninas.diesel.consumption.tree</field>
+			<field name="model">ninas.diesel.consumption</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="date_input"/>
+				<field name="diesel_level_start"/>
+				<field name="diesel_level_end"/>
+				<field name="diesel_available"/>
+			</field>	
+		</record>
+	
+	<record model="ir.ui.view" id="ninas_diesel_consumption_form_view">
+			<field name="name">ninas.diesel.consumption.form</field>
+			<field name="model">ninas.diesel.consumption</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Diesel Consumption">
+					<sheet>
+						<group string="Diesel Consumption Log" col="4" colspan="4">
+							<field name="date_input"/>
+						</group>
+						<notebook>
+							<page name="start_time" string="Start Time">
+								<group col="4" colspan="4">
+									<field name="diesel_level_start"/>
+									<field name="time_started"/>
+									<field name="engine_temp_start"/>
+									<field name="oil_level_start"/>
+									<field name="battery_voltage_start"/>
+								</group>
+							</page>	
+							<page name="end_time" string="End Time">
+								<group col="4" colspan="4">
+									<field name="diesel_level_end"/>
+									<field name="time_ended"/>
+									<field name="engine_temp_end"/>
+									<field name="oil_level_end"/>
+									<field name="battery_voltage_end"/>
+								</group>
+							</page>	
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+	
+    
     
 	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
     <menuitem name="Loan Request" id="loan_request_menu" parent="request_main_menu"
@@ -822,11 +942,15 @@
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
               
-    <menuitem name="Bank Voucher" id="bank_vouchert_main_menu" parent="account.menu_finance_receivables"/>          
+    <menuitem name="Vouchers" id="bank_vouchert_main_menu" parent="account.menu_finance_receivables"/>          
     <menuitem name="Bank voucher" id="bank_voucher_menu" parent="bank_vouchert_main_menu"
               action="ninas_bank_voucher_action"/>
+    <menuitem name="Petty Cash voucher" id="petty_cash_voucher_menu" parent="bank_vouchert_main_menu"
+              action="ninas_petty_cash_action"/>
               
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
+    
+    <menuitem name="Diesel Consumption" id="ninas_diesel_consumption_menuitem" parent="hr.menu_hr_root" action="ninas_diesel_consumption_action"/>
               
    	<menuitem name="Receipt Register" id="register_receipt_menu" parent="stock.menu_stock_root"/>
     <menuitem name="Monthly Consumable Receipt" id="tests_request_menu" parent="register_receipt_menu"

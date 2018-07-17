@@ -6,6 +6,38 @@
         web_icon="ninasmain,static/icon/ninas-logo.png"
         groups="helpdesk.group_helpdesk_user"/>
   
+	<!-- action for halpdask team -->
+    <record id="helpdesk.helpdesk_ticket_action_team" model="ir.actions.act_window">
+        <field name="name">Applications</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_team_id': active_id}</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click create a new ticket.
+            </p>
+        </field>
+    </record>
+	
+	 <!-- Action for dashboard button -->
+    <record id="helpdesk.helpdesk_ticket_action_high_priorities" model="ir.actions.act_window">
+        <field name="name">Applications</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="helpdesk.helpdesk_ticket_view_kanban_no_create"/>
+        <field name="domain">[('priority', '=', '2')]</field>
+        <field name="context">{'default_priority': '2', 'search_default_is_open': True, 'search_default_my_ticket': True}</field>
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="help" type="html">
+            <p>
+                No tickets to display.
+            </p>
+        </field>
+    </record>
+	  	
 	<template id="ninas_website_helpdesk_form_ticket_submit" inherit_id="website_helpdesk_form.ticket_submit">
             <xpath expr="//div[@class='form-group']" position="before">
            		
@@ -54,7 +86,6 @@
 	          </div>  -->
             </xpath>
             
-            
         <xpath expr="//t[@t-set='additional_title']" position="replace">
 	         	<t t-set="additional_title">Applications</t>
        </xpath>
@@ -97,8 +128,45 @@
             </xpath>
             
         </template>
+   		
+   		<template id ="ninas_portal_my_home_helpdesk_ticket" name="Portal My Home : Accreditation Application" inherit_id="helpdesk.portal_my_home_helpdesk_ticket" priority="50">
+   			<xpath expr="//a[@href='/my/tickets']" position="replace">
+                <a href="/my/tickets">Applications</a>
+        	</xpath>
+   		</template>
+   		
+   		<template id ="ninas_portal_my_home_menu_helpdesk" name="Portal layout : Accreditation Application menu entries" inherit_id="helpdesk.portal_my_home_menu_helpdesk" priority="50">
+   			<xpath expr="//a[@t-if='ticket']" position="replace">
+                <a t-if="ticket" t-attf-href="/my/tickets?{{ keep_query() }}">Applications</a>
+        	</xpath>
+        	
+        	<xpath expr="//t[@t-else='']" position="replace">
+				<t t-else="">Applications</t>
+        	</xpath>
+        	
+   		</template> 
+   		
+   		<template id="ninas_portal_helpdesk_ticket" name="Acceditation Applications" inherit_id="helpdesk.portal_helpdesk_ticket">
+	        <xpath expr="//h3" position="replace">
+	            <h3>Applications
+	                <t t-call="portal.portal_searchbar"/>
+	            </h3>
+	        </xpath>
         
-        
+	        <xpath expr="//t[@t-if='not tickets']" position="replace">
+	        	<t t-if="not tickets">
+	                <p>There are currently no Applications for your account.</p>
+	            </t>
+	        </xpath>
+	        
+	        <xpath expr="//tr[@class='active']" position="replace">
+	        	 <tr class="active">
+                            <th>Application Number</th>
+                            <th>Description</th><th/>
+                            <th>Status</th>
+                        </tr>
+	        </xpath>
+   		</template>
         
         <!-- function -->
         
@@ -171,6 +239,154 @@
             </field>
             
         </field>
+    </record>
+    
+    <record id="ninas_helpdesk_ticket_view_form" model="ir.ui.view">
+            <field name="name">ninas.helpdesk.ticket.form</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+            <field name="arch" type="xml">
+               <xpath expr="//sheet" position="after">
+                	<sheet>
+           	    	<group string="Confidentiality Policy">	
+	           	    	<span>
+	                        According to the NiNAS Code of Conduct: All NiNAS Assessors, Staff and Committee members are required to keep
+	                        information about your application confidential. Following a successful accreditation, the only information published by
+	                        NiNAS will be your accredited scope and contact details. NiNAS may be required by law to share other information or may
+	                        publish information that is already in the public domain.                                                        
+	           	    	</span>
+           	       	</group>
+           	       	
+           	       	<group string="Part I. Application Information" col="4" colspan="4">
+           	       		<field name="name_applicant"/>
+           	       		<field name="applicant_rep_title"/>
+           	       	</group>
+           	       	<group col="4" colspan="4">
+           	       	<field name="laboratory_legal_name"/>
+           	       	<field name="laboratory_address"/>
+           	       	<field name="telephone_number"/>
+           	       	<field name="email_address"/>
+           	       	<field name="mailing_address"/>
+           	       	
+           	       	</group>
+           	    	<group>
+           	    	<field name="account">
+           	    		<tree editable="True">
+           	    			<field name="contact_name"/>
+		           	       	<field name="telephone"/>
+		           	       	<field name="email"/>
+		           	       	<field name="alternate_email"/>
+           	    		</tree>
+           	    	</field>
+           	    		<field name="name_address_of_owners"/>
+           	    	</group>
+           	    	
+           	    	<notebook>
+           	    		<page string="Type &amp; Size of Laboratory:">
+	           	    		<group>
+	           	    		<field name="testing_lab"/>
+	           	    		<field name="calibration_lab"/>
+	           	    		<field name="med_lab"/>
+	           	    		</group>
+	           	    		<group string="Size of Laboratory (the number of tests being carried out)">
+	           	    			<field name="tertiary_level_lab"/>
+		           	    		<field name="secondary_level_lab"/>
+		           	    		<field name="primary_level_lab"/>
+	           	    		</group>
+           	    		</page>
+           	    		<page string="Tests">
+           	    		<span>
+           	    			Please list all the fields of testing and the test methods under each field for which the laboratory seeks accreditation. (For more tests add additional lines) <br/>
+           	    			Examples:<br/> 
+
+							FOOD MICROBIOLOGY – Bacteriology<br/>
+							Test Name                                                                                       Test Method Number<br/>
+							Aerobic Plate Count Method                                                                		AOAC 990.12; AFNOR 3M<br/>
+							Brine Testing for Coliform                                                                   	AOAC 991.14<br/>
+							Environmental, Brine, and Food Contact Testing for Listeria Genus       						AOAC RI 020401<br/>
+							
+							FOOD MICROBIOLOGY – Mycology<br/>
+							Test Name                                                                                      	Test Method Number<br/>
+							Yeast and Mold                                                                                  BAM Ch. 18; APHA Compendium Ch. 21, 52<br/>
+							
+							FOOD CHEMISTRY<br/>
+							Test Name                                                                                      	Test Method Number<br/>
+							Fat                                                                                             AOCS Am 5-04<br/>
+							Moisture                                                                                        AOCS Am 5-04<br/>
+							Protein                                                                                       	AOAC 992.15<br/>
+							Salt in Meat                                                                                    AOAC 935.47<br/>
+           	    		</span>
+           	    		<group string="List the Test Names and Methods below, as in the format shown above, for which your laboratory seeks accreditation:"></group>
+           	    		
+           	    		<field name="test">
+	           	    		<tree editable="True">
+		           	    		<field name="test_name"/>
+		           	    		<field name="test_method"/>
+	           	    		</tree>
+           	    		</field>
+           	    		
+           	    		<group>
+	           	    		<field name="lab_capabilities" placeholder="Please enter a brief description of the types of other tests or calibrations that the laboratory currently conducts which you do not plan to include on your scope of accreditation at this time"/>
+	           	    		<field name="num_of_lab_staff" placeholder="Please enter the total number of laboratory personnel, including those who may conduct testing work off-site."/>
+           	    		</group>
+           	    		</page>
+           	    		<page string="Agreement">
+           	    			<group col="4" colspan="4">
+           	    			<field name="signed_by_authorized_rep"/>
+           	    			<field name="place_and_date"/>
+           	    			</group>
+           	    			<group>
+           	    				<field name="print_name_below"/>
+           	    			</group>
+           	    			<group col="6" colspan="3">
+           	    				<field name="telephone"/>
+           	    				<field name="fax"/>
+           	    				<field name="email"/>
+           	    			</group>
+           	    			<span>I have read, I understand and I agree with the information provided in the Guide for Laboratories Applying to NiNAS for Accreditation, and agrees that the laboratory</span><br/>
+                            <span>a) commit to fulfill continually the requirements for accreditation for the scope for which accreditation is sought or granted and commit to provide evidence of fulfillment. This includes agreement to adapt to changes in the requirements for accreditation;</span><br/>
+                            <span>b) cooperate as is necessary to enable the accreditation body to verify fulfillment of requirements for accreditation;</span><br/>
+           	    			<span>c) provide access to conformity assessment body personnel, locations, information, documents and records as necessary to verify fulfillment of requirements for accreditation;</span><br/>
+           	    			<span>d) arrange the witnessing of conformity assessment activities when requested by the accreditation body;  </span><br/>
+           	    			<span>e) have, where applicable, legally enforceable arrangements with their clients that commit the  clients to provide, on request, access to accreditation body assessment teams to assess the conformity assessment body's performance when carrying out conformity assessment activities at the client’s site;</span><br/>
+           	    			<span>f) claim accreditation only with respect to the scope for which it has been granted; </span><br/>
+           	    			<span>g) commit to follow the accreditation body's policy for the use of the accreditation symbol;</span><br/>
+           	    			<span>h) not to use its accreditation in such a manner as to bring the accreditation body into disrepute;</span><br/>
+           	    			<span>i) inform the accreditation body without delay of significant changes relevant to its accreditation such as,<br/>
+							- its legal, commercial, ownership or organizational status,<br/>
+							- the organization, top management and key personnel,<br/>
+							- resources and location(s) other matters that may affect the ability of the conformity assessment body to fulfill requirements for accreditation</span><br/>
+           	    			<span>j) to pay fees as determined by the accreditation body; and</span><br/>
+           	    			<span>k) to assist in the investigation and resolution of any accreditation-related complaints about the conformity assessment body referred to it by the accreditation body.</span><br/>
+           	    		</page>
+           	    		<page string="Supporting Attachments for Application">
+           	    			<group string="Please include the following supporting documentation with the application:">
+           	    				<span>☐	A copy of the current version of your quality manual and any operating procedures and work instructions. Electronic copies are preferred.</span><br/>
+           	    				<span>☐ An up-to-date laboratory organization chart and identify, by name, the key personnel involved for each function.</span><br/>
+           	    				<span>☐	If laboratory is a part of a larger organization, e.g., a manufacturing company or a government department, include a chart of the Laboratory’s position and reporting relationships within that organization.</span><br/>
+           	    				<span>☐	The proficiency testing plan and proficiency test results, with any corrective action response (if applicable).</span><br/>
+           	    				<span>☐	A list of all equipment used to support the tests or calibrations including in-house (i.e. equipment calibrations that your lab perform) and external calibrations (i.e. those that an external calibration laboratory performs), and rented/borrowed equipment.</span><br/>
+           	    				<span>☐	For Calibration Applicants Only:  a sample of a calibration certificate which you laboratory issues and uncertainty calculations that support the Measurement Uncertainties to be claimed on your scope of accreditation.</span><br/>
+           	    			</group>
+           	    			<group string="Mailing/Emailing Instructions">
+           	    				<span>Electronic submissions are preferred to:  Applications@NiNAS.ng</span><br/>
+           	    				<span>If mailing paper copies, please return the entire application along with the requested supporting documentation and payment of fees to:</span><br/>
+           	    				<span>
+           	    				Nigeria National Accreditation Service (NiNAS) c/o UNIDO NQIP<br/>
+								Bank of Industry Building,<br/>
+								7th floor<br/>
+								256 Herbert Macaulay Way,<br/>
+								Central Business District,<br/>
+								Abuja, Nigeria<br/>
+           	    				</span>
+           	    			</group>
+           	    			<group string="Questions?:  Please direct them to: Applications@NiNAS.ng  or call: +234 (0) 81 7976 4868"></group>
+           	    		</page>
+           	    	</notebook>
+           	    	
+                </sheet>
+			    </xpath>
+            </field>
     </record>
     
     <record id="ninas_assessment_type_form_view" model="ir.ui.view">
