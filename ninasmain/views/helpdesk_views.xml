@@ -39,6 +39,106 @@
     </record>
 	  	
 	<template id="ninas_website_helpdesk_form_ticket_submit" inherit_id="website_helpdesk_form.ticket_submit">
+            
+            <xpath expr="//h2" position="before">
+            	<h1 class="text-center">NIGERIA NATIONAL ACCREDITATION SERVICE</h1>
+				<h3 class="text-center">F 072A APPLICATION FOR ACCREDITATION OF TESTING, CALIBRATION OR MEDICAL
+										LABORATORY ISO/IEC 17025 &amp; ISO 15189</h3>
+				<h4 class="text-left">Confidentiality Policy</h4>
+				<h5 class="text-left">According to the NiNAS Code of Conduct: All NiNAS Assessors, Staff and Committee members are required to keep
+				information about your application confidential. Following a successful accreditation, the only information published by
+				NiNAS will be your accredited scope and contact details. NiNAS may be required by law to share other information or may
+				publish information that is already in the public domain.</h5>
+				<strong>
+					Part I. Application Information
+				</strong><br/>
+			</xpath>
+			
+			<xpath expr="//label[@for='partner_name']" position="replace">
+            	<label class="control-label" for="partner_name">Applicant’s Authorized Representative’s Name</label>                  
+       		</xpath>
+       		
+       		<xpath expr="//div[@class='form-group form-field o_website_form_required']" position="after">
+       			<div class="form-group form-field o_website_form_required">
+		              <div class="col-md-3 col-sm-4 text-right">
+		                  <label class="control-label" for="applicant_rep_title">Authorized Representative’s Title</label>
+		              </div>
+		              <div class="col-md-7 col-sm-8">
+		              	<select name="applicant_rep_title">
+							  <option value="mr">Mr.</option>
+							  <option value="ms">Ms.</option>
+							  <option value="mrs">Mrs.</option>
+							  <option value="dr">DR.</option>
+							  <option value="engr">Engr.</option>
+							  <option value="prof">Prof.</option>
+						</select>
+		              </div>
+		          </div>
+		          
+		          <p class='text-center'>
+		          	Laboratory’s Legal Name (as it should appear on your Certificate and on the NiNAS web site) and the Legal Status of
+					the laboratory (e.g. Owner operated, Limited Liability Corporation, Corporation, Government Lab, Incorporation by
+					Trustees etc.) If the lab is part of a larger legal entity, include that name and the division to which the lab belongs.
+		          </p>
+		          
+		          <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="laboratory_legal_name">Laboratory’s Legal Name</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="laboratory_legal_name" required="1"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="laboratory_address">Laboratory Address (Number and Street, City, State and Country)</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="laboratory_address" required="1"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="telephone_number">Telephone Numbers</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="telephone_number" required="1"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="email_address">Email Address(es) official for laboratory and alternate contact</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="email_address" t-att-value="default_values.get('email', '')" required="1" multiple=""/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="mailing_address">Mailing Address (if different from the laboratory location – Number, Street, City, State, Country)</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+	                       <textarea class="form-control o_website_form_input" name="mailing_address"/>
+	                   </div>
+                 </div>
+                 
+                 <div class="form-group form-field">
+	                   <div class="col-md-3 col-sm-4 text-right">
+	                       <label class="control-label" for="name_address_of_owners">Name and Address of Owners (applicable in the case of private ownership)</label>
+	                   </div>
+	                   <div class="col-md-7 col-sm-8">
+	                       <textarea class="form-control o_website_form_input" name="name_address_of_owners"/>
+	                   </div>
+	               </div>
+		          
+		          
+		          
+       		</xpath>
+            
             <xpath expr="//div[@class='form-group']" position="before">
            		
            		<div class="form-group form-field o_website_form_required">
@@ -180,7 +280,15 @@
             'team_id',
             'partner_id',
             'funding',
-            'assessment_type_id'
+            'assessment_type_id',
+            'applicant_rep_title',
+            'laboratory_address',
+            'laboratory_legal_name',
+            'telephone_number',
+            'email_address',
+            'mailing_address',
+            'account',
+            'name_address_of_owners'
         ]"/>
     </function>
         
