@@ -941,6 +941,8 @@
               action="TravelRequest_action_window"/>
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
+	<menuitem name="Checklist Request" id="checklist_main_menu" parent="request_main_menu"
+              action="multea_checklist_action"/>
               
     <menuitem name="Vouchers" id="bank_vouchert_main_menu" parent="account.menu_finance_receivables"/>          
     <menuitem name="Bank voucher" id="bank_voucher_menu" parent="bank_vouchert_main_menu"

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <record model="ir.ui.view" id="multea_checklist_form_view">
+			    <field name="name">multea.checklist.form</field>
+			    <field name="model">multea.checklist</field>
+			    <field name="type">form</field>
+			    <field name="arch" type="xml">
+				    <form string="Check List">
+						    <group string="CheckList" col="1">
+                                <field name="quality_manual"/>
+                                <field name="procedures"/>
+							    <field name="work_inst"/>
+							    <field name="org_charts"/>
+							    <field name="report_rela"/>
+							    <field name="prof_testing"/>
+							    <field name="list_equip"/>
+							    <field name="cali_cert"/>
+							    <field name="evi_pay"/>
+						    </group>
+				    </form>
+			    </field>
+		    </record>
+
+		<record model="ir.actions.act_window" id="multea_checklist_action">
+            <field name="name">Check List</field>
+            <field name="res_model">multea.checklist</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+	</data>
+</odoo>
