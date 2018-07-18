@@ -170,7 +170,7 @@ class JobApp(models.Model):
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
 
-    applicant = fields.Many2one('res.partner', string='Related Patient', help="Patient Name")
+    applicant = fields.Many2one('res.partner', string='Related Patient', help="Customer Name")
     
     
 class CreateInvoice(models.Model):

@@ -10,7 +10,10 @@ from odoo import api, fields, models
 
 class Employee(models.Model):
     _inherit = 'hr.employee'
-
+    
+    employee = fields.Char(
+        string='Employee ID', readonly=True, index=True, copy=False, default='New')
+    
     fname = fields.Char(string='First Name')
     lname = fields.Char(string='Last Name')
     address = fields.Char(string='street address')
@@ -30,17 +33,23 @@ class Employee(models.Model):
     spouse_employer = fields.Char(string='Spouse Employer')
     spouse_phone = fields.Char(string='Spouse Phone')
     title = fields.Char(string='Title')
-    employee = fields.Char(string='Employee ID')
+#    employee = fields.Char(string='Employee ID')
     start_date = fields.Date(string='Start Date')
     salary = fields.Char(string='Salary')
-    Training_date = fields.Date(string='Training Date')
+    Training_date = fields.Date(string='Next Training Date')
     levelof_exp = fields.Selection([
         ('0', 'All'),
         ('1', 'Beginner'),
         ('2', 'Intermediate'),
         ('3', 'Professional')], string='Level Of Expertise',
         default='1')
-
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('employee', 'New') == 'New':
+            vals['employee'] = self.env['ir.sequence'].next_by_code('hr.employee') or '/'
+        return super(Employee, self).create(vals)
+    
 class HrAppraisals(models.Model):
     _inherit = "hr.appraisal"
     
@@ -959,44 +968,6 @@ class StoreReqEdit(models.Model):
         return {}
 
 
-class Petty(models.Model):
-    _name = 'ninas.petty.cash'
-
-    date_entered=fields.Date(
-        string='Date',
-        required=True
-        )
-    ref_no=fields.Char(
-        string='Ref No'
-        )
-    name_of_payee=fields.Char(
-        string='Name of Payee',
-        required=True
-        )
-    amount_naira=fields.Float(
-        string='Amount (Naira)',
-        required=True
-        )
-    description=fields.Text(
-        string='Description of Payment'
-        )
-    accounts_charge=fields.Char(
-        string='Account Chargeable'
-        )
-    grant=fields.Char(
-        string='Grant'
-        )
-    budget_line=fields.Char(
-        string='Budget line'
-        )
-    GL=fields.Char(
-        string='GL'
-        )
-    prepared_by=fields.Char(
-        string='Prepared by',
-        required=True)
-    
-    
 class DieselConsumption(models.Model):
     _name = 'ninas.diesel.consumption'
 
@@ -1055,21 +1026,200 @@ class DieselConsumption(models.Model):
             diesel_available = num.diesel_level_start - num.diesel_level_end
             num.diesel_available = diesel_available
 
+
+
+class CodeofConduct(models.Model):
+    _name = 'ninas.code.conduct'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
+    state = fields.Selection(
+        [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    agreement = fields.Boolean(
+        string='I have read and concur with NiNAS’s Code of Conduct (Sections 1-7).',
+        required=True
+        )
+    date = fields.Date(
+        )
+    date_today = fields.Date(
+        )
+    description = fields.Text(
+        )
+    name = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Employee Printed name:',
+        readonly=True)
+    date_signed = fields.Date(
+        string='Date',
+        readonly=True)
+
+    @api.multi
+    def button_accept(self):
+        self.write({'state': 'accept'})
+        self.date_signed = date.today()
+        self.name = self._uid
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+    
+class ConflictofInterest(models.Model):
+    _name = 'ninas.conflict.interest'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    state = fields.Selection(
+        [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    agreement = fields.Boolean(
+        string='I have read and concur with NiNAS’s Code of Conduct (Sections 2-7).',
+        required=True
+        )
+    date = fields.Date(
+        )
+    date_today = fields.Date(
+        )
+    description = fields.Text(
+        )
+    name = fields.Char(
+        string='Name of Institution or Persone:')
+    
+    printed_name = fields.Char(related='name',readonly=True,
+        string='Printed Name')
+    
+    location = fields.Char(
+        string='Location')
+    date_signed = fields.Date(
+        string='Date',
+        readonly=True)
+
+    @api.multi
+    def button_accept(self):
+        self.write({'state': 'accept'})
+        self.date_signed = date.today()
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
 
 
+class Confidentiality(models.Model):
+    _name = 'ninas.confidentiality'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    state = fields.Selection(
+        [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    name = fields.Char(
+        string='Name of Institution or Persone:',required=True)
+    location = fields.Char(
+        string='Location',required=True)
+    name_rep = fields.Char(
+        string='Name of Person:',required=True)
+    
+    date = fields.Date(
+        )
+    description = fields.Text(
+        )
+    
+    signed = fields.Char(related='name_rep',readonly=True,
+        string='Signed')
+
+    date_signed = fields.Date(
+        string='Date',
+        readonly=True)
+
+    @api.multi
+    def button_accept(self):
+        self.write({'state': 'accept'})
+        self.date_signed = date.today()
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
 
 
+class PettyCash(models.Model):
+    _name = 'ninas.petty_cash'
 
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
 
+    date_entered=fields.Date(
+        string='Date',
+        required=True
+        )
+    ref_no=fields.Char(
+        string='Ref No'
+        )
+    name_of_payee=fields.Char(
+        string='Name of Payee',
+        required=True
+        )
+    amount_naira=fields.Integer(
+        string='Amount (Naira)',
+        required=False
+        )
+    description=fields.Text(
+        string='Description of Payment',
+        required=True
+        )
+    accounts_charge=fields.Char(
+        string='Account Chargeable'
+        )
+    grant=fields.Char(
+        string='Grant'
+        )
+    budget_line=fields.Char(
+        string='Budget line'
+        )
+    gl=fields.Char(
+        string='GL'
+        )
+    prepared_by=fields.Many2one(
+        comodel_name="hr.employee",
+        string='Prepared by',
+        readonly=True
+        )
+    approved_by=fields.Many2one(
+        comodel_name="hr.employee",
+        string='Approved by',
+        readonly=True
+        )
 
+    @api.multi
+    def button_submit(self):
+        self.write({'state':'submit'})
+        self.prepared_by = self._uid
+        return {}
 
-
-
-
-
-
-
+    @api.multi
+    def button_approve(self):
+        self.write({'state':'approve'})
+        self.approved_by = self._uid
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state':'reject'})
+        return {}
 
 
 
