@@ -165,13 +165,7 @@ class JobApp(models.Model):
     @api.multi
     def button_approve(self):
         self.write({'approved':True})
-        return {}
-
-class account_invoice(models.Model):
-    _inherit = 'account.invoice'
-
-    applicant = fields.Many2one('res.partner', string='Related Patient', help="Customer Name")
-    
+        return {}   
     
 class CreateInvoice(models.Model):
     _inherit = "helpdesk.ticket"
@@ -185,15 +179,15 @@ class CreateInvoice(models.Model):
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
     
-    invoice_count = fields.Integer(compute="_invoice_count", string="Invoices")
+    invoice_count = fields.Integer(compute="_invoice_count", string="Invoices", store=False)
     checklist_count = fields.Integer(compute="_checklist_count",string="Checklist")
     car_count = fields.Integer(compute="_car_count",string="C.A.R")
     
-    @api.multi
+    @api.depends('invoice_count')
     def _invoice_count(self):
         oe_invoice = self.env['account.invoice']
         for inv in self:
-            invoice_ids = self.env['account.invoice'].search([('applicant', '=',inv.id)])
+            invoice_ids = self.env['account.invoice'].search([('partner_id', '=', inv.partner_id.id)])
             invoices = oe_invoice.browse(invoice_ids)
             invoice_count = 0
             for inv_id in invoices:

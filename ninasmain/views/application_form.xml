@@ -55,27 +55,25 @@
 	           	    		</group>
            	    		</page>
            	    		<page string="Tests">
-           	    		<span>
-           	    			Please list all the fields of testing and the test methods under each field for which the laboratory seeks accreditation. (For more tests add additional lines) <br/>
-           	    			Examples:<br/> 
-
-							FOOD MICROBIOLOGY – Bacteriology<br/>
-							Test Name                                                                                       Test Method Number<br/>
-							Aerobic Plate Count Method                                                                		AOAC 990.12; AFNOR 3M<br/>
-							Brine Testing for Coliform                                                                   	AOAC 991.14<br/>
-							Environmental, Brine, and Food Contact Testing for Listeria Genus       						AOAC RI 020401<br/>
-							
-							FOOD MICROBIOLOGY – Mycology<br/>
-							Test Name                                                                                      	Test Method Number<br/>
-							Yeast and Mold                                                                                  BAM Ch. 18; APHA Compendium Ch. 21, 52<br/>
-							
-							FOOD CHEMISTRY<br/>
-							Test Name                                                                                      	Test Method Number<br/>
-							Fat                                                                                             AOCS Am 5-04<br/>
-							Moisture                                                                                        AOCS Am 5-04<br/>
-							Protein                                                                                       	AOAC 992.15<br/>
-							Salt in Meat                                                                                    AOAC 935.47<br/>
-           	    		</span>
+           	    		<table class="tableizer-table">
+								<thead><tr class="tableizer-firstrow"><th>Example:</th><th>&#160;</th></tr></thead><tbody>
+								 <tr><td><u>FOOD MICROBIOLOGY - Bacteriology</u></td><td>&#160;</td></tr>
+								 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
+								 <tr><td>Aerobic Plate Count Method</td><td>AOAC 990.12; AFNOR 3M</td></tr>
+								 <tr><td>Brine Testing for Coliform</td><td>AOAC 991.14</td></tr>
+								 <tr><td>Environmental, Brine, and Food Contact Testing for Listeria Genus</td><td>AOAC RI 020401</td></tr>
+								 <tr><td>&#160;</td><td>&#160;</td></tr>
+								 <tr><td>FOOD MICROBIOLOGY - Mycology</td><td>&#160;</td></tr>
+								 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
+								 <tr><td>Yeast and Mold</td><td>BAM Ch. 18; APHA Compendium Ch. 21, 52</td></tr>
+								 <tr><td>&#160;</td><td>&#160;</td></tr>
+								 <tr><td>FOOD CHEMISTRY</td><td>&#160;</td></tr>
+								 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
+								 <tr><td>Fat</td><td>AOCS Am 5-04</td></tr>
+								 <tr><td>Moisture</td><td>AOCS Am 5-04</td></tr>
+								 <tr><td>Protein</td><td>AOAC 992.15</td></tr>
+								 <tr><td>Salt in Meat</td><td>AOAC 935.47</td></tr>
+								</tbody></table>
            	    		<group string="List the Test Names and Methods below, as in the format shown above, for which your laboratory seeks accreditation:"></group>
            	    		
            	    		<field name="test">

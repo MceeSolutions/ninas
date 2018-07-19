@@ -161,7 +161,7 @@
 		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
                 	<field string="Checklist" name="checklist_count" widget="statinfo"/>
                </button>
-               <button type="action" class="oe_stat_button" name="%(account.action_invoice_tree1)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
+               <button type="action" class="oe_stat_button" name="%(account.action_invoice_tree)d" icon="fa-pencil-square-o">
                    <field string="Invoices" name="invoice_count" widget="statinfo"/>
                </button>
                <button type="action" class="oe_stat_button" name="%(ninasmain.ninas_car_report_action)d" icon="fa-folder">

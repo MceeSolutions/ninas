@@ -135,8 +135,233 @@
 	                   </div>
 	               </div>
 		          
+		          <div class="form-group form-field">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="testing_lab">ISO/IEC 17025 Testing Laboratory</label>
+                     </div>
+                     <div class="col-md-1 col-sm-1">
+                         <input type="checkbox" class="form-control o_website_form_input" name="testing_lab"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="calibration_lab">ISO/IEC 17025 Calibration Laboratory</label>
+                     </div>
+                     <div class="col-md-1 col-sm-1">
+                         <input type="checkbox" class="form-control o_website_form_input" name="calibration_lab"/>
+                     </div>
+                 </div>
+                 
+                
+                 <div class="form-group form-field">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="med_lab">ISO 15189: Medical Laboratory</label>
+                     </div>
+                     <div class="col-md-1 col-sm-1">
+                         <input type="checkbox" class="form-control o_website_form_input" name="med_lab"/>
+                     </div>
+                 </div>
+                 
+                  
+                 <div class="form-group form-field">
+                 	<strong>
+                 		<p class='text-center'>
+                 		Size of Laboratory (the number of tests being carried out)
+                 		</p>
+                 	</strong>
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="tertiary_level_lab">Tertiary level lab/ Tests (&gt;20)</label>
+                     </div>
+                     <div class="col-md-1 col-sm-1">
+                         <input type="checkbox" class="form-control o_website_form_input" name="tertiary_level_lab"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="secondary_level_lab">Secondary level lab 11-20 Tests</label>
+                     </div>
+                     <div class="col-md-1 col-sm-1">
+                         <input type="checkbox" class="form-control o_website_form_input" name="secondary_level_lab"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="primary_level_lab">Primary level lab (1-10)</label>
+                     </div>
+                     <div class="col-md-1 col-sm-1">
+                         <input type="checkbox" class="form-control o_website_form_input" name="primary_level_lab"/>
+                     </div>
+                 </div>
+    				<p>
+    					<strong>Tests:</strong> Please list all the fields of testing and the test methods under each field for which the laboratory seeks
+    					accreditation. (For more tests add additional lines)
+    				</p>
+    				
+			        <table class="tableizer-table">
+					<thead><tr class="tableizer-firstrow"><th>Example:</th><th>&#160;</th></tr></thead><tbody>
+					 <tr><td><u>FOOD MICROBIOLOGY - Bacteriology</u></td><td>&#160;</td></tr>
+					 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
+					 <tr><td>Aerobic Plate Count Method</td><td>AOAC 990.12; AFNOR 3M</td></tr>
+					 <tr><td>Brine Testing for Coliform</td><td>AOAC 991.14</td></tr>
+					 <tr><td>Environmental, Brine, and Food Contact Testing for Listeria Genus</td><td>AOAC RI 020401</td></tr>
+					 <tr><td>&#160;</td><td>&#160;</td></tr>
+					 <tr><td>FOOD MICROBIOLOGY - Mycology</td><td>&#160;</td></tr>
+					 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
+					 <tr><td>Yeast and Mold</td><td>BAM Ch. 18; APHA Compendium Ch. 21, 52</td></tr>
+					 <tr><td>&#160;</td><td>&#160;</td></tr>
+					 <tr><td>FOOD CHEMISTRY</td><td>&#160;</td></tr>
+					 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
+					 <tr><td>Fat</td><td>AOCS Am 5-04</td></tr>
+					 <tr><td>Moisture</td><td>AOCS Am 5-04</td></tr>
+					 <tr><td>Protein</td><td>AOAC 992.15</td></tr>
+					 <tr><td>Salt in Meat</td><td>AOAC 935.47</td></tr>
+					</tbody></table>
+					
+		          <br/>
 		          
+		          <p>
+			          <strong>
+			          	<u>List the Test Names and Methods below, as in the format shown above, for which your laboratory seeks
+		          		accreditation:</u>
+			          </strong>
+		          </p>
+		        
+		        <div class="form-group form-field o_website_form_required">
+	                   <div class="col-md-3 col-sm-4 text-right">
+	                       <label class="control-label" for="lab_capabilities">Laboratory Capabilities: Please enter a brief description of the types of other tests or calibrations that the laboratory
+							currently conducts which you do not plan to include on your scope of accreditation at this time</label>
+	                   </div>
+	                   <div class="col-md-7 col-sm-8">
+	                       <textarea class="form-control o_website_form_input" name="lab_capabilities" required="1"/>
+	                   </div>
+	               </div>  
+	               
+	               <div class="form-group form-field o_website_form_required">
+	                   <div class="col-md-3 col-sm-4 text-right">
+	                       <label class="control-label" for="num_of_lab_staff">Number of Laboratory Staff: Please enter the total number of laboratory personnel, including those who may
+							conduct testing work off-site.</label>
+	                   </div>
+	                   <div class="col-md-7 col-sm-8">
+	                       <textarea class="form-control o_website_form_input" name="num_of_lab_staff" required="1"/>
+	                   </div>
+	               </div>  
 		          
+		       		<p>
+		       		<strong>
+		       		AGREEMENT
+		       		</strong>
+		       		</p>
+		       		
+		       		<div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="email_address">Signed by Authorized Representative:</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="signed_by_authorized_rep" required="1"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="email_address">Place and date:</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="place_and_date" required="1"/>
+                     </div>
+                 </div> 
+                 
+                 <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="email_address">Print Name below:</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="print_name_below" required="1"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="telephone">Telephone</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="telephone" required="1"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="fax">Fax</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="fax"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="email">Email</label>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <input type="email" class="form-control o_website_form_input" name="email" t-att-value="default_values.get('email', '')" required="1"/>
+                     </div>
+                 </div>
+                 
+                 <span>I have read, I understand and I agree with the information provided in the <strong>Guide for Laboratories Applying to NiNAS for Accreditation,</strong> and agrees that the laboratory</span><br/>
+                            <span>a) commit to fulfill continually the requirements for accreditation for the scope for which accreditation is sought or granted and commit to provide evidence of fulfillment. This includes agreement to adapt to changes in the requirements for accreditation;</span><br/>
+                            <span>b) cooperate as is necessary to enable the accreditation body to verify fulfillment of requirements for accreditation;</span><br/>
+           	    			<span>c) provide access to conformity assessment body personnel, locations, information, documents and records as necessary to verify fulfillment of requirements for accreditation;</span><br/>
+           	    			<span>d) arrange the witnessing of conformity assessment activities when requested by the accreditation body;  </span><br/>
+           	    			<span>e) have, where applicable, legally enforceable arrangements with their clients that commit the  clients to provide, on request, access to accreditation body assessment teams to assess the conformity assessment body's performance when carrying out conformity assessment activities at the client’s site;</span><br/>
+           	    			<span>f) claim accreditation only with respect to the scope for which it has been granted; </span><br/>
+           	    			<span>g) commit to follow the accreditation body's policy for the use of the accreditation symbol;</span><br/>
+           	    			<span>h) not to use its accreditation in such a manner as to bring the accreditation body into disrepute;</span><br/>
+           	    			<span>i) inform the accreditation body without delay of significant changes relevant to its accreditation such as,<br/>
+							- its legal, commercial, ownership or organizational status,<br/>
+							- the organization, top management and key personnel,<br/>
+							- resources and location(s) other matters that may affect the ability of the conformity assessment body to fulfill requirements for accreditation</span><br/>
+           	    			<span>j) to pay fees as determined by the accreditation body; and</span><br/>
+           	    			<span>k) to assist in the investigation and resolution of any accreditation-related complaints about the conformity assessment body referred to it by the accreditation body.</span><br/>
+           	    			<br/>
+           	    <p>
+           	    <strong>
+           	    	Please include the following supporting documentation with the application:<br/><br/>
+           	    </strong>
+           	    <span>☐	A copy of the current version of your quality manual and any operating procedures and work instructions. Electronic copies are preferred.</span><br/>
+           	    				<span>☐ An up-to-date laboratory organization chart and identify, by name, the key personnel involved for each function.</span><br/>
+           	    				<span>☐	If laboratory is a part of a larger organization, e.g., a manufacturing company or a government department, include a chart of the Laboratory’s position and reporting relationships within that organization.</span><br/>
+           	    				<span>☐	The proficiency testing plan and proficiency test results, with any corrective action response (if applicable).</span><br/>
+           	    				<span>☐	A list of all equipment used to support the tests or calibrations including in-house (i.e. equipment calibrations that your lab perform) and external calibrations (i.e. those that an external calibration laboratory performs), and rented/borrowed equipment.</span><br/>
+           	    				<span>☐	For Calibration Applicants Only:  a sample of a calibration certificate which you laboratory issues and uncertainty calculations that support the Measurement Uncertainties to be claimed on your scope of accreditation.</span><br/>
+           	    </p>
+           	    
+           	  <p>
+           	  	<strong>
+           	  		Mailing/Emailing Instructions
+           	  	</strong>
+           	  	Electronic submissions are preferred to: <a href="https://www.ninas.ng">Applications@NiNAS.ng</a>
+           	  </p>
+           	  
+           	  <p>
+           	  <span>If mailing paper copies, please return the entire application along with the requested supporting documentation and payment of fees to:</span><br/>
+           	    				<span>
+           	    				Nigeria National Accreditation Service (NiNAS) c/o UNIDO NQIP<br/>
+								Bank of Industry Building,<br/>
+								7th floor<br/>
+								256 Herbert Macaulay Way,<br/>
+								Central Business District,<br/>
+								Abuja, Nigeria<br/>
+           	    				</span>
+           	  </p>
+           	  
+           	  <p>
+	           	  <strong>
+	           	  	Questions?: Please direct them to: <a href="https://www.ninas.ng">Applications@NiNAS.ng</a> or call: +234 (0) 81 7976 4868
+	           	  </strong>
+           	  </p>
+                 
        		</xpath>
             
             <xpath expr="//div[@class='form-group']" position="before">
@@ -288,7 +513,9 @@
             'email_address',
             'mailing_address',
             'account',
-            'name_address_of_owners'
+            'name_address_of_owners',
+            'testing_lab','calibration_lab','med_lab',
+            'tertiary_level_lab','secondary_level_lab','primary_level_lab'
         ]"/>
     </function>
         
@@ -403,27 +630,25 @@
 	           	    		</group>
            	    		</page>
            	    		<page string="Tests">
-           	    		<span>
-           	    			Please list all the fields of testing and the test methods under each field for which the laboratory seeks accreditation. (For more tests add additional lines) <br/>
-           	    			Examples:<br/> 
-
-							FOOD MICROBIOLOGY – Bacteriology<br/>
-							Test Name                                                                                       Test Method Number<br/>
-							Aerobic Plate Count Method                                                                		AOAC 990.12; AFNOR 3M<br/>
-							Brine Testing for Coliform                                                                   	AOAC 991.14<br/>
-							Environmental, Brine, and Food Contact Testing for Listeria Genus       						AOAC RI 020401<br/>
-							
-							FOOD MICROBIOLOGY – Mycology<br/>
-							Test Name                                                                                      	Test Method Number<br/>
-							Yeast and Mold                                                                                  BAM Ch. 18; APHA Compendium Ch. 21, 52<br/>
-							
-							FOOD CHEMISTRY<br/>
-							Test Name                                                                                      	Test Method Number<br/>
-							Fat                                                                                             AOCS Am 5-04<br/>
-							Moisture                                                                                        AOCS Am 5-04<br/>
-							Protein                                                                                       	AOAC 992.15<br/>
-							Salt in Meat                                                                                    AOAC 935.47<br/>
-           	    		</span>
+           	    		<table class="tableizer-table">
+							<thead><tr class="tableizer-firstrow"><th>Example:</th><th>&#160;</th></tr></thead><tbody>
+							 <tr><td><u>FOOD MICROBIOLOGY - Bacteriology</u></td><td>&#160;</td></tr><br/>
+							 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
+							 <tr><td>Aerobic Plate Count Method</td><td>AOAC 990.12; AFNOR 3M</td></tr>
+							 <tr><td>Brine Testing for Coliform</td><td>AOAC 991.14</td></tr>
+							 <tr><td>Environmental, Brine, and Food Contact Testing for Listeria Genus</td><td>AOAC RI 020401</td></tr><br/>
+							 <tr><td>&#160;</td><td>&#160;</td></tr>
+							 <tr><td>FOOD MICROBIOLOGY - Mycology</td><td>&#160;</td></tr>
+							 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
+							 <tr><td>Yeast and Mold</td><td>BAM Ch. 18; APHA Compendium Ch. 21, 52</td></tr><br/>
+							 <tr><td>&#160;</td><td>&#160;</td></tr>
+							 <tr><td>FOOD CHEMISTRY</td><td>&#160;</td></tr>
+							 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
+							 <tr><td>Fat</td><td>AOCS Am 5-04</td></tr>
+							 <tr><td>Moisture</td><td>AOCS Am 5-04</td></tr>
+							 <tr><td>Protein</td><td>AOAC 992.15</td></tr>
+							 <tr><td>Salt in Meat</td><td>AOAC 935.47</td></tr>
+							</tbody></table>
            	    		<group string="List the Test Names and Methods below, as in the format shown above, for which your laboratory seeks accreditation:"></group>
            	    		
            	    		<field name="test">
