@@ -701,6 +701,113 @@
         <field name="context">{}</field>
     </record>
 
+    <record id="ninas_proficiency_testing_form_view" model="ir.ui.view">
+        <field name="name">ninas.proficiency.testing.form</field>
+        <field name="model">ninas.proficiency.testing</field>
+        <field name="arch" type="xml">
+            <form string="Proficiency Testing">
+                <header>
+                    <button name="review" string="Review" type="object" class="btn btn-primary" states="new"/>
+                    <button name="draft" string="Set to New" type="object" states="refused"/>
+                    <button name="refuse" string="Refuse" type="object" class="btn btn-danger" states="new"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="name"/>
+                        <field name="application_id"/>
+                        <field name="institution_name"/>
+                        <field name="institution_representative"/>
+                        <field name="lead_assessor_id"/>
+                        <field name="evaluation_date"/>
+                        <field name="laboratory"/>
+                        <field name="laboratory_representative"/>
+                        <field name="operation_field"/>
+                        <field name="review_date" readonly="1"/>
+                    </group>
+                    <span><strong>REQUIREMENTS &amp; COMMENTS</strong> Compliance = C , Non-Compliance = NC, Not Applicable = NA</span><br/>
+                    <span>Comment below on adequacy of how requirements have been addressed, documented and/or implemented. All sections of this form must be completed in full</span>
+                    <span><strong>TECHNICAL REQUIREMENTS</strong></span><br/>
+                    <group colspan="15">
+                        <field name="proficiency_testing_text"/>
+                        <field name="proficiency_details_text_1"/>
+                        <field name="proficiency_details_text_2"/>
+                        <field name="proficiency_details_text_3"/>
+                        <field name="proficiency_details_text_4"/>
+                        <field name="proficiency_details_text_5"/>
+                        <field name="proficiency_details_text_6"/>
+                        <field name="proficiency_details_text_7"/>
+                        <field name="proficiency_details_text_8"/>
+                        <field name="proficiency_details_text_9"/>
+                        <field name="proficiency_details_text_10"/>
+                        <field name="proficiency_details_text_11"/>
+                        <field name="proficiency_details_text_12"/>
+                        <field name="proficiency_details_text_13"/>
+                        <field name="proficiency_details_text_14"/>
+                    </group>
+                    <span><strong>Calibration laboratories only:</strong></span>
+                    <group>
+                        <field name="calibration_text_1"/>
+                        <field name="calibration_text_2"/>
+                    </group>
+                    <span><strong>Testing and Medical laboratories only:</strong></span>
+                    <group>
+                        <field name="medical_text_1"/>
+                        <field name="medical_text_2"/>
+                        <field name="medical_comments"/>
+                    </group>
+                    <group string="Calibration, testing and medical laboratories">
+                        <span>Is the PT scheme/ILC/EQA reports clear and comprehensive and does it include at least the following minimum information:
+                            <ul>
+                                <li>Identification of participants</li>
+                                <li>Measurement protocol</li>
+                                <li>Identification of the measurement standard or artifact</li>
+                                <li>Measurement results</li>
+                                <li>The reference value(s) and how these were established</li>
+                                <li>Evaluation of the measurement results</li>
+                                <li>An indication of the performance of individual participants</li>
+                                <li>Minimum acceptance criteria</li>
+                                <li>Conclusion</li>
+                            </ul>
+                        </span>
+                        <field name="calibration_testing_comments" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>  
+
+    <record id="ninas_proficiency_testing_tree_view" model="ir.ui.view">
+        <field name="name">ninas.proficiency.testing.tree</field>
+        <field name="model">ninas.proficiency.testing</field>
+        <field name="arch" type="xml">
+            <tree string="Proficiency Testing">
+                <field name="name"/>
+                <field name="application_id"/>
+                <field name="institution_name"/>
+                <field name="institution_representative"/>
+                <field name="lead_assessor_id"/>
+                <field name="evaluation_date"/>
+                <field name="laboratory"/>
+                <field name="laboratory_representative"/>
+                <field name="operation_field"/>
+            </tree>
+        </field>
+    </record>  
+    
+    <record model="ir.actions.act_window" id="ninas_proficiency_testing_action">
+        <field name="name">Proficiency Testing</field>
+        <field name="res_model">ninas.proficiency.testing</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
     <menuitem name="Toolkits" id="ninas_toolkit_main_menu"/>
     <menuitem name="Tools" id="ninas_toolkit_tools_main_menu" parent="ninas_toolkit_main_menu"/>
     <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_portal" sequence="1"/>
@@ -709,6 +816,8 @@
     <menuitem name="Surveillance Report" id="surveillance_report_menu" action="ninas_surveillance_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="4"/>
     <menuitem name="Document Review Report" id="ninas_document_review_report_menu" action="ninas_document_review_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="5"/>
     <menuitem name="Vertical Assessment Laboratory" id="ninas_vertical_assessment_lab_menu" action="ninas_vertical_assessment_lab_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="6"/>
+    <menuitem name="Proficiency Testing" id="ninas_proficiency_testing_menu" action="ninas_proficiency_testing_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="7"/>
+
 
     <menuitem name="Configuration" id="ninas_toolkit_configuration_main_menu" parent="ninas_toolkit_main_menu"/>
     <menuitem name="Document Review Report Config" id="ninas_document_review_report_config_menu" action="ninas_document_review_config_action" parent="ninas_toolkit_configuration_main_menu" groups="base.group_user" sequence="5"/>

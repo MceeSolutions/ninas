@@ -863,6 +863,103 @@ class VerticalAssessmentLaboratory(models.Model):
 
 
 
+class ProficiencyTesting(models.Model):
+    _name = 'ninas.proficiency.testing'
+    _description = 'NiNAS Proficiency Testing'
+    _inherit='ninas.basic.toolkit.data'
+
+    evaluation_date = fields.Date(
+        string='Date of Evaluation',
+        track_visibility='onchange'
+    )
+
+    laboratory = fields.Char(
+        string='Laboratory',
+        track_visibility='onchange'
+    )
+
+    laboratory_representative = fields.Char(
+        string='Laboratory Representative',
+        track_visibility='onchange'
+    )
+
+    operation_field = fields.Char(
+        string='Area/field of operation',
+        track_visibility='onchange'
+    )
+
+    proficiency_testing_text = fields.Selection(
+        COMPLIANCE,
+        string='5.6.3 - Proficiency testing: Has the laboratory participated in Proficiency Testing (PT) or Inter-laboratory Comparisons for all parameters on the Schedule of Accreditation?',
+        track_visibility='onchange'
+    )
+
+    proficiency_details_text_1 = fields.Text(string='Provide details of the PT/ILC/EQA activity that the laboratory has participated in, particularly since the application/last assessment. Issues to be addressed include: what was covered; were the results satisfactory; who arranged the PT/ILAC/EQA:',
+        track_visibility='onchange')
+    proficiency_details_text_2 = fields.Text(string='If the laboratory has not participated in PT activities because PT is either not practical or none existent.',
+        track_visibility='onchange')
+    proficiency_details_text_3 = fields.Text(string='1. List the tests not covered by PT/ILC',
+        track_visibility='onchange')
+    proficiency_details_text_4 = fields.Text(string='2. What are the reasons for not participating in PT/ILC activities, and are they valid verifiable reasons?',
+        track_visibility='onchange')
+    proficiency_details_text_5 = fields.Text(string='3. Have suitable alternative activities been proposed by the laboratory and agreed to by NiNAS?',
+        track_visibility='onchange')
+    proficiency_details_text_6 = fields.Text(string='4. Which alternative activities are being used by the laboratory?',
+        track_visibility='onchange')
+    proficiency_details_text_7 = fields.Text(string='5. Comment on the suitability of the alternative activities used in assuring the quality of Test and Calibration results',
+        track_visibility='onchange')
+    proficiency_details_text_8 = fields.Text(string='6. Appropriateness of PT/ILC/EQA Activity: How are the following addressed/implemented?',
+        track_visibility='onchange')
+    proficiency_details_text_9 = fields.Text(string='7. Is the amount of PT/ILC/EQA activity (or alternative activities) appropriate to the volume and associated risk for the testing and or calibration activities of the laboratory?',
+        track_visibility='onchange')
+    proficiency_comments = fields.Text(string='Comment on Appropriateness',
+        track_visibility='onchange')
+    proficiency_details_text_10 = fields.Text(string='Analysis of results of PT/ILC/EQA testing: How are the following addressed/implemented? Has the laboratory analyzed the results of the PT/ILC/EQA results (or alternatives) and have appropriate steps been taken when results are not satisfactory (En>1, or Z score>3)',
+        track_visibility='onchange')
+    proficiency_details_text_11 = fields.Text(string='Comment on analysis of results, provide information on what actions the laboratory has taken where the results were found to be unsatisfactory:',
+        track_visibility='onchange')
+    proficiency_details_text_12 = fields.Text(string='Is the laboratory experiencing any problems with participating in PT/ILC/EQA?',
+        track_visibility='onchange')
+    proficiency_details_text_13 = fields.Text(string='What difficulties, if any, has the laboratory experienced in participation? Are there any issues that need to be referred to the technical committee?',
+        track_visibility='onchange')
+    proficiency_details_text_14 = fields.Text(string='What difficulties, if any, has the laboratory experienced in participation? Are there any issues that need to be referred to the technical committee?',
+        track_visibility='onchange')
+    
+    calibration_text_1 = fields.Text(string='1. Has the laboratory prepared and implemented an activity plan that indicated how and when PT and/or ILC activities are to be implemented for the next 5 years?',
+        track_visibility='onchange')
+    calibration_text_2 = fields.Text(string='2. Does the activity plan cover all the major parameters and instruments listed on the laboratory’s schedule of accreditation?',
+        track_visibility='onchange')
+    
+    medical_text_1 = fields.Text(string='1. Has the laboratory prepared and implemented a plan that indicates how and when PT/ILC/EQA activities are to be implemented for at least 2 accreditation cycles ie, the activity schedule for the past accreditation cycle (where possible) and the plan for the subsequent accreditation cycle?',
+        track_visibility='onchange')
+    medical_text_2 = fields.Text(string='2. Does the activity plan cover all accredited activities listed on the laboratory’s schedule of accreditation, and in a period not exceeding one accreditation cycle?',
+        track_visibility='onchange')
+    medical_comments = fields.Text(string='Comment on activity pan, does it cover the full scope of accredited activities?',
+        track_visibility='onchange')
+    calibration_testing_comments = fields.Text(string='Comment on ILC/PT/EQA reports received. Where requirements have not been met, what was missing or incorrectly reported?',
+        track_visibility='onchange')
+    
+    review_date = fields.Date(string='Reviewed Date', track_visibility='onchange')
+    
+    state = fields.Selection(
+        [('new','New'),('refused','Refused'),('reviewed','Reviewed')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+
+    def review(self):
+        self.write({'state':'reviewed', 'review_date':time.strftime('%Y-%m-%d')})
+
+    def draft(self):
+        self.write({'state':'new'})
+
+    def refuse(self):
+        self.write({'state':'refused'})
+
+
+
+
+
 
 
 
