@@ -11,6 +11,7 @@ from pandas.tseries.offsets import BDay
 
 ISO_STANDARD = [('iso1','ISO1'),('iso2','ISO2')]
 COMPLIANCE = [('C','Compliance'),('NC', 'Non-Compliance'),('NA','Not Applicable')]
+COMPLIANCE_STANDARD = [('C','Compliance'),('NC', 'Non-Compliance')]
 
 
 class BasicToolkitData(models.Model):
@@ -889,7 +890,7 @@ class ProficiencyTesting(models.Model):
     )
 
     proficiency_testing_text = fields.Selection(
-        COMPLIANCE,
+        COMPLIANCE_STANDARD,
         string='5.6.3 - Proficiency testing: Has the laboratory participated in Proficiency Testing (PT) or Inter-laboratory Comparisons for all parameters on the Schedule of Accreditation?',
         track_visibility='onchange'
     )
