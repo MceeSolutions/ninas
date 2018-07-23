@@ -714,47 +714,47 @@
                 </header>
                 <sheet>
                     <group col="4" colspan="4">
-                        <field name="name"/>
-                        <field name="application_id"/>
-                        <field name="institution_name"/>
-                        <field name="institution_representative"/>
-                        <field name="lead_assessor_id"/>
-                        <field name="evaluation_date"/>
-                        <field name="laboratory"/>
-                        <field name="laboratory_representative"/>
-                        <field name="operation_field"/>
+                        <field name="name" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="application_id" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="institution_name" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="institution_representative" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="lead_assessor_id" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="evaluation_date" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="laboratory" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="laboratory_representative" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="operation_field" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                         <field name="review_date" readonly="1"/>
                     </group>
-                    <span><strong>REQUIREMENTS &amp; COMMENTS</strong> Compliance = C , Non-Compliance = NC, Not Applicable = NA</span><br/>
+                    <span><strong>REQUIREMENTS &amp; COMMENTS</strong> Compliance = C , Non-Compliance = NC</span><br/>
                     <span>Comment below on adequacy of how requirements have been addressed, documented and/or implemented. All sections of this form must be completed in full</span>
-                    <span><strong>TECHNICAL REQUIREMENTS</strong></span><br/>
+                    <span><br/><br/><strong>TECHNICAL REQUIREMENTS</strong></span><br/>
                     <group colspan="15">
-                        <field name="proficiency_testing_text"/>
-                        <field name="proficiency_details_text_1"/>
-                        <field name="proficiency_details_text_2"/>
-                        <field name="proficiency_details_text_3"/>
-                        <field name="proficiency_details_text_4"/>
-                        <field name="proficiency_details_text_5"/>
-                        <field name="proficiency_details_text_6"/>
-                        <field name="proficiency_details_text_7"/>
-                        <field name="proficiency_details_text_8"/>
-                        <field name="proficiency_details_text_9"/>
-                        <field name="proficiency_details_text_10"/>
-                        <field name="proficiency_details_text_11"/>
-                        <field name="proficiency_details_text_12"/>
-                        <field name="proficiency_details_text_13"/>
-                        <field name="proficiency_details_text_14"/>
+                        <field name="proficiency_testing_text" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_1" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_2" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_3" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_4" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_5" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_6" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_7" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_8" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_9" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_10" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_11" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_12" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_13" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_14" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                     </group>
                     <span><strong>Calibration laboratories only:</strong></span>
                     <group>
-                        <field name="calibration_text_1"/>
-                        <field name="calibration_text_2"/>
+                        <field name="calibration_text_1" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="calibration_text_2" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                     </group>
                     <span><strong>Testing and Medical laboratories only:</strong></span>
                     <group>
-                        <field name="medical_text_1"/>
-                        <field name="medical_text_2"/>
-                        <field name="medical_comments"/>
+                        <field name="medical_text_1" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="medical_text_2" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="medical_comments" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                     </group>
                     <group string="Calibration, testing and medical laboratories">
                         <span>Is the PT scheme/ILC/EQA reports clear and comprehensive and does it include at least the following minimum information:
@@ -770,7 +770,7 @@
                                 <li>Conclusion</li>
                             </ul>
                         </span>
-                        <field name="calibration_testing_comments" nolabel="1"/>
+                        <field name="calibration_testing_comments" nolabel="1" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
