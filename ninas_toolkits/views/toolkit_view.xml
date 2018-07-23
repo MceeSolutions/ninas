@@ -909,7 +909,7 @@
         <field name="name">ninas.assessment.confirmation.assessor.form</field>
         <field name="model">ninas.assessment.confirmation.assessor</field>
         <field name="arch" type="xml">
-            <form string="Assessment Confirmation Assessor">
+            <form string="Assessment Confirmation Assessor" create="false">
                 <header>
                     <button name="accept" string="Accept" type="object" class="btn btn-primary" states="pending"/>
                     <button name="draft" string="Set to New" type="object" states="declined"/>
@@ -958,7 +958,7 @@
         <field name="name">ninas.assessment.confirmation.assessor.tree</field>
         <field name="model">ninas.assessment.confirmation.assessor</field>
         <field name="arch" type="xml">
-            <tree string="Assessment Confirmation Assessor">
+            <tree string="Assessment Confirmation Assessor" create="false">
                 <field name="assessment_confirmation_id"/>
                 <field name="capacity"/>
                 <field name="name"/>
