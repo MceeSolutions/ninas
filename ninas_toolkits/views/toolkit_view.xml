@@ -980,6 +980,147 @@
         <field name="context">{}</field>
     </record>
 
+    <!-- assessment -->
+    <record id="ninas_appraisal_report_lead_assessor_form_view" model="ir.ui.view">
+        <field name="name">ninas.appraisal.report.lead.assessor.form</field>
+        <field name="model">ninas.appraisal.report.lead.assessor</field>
+        <field name="arch" type="xml">
+            <form string="Appraisal Report Lead Assessor">
+                <header>
+                    <button name="approve" string="Approve" type="object" class="btn btn-primary" states="new"/>
+                    <button name="director_approve" string="Director Approve" type="object" class="btn btn-primary" states="approved"/>
+                    <button name="draft" string="Set to New" type="object" states="refused"/>
+                    <button name="refuse" string="Refuse" type="object" class="btn btn-danger" states="new"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group col="2">
+                        <field name="name"/>
+                        <field name="application_id"/>
+                        <field name="institution_name"/>
+                        <field name="assessment_type"/>
+                        <field name="assessment_date"/>
+                        <field name="standard_used"/>
+                    </group>
+                    <group string="Grades">
+                        <!-- total rate -->
+                        <!-- grade -->
+                    </group>
+                    <notebook>
+                        <page string="1. Personal Attributes (based on ISO 19011:2011) Max. Rate = 50">
+                            <group col="4" colspan="4">
+                                <field name="personal_attributes_criteria_1"/>
+                                <field name="personal_attributes_criteria_comments_1"/>
+                                <field name="personal_attributes_criteria_2"/>
+                                <field name="personal_attributes_criteria_comments_2"/>
+                                <field name="personal_attributes_criteria_3"/>
+                                <field name="personal_attributes_criteria_comments_3"/>
+                                <field name="personal_attributes_criteria_4"/>
+                                <field name="personal_attributes_criteria_comments_4"/>
+                                <field name="personal_attributes_criteria_5"/>
+                                <field name="personal_attributes_criteria_comments_5"/>
+                                <field name="personal_attributes_criteria_6"/>
+                                <field name="personal_attributes_criteria_comments_6"/>
+                                <field name="personal_attributes_criteria_7"/>
+                                <field name="personal_attributes_criteria_comments_7"/>
+                                <field name="personal_attributes_criteria_8"/>
+                                <field name="personal_attributes_criteria_comments_8"/>
+                                <field name="personal_attributes_criteria_9"/>
+                                <field name="personal_attributes_criteria_comments_9"/>
+                                <field name="personal_attributes_criteria_10"/>
+                                <field name="personal_attributes_criteria_comments_10"/>
+                            </group>
+                        </page>
+                        <page string="2. Knowledge and Assessment Skills (based on ISO 19011:2011) Max. Rate = 50">
+                            <group col="4" colspan="4">
+                                <field name="knowledge_assessment_skill_1"/>
+                                <field name="knowledge_assessment_skill_comments_1"/>
+                                <field name="knowledge_assessment_skill_2"/>
+                                <field name="knowledge_assessment_skill_comments_2"/>
+                                <field name="knowledge_assessment_skill_3"/>
+                                <field name="knowledge_assessment_skill_comments_3"/>
+                                <field name="knowledge_assessment_skill_4"/>
+                                <field name="knowledge_assessment_skill_comments_4"/>
+                                <field name="knowledge_assessment_skill_5"/>
+                                <field name="knowledge_assessment_skill_comments_5"/>
+                                <field name="knowledge_assessment_skill_6"/>
+                                <field name="knowledge_assessment_skill_comments_6"/>
+                                <field name="knowledge_assessment_skill_7"/>
+                                <field name="knowledge_assessment_skill_comments_7"/>
+                                <field name="knowledge_assessment_skill_8"/>
+                                <field name="knowledge_assessment_skill_comments_8"/>
+                                <field name="knowledge_assessment_skill_9"/>
+                                <field name="knowledge_assessment_skill_comments_9"/>
+                                <field name="knowledge_assessment_skill_10"/>
+                                <field name="knowledge_assessment_skill_comments_10"/>
+                            </group>
+                        </page>
+                        <page string="3. Skills in Assessment Leadership Max. Rate = 30">
+                            <group col="4" colspan="4">
+                                <field name="skill_assessment_leadership_1"/>
+                                <field name="skill_assessment_leadership_comments_1"/>
+                                <field name="skill_assessment_leadership_2"/>
+                                <field name="skill_assessment_leadership_comments_2"/>
+                                <field name="skill_assessment_leadership_3"/>
+                                <field name="skill_assessment_leadership_comments_3"/>
+                                <field name="skill_assessment_leadership_4"/>
+                                <field name="skill_assessment_leadership_comments_4"/>
+                                <field name="skill_assessment_leadership_5"/>
+                                <field name="skill_assessment_leadership_comments_5"/>
+                                <field name="skill_assessment_leadership_6"/>
+                                <field name="skill_assessment_leadership_comments_6"/>
+                            </group>
+                        </page>
+                        <page string="4. Skill in Assessment Reporting Max. Rate = 20">
+                            <group col="4" colspan="4">
+                                <field name="skill_assessment_reporting_1"/>
+                                <field name="skill_assessment_reporting_comments_1"/>
+                                <field name="skill_assessment_reporting_2"/>
+                                <field name="skill_assessment_reporting_comments_2"/>
+                                <field name="skill_assessment_reporting_3"/>
+                                <field name="skill_assessment_reporting_comments_3"/>
+                                <field name="skill_assessment_reporting_4"/>
+                                <field name="skill_assessment_reporting_comments_4"/>
+                            </group>
+                        </page>
+                        <page string="Recommendations">
+                            <field name="recommendations"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="ninas_appraisal_report_lead_assessor_tree_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.confirmation.assessor.tree</field>
+        <field name="model">ninas.appraisal.report.lead.assessor</field>
+        <field name="arch" type="xml">
+            <tree string="Appraisal Report Lead Assessor">
+                <field name="name"/>
+                <field name="application_id"/>
+                <field name="institution_name"/>
+                <field name="assessment_type"/>
+                <field name="assessment_date"/>
+                <field name="standard_used"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>  
+    
+    <record model="ir.actions.act_window" id="ninas_appraisal_report_lead_assessor_action">
+        <field name="name">Appraisal Report Lead Assessor</field>
+        <field name="res_model">ninas.appraisal.report.lead.assessor</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
     <menuitem name="Toolkits" id="ninas_toolkit_main_menu"/>
     <menuitem name="Tools" id="ninas_toolkit_tools_main_menu" parent="ninas_toolkit_main_menu"/>
     <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_portal" sequence="1"/>
@@ -991,6 +1132,8 @@
     <menuitem name="Proficiency Testing" id="ninas_proficiency_testing_menu" action="ninas_proficiency_testing_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="7"/>
     <menuitem name="Assessment Confirmation" id="ninas_assessment_confirmation_menu" action="ninas_assessment_confirmation_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="8"/>
     <menuitem name="Assessment Confirmation Assessor" id="ninas_assessment_confirmation_assessor_menu" action="ninas_assessment_confirmation_assessor_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="8"/>
+    <menuitem name="Appraisal Report Lead Assessor" id="ninas_appraisal_report_lead_assessor_menu" action="ninas_appraisal_report_lead_assessor_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="9"/>
+
 
     <menuitem name="Configuration" id="ninas_toolkit_configuration_main_menu" parent="ninas_toolkit_main_menu"/>
     <menuitem name="Document Review Report Config" id="ninas_document_review_report_config_menu" action="ninas_document_review_config_action" parent="ninas_toolkit_configuration_main_menu" groups="base.group_user" sequence="5"/>
