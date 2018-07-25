@@ -12,7 +12,7 @@
     'author':'Mcee',               
     'website': 'https://mceesolutions.com',
     'category': 'ninas',
-    'version':'11.0.0.0.8',
+    'version':'11.0.0.0.19',
     'application': True,
     'insatallable': True,
     'auto-install': True,
@@ -31,6 +31,7 @@
         'views/helpdesk_views.xml',
         'views/stock_view.xml',
         'views/hr_views.xml',
+        'views/application_form.xml',
         'views/views.xml'
         ],
     'css':[],

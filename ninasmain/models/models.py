@@ -6,11 +6,15 @@ import datetime
 
 from datetime import date, timedelta
 from odoo import api, fields, models
+from docutils.nodes import organization
 
 
 class Employee(models.Model):
     _inherit = 'hr.employee'
-
+    
+    employee = fields.Char(
+        string='Employee ID', readonly=True, index=True, copy=False, default='New')
+    
     fname = fields.Char(string='First Name')
     lname = fields.Char(string='Last Name')
     address = fields.Char(string='street address')
@@ -30,17 +34,23 @@ class Employee(models.Model):
     spouse_employer = fields.Char(string='Spouse Employer')
     spouse_phone = fields.Char(string='Spouse Phone')
     title = fields.Char(string='Title')
-    employee = fields.Char(string='Employee ID')
+#    employee = fields.Char(string='Employee ID')
     start_date = fields.Date(string='Start Date')
     salary = fields.Char(string='Salary')
-    Training_date = fields.Date(string='Training Date')
+    Training_date = fields.Date(string='Next Training Date')
     levelof_exp = fields.Selection([
         ('0', 'All'),
         ('1', 'Beginner'),
         ('2', 'Intermediate'),
         ('3', 'Professional')], string='Level Of Expertise',
         default='1')
-
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('employee', 'New') == 'New':
+            vals['employee'] = self.env['ir.sequence'].next_by_code('hr.employee') or '/'
+        return super(Employee, self).create(vals)
+    
 class HrAppraisals(models.Model):
     _inherit = "hr.appraisal"
     
@@ -957,4 +967,387 @@ class StoreReqEdit(models.Model):
         self.mapped('move_lines')._action_cancel()
         self.write({'state': 'draft'})
         return {}
+
+
+class DieselConsumption(models.Model):
+    _name = 'ninas.diesel.consumption'
+
+    date_input=fields.Date(
+        string='Date',
+        required=True
+        )
+    diesel_level_start=fields.Float(
+        string='Diesel Level Start',
+        default=0,
+        )
+    time_started=fields.Datetime(
+        string='Time Started',
+        default=0,
+        )
+    engine_temp_start=fields.Float(
+        string='Engine Temperature',
+        default=0,
+        )
+    oil_level_start=fields.Float(
+        string='Oil Level',
+        default=0,
+        )
+    battery_voltage_start=fields.Float(
+        string='Battery Voltage',
+        default=0,
+        )
+    diesel_level_end=fields.Float(
+        string='Diesel Level End',
+        default=0,
+        )
+    time_ended=fields.Datetime(
+        string='Time Ended',
+        default=0,
+        )
+    engine_temp_end=fields.Float(
+        string='Engine Temperature',
+        default=0,
+        )
+    oil_level_end=fields.Float(
+        string='Oil Level',
+        default=0,
+        )
+    battery_voltage_end=fields.Float(
+        string='Battery Voltage',
+        default=0,
+        )
+    diesel_available=fields.Float(
+        compute='_subtract_',
+        string='Diesel Level'
+        )
+
+    @api.multi
+    def _subtract_(self):
+        for num in self:
+            diesel_available = num.diesel_level_start - num.diesel_level_end
+            num.diesel_available = diesel_available
+
+
+
+class CodeofConduct(models.Model):
+    _name = 'ninas.code.conduct'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
+    state = fields.Selection(
+        [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    agreement = fields.Boolean(
+        string='I have read and concur with NiNAS’s Code of Conduct (Sections 1-7).',
+        required=True
+        )
+    date = fields.Date(
+        )
+    date_today = fields.Date(
+        )
+    description = fields.Text(
+        )
+    name = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Employee Printed name:',
+        readonly=True)
+    date_signed = fields.Date(
+        string='Date',
+        readonly=True)
+
+    @api.multi
+    def button_accept(self):
+        self.write({'state': 'accept'})
+        self.date_signed = date.today()
+        self.name = self._uid
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+    
+class ConflictofInterest(models.Model):
+    _name = 'ninas.conflict.interest'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    state = fields.Selection(
+        [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    agreement = fields.Boolean(
+        string='I have read and concur with NiNAS’s Code of Conduct (Sections 2-7).',
+        required=True
+        )
+    date = fields.Date(
+        )
+    date_today = fields.Date(
+        )
+    description = fields.Text(
+        )
+    name = fields.Char(
+        string='Name of Institution or Persone:')
+    
+    printed_name = fields.Char(related='name',readonly=True,
+        string='Printed Name')
+    
+    location = fields.Char(
+        string='Location')
+    date_signed = fields.Date(
+        string='Date',
+        readonly=True)
+
+    @api.multi
+    def button_accept(self):
+        self.write({'state': 'accept'})
+        self.date_signed = date.today()
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+
+
+class Confidentiality(models.Model):
+    _name = 'ninas.confidentiality'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    state = fields.Selection(
+        [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    name = fields.Char(
+        string='Name of Institution or Persone:',required=True)
+    location = fields.Char(
+        string='Location',required=True)
+    name_rep = fields.Char(
+        string='Name of Person:',required=True)
+    
+    date = fields.Date(
+        )
+    description = fields.Text(
+        )
+    
+    signed = fields.Char(related='name_rep',readonly=True,
+        string='Signed')
+
+    date_signed = fields.Date(
+        string='Date',
+        readonly=True)
+
+    @api.multi
+    def button_accept(self):
+        self.write({'state': 'accept'})
+        self.date_signed = date.today()
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+
+
+class PettyCash(models.Model):
+    _name = 'ninas.petty_cash'
+
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+
+    date_entered=fields.Date(
+        string='Date',
+        required=True
+        )
+    ref_no=fields.Char(
+        string='Ref No'
+        )
+    name_of_payee=fields.Char(
+        string='Name of Payee',
+        required=True
+        )
+    amount_naira=fields.Integer(
+        string='Amount (Naira)',
+        required=False
+        )
+    description=fields.Text(
+        string='Description of Payment',
+        required=True
+        )
+    accounts_charge=fields.Char(
+        string='Account Chargeable'
+        )
+    grant=fields.Char(
+        string='Grant'
+        )
+    budget_line=fields.Char(
+        string='Budget line'
+        )
+    gl=fields.Char(
+        string='GL'
+        )
+    prepared_by=fields.Many2one(
+        comodel_name="hr.employee",
+        string='Prepared by',
+        readonly=True
+        )
+    approved_by=fields.Many2one(
+        comodel_name="hr.employee",
+        string='Approved by',
+        readonly=True
+        )
+
+    @api.multi
+    def button_submit(self):
+        self.write({'state':'submit'})
+        self.prepared_by = self._uid
+        return {}
+
+    @api.multi
+    def button_approve(self):
+        self.write({'state':'approve'})
+        self.approved_by = self._uid
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state':'reject'})
+        return {}
+
+
+class ContractAgreement(models.Model):
+    _name = 'ninas.contract.agreement'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    date = fields.Date(string='Effective Date', required=True)
+    name = fields.Char(string='Name', required=True)
+    
+    contract_line_ids = fields.One2many(
+        comodel_name='ninas.contract.agreement.items',
+        inverse_name='item')
+    
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    amount_total = fields.Monetary(compute='_total_amount',
+        string='Total', readonly=True, store=True)
+    
+    assessor_name = fields.Char(string='Name')
+    organization_name = fields.Char(string='Organizatoin Name')
+    assessor_address = fields.Char(string='Physical & postal Address')
+    city_country = fields.Char(string='City/Country')
+    
+    contract_date = fields.Date(string='Date')
+    
+    assessor_expert_name = fields.Char(string='Assessor/Expert’s (Name)')
+    management_rep = fields.Char(string="On behalf of NINAS (Management Representative)")
+    assessor_sign = fields.Date(string='Assessor/Expert’s (Sign)')
+    assessor_ref = fields.Char(string='Assessor/Expert’s Ref No')
+    
+
+    @api.depends('contract_line_ids.amount')
+    def _total_amount(self):
+        amount_total = 0.0
+        for line in self.contract_line_ids:
+            self.amount_total += line.amount
+
+    
+class ContractAgreementItems(models.Model):
+    _name = 'ninas.contract.agreement.items'
+    
+    item=fields.Char(string='Item')
+    amount=fields.Monetary(string='Amount')
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    
+class ActivityBudget(models.Model):
+    _name = 'ninas.activity_budget'
+    _description = 'Activity Budget Template'
+
+    employee_id= fields.Char(
+        #related = 'Employee Name'
+        #required=1,
+        )
+    employee = fields.Integer(
+        #related = ''
+        string='Employee Code',
+        #required=1,
+        readonly=1
+        )
+    purpose = fields.Text(
+        string="Purpose/Description of Activity",
+        required=1
+        )
+    date = fields.Date(
+        string = 'Activity Date',
+        required=1,
+        )
+    total = fields.Float(
+        compute = 'sum',
+        string="Total Amount",
+        readonly=1
+        )
+    activity_budget = fields.One2many(
+        comodel_name = 'activity.budget',
+        inverse_name = 'name',
+        string = 'Activity Budget'
+        )
+
+    @api.one
+    def sum(self):
+        total = 0.0
+        for line in self.activity_budget:
+            self.total += line.amount
+         
+class ABudget(models.Model):
+    _name = 'activity.budget'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='',
+        required=0
+        )
+    item = fields.Char(
+        string='Items',
+        required=0
+        )
+    units = fields.Integer(
+        string = 'No. of Units',
+        required=0
+        )
+    cost = fields.Float(
+        string = 'Unit Cost',
+        required=0
+        )
+    amount = fields.Float(
+        compute = 'mul',
+        string = 'Amount',
+        readonly=1
+        )
+    remarks = fields.Char(
+        string = 'Remarks',
+        required=0
+        )
+    fund_code = fields.Char(
+        #related = 'Employee Name'
+        string = 'Fund Code',
+        #required=1
+        )
+    budget_code = fields.Char(
+        #related = 'Employee Name',
+        string = 'Budget Line Code',
+        #required=1
+        )
+
+    @api.one
+    def mul(self):
+        self.amount = self.units  *  self.cost
+        return True

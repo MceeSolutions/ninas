@@ -50,6 +50,12 @@
 							<field name="relationship"/>
 						</group>
 					</page>
+					<page name="training_plan" string="Training Plan" groups="hr.group_hr_manager">
+						<group>
+							<field name="Training_date"/>
+							<field name="notes" placeholder="Notes from HR"/>
+						</group>
+					</page>
 				</xpath>
  				
 			 <xpath expr="//page[@name='personal_information']" position="inside">
@@ -78,7 +84,6 @@
 					<field name="title"/>
 					<field name="levelof_exp" widget="priority"/>
 					<field name="employee"/>
-					<field name="Training_date"/>
 					<field name="start_date"/>
 					<field name="salary" widget="monetary"/>
 				</group>
@@ -247,6 +252,82 @@
 	<record model="ir.actions.act_window" id="ninas_expense_claim_action">
 		<field name="name">Expense Claim Form</field>
 		<field name="res_model">ninas.expense_claim</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+    
+    <!-- petty cash action -->
+   		<record model="ir.actions.act_window" id="petty_cash_action">
+			<field name="name">Petty Cash Voucher</field>
+			<field name="res_model">ninas.petty_cash</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[]</field>
+			<field name="context">{}</field>
+		</record>
+		
+	<!-- diesel consumption action -->
+		
+	<record model="ir.actions.act_window" id="ninas_diesel_consumption_action">
+            <field name="name">Diesel Consumption</field>
+            <field name="res_model">ninas.diesel.consumption</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+	
+    <!-- Code of conduct action -->
+		
+	<record model="ir.actions.act_window" id="ninas_code_of_conduct_action">
+            <field name="name">Code Of Conduct</field>
+            <field name="res_model">ninas.code.conduct</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        
+        
+     <!-- Conflict of interest action -->
+		
+	<record model="ir.actions.act_window" id="ninas_conflict_of_interest_action">
+            <field name="name">Conflict Of Interest</field>
+            <field name="res_model">ninas.conflict.interest</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        
+   <!-- Confidentiality action -->
+		
+	<record model="ir.actions.act_window" id="ninas_confidentiality_action">
+            <field name="name">Confidentiality</field>
+            <field name="res_model">ninas.confidentiality</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+    
+    <!-- Contract Agreement action -->
+    
+	<record model="ir.actions.act_window" id="ninas_contract_agreement_action">
+            <field name="name">Contract Agreement</field>
+            <field name="res_model">ninas.contract.agreement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+    
+    <!-- Activity Budget -->
+    <record model="ir.actions.act_window" id="activity_budget_action">
+		<field name="name">Activity Budget Template</field>
+		<field name="res_model">ninas.activity_budget</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[]</field>
@@ -445,7 +526,7 @@
 	                	<notebook>
 	                		<page name="item" string="Items receipted">
 	                			<field name="month_ids">
-	                				<tree>
+	                				<tree editable="True">
 	                					<field name="name_id"/>
 	                					<field name="product_id"/>
 	                					<field name="quantity"/>
@@ -813,6 +894,577 @@
 			</form>
 		</field>
 	</record>
+	
+	<!-- petty cash tree/form -->
+	<record model="ir.ui.view" id="ninas_petty_cash_tree_view">
+			<field name="name">ninas.petty_cash.tree</field>
+			<field name="model">ninas.petty_cash</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="ref_no"/>
+				<field name="name_of_payee"/>
+                <field name="prepared_by"/>
+				<field name="amount_naira"/>
+				<field name="date_entered"/>
+			</field>	
+		</record>
+
+		<record model="ir.ui.view" id="petty_cash_form_view">
+			<field name="name">ninas.petty_cash.form</field>
+			<field name="model">ninas.petty_cash</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Petty Cash Voucher">
+				<header>
+					<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new"/>
+					<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit"/>
+					<button name="button_reject" string="Rejected" type="object" class="btn btn-danger" states="submit"/>
+					<field name="state" widget="statusbar" statusbar_visible="new,submit,approve" readonly="1"/>
+				</header>
+					<sheet>
+						<group string="Petty Cash Voucher" col="4" colspan="4">
+							<field name="date_entered"/>
+							<field name="ref_no"/>
+							<field name="name_of_payee"/>
+							<field name="amount_naira"/>
+							<field name="prepared_by"/>
+						</group>
+						<group>
+								<field name="description"/>
+							</group>
+						<notebook>
+							<page name="accounts" string="Accounts">
+								<group col="4" colspan="4">
+									<field name="accounts_charge"/>
+									<field name="grant"/>
+									<field name="budget_line"/>
+									<field name="gl"/>
+								</group>
+							</page>	
+						</notebook>
+						<group>
+							<field name="approved_by"/>
+						</group>
+					</sheet>
+				</form>	
+			</field>
+		</record>
+
+	<!-- diesel consumption -->    
+	
+	<record model="ir.ui.view" id="ninas_diesel_consumption_tree_view">
+			<field name="name">ninas.diesel.consumption.tree</field>
+			<field name="model">ninas.diesel.consumption</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="date_input"/>
+				<field name="diesel_level_start"/>
+				<field name="diesel_level_end"/>
+				<field name="diesel_available"/>
+			</field>	
+		</record>
+	
+	<record model="ir.ui.view" id="ninas_diesel_consumption_form_view">
+			<field name="name">ninas.diesel.consumption.form</field>
+			<field name="model">ninas.diesel.consumption</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Diesel Consumption">
+					<sheet>
+						<group string="Diesel Consumption Log" col="4" colspan="4">
+							<field name="date_input"/>
+						</group>
+						<notebook>
+							<page name="start_time" string="Start Time">
+								<group col="4" colspan="4">
+									<field name="diesel_level_start"/>
+									<field name="time_started"/>
+									<field name="engine_temp_start"/>
+									<field name="oil_level_start"/>
+									<field name="battery_voltage_start"/>
+								</group>
+							</page>	
+							<page name="end_time" string="End Time">
+								<group col="4" colspan="4">
+									<field name="diesel_level_end"/>
+									<field name="time_ended"/>
+									<field name="engine_temp_end"/>
+									<field name="oil_level_end"/>
+									<field name="battery_voltage_end"/>
+								</group>
+							</page>	
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+	
+    <!-- COde of conduct -->    
+	
+	<record model="ir.ui.view" id="ninas_code_of_conduct_tree_view">
+			<field name="name">ninas.code.conduct.tree</field>
+			<field name="model">ninas.code.conduct</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="name"/>
+				<field name="date"/>
+			</field>	
+		</record>
+	
+	<record model="ir.ui.view" id="ninas_code_of_conduct_form_view">
+			<field name="name">ninas.code.conduct.form</field>
+			<field name="model">ninas.code.conduct</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Code Of Conduct">
+					<header>
+		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+		        	</header>
+					<sheet>
+						<strong>
+							NiNAS CODE OF CONDUCT-SECTION 8: EMPLOYEE AGREEMENT
+						</strong><br/><br/>
+							<field name="agreement"/>
+								<span>
+								I have read and concur with NiNAS’s Code of Conduct (Sections 1-7).
+								</span><br/><br/>
+						<span>
+						<strong>
+							I understand that I must comply with the expectations outlined within
+							these Sections of the Code in performing my duties and activities on
+							behalf of NiNAS, and that failure to do so may result in disciplinary
+							action or termination.
+						</strong><br/><br/>
+						In addition, (please initial one):
+						</span><br/><br/>
+						<strong>
+							<field name="date" attrs="{'required':[('date_today','=',False)]}"/>
+						</strong>
+							<span>
+								as of the date this form was signed, I do not have any actual or
+								potential conflicts of interest as defined by Section 3 of this Code. If any
+								actual or potential conflict(s) of interest arise after signing this form, I agree
+								to divulge them immediately to the NiNAS CEO or the Chair of NiNAS.
+							</span><br/>
+						<strong>
+							<field name="date_today" attrs="{'required':[('date','=',False)]}"/>
+						</strong>
+							<span>
+							as of the date this form was signed, the following actual or potential
+							conflict(s) of interest exist and are detailed below (attached separate pages
+							as necessary). If other actual or potential conflict(s) of interest arise after
+							completing this form, I agree to divulge them immediately to the NiNAS CEO
+							or the Chair of Board of Directors of NiNAS.
+							</span><br/><br/>
+						<field name="description" widget="html"/>
+						<group col="1">
+							<field name="name"/>
+							<field name="date_signed"/>
+						</group>
+					</sheet>
+					<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			     </div>
+				</form>
+			</field>
+		</record>
+		
+		<!-- COnflict of Interest -->    
+	
+	<record model="ir.ui.view" id="ninas_conflict_of_interest_tree_view">
+			<field name="name">ninas.conflict.interest.tree</field>
+			<field name="model">ninas.conflict.interest</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="name"/>
+				<field name="date"/>
+			</field>	
+		</record>
+	
+	<record model="ir.ui.view" id="ninas_conflict_of_interest_form_view">
+			<field name="name">ninas.conflict.interest.form</field>
+			<field name="model">ninas.conflict.interest</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Conflict of Interest">
+					<header>
+		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+		        	</header>
+					<sheet>
+						<strong>
+							CONFLICT OF INTEREST:  F 444
+						</strong><br/><br/>
+							<span>
+								This agreement must be completed and signed prior to taking part in any
+								assignment on behalf of NiNAS
+							</span>
+							<group>
+								<field name="name"/>
+								<field name="location"/>
+							</group>
+							<strong>SECTION 9 –ASSESSOR AGREEMENT</strong><br/><br/><br/>
+							<field name="agreement"/>
+								<span>
+								I have read and concur with NiNAS’s Code of Conduct (Sections 2-7).
+								</span><br/><br/>
+						<span>
+						
+							I understand that I must comply with the expectations outlined within these Sections of
+							the Code in performing my duties and activities on behalf of NiNAS, and that failure to do
+							so may result in disciplinary action, contract termination and/or removal from all NiNAS
+							committee(s)/Assessment role/Consultancy role on which I serve.
+						<br/><br/>
+						In addition, (please initial one):
+						</span><br/><br/>
+						<strong>
+							<field name="date" attrs="{'required':[('date_today','=',False)]}"/>
+						</strong>
+							<span>
+								as of the date this form was signed, I do not have any actual or potential
+								conflicts of interest as defined by this Section 3 of this Code. If any actual or potential
+								conflict(s) of interest arise after signing this form, I agree to divulge them immediately to
+								the NiNAS CEO or the Chair of NiNAS Board of Trustees.
+							</span><br/><br/>
+						<strong>
+							<field name="date_today" attrs="{'required':[('date','=',False)]}"/>
+						</strong>
+							<span>
+							as of the date this form was signed, the following actual or potential conflict(s)
+							of interest exist and are detailed below (attached separate pages as necessary). If other
+							actual or potential conflict(s) of interest arise after completing this form, I agree to
+							divulge them immediately to the NiNAS CEO or the Chair of NiNAS Board of Trustees.
+							</span><br/><br/>
+						<field name="description" widget="html"/>
+						<group col="1">
+							<field name="printed_name"/>
+							<field name="date_signed"/>
+						</group>
+					</sheet>
+					<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			     </div>
+				</form>
+			</field>
+		</record>
+		
+		
+		
+	<!-- Confidentiality -->    
+	
+	<record model="ir.ui.view" id="ninas_confidentiality_tree_view">
+			<field name="name">ninas.confidentiality.tree</field>
+			<field name="model">ninas.confidentiality</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="name"/>
+				<field name="date"/>
+			</field>	
+		</record>
+	
+	<record model="ir.ui.view" id="ninas_confidentialityt_form_view">
+			<field name="name">ninas.confidentiality.form</field>
+			<field name="model">ninas.confidentiality</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Confidentiality">
+					<header>
+		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+		        	</header>
+					<sheet>
+						<strong>
+							CONFIDENTIALITY, IMPARTIALITY AND NON-DISCLOSURE AGREEMENT: F 443
+						</strong><br/><br/>
+							<span>
+								This agreement must be completed and signed prior to taking part in any assignment
+								on behalf of NiNAS
+							</span>
+							<group>
+								<field name="name"/>
+								<field name="location"/>
+							</group>
+							
+							<field name="name_rep"/>
+								<span>
+								(Print name in full) hereby agree that all information in relation to the Client /NiNAS,
+								whether it was gained by myself prior to, during or after the assignment, will be
+								treated by myself as confidential information and will not be reproduced or disclosed
+								to any person or organization.
+								</span><br/><br/>
+						<span>
+							I further agree that I will restrict the above-mentioned information exclusively for
+							purposes directed by NINAS.						
+							<br/><br/>
+							Permission to disclose any information about a Client/NiNAS may only be deemed to
+							have been granted once I have obtained unambiguous written permission from
+							NiNAS’s Chief Executive Officer to do so.
+							<br/><br/>
+							I also confirm that I am fully aware of the binding effect of the “Confidentiality”
+							provisions in the agreement between myself and NiNAS.
+							<br/><br/>
+							I also declare that, to the best of my knowledge, there is no possibility of a conflict
+							of interest between myself, my employee, NiNAS and/or the Client in accepting this
+							assignment.
+							<br/><br/>
+							I hereby declare all interests and associations I have / have had with the above-
+							mentioned Client and its personnel, and also declare any actual or perceived
+							commercial, financial, political or other pressure/s that could influence a decision,
+							recommendation, the business of NiNAS and/or may be to my personal gain:
+						</span><br/><br/>
+						<field name="description" widget="html"/>
+						<span>
+							I further agree that I will uphold the principles of impartiality and non-discrimination,
+							as documented in the NiNAS Administrative Policy (P060 Section 2) and to protect the
+							integrity of NINAS and the accreditation system by:
+						</span><br/>
+						<span>• Observing a non-discriminatory attitude towards the client in the assessment process;</span><br/>
+						<span>• Treating the client in a fair and equitable manner; and</span><br/>
+						<span>• Not providing consultancy to the client, nor suggesting the use of consultants.</span><br/>
+						<span>
+							I further agree that I will abide by all the rules, including applicable policies,
+							procedures and regulations of NiNAS during this assignment
+						</span><br/>
+						<group col="4" colspan="2">
+							<field name="signed"/>
+							<field name="date_signed"/>
+						</group>
+					</sheet>
+					<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			     </div>
+				</form>
+			</field>
+		</record>
+				
+	
+	<!-- Contract Agreement -->    
+	
+	<record model="ir.ui.view" id="ninas_contract_agreement_tree_view">
+			<field name="name">ninas.contract.agreement.tree</field>
+			<field name="model">ninas.contract.agreement</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="name"/>
+				<field name="date"/>
+			</field>	
+		</record>
+	
+	<record model="ir.ui.view" id="ninas_contract_agreement_form_view">
+			<field name="name">ninas.contract.agreement.form</field>
+			<field name="model">ninas.contract.agreement</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Contract Agreement">
+					<sheet>
+						<p class="text-center">
+							<strong>
+								CONTRACT BETWEEN NiNAS AND ASSESSORS/EXPERTS
+							</strong>
+						</p>
+						
+						<p>
+							THIS CONTRACT is made and entered into as of <field name="date"/>, (the "Effective
+							Date:") by and between<field name="name"/> «Name»,
+							hereinafter referred to as the "Assessor/Expert," and the Nigeria Accreditation
+							Service, the national body for the accreditation of Conformity Assessment Bodies
+							(CABs) such as laboratories, certification bodies, product certification bodies,
+							inspection bodies, and personnel certification, in Nigeria, hereinafter referred to as
+							"NINAS".
+						</p>
+						
+						<P>
+							WHEREAS, the Assessor/Expert represents that s(he) is technically knowledgeable
+							and experienced in assessing the competence of a CABs;<br/>
+							WHEREAS, NINAS operates a national program to assess and accredit laboratories utilizing
+							the services of skilled independent contractor Assessor/Expert;<br/>
+							WHEREAS, NINAS seeks to engage the Assessor/Expert to provide such services, and;<br/>
+							WHEREAS, the Assessor/Expert is available and wishes to perform such tasks;<br/>
+							NOW THEREFORE, it is mutually agreed by and between the parties hereto as follows:<br/>
+						</P>
+						
+						<p>
+							<strong>
+								1. PERFORMANCE:<br/>
+							</strong>
+							Assessor’s Responsibilities:<br/>
+							The assessor agrees to fully participate in the assessment by:<br/>
+							1. Preparing for the assessment by reviewing the institutions.<br/>
+							2. Participating in a pre-visit phone call or pre-assessment meeting in conjunction with the rest of
+							the Assessment Team.<br/>
+							3. Performing assessment activities as described in the:<br/>
+							&#160;&#160;&#160;&#160;• NiNAS Lead Assessor Job Description<br/>
+							&#160;&#160;&#160;&#160;• NiNAS Assessor Job Description<br/>
+							&#160;&#160;&#160;&#160;• NiNAS Technical Assessor Job Description<br/>
+							These activities will involve:<br/>
+							&#160;&#160;&#160;&#160;• Document Review<br/>
+							&#160;&#160;&#160;&#160;• Site Visit<br/>
+							&#160;&#160;&#160;&#160;• Findings closure<br/>
+							&#160;&#160;&#160;&#160;• Report writing<br/>
+						</p>
+							
+						<p>
+							As described in the Task Assignment Form for a specific activity in conjunction with any
+							additional assessors.
+						</p>
+						
+						<p>
+							<strong>
+								Services: The Assessor/Expert agrees to provide the following services to NINAS:<br/>
+								&#160;&#160;&#160;&#160;a) Assessments using reference documents supplied by NINAS, based on NINAS
+								designated national and international standards for accreditation, and using the
+								Assessor/Expert's knowledge of particular specific areas of assessment;<br/>
+								&#160;&#160;&#160;&#160;b) Written reports of the assessments and of the Non conformities found in the
+								assessment against the accreditation requirements including the details of an
+								applicant's Scope of Accreditation, as applicable;<br/>
+								&#160;&#160;&#160;&#160;c) Perform in a professional manner the duties and responsibilities of NINAS
+								Assessor/Expert within the limits prescribed by NINAS.
+							</strong>	
+						</p>
+						
+						<p>
+							<strong>
+								<u>
+								Assignments: NINAS is under no obligation to assign any assessments to the
+								Assessor/Expert under this contract. The Assessor/Expert may also refuse to perform any
+								assignment of an assessment for any specific reasons; this reason shall be put in writing.
+								</u>
+							</strong>
+						</p>
+						
+						<p>
+							<strong>
+								2. CONFLICT OF INTEREST, CONFIDENTIALITY, IMPARTIALITY AND NON-DISCLOSURE
+								AGREEMENTS The Assessor/Expert shall sign and comply with NINAS's Conflict of Interest,
+								Confidentiality and Intellectual Property as presented in NiNAS forms F443 and F444.
+								The Assessor / Expert shall refuse any assignments prohibited by these policies.
+							</strong>
+						</p>
+						
+						<p>
+							<strong>
+								3. UPON COMPLETION OF ASSESSMENT<br/>
+								Assessor/Expert shall submit to the Lead Assessor on the last day of an assessment their<br/>
+								1) Individual Assessor/Expert report, Non conformity reports and all relevant
+								attachments including checklist if any;<br/>
+								2) The Lead Assessor shall on the last day of assessment present the signed off Non
+								conformity reports and supporting information to NINAS and within 5 days of Assessment
+								present his/her final report to NINAS.<br/>
+							</strong>
+						</p>
+						
+						<p>
+							<strong>
+								4. PAYMENT<br/>
+								NINAS shall effect payment of approved allowances to Assessor/Expert upon successful
+								presentation of the assessment report.
+							</strong>
+						</p>
+						
+						<strong>
+							Assessment Fees:
+						</strong>
+						
+						<field name="contract_line_ids">
+							<tree editable="True">
+								<field name="item"/>
+								<field name="amount"/>
+							</tree>
+						</field>
+						<group class="oe_subtotal_footer oe_right">
+                           <field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+						
+						<group string="ASSESSOR/EXPERT ADDRESS:">
+							<field name="assessor_name"/>
+							<field name="organization_name"/>
+							<field name="assessor_address"/>
+							<field name="city_country"/>
+						</group>
+						
+						<p>
+						<strong>
+							IN WITNESS WHEREOF, the parties hereto have executed this Contract on
+							<field name="contract_date"/>(DATE) and is valid for three years, extendable if desired by both parties.
+						</strong>
+						</p>
+						<group col="6" colspan="4">
+							<field name="management_rep"/>
+							<field name="assessor_expert_name"/>
+							<field name="assessor_sign"/>
+							<field name="assessor_ref"/>
+						</group>
+					</sheet>
+					<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			     	</div>
+				</form>
+			</field>
+		</record>
+				
+	<!-- activity Budget views -->				
+	<record model="ir.ui.view" id="ninas_activity_budget_tree_view">
+		<field name="name">ninas.activity_budget.tree</field>
+		<field name="model">ninas.activity_budget</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="employee_id"/>
+				<field name="employee"/>
+				<field name="purpose"/>
+				<field name="date"/>
+				<field name="total"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_activity_budget_form_view">
+		<field name="name">ninas.activity_budget.form</field>
+		<field name="model">ninas.activity_budget</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Activity Budget Template">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="employee_id"/>
+						<field name="employee"/>
+						<field name="date"/>
+					</group>
+					<group col="2" colspan="2">
+						<field name="purpose"/>
+					</group>
+					<field name="activity_budget">
+						<tree editable="True">
+							<field name="item"/>
+							<field name="cost"/>
+							<field name="units"/>
+							<field name="amount"/>
+							<field name="remarks" />
+							<field name="budget_code"/>
+							<field name="fund_code"/>
+						</tree>
+					</field>
+					<group>
+						<field name="total"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+		
     
 	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
     <menuitem name="Loan Request" id="loan_request_menu" parent="request_main_menu"
@@ -821,12 +1473,27 @@
               action="TravelRequest_action_window"/>
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
+    <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="request_main_menu"
+              action="ninas_code_of_conduct_action"/>
+    <menuitem name="Conflict Of Interest" id="conflict_of_interest_menu" parent="request_main_menu"
+              action="ninas_conflict_of_interest_action"/>
+    <menuitem name="Confidentiality" id="confidentiality_menu" parent="request_main_menu"
+              action="ninas_confidentiality_action"/>
+    <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="request_main_menu"
+              action="ninas_contract_agreement_action"/>
+  	<menuitem name="Activity Budget" id="activity_budget_menu" parent="request_main_menu"
+              action="activity_budget_action"/>
               
-    <menuitem name="Bank Voucher" id="bank_vouchert_main_menu" parent="account.menu_finance_receivables"/>          
+              
+    <menuitem name="Vouchers" id="bank_vouchert_main_menu" parent="account.menu_finance_receivables"/>          
     <menuitem name="Bank voucher" id="bank_voucher_menu" parent="bank_vouchert_main_menu"
               action="ninas_bank_voucher_action"/>
+    <menuitem name="Petty Cash voucher" id="petty_cash_voucher_menu" parent="bank_vouchert_main_menu"
+              action="petty_cash_action"/>
               
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
+    
+    <menuitem name="Diesel Consumption" id="ninas_diesel_consumption_menuitem" parent="hr.menu_hr_root" action="ninas_diesel_consumption_action"/>
               
    	<menuitem name="Receipt Register" id="register_receipt_menu" parent="stock.menu_stock_root"/>
     <menuitem name="Monthly Consumable Receipt" id="tests_request_menu" parent="register_receipt_menu"

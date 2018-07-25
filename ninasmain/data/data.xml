@@ -9,5 +9,12 @@
         	<field name="travelrequest_no" eval="False"/>
         </record>
         
+        <record id="seq_employee_id" model="ir.sequence">
+        	<field name="name">Employee ID</field>
+        	<field name="code">hr.employee</field>
+        	<field name="padding">5</field>
+        	<field name="employee" eval="False"/>
+        </record>
+        
     </data>
 </odoo>

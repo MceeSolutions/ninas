@@ -148,6 +148,30 @@
            </field>
     </record>
     
+    <record id="account.action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_invoice')]</field>
+            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a customer invoice.
+              </p><p>
+                Odoo's electronic invoicing allows to ease and fasten the
+                collection of customer payments. Your customer receives the
+                invoice by email and he can pay online and/or import it
+                in his own system.
+              </p><p>
+                The discussions with your customer are automatically displayed at
+                the bottom of each invoice.
+              </p>
+            </field>
+        </record>
+    
     <record id="ninas_helpdesk_view_form_view" model="ir.ui.view">
         <field name="name">helpdesk.ticket.form</field>
         <field name="model">helpdesk.ticket</field>
@@ -161,7 +185,7 @@
 		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
                 	<field string="Checklist" name="checklist_count" widget="statinfo"/>
                </button>
-               <button type="action" class="oe_stat_button" name="%(account.action_invoice_tree1)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
+               <button type="object" class="oe_stat_button" name="open_customer_invoices" icon="fa-pencil-square-o">
                    <field string="Invoices" name="invoice_count" widget="statinfo"/>
                </button>
                <button type="action" class="oe_stat_button" name="%(ninasmain.ninas_car_report_action)d" icon="fa-folder">
@@ -332,8 +356,7 @@
 		<field name="model">checklist.ticket</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<field name="name"/>
-			<field name="current_stage"/>
+			<field name="partner_id"/>
 		</field>
 	</record>
 
@@ -344,20 +367,18 @@
     <field name="arch" type="xml">
         <form string="Check List">
 			 <sheet>
-				 <group col="4" colspan="4">
-				 <field name="name"/>
-				 <field name="current_stage"/>
-				 </group>
-				 <notebook>
-					<page name="stages" string="Stages">
-						 <group col="4" colspan="2">
-							<field name="stage_one"/>
-						 	<field name="stage_two"/>
-						 	<field name="stage_three"/>
-						 	<field name="stage_four"/>
-					 	</group>
-					 </page>
-				 </notebook>
+			    <group string="CheckList" col="1">
+			    	<field name="partner_id"/>
+                    <field name="quality_manual"/>
+                    <field name="procedures"/>
+				    <field name="work_inst"/>
+				    <field name="org_charts"/>
+				    <field name="report_rela"/>
+				    <field name="prof_testing"/>
+				    <field name="list_equip"/>
+				    <field name="cali_cert"/>
+				    <field name="evi_pay"/>
+			    </group>
 			 </sheet>
         </form>
     </field>
