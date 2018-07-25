@@ -2,15 +2,17 @@
 # © 2018 Intelligenti <http://www.intelligenti.io>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 import time
-from datetime import datetime
+from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from pandas.tseries.offsets import BDay
+from odoo.exceptions import ValidationError
 
 
 ISO_STANDARD = [('iso1','ISO1'),('iso2','ISO2')]
 COMPLIANCE = [('C','Compliance'),('NC', 'Non-Compliance'),('NA','Not Applicable')]
+COMPLIANCE_STANDARD = [('C','Compliance'),('NC', 'Non-Compliance')]
 
 
 class BasicToolkitData(models.Model):
@@ -889,7 +891,7 @@ class ProficiencyTesting(models.Model):
     )
 
     proficiency_testing_text = fields.Selection(
-        COMPLIANCE,
+        COMPLIANCE_STANDARD,
         string='5.6.3 - Proficiency testing: Has the laboratory participated in Proficiency Testing (PT) or Inter-laboratory Comparisons for all parameters on the Schedule of Accreditation?',
         track_visibility='onchange'
     )
@@ -957,10 +959,184 @@ class ProficiencyTesting(models.Model):
         self.write({'state':'refused'})
 
 
+class AssessmentConfirmation(models.Model):
+    _name = 'ninas.assessment.confirmation'
+    _description = 'Ninas Assessment Confirmation'
+    _inherit = 'ninas.basic.toolkit.data'
+    _sql_constraints = [
+        ('date_check', "CHECK ( (start_date <= end_date))", "The start date must be anterior to the end date.")
+    ]
+
+    start_date = fields.Date(
+        string='Start Date',
+        track_visibility='onchange',
+        required=True
+    )
+
+    end_date = fields.Date(
+        string='End Date',
+        track_visibility='onchange',
+        required=True
+    )
+
+    days = fields.Integer(
+        string='Day(s)',
+        track_visibility='onchange',
+    )
+
+    related_days = fields.Integer(
+        related='days'
+    )
+
+    related_start_date = fields.Date(
+        related='start_date'
+    )
+
+    related_end_date = fields.Date(
+        related='end_date'
+    )
+
+    confirmation_assessor_ids = fields.One2many(
+        comodel_name = 'ninas.assessment.confirmation.assessor',
+        inverse_name = 'assessment_confirmation_id',
+        string='Confirmation Assessor(s)'
+    )
+
+    approval_date = fields.Date(string='Approval Date', track_visibility='onchange')
+    
+    state = fields.Selection(
+        [('new','New'),('refused','Refused'),('approved','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+
+    def approve(self):
+        self.write({'state':'approved', 'approval_date':time.strftime('%Y-%m-%d')})
+
+    def draft(self):
+        self.write({'state':'new'})
+
+    def refuse(self):
+        self.write({'state':'refused'})
 
 
+    @api.model
+    def create(self, values):
+        confirmation = super(AssessmentConfirmation, self).create(values)
+        confirmation.days = confirmation.get_days(confirmation.start_date, confirmation.end_date) 
+        return confirmation
+    
+    @api.multi
+    def write(self, values):
+        super(AssessmentConfirmation, self).write(values)
+        if 'start_date' in values.keys():
+            start_date = values.get('start_date')
+        else:
+            start_date = self.start_date
+        if 'end_date' in values.keys():
+            end_date = values.get('end_date')
+        else:
+            end_date = self.end_date
+        values = {}
+        values.update({'days':self.get_days(start_date, end_date)})
+        super(AssessmentConfirmation, self).write(values)
+        return True
 
+    def get_days(self, start_date, end_date):
+        start_date = start_date.split('-')
+        end_date = end_date.split('-')
+        d0 = date(int(start_date[0]), int(start_date[1]), int(start_date[2]))
+        d1 = date(int(end_date[0]), int(end_date[1]), int(end_date[2]))
+        delta = d1 - d0
+        return delta.days + 1
 
+class AssessmentConfirmationAssessor(models.Model):
+    _name = 'ninas.assessment.confirmation.assessor'
+    _description = 'Ninas Assessment Confirmation Assessors'
+    _inherit = ['mail.thread']
 
+    capacity = fields.Selection(
+        [('lead_assessor','Lead Assessor'), ('technical_assessor_trainee','Technical Assessor (Trainee)')],
+        string='Capacity', 
+        required=True, 
+        track_visibility='onchange'
+    )
 
+    name = fields.Many2one(
+        comodel_name = 'hr.employee',
+        string='Name',
+        required=True,
+        track_visibility='onchange'
+    )
 
+    employed_by = fields.Selection(
+        [('ninas','NiNAS')],
+        string='Employed By', 
+        required=True,
+        default='ninas',
+        track_visibility='onchange'
+    )
+
+    scope_assess = fields.Char(
+        string='Scopes to be assess',
+        track_visibility='onchange',
+        required=True
+    )
+
+    days = fields.Integer(
+        related='assessment_confirmation_id.days',
+        track_visibility='onchange'
+    )
+
+    assessment_confirmation_id = fields.Many2one(
+        comodel_name = 'ninas.assessment.confirmation',
+        string='Assessment Confirmation',
+        ondelete='cascade',
+        track_visibility='onchange'
+    )
+
+    assessment_option = fields.Selection(
+        [('institution_representative','Institution Representative'),
+        ('assessor_expert','Assessor/Expert'),
+        ('observer','Observer'),
+        ('trainee_mentor','Trainee Mentor/Monitor')],
+        string='Assessment Option',
+        track_visibility='onchange'
+    )
+
+    state = fields.Selection(
+        [('pending','Pending'),('declined','Declined'),('accepted','Accepted')],
+        string='Status',
+        default='pending',
+        track_visibility='onchange')
+    
+    accepted_date = fields.Date(
+        string='Accepted Date',
+        track_visibility='onchange'
+    )
+
+    @api.model
+    def create(self, values):
+        assessor = super(AssessmentConfirmationAssessor, self).create(values)
+        partner_id = assessor.name.user_id.partner_id.id 
+        reg = { 
+            'res_id': assessor.id, 
+            'res_model': 'ninas.assessment.confirmation.assessor', 
+            'partner_id': partner_id,
+        } 
+        if not self.env['mail.followers'].search([('res_id','=',assessor.id),('res_model','=','crm.lead'),('partner_id','=',partner_id)]): 
+            self.env['mail.followers'].create(reg)
+        return assessor
+
+    def accept(self):
+        if self.env.user.id != SUPERUSER_ID and self.name.user_id.id != self.env.user.id:
+            raise ValidationError('You cannot accept this as you are not the assessor for this document!') 
+        if not self.assessment_option:
+            raise ValidationError('You must select an assessment option!')         
+        self.write({'state':'accepted', 'accepted_date':time.strftime('%Y-%m-%d')})
+
+    def draft(self):
+        self.write({'state':'pending'})
+
+    def decline(self):
+        self.write({'state':'declined'})

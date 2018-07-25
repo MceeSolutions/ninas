@@ -714,47 +714,47 @@
                 </header>
                 <sheet>
                     <group col="4" colspan="4">
-                        <field name="name"/>
-                        <field name="application_id"/>
-                        <field name="institution_name"/>
-                        <field name="institution_representative"/>
-                        <field name="lead_assessor_id"/>
-                        <field name="evaluation_date"/>
-                        <field name="laboratory"/>
-                        <field name="laboratory_representative"/>
-                        <field name="operation_field"/>
+                        <field name="name" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="application_id" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="institution_name" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="institution_representative" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="lead_assessor_id" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="evaluation_date" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="laboratory" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="laboratory_representative" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="operation_field" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                         <field name="review_date" readonly="1"/>
                     </group>
-                    <span><strong>REQUIREMENTS &amp; COMMENTS</strong> Compliance = C , Non-Compliance = NC, Not Applicable = NA</span><br/>
+                    <span><strong>REQUIREMENTS &amp; COMMENTS</strong> Compliance = C , Non-Compliance = NC</span><br/>
                     <span>Comment below on adequacy of how requirements have been addressed, documented and/or implemented. All sections of this form must be completed in full</span>
-                    <span><strong>TECHNICAL REQUIREMENTS</strong></span><br/>
+                    <span><br/><br/><strong>TECHNICAL REQUIREMENTS</strong></span><br/>
                     <group colspan="15">
-                        <field name="proficiency_testing_text"/>
-                        <field name="proficiency_details_text_1"/>
-                        <field name="proficiency_details_text_2"/>
-                        <field name="proficiency_details_text_3"/>
-                        <field name="proficiency_details_text_4"/>
-                        <field name="proficiency_details_text_5"/>
-                        <field name="proficiency_details_text_6"/>
-                        <field name="proficiency_details_text_7"/>
-                        <field name="proficiency_details_text_8"/>
-                        <field name="proficiency_details_text_9"/>
-                        <field name="proficiency_details_text_10"/>
-                        <field name="proficiency_details_text_11"/>
-                        <field name="proficiency_details_text_12"/>
-                        <field name="proficiency_details_text_13"/>
-                        <field name="proficiency_details_text_14"/>
+                        <field name="proficiency_testing_text" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_1" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_2" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_3" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_4" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_5" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_6" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_7" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_8" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_9" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_10" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_11" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_12" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_13" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="proficiency_details_text_14" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                     </group>
                     <span><strong>Calibration laboratories only:</strong></span>
                     <group>
-                        <field name="calibration_text_1"/>
-                        <field name="calibration_text_2"/>
+                        <field name="calibration_text_1" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="calibration_text_2" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                     </group>
                     <span><strong>Testing and Medical laboratories only:</strong></span>
                     <group>
-                        <field name="medical_text_1"/>
-                        <field name="medical_text_2"/>
-                        <field name="medical_comments"/>
+                        <field name="medical_text_1" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="medical_text_2" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
+                        <field name="medical_comments" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                     </group>
                     <group string="Calibration, testing and medical laboratories">
                         <span>Is the PT scheme/ILC/EQA reports clear and comprehensive and does it include at least the following minimum information:
@@ -770,7 +770,7 @@
                                 <li>Conclusion</li>
                             </ul>
                         </span>
-                        <field name="calibration_testing_comments" nolabel="1"/>
+                        <field name="calibration_testing_comments" nolabel="1" attrs="{'readonly':[('state','in',['reviewed','refused'])]}"/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
@@ -808,6 +808,178 @@
         <field name="context">{}</field>
     </record>
 
+    <record id="ninas_assessment_confirmation_form_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.confirmation.form</field>
+        <field name="model">ninas.assessment.confirmation</field>
+        <field name="arch" type="xml">
+            <form string="Assessment Confirmation">
+                <header>
+                    <button name="approve" string="Approve" type="object" class="btn btn-primary" states="new"/>
+                    <button name="draft" string="Set to New" type="object" states="refused"/>
+                    <button name="refuse" string="Refuse" type="object" class="btn btn-danger" states="new"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="name" attrs="{'readonly':[('state','in',['approved','refused'])]}"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="application_id" attrs="{'readonly':[('state','in',['approved','refused'])]}"/>
+                        <field name="institution_name" required="1" attrs="{'readonly':[('state','in',['approved','refused'])]}"/>
+                        <field name="start_date" attrs="{'readonly':[('state','in',['approved','refused'])]}"/>
+                        <field name="end_date" attrs="{'readonly':[('state','in',['approved','refused'])]}"/>
+                        <field name="days" readonly="1"/>
+                        <field name="approval_date" readonly="1"/>
+                    </group>
+                    <span>Dear Sir/Madam,</span><br/><br/>
+                    <span>
+                           This is to confirm that the Assessment visit for the above institution has been scheduled for the duration of 
+                           <field name="related_days" readonly="1"/> day(s), from <field name="related_start_date" readonly="1"/> 
+                           to <field name="related_end_date" readonly="1"/>.
+                    </span><br/>
+                    <field name="confirmation_assessor_ids">
+                        <tree editable="bottom">
+                            <field name="capacity"/>
+                            <field name="name"/>
+                            <field name="employed_by"/>
+                            <field name="scope_assess"/>
+                            <field name="days" readonly="1"/>
+                            <field name="assessment_option" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                        </tree>
+                    </field>
+                    <span>
+                        You are requested to confirm your acceptance of the above scheduled date and assessment team member(s) within five (5) days of this communication.
+                    </span><br/><br/>
+                    <span>
+                        If you have any objections to the above, kindly submit written justification to NiNAS for consideration. This request should reach NiNAS within five (5) working days.
+                    </span><br/><br/>
+                    <span>
+                        In the event where the institution or assessor cancel or change the scheduled assessment date, NiNAS reserves the right to claim costs incurred resulting from the cancellation or change.
+                    </span><br/><br/>
+                    <span><strong>ASSESSOR(S)</strong></span><br/><br/>
+                    <span>
+                        By accepting this assignment, you undertake to declare that there is no conflict of interest between yourself, your employee or the institution/client.
+                    </span>
+                    <span><strong>__________________________________________________________________________________________________________________________________________________________________________________________</strong></span><br/>
+                    <span>PLEASE CLICK ON ACCEPT WITHIN 2 DAYS OR EMAIL TO l.okoro@ninas.ng</span><br/><br/>
+                    <span>
+                        I the undersigned, accept the date(s) and assessment team for the scheduled assessment as stipulated above.
+                    </span>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>  
+
+
+
+    <record id="ninas_assessment_confirmation_tree_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.confirmation.tree</field>
+        <field name="model">ninas.assessment.confirmation</field>
+        <field name="arch" type="xml">
+            <tree string="Assessment Confirmation">
+                <field name="name"/>
+                <field name="application_id"/>
+                <field name="institution_name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="days"/>
+                <field name="approval_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>  
+    
+    <record model="ir.actions.act_window" id="ninas_assessment_confirmation_action">
+        <field name="name">Assessment Confirmation</field>
+        <field name="res_model">ninas.assessment.confirmation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+
+    <record id="ninas_assessment_confirmation_assessor_form_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.confirmation.assessor.form</field>
+        <field name="model">ninas.assessment.confirmation.assessor</field>
+        <field name="arch" type="xml">
+            <form string="Assessment Confirmation Assessor" create="false">
+                <header>
+                    <button name="accept" string="Accept" type="object" class="btn btn-primary" states="pending"/>
+                    <button name="draft" string="Set to New" type="object" states="declined"/>
+                    <button name="decline" string="Decline" type="object" class="btn btn-danger" states="pending"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group col="4">
+                        <field name="assessment_confirmation_id" readonly="1"/>
+                        <field name="capacity" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                        <field name="employed_by" readonly="1"/>
+                        <field name="scope_assess" readonly="1"/>
+                        <field name="days" readonly="1"/>
+                        <field name="assessment_option"/>
+                        <field name="accepted_date" readonly="1"/>
+                    </group>
+                    <span>
+                        You are requested to confirm your acceptance of the above scheduled date and assessment team member(s) within five (5) days of this communication.
+                    </span><br/><br/>
+                    <span>
+                        If you have any objections to the above, kindly submit written justification to NiNAS for consideration. This request should reach NiNAS within five (5) working days.
+                    </span><br/><br/>
+                    <span>
+                        In the event where the institution or assessor cancel or change the scheduled assessment date, NiNAS reserves the right to claim costs incurred resulting from the cancellation or change.
+                    </span><br/><br/>
+                    <span><strong>ASSESSOR(S)</strong></span><br/><br/>
+                    <span>
+                        By accepting this assignment, you undertake to declare that there is no conflict of interest between yourself, your employee or the institution/client.
+                    </span>
+                    <span><strong>__________________________________________________________________________________________________________________________________________________________________________________________</strong></span><br/>
+                    <span>PLEASE CLICK ON ACCEPT WITHIN 2 DAYS OR EMAIL TO l.okoro@ninas.ng</span><br/><br/>
+                    <span>
+                        I the undersigned, accept the date(s) and assessment team for the scheduled assessment as stipulated above.
+                    </span>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="ninas_assessment_confirmation_assessor_tree_view" model="ir.ui.view">
+        <field name="name">ninas.assessment.confirmation.assessor.tree</field>
+        <field name="model">ninas.assessment.confirmation.assessor</field>
+        <field name="arch" type="xml">
+            <tree string="Assessment Confirmation Assessor" create="false">
+                <field name="assessment_confirmation_id"/>
+                <field name="capacity"/>
+                <field name="name"/>
+                <field name="employed_by"/>
+                <field name="scope_assess"/>
+                <field name="days"/>
+                <field name="assessment_option"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>  
+    
+    <record model="ir.actions.act_window" id="ninas_assessment_confirmation_assessor_action">
+        <field name="name">Assessment Confirmation Assessor</field>
+        <field name="res_model">ninas.assessment.confirmation.assessor</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
     <menuitem name="Toolkits" id="ninas_toolkit_main_menu"/>
     <menuitem name="Tools" id="ninas_toolkit_tools_main_menu" parent="ninas_toolkit_main_menu"/>
     <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_portal" sequence="1"/>
@@ -817,7 +989,8 @@
     <menuitem name="Document Review Report" id="ninas_document_review_report_menu" action="ninas_document_review_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="5"/>
     <menuitem name="Vertical Assessment Laboratory" id="ninas_vertical_assessment_lab_menu" action="ninas_vertical_assessment_lab_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="6"/>
     <menuitem name="Proficiency Testing" id="ninas_proficiency_testing_menu" action="ninas_proficiency_testing_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="7"/>
-
+    <menuitem name="Assessment Confirmation" id="ninas_assessment_confirmation_menu" action="ninas_assessment_confirmation_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="8"/>
+    <menuitem name="Assessment Confirmation Assessor" id="ninas_assessment_confirmation_assessor_menu" action="ninas_assessment_confirmation_assessor_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="8"/>
 
     <menuitem name="Configuration" id="ninas_toolkit_configuration_main_menu" parent="ninas_toolkit_main_menu"/>
     <menuitem name="Document Review Report Config" id="ninas_document_review_report_config_menu" action="ninas_document_review_config_action" parent="ninas_toolkit_configuration_main_menu" groups="base.group_user" sequence="5"/>
