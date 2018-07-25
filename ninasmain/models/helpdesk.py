@@ -32,6 +32,8 @@ class Accreditation(models.Model):
     
     lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor', track_visibility='onchange',)
     
+    re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange',)
+    
     #Application Form Sheet
     name_applicant = fields.Char(
         string='Applicant’s Authorized Representative’s Name',

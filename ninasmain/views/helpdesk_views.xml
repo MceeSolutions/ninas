@@ -33,7 +33,7 @@
         <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
         <field name="help" type="html">
             <p>
-                No tickets to display.
+                No Applications to display.
             </p>
         </field>
     </record>
@@ -45,7 +45,7 @@
 				<h3 class="text-center">F 072A APPLICATION FOR ACCREDITATION OF TESTING, CALIBRATION OR MEDICAL
 										LABORATORY ISO/IEC 17025 &amp; ISO 15189</h3>
 				<h4 class="text-left">Confidentiality Policy</h4>
-				<h5 class="text-left">According to the NiNAS Code of Conduct: All NiNAS Assessors, Staff and Committee members are required to keep
+				<h5 class="container">According to the NiNAS Code of Conduct: All NiNAS Assessors, Staff and Committee members are required to keep
 				information about your application confidential. Following a successful accreditation, the only information published by
 				NiNAS will be your accredited scope and contact details. NiNAS may be required by law to share other information or may
 				publish information that is already in the public domain.</h5>
@@ -71,11 +71,12 @@
 							  <option value="dr">DR.</option>
 							  <option value="engr">Engr.</option>
 							  <option value="prof">Prof.</option>
-						</select>
+						</select> 
+						
 		              </div>
 		          </div>
 		          
-		          <p class='text-center'>
+		          <p class='container'>
 		          	Laboratory’s Legal Name (as it should appear on your Certificate and on the NiNAS web site) and the Legal Status of
 					the laboratory (e.g. Owner operated, Limited Liability Corporation, Corporation, Government Lab, Incorporation by
 					Trustees etc.) If the lab is part of a larger legal entity, include that name and the division to which the lab belongs.
@@ -126,6 +127,17 @@
 	                   </div>
                  </div>
                  
+                  <div class="form-group form-field o_website_form_custom">
+                	<div class="col-md-3 col-sm-4 text-right">
+                 		<label class="control-label" for="account">account</label>
+	               </div>
+	               <div class="col-md-7 col-sm-8">
+	               		<t t-foreach="account" t-as="account">
+					         <input type="text" name="account[]" limit="1"/>
+					     </t>
+	               </div>
+	         	</div> 
+                 
                  <div class="form-group form-field">
 	                   <div class="col-md-3 col-sm-4 text-right">
 	                       <label class="control-label" for="name_address_of_owners">Name and Address of Owners (applicable in the case of private ownership)</label>
@@ -166,7 +178,7 @@
                   
                  <div class="form-group form-field">
                  	<strong>
-                 		<p class='text-center'>
+                 		<p class='container'>
                  		Size of Laboratory (the number of tests being carried out)
                  		</p>
                  	</strong>
@@ -195,12 +207,13 @@
                          <input type="checkbox" class="form-control o_website_form_input" name="primary_level_lab"/>
                      </div>
                  </div>
-    				<p>
+                 
+    				<p class="container">
     					<strong>Tests:</strong> Please list all the fields of testing and the test methods under each field for which the laboratory seeks
     					accreditation. (For more tests add additional lines)
     				</p>
     				
-			        <table class="tableizer-table">
+			        <table class="container">
 					<thead><tr class="tableizer-firstrow"><th>Example:</th><th>&#160;</th></tr></thead><tbody>
 					 <tr><td><u>FOOD MICROBIOLOGY - Bacteriology</u></td><td>&#160;</td></tr>
 					 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
@@ -222,12 +235,41 @@
 					
 		          <br/>
 		          
-		          <p>
+		          <div class="container">
 			          <strong>
 			          	<u>List the Test Names and Methods below, as in the format shown above, for which your laboratory seeks
 		          		accreditation:</u>
 			          </strong>
-		          </p>
+			          
+			          <table>
+				            <thead>
+				                <tr>
+				                    <th class="text-center">Name</th>
+				                    <th class="text-center">Test Method Number Test</th>
+				                </tr>
+				            </thead>
+				           	<tbody class="container">
+				                <tr t-foreach="account" t-as="test">
+				                    <td><input type="text" name="test" limit="1"/></td>
+				                    <td><input type="text" name="test" limit="1"/></td>
+				                </tr>
+				            </tbody>
+				    </table>
+				    
+		          </div>
+		        	
+		        	
+		        	
+		        <!-- <div class="form-group form-field o_website_form_custom">
+                	<div class="col-md-3 col-sm-4 text-right">
+                 		<label class="control-label" for="test">Test</label>
+	               </div>
+	               <div class="col-md-7 col-sm-8">
+	               		<t t-foreach="test" t-as="test">
+					         <input type="text" name="test" limit="1"/>
+					     </t>
+	               </div>
+	         	</div> -->
 		        
 		        <div class="form-group form-field o_website_form_required">
 	                   <div class="col-md-3 col-sm-4 text-right">
@@ -414,6 +456,15 @@
         <xpath expr="//t[@t-set='additional_title']" position="replace">
 	         	<t t-set="additional_title">Applications</t>
        </xpath>
+       
+       <!--  <xpath expr="//div[@class='form-group']" position="replace">
+	       <div class="form-group">
+	           <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+	               <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
+	               <span id="o_website_form_result"></span>
+	           </div>
+	       </div>
+        </xpath>-->
             
   	</template>
         
@@ -515,7 +566,9 @@
             'account',
             'name_address_of_owners',
             'testing_lab','calibration_lab','med_lab',
-            'tertiary_level_lab','secondary_level_lab','primary_level_lab'
+            'tertiary_level_lab','secondary_level_lab','primary_level_lab',
+            'lab_capabilities','num_of_lab_staff','signed_by_authorized_rep','place_and_date',
+            'print_name_below','telephone','email','fax'
         ]"/>
     </function>
         
@@ -545,7 +598,7 @@
 		</field>
     </record>
         
-        <record id="ninas_helpdesk_ticket_view_form" model="ir.ui.view">
+        <record id="ninas_helpdesk_ticket_view_form_now" model="ir.ui.view">
         <field name="name">ninas.helpdesk.ticket</field>
         <field name="model">helpdesk.ticket</field>
         <field name="priority" eval="7"/>
@@ -572,7 +625,9 @@
             <field name="user_id" position="after">
                 <field name="lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]"/>
             </field>
-            
+            <field name="deadline" position="after">
+                <field name="re_assessment_date" attrs="{'required':[('stage_id','=',3)], 'invisible':[('stage_id','!=',3)]}"/>
+            </field>
         </field>
     </record>
     

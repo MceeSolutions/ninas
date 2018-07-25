@@ -313,8 +313,26 @@
             <field name="context">{}</field>
         </record>
     
+    <!-- Contract Agreement action -->
     
+	<record model="ir.actions.act_window" id="ninas_contract_agreement_action">
+            <field name="name">Contract Agreement</field>
+            <field name="res_model">ninas.contract.agreement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
     
+    <!-- Activity Budget -->
+    <record model="ir.actions.act_window" id="activity_budget_action">
+		<field name="name">Activity Budget Template</field>
+		<field name="res_model">ninas.activity_budget</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
     
     <!-- loan request  tree view-->
     <record id="loan_request_tree_view" model="ir.ui.view">
@@ -1230,6 +1248,221 @@
 		</record>
 				
 	
+	<!-- Contract Agreement -->    
+	
+	<record model="ir.ui.view" id="ninas_contract_agreement_tree_view">
+			<field name="name">ninas.contract.agreement.tree</field>
+			<field name="model">ninas.contract.agreement</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="name"/>
+				<field name="date"/>
+			</field>	
+		</record>
+	
+	<record model="ir.ui.view" id="ninas_contract_agreement_form_view">
+			<field name="name">ninas.contract.agreement.form</field>
+			<field name="model">ninas.contract.agreement</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Contract Agreement">
+					<sheet>
+						<p class="text-center">
+							<strong>
+								CONTRACT BETWEEN NiNAS AND ASSESSORS/EXPERTS
+							</strong>
+						</p>
+						
+						<p>
+							THIS CONTRACT is made and entered into as of <field name="date"/>, (the "Effective
+							Date:") by and between<field name="name"/> «Name»,
+							hereinafter referred to as the "Assessor/Expert," and the Nigeria Accreditation
+							Service, the national body for the accreditation of Conformity Assessment Bodies
+							(CABs) such as laboratories, certification bodies, product certification bodies,
+							inspection bodies, and personnel certification, in Nigeria, hereinafter referred to as
+							"NINAS".
+						</p>
+						
+						<P>
+							WHEREAS, the Assessor/Expert represents that s(he) is technically knowledgeable
+							and experienced in assessing the competence of a CABs;<br/>
+							WHEREAS, NINAS operates a national program to assess and accredit laboratories utilizing
+							the services of skilled independent contractor Assessor/Expert;<br/>
+							WHEREAS, NINAS seeks to engage the Assessor/Expert to provide such services, and;<br/>
+							WHEREAS, the Assessor/Expert is available and wishes to perform such tasks;<br/>
+							NOW THEREFORE, it is mutually agreed by and between the parties hereto as follows:<br/>
+						</P>
+						
+						<p>
+							<strong>
+								1. PERFORMANCE:<br/>
+							</strong>
+							Assessor’s Responsibilities:<br/>
+							The assessor agrees to fully participate in the assessment by:<br/>
+							1. Preparing for the assessment by reviewing the institutions.<br/>
+							2. Participating in a pre-visit phone call or pre-assessment meeting in conjunction with the rest of
+							the Assessment Team.<br/>
+							3. Performing assessment activities as described in the:<br/>
+							&#160;&#160;&#160;&#160;• NiNAS Lead Assessor Job Description<br/>
+							&#160;&#160;&#160;&#160;• NiNAS Assessor Job Description<br/>
+							&#160;&#160;&#160;&#160;• NiNAS Technical Assessor Job Description<br/>
+							These activities will involve:<br/>
+							&#160;&#160;&#160;&#160;• Document Review<br/>
+							&#160;&#160;&#160;&#160;• Site Visit<br/>
+							&#160;&#160;&#160;&#160;• Findings closure<br/>
+							&#160;&#160;&#160;&#160;• Report writing<br/>
+						</p>
+							
+						<p>
+							As described in the Task Assignment Form for a specific activity in conjunction with any
+							additional assessors.
+						</p>
+						
+						<p>
+							<strong>
+								Services: The Assessor/Expert agrees to provide the following services to NINAS:<br/>
+								&#160;&#160;&#160;&#160;a) Assessments using reference documents supplied by NINAS, based on NINAS
+								designated national and international standards for accreditation, and using the
+								Assessor/Expert's knowledge of particular specific areas of assessment;<br/>
+								&#160;&#160;&#160;&#160;b) Written reports of the assessments and of the Non conformities found in the
+								assessment against the accreditation requirements including the details of an
+								applicant's Scope of Accreditation, as applicable;<br/>
+								&#160;&#160;&#160;&#160;c) Perform in a professional manner the duties and responsibilities of NINAS
+								Assessor/Expert within the limits prescribed by NINAS.
+							</strong>	
+						</p>
+						
+						<p>
+							<strong>
+								<u>
+								Assignments: NINAS is under no obligation to assign any assessments to the
+								Assessor/Expert under this contract. The Assessor/Expert may also refuse to perform any
+								assignment of an assessment for any specific reasons; this reason shall be put in writing.
+								</u>
+							</strong>
+						</p>
+						
+						<p>
+							<strong>
+								2. CONFLICT OF INTEREST, CONFIDENTIALITY, IMPARTIALITY AND NON-DISCLOSURE
+								AGREEMENTS The Assessor/Expert shall sign and comply with NINAS's Conflict of Interest,
+								Confidentiality and Intellectual Property as presented in NiNAS forms F443 and F444.
+								The Assessor / Expert shall refuse any assignments prohibited by these policies.
+							</strong>
+						</p>
+						
+						<p>
+							<strong>
+								3. UPON COMPLETION OF ASSESSMENT<br/>
+								Assessor/Expert shall submit to the Lead Assessor on the last day of an assessment their<br/>
+								1) Individual Assessor/Expert report, Non conformity reports and all relevant
+								attachments including checklist if any;<br/>
+								2) The Lead Assessor shall on the last day of assessment present the signed off Non
+								conformity reports and supporting information to NINAS and within 5 days of Assessment
+								present his/her final report to NINAS.<br/>
+							</strong>
+						</p>
+						
+						<p>
+							<strong>
+								4. PAYMENT<br/>
+								NINAS shall effect payment of approved allowances to Assessor/Expert upon successful
+								presentation of the assessment report.
+							</strong>
+						</p>
+						
+						<strong>
+							Assessment Fees:
+						</strong>
+						
+						<field name="contract_line_ids">
+							<tree editable="True">
+								<field name="item"/>
+								<field name="amount"/>
+							</tree>
+						</field>
+						<group class="oe_subtotal_footer oe_right">
+                           <field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+						
+						<group string="ASSESSOR/EXPERT ADDRESS:">
+							<field name="assessor_name"/>
+							<field name="organization_name"/>
+							<field name="assessor_address"/>
+							<field name="city_country"/>
+						</group>
+						
+						<p>
+						<strong>
+							IN WITNESS WHEREOF, the parties hereto have executed this Contract on
+							<field name="contract_date"/>(DATE) and is valid for three years, extendable if desired by both parties.
+						</strong>
+						</p>
+						<group col="6" colspan="4">
+							<field name="management_rep"/>
+							<field name="assessor_expert_name"/>
+							<field name="assessor_sign"/>
+							<field name="assessor_ref"/>
+						</group>
+					</sheet>
+					<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			     	</div>
+				</form>
+			</field>
+		</record>
+				
+	<!-- activity Budget views -->				
+	<record model="ir.ui.view" id="ninas_activity_budget_tree_view">
+		<field name="name">ninas.activity_budget.tree</field>
+		<field name="model">ninas.activity_budget</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="employee_id"/>
+				<field name="employee"/>
+				<field name="purpose"/>
+				<field name="date"/>
+				<field name="total"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_activity_budget_form_view">
+		<field name="name">ninas.activity_budget.form</field>
+		<field name="model">ninas.activity_budget</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Activity Budget Template">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="employee_id"/>
+						<field name="employee"/>
+						<field name="date"/>
+					</group>
+					<group col="2" colspan="2">
+						<field name="purpose"/>
+					</group>
+					<field name="activity_budget">
+						<tree editable="True">
+							<field name="item"/>
+							<field name="cost"/>
+							<field name="units"/>
+							<field name="amount"/>
+							<field name="remarks" />
+							<field name="budget_code"/>
+							<field name="fund_code"/>
+						</tree>
+					</field>
+					<group>
+						<field name="total"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
 	
 		
     
@@ -1246,6 +1479,10 @@
               action="ninas_conflict_of_interest_action"/>
     <menuitem name="Confidentiality" id="confidentiality_menu" parent="request_main_menu"
               action="ninas_confidentiality_action"/>
+    <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="request_main_menu"
+              action="ninas_contract_agreement_action"/>
+  	<menuitem name="Activity Budget" id="activity_budget_menu" parent="request_main_menu"
+              action="activity_budget_action"/>
               
               
     <menuitem name="Vouchers" id="bank_vouchert_main_menu" parent="account.menu_finance_receivables"/>          

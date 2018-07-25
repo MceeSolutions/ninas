@@ -6,6 +6,7 @@ import datetime
 
 from datetime import date, timedelta
 from odoo import api, fields, models
+from docutils.nodes import organization
 
 
 class Employee(models.Model):
@@ -1222,11 +1223,131 @@ class PettyCash(models.Model):
         return {}
 
 
+class ContractAgreement(models.Model):
+    _name = 'ninas.contract.agreement'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    date = fields.Date(string='Effective Date', required=True)
+    name = fields.Char(string='Name', required=True)
+    
+    contract_line_ids = fields.One2many(
+        comodel_name='ninas.contract.agreement.items',
+        inverse_name='item')
+    
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    amount_total = fields.Monetary(compute='_total_amount',
+        string='Total', readonly=True, store=True)
+    
+    assessor_name = fields.Char(string='Name')
+    organization_name = fields.Char(string='Organizatoin Name')
+    assessor_address = fields.Char(string='Physical & postal Address')
+    city_country = fields.Char(string='City/Country')
+    
+    contract_date = fields.Date(string='Date')
+    
+    assessor_expert_name = fields.Char(string='Assessor/Expert’s (Name)')
+    management_rep = fields.Char(string="On behalf of NINAS (Management Representative)")
+    assessor_sign = fields.Date(string='Assessor/Expert’s (Sign)')
+    assessor_ref = fields.Char(string='Assessor/Expert’s Ref No')
+    
 
+    @api.depends('contract_line_ids.amount')
+    def _total_amount(self):
+        amount_total = 0.0
+        for line in self.contract_line_ids:
+            self.amount_total += line.amount
 
+    
+class ContractAgreementItems(models.Model):
+    _name = 'ninas.contract.agreement.items'
+    
+    item=fields.Char(string='Item')
+    amount=fields.Monetary(string='Amount')
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    
+class ActivityBudget(models.Model):
+    _name = 'ninas.activity_budget'
+    _description = 'Activity Budget Template'
 
+    employee_id= fields.Char(
+        #related = 'Employee Name'
+        #required=1,
+        )
+    employee = fields.Integer(
+        #related = ''
+        string='Employee Code',
+        #required=1,
+        readonly=1
+        )
+    purpose = fields.Text(
+        string="Purpose/Description of Activity",
+        required=1
+        )
+    date = fields.Date(
+        string = 'Activity Date',
+        required=1,
+        )
+    total = fields.Float(
+        compute = 'sum',
+        string="Total Amount",
+        readonly=1
+        )
+    activity_budget = fields.One2many(
+        comodel_name = 'activity.budget',
+        inverse_name = 'name',
+        string = 'Activity Budget'
+        )
 
+    @api.one
+    def sum(self):
+        total = 0.0
+        for line in self.activity_budget:
+            self.total += line.amount
+         
+class ABudget(models.Model):
+    _name = 'activity.budget'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='',
+        required=0
+        )
+    item = fields.Char(
+        string='Items',
+        required=0
+        )
+    units = fields.Integer(
+        string = 'No. of Units',
+        required=0
+        )
+    cost = fields.Float(
+        string = 'Unit Cost',
+        required=0
+        )
+    amount = fields.Float(
+        compute = 'mul',
+        string = 'Amount',
+        readonly=1
+        )
+    remarks = fields.Char(
+        string = 'Remarks',
+        required=0
+        )
+    fund_code = fields.Char(
+        #related = 'Employee Name'
+        string = 'Fund Code',
+        #required=1
+        )
+    budget_code = fields.Char(
+        #related = 'Employee Name',
+        string = 'Budget Line Code',
+        #required=1
+        )
 
-
-
-
+    @api.one
+    def mul(self):
+        self.amount = self.units  *  self.cost
+        return True

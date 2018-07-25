@@ -176,7 +176,7 @@ class CreateInvoice(models.Model):
             ('out_refund','Customer Credit Note'),
             ('in_refund','Vendor Credit Note'),
         ], readonly=True, index=True, change_default=True,
-        default=lambda self: self._context.get('type', 'out_invoice'),
+        default='out_invoice',
         track_visibility='always')
     
     invoice_count = fields.Integer(compute="_invoice_count", string="Invoices", store=False)
@@ -195,17 +195,17 @@ class CreateInvoice(models.Model):
             inv.invoice_count = invoice_count
         return True
 
-    @api.multi
+    @api.depends('checklist_count')
     def _checklist_count(self):
         oe_checklist = self.env['checklist.ticket']
         for pa in self:
             domain = [('ticket_id', '=', pa.id)]
             pres_ids = oe_checklist.search(domain)
             pres = oe_checklist.browse(pres_ids)
-            pres_count = 0
+            checklist_count = 0
             for pr in pres:
-                pres_count+=1
-            pa.checklist_count = pres_count
+                checklist_count+=1
+            pa.checklist_count = checklist_count
         return True
     
     @api.multi
@@ -221,6 +221,12 @@ class CreateInvoice(models.Model):
             car.car_count = car_count
         return True
     
+    @api.onchange('stage_id')
+    def _onchange_kanban_state(self):
+        self.update({'kanban_state':'normal'})
+        return {} 
+    
+    '''
     @api.multi
     def action_create_new(self):
         ctx = self._context.copy()
@@ -238,30 +244,87 @@ class CreateInvoice(models.Model):
             'view_id': view_id,
             'context': ctx,
         }
+    '''
     
+    @api.multi
+    def action_create_new(self):
+       """
+       Method to open create customer invoice form
+       """
+       
+       partner_id = self.partner_id
+            
+       view_ref = self.env['ir.model.data'].get_object_reference('account', 'invoice_form')
+       view_id = view_ref[1] if view_ref else False
+        
+       res = {
+           'type': 'ir.actions.act_window',
+           'name': _('Customer Invoice'),
+           'res_model': 'account.invoice',
+           'view_type': 'form',
+           'view_mode': 'form',
+           'view_id': view_id,
+           'target': 'current',
+           'context': {'default_partner_id': partner_id.id}
+       }
+     
+       return res
+       
+    '''
+    @api.multi
+    def action_create_new(self):
+        self.write({'stage_id': 4})
+        return {}
+    '''
+   
+    @api.multi
+    def open_customer_invoices(self):
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Customer Invoices'),
+            'res_model': 'account.invoice',
+            'view_mode': 'tree,kanban,form,pivot,graph',
+            'domain':[('type','=','out_invoice')],
+            'context': {'search_default_partner_id': self.partner_id.id}
+        }
+
     
 class Checklist(models.Model):
     _name = "checklist.ticket"
     
-    name = fields.Many2one(
-        comodel_name='hr.employee',
-        string='Employee')
-    current_stage = fields.Selection(
-        [(i, i) for i in range(13)],
-        string='Curent Stage')
+    ticket_id = fields.Many2one(comdel_name='helpdesk.ticket')
     
-    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
+    partner_id = fields.Many2one('res.partner', string='Applicant')
     
-    stage_one = fields.Boolean(
-        string='Stage One')
-    stage_two = fields.Boolean(
-        string='Stage Two')
-    stage_three = fields.Boolean(
-        string='Stage Three')
-    stage_four = fields.Boolean(
-        string='Stage Four')
-    stage_five = fields.Boolean(
-        string='Stage Five')
+    quality_manual = fields.Boolean(
+        string='A copy of current version of Quality Manual',
+      
+    )
+    procedures=fields.Boolean(
+        string='Operating Procedures'
+    )
+    work_inst=fields.Boolean(
+        string ='Work Instructions'
+    )
+    org_charts=fields.Boolean(
+        string="Up-to-date Organisational Chart(with identity of key personnel involved in each function"
+    )
+    report_rela=fields.Boolean(
+         string="If part of a larger organisation, include a chart of the laboratory’s position and reporting relationships within the organisation"
+    )
+    prof_testing=fields.Boolean(
+        string="Proficiency testing plan and proficiency test results with any corrective action response (if applicable)"
+    )
+    list_equip=fields.Boolean(
+        string="A list of all the equipment used to support the tests or calibrations including in-house (i.e. equipment calibrations that your lab performs) and external calibrations (i.e. those that an external calibration laboratory performs), and rented/borrowed equipment."
+    )
+    cali_cert=fields.Boolean(
+        string="For Calibration Applicants Only: a sample of a calibration certificate which your laboratory issued and uncertainty calculations that support the Measurement Uncertainties to be claimed on your scope of accreditation."
+    )
+    evi_pay=fields.Boolean(
+         string="Additional Requirement: Evidence of payment or funding support"
+    )
     
     
 class CarReport(models.Model):

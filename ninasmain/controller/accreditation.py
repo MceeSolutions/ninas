@@ -9,11 +9,13 @@ class Accreditation(http.Controller):
     def index(self, **kw):
         default_values = {}
         assessment_type_id = http.request.env['assessment.type'].sudo().search([])
+        account = http.request.env['helpdesk.ticket'].sudo().search([])
+        test = http.request.env['helpdesk.ticket'].sudo().search([])
         if request.env.user.partner_id != request.env.ref('base.public_partner'):
             default_values['name'] = request.env.user.partner_id.name
             default_values['email'] = request.env.user.partner_id.email
         return http.request.render("ninasmain.ninas_website_helpdesk_form_ticket_submit", {
-            'default_values': default_values, 'assessment_type_id':assessment_type_id})
+            'default_values': default_values, 'assessment_type_id':assessment_type_id, 'account':account, 'test':test})
         
 
 
