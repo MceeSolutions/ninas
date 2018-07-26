@@ -1239,6 +1239,37 @@ class AppraisalReportLeadAssessor(models.Model):
     approval_date = fields.Date(string='Approval Date', track_visibility='onchange')
     director_approval_date = fields.Date(string='Director Approval Date', track_visibility='onchange')
 
+    rate = fields.Integer('Total Rate')
+    grade = fields.Selection(
+        [('satisfactory','Satisfactory (80% and above)'), 
+        ('need_guidance','Need Guidance (80% and above) &amp; has comments for development needs'), 
+        ('unsatisfactory','Unsatisfactory (Less than 80%)')],
+        string='Grade'
+    )
+
+    def compute_grade(self):
+        for appraisal in self:
+            total_rate = 0
+            STAGE_1 = 10
+            STAGE_2 = 10
+            STAGE_3 = 6
+            STAGE_4 = 4
+            MAX_RATE = (STAGE_1 + STAGE_2 + STAGE_3 + STAGE_4) * 5
+            for i in range(1,STAGE_1+1):
+                rate = getattr(appraisal, 'personal_attributes_criteria_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_2+1):
+                rate = getattr(appraisal, 'knowledge_assessment_skill_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_3+1):
+                rate = getattr(appraisal, 'skill_assessment_leadership_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_4+1):
+                rate = getattr(appraisal, 'skill_assessment_reporting_'+str(i))
+                total_rate += int(rate) if rate else 0
+            appraisal.rate = total_rate/MAX_RATE * 100
+        return
+
     def approve(self):         
         self.write({'state':'approved', 'approval_date':time.strftime('%Y-%m-%d')})
     
@@ -1250,3 +1281,94 @@ class AppraisalReportLeadAssessor(models.Model):
 
     def refuse(self):
         self.write({'state':'refused'})
+    
+    @api.multi
+    def write(self, values):
+        super(AppraisalReportLeadAssessor, self).write(values)
+        if not 'rate' in values.keys():
+            self.compute_grade()
+        return True
+    
+    @api.model
+    def create(self, values):
+        appraisal = super(AppraisalReportLeadAssessor, self).create(values)
+        appraisal.compute_grade()
+        return appraisal
+
+
+class AppraisalReportTechnicalAssessor(models.Model):
+    _name = 'ninas.appraisal.report.technical.assessor'
+    _description = 'NiNAS Appraisal Report Technical Assessor'
+    _inherit = 'ninas.appraisal.report.lead.assessor'
+
+    technical_skills_1 = fields.Selection(KEYS,string='3.1 - Have up-to-date knowledge and understanding of the appropriate standards, regulations and guidelines relevant to his scope of assessment.', track_visibility='onchange')
+    technical_skills_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_2 = fields.Selection(KEYS,string='3.2 - Have knowledge and understanding of the relevant accreditation procedures.', track_visibility='onchange')
+    technical_skills_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_3 = fields.Selection(KEYS,string='3.3 - Be familiar with the technical activities of the CAB that lies under his scope of assessment', track_visibility='onchange')
+    technical_skills_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+
+    def compute_grade(self):
+        for appraisal in self:
+            total_rate = 0
+            STAGE_1 = 10
+            STAGE_2 = 10
+            STAGE_3 = 3
+            STAGE_4 = 4
+            MAX_RATE = (STAGE_1 + STAGE_2 + STAGE_3 + STAGE_4) * 5
+            for i in range(1,STAGE_1+1):
+                rate = getattr(appraisal, 'personal_attributes_criteria_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_2+1):
+                rate = getattr(appraisal, 'knowledge_assessment_skill_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_3+1):
+                rate = getattr(appraisal, 'technical_skills_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_4+1):
+                rate = getattr(appraisal, 'skill_assessment_reporting_'+str(i))
+                total_rate += int(rate) if rate else 0
+            appraisal.rate = total_rate/MAX_RATE * 100
+        return
+
+class AppraisalReportTechnicalExpert(models.Model):
+    _name = 'ninas.appraisal.report.technical.expert'
+    _description = 'NiNAS Appraisal Report Technical Expert'
+    _inherit = 'ninas.appraisal.report.lead.assessor'
+
+    personal_aspects_1 = fields.Selection(KEYS,string='1.1 - Ethical, i.e. fair, truthful, sincere, honest and discrete.', track_visibility='onchange')
+    personal_aspects_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_aspects_2 = fields.Selection(KEYS,string='1.2 - Diplomatic, i.e. tactful in dealing with people.', track_visibility='onchange')
+    personal_aspects_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_aspects_3 = fields.Selection(KEYS,string='1.3 - Observant, i.e. actively aware of physical surroundings and activities.', track_visibility='onchange')
+    personal_aspects_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_aspects_4 = fields.Selection(KEYS,string='1.4 - Perceptive, i.e. instinctively aware of and able to understand situations.', track_visibility='onchange')
+    personal_aspects_comments_4 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_aspects_5 = fields.Selection(KEYS,string='1.5 - Self-reliant, i.e. acts and functions independently while interacting effectively with others.', track_visibility='onchange')
+    personal_aspects_comments_5 = fields.Char(string='Comments', track_visibility='onchange')
+
+    technical_skills_1 = fields.Selection(KEYS,string='2.1 - Have up-to-date knowledge and understanding of the appropriate standards, technical regulations and guidelines relevant to his technical scope.', track_visibility='onchange')
+    technical_skills_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_2 = fields.Selection(KEYS,string='2.2 - Familiar with the technical activities of the CAB that he witnesses.', track_visibility='onchange')
+    technical_skills_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_3 = fields.Selection(KEYS,string='2.3 - Understand the appropriateness and consequences of using sampling techniques.', track_visibility='onchange')
+    technical_skills_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_4 = fields.Selection(KEYS,string='2.4 - Verify the accuracy of collected information.', track_visibility='onchange')
+    technical_skills_comments_4 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_5 = fields.Selection(KEYS,string='2.5 - Maintain the confidentiality and security of information.', track_visibility='onchange')
+    technical_skills_comments_5 = fields.Char(string='Comments', track_visibility='onchange')
+
+    def compute_grade(self):
+        for appraisal in self:
+            total_rate = 0
+            STAGE_1 = 5
+            STAGE_2 = 5
+            MAX_RATE = (STAGE_1 + STAGE_2) * 5
+            for i in range(1,STAGE_1+1):
+                rate = getattr(appraisal, 'personal_aspects_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_2+1):
+                rate = getattr(appraisal, 'technical_skills_'+str(i))
+                total_rate += int(rate) if rate else 0
+            appraisal.rate = total_rate/MAX_RATE * 100
+        return
