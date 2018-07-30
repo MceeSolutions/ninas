@@ -22,3 +22,10 @@ access_assessment_type,assessment.type,model_assessment_type,base.group_user,1,1
 access_ninas_hr_recruitment,ninas.hr.recruitment,model_ninas_hr_recruitment,base.group_user,1,1,1,0
 access_ninas_petty_cash,ninas.petty.cash,model_ninas_petty_cash,base.group_user,1,1,1,0
 access_ninas_diesel_consumption,ninas.diesel.consumption,model_ninas_diesel_consumption,base.group_user,1,1,1,0
+access_activity_budget,activity.budget,model_activity_budget,base.group_user,1,1,1,0
+access_ninas_activity_budget,ninas.activity_budget,model_ninas_activity_budget,base.group_user,1,1,1,0
+access_ninas_contract_agreement_items,ninas.contract.agreement.items,model_ninas_contract_agreement_items,base.group_user,1,1,1,0
+access_ninas_contract_agreement,ninas.contract.agreement,model_ninas_contract_agreement,base.group_user,1,1,1,0
+access_ninas_confidentiality,ninas.confidentiality,model_ninas_confidentiality,base.group_user,1,1,1,0
+access_ninas_conflict_interest,ninas.conflict.interest,model_ninas_conflict_interest,base.group_user,1,1,1,0
+access_ninas_code_conduct,ninas.code.conduct,model_ninas_code_conduct,base.group_user,1,1,1,0

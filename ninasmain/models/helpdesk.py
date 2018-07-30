@@ -195,7 +195,7 @@ class CreateInvoice(models.Model):
     checklist_count = fields.Integer(compute="_checklist_count",string="Checklist")
     car_count = fields.Integer(compute="_car_count",string="C.A.R")
     
-    @api.depends('invoice_count')
+    @api.multi
     def _invoice_count(self):
         oe_invoice = self.env['account.invoice']
         for inv in self:
@@ -207,7 +207,7 @@ class CreateInvoice(models.Model):
             inv.invoice_count = invoice_count
         return True
 
-    @api.depends('checklist_count')
+    @api.multi
     def _checklist_count(self):
         oe_checklist = self.env['checklist.ticket']
         for pa in self:
@@ -288,7 +288,7 @@ class CreateInvoice(models.Model):
 
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Customer Invoices'),
+            'name': ('Customer Invoices'),
             'res_model': 'account.invoice',
             'view_mode': 'tree,kanban,form,pivot,graph',
             'domain':[('type','=','out_invoice')],
