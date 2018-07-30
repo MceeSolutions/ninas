@@ -90,12 +90,15 @@ class LoanRequest(models.Model):
         string='Purpose of Loan', required=True)
     terms_ofloan = fields.Char(
         string='Terms of Loan')
-    repayment = fields.Selection([
-        ('soon','As soon as there is funding'),('other','Other')],
+    repayment = fields.Text(
         string='Repayment')
-    repayment_period = fields.Selection([
-        ('oneoff','One Off'),('other','Other')],
+    repayment_period = fields.Char(
         string='Repayment Period')
+    
+    start_date = fields.Datetime(string='Start Date')
+    end_date = fields.Datetime(string='End Date')
+    
+    
     recieved_from = fields.Many2one(
         comodel_name="hr.employee",
         string='Recieved Name', readonly=True)
@@ -178,15 +181,22 @@ class TravelRequest(models.Model):
     travelrequest_no = fields.Char(
         string='Travel request Number', readonly=True, required=True, index=True, copy=False, default='New')
     traveller_email = fields.Char(
-        string='Travellers Email Address')
-    name = fields.Char(string='Name', required=True)
-    traveller_job = fields.Char(string='Traveller Job Title')
-    traveller_phone = fields.Char(string='Traveller Phone')
-    traveller_department = fields.Char(string='Department')
-    contact_phone = fields.Char(string='Contact Phone')
-    contact_name = fields.Char(string='Contact Name')
-    traveller_employee_id = fields.Char(string='Travellers Employee ID')
+        related='name.work_email',
+        string='Travellers Email Address', readonly=True)
+    name = fields.Many2one(
+        comodel_name="hr.employee",
+        string='Travellers Name', required=True)
+    traveller_job = fields.Char(related='name.job_id.name',string='Traveller Job Title', readonly=True)
+    traveller_phone = fields.Char(related='name.work_phone',string='Traveller Phone', readonly=True)
+    traveller_department = fields.Char(related='name.department_id.name',string='Department', readonly=True)
+    contact_phone = fields.Char(related='name.telphone',string='Contact Phone', readonly=True)
+    contact_name = fields.Char(related='name.fname',string='Contact Name', readonly=True)
+    traveller_employee_id = fields.Char(related='name.employee',string='Travellers Employee ID', readonly=True)
     purpose = fields.Text(string='Purpose and Benefit of Travel', required=True)
+    
+    classification_of_traveller = fields.Selection([
+        ('employee','Ninas Employee'),('expert','Ninas Expert'),('assessor','Ninas Assessor'),('guest','Ninas Guest'),('other','Others(Describe)')])
+    
     ninas_employee = fields.Boolean(string='Ninas Employee')
     ninas_expert = fields.Boolean(string='Ninas Expert')
     ninas_assesor = fields.Boolean(string='Ninas Assessor')
@@ -342,10 +352,10 @@ class TrainingTracker(models.Model):
         required=1
         )
     #pull this from employee records and set required to true
-    position = fields.Many2one(
-        comodel_name = 'hr.job',
+    position = fields.Char(
+        related='name.job_id.name',
+        readonly=True,
         string='Position',
-        required=0
         )
     provider = fields.Char(
         string='Provider',
@@ -362,8 +372,9 @@ class TrainingTracker(models.Model):
         string='Qualification',
         required=0
         )
-    budget = fields.Integer(
-        string='Budget',
+    budget = fields.Many2one(
+        comodel_name='account.account',
+        string='Expense Account',
         required=1
         )
     duration = fields.Selection(
@@ -383,8 +394,8 @@ class TrainingTracker(models.Model):
         required=0,
         default='400'
         )
-    review = fields.Char(
-        string ='Review on'
+    review = fields.Date(
+        string ='Next Training Date'
         )
     refresh = fields.Boolean(
         )

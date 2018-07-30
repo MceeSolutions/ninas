@@ -367,6 +367,9 @@
 				 </group>
 				 <notebook>
 					 <page string="Terms Of Loan">
+					 <p class="text-center">
+					 	Terms of loan: Must be repaid within a Financial Year; monthly repayment and repayment period will be clearly stated here					
+					 </p>
 					 	<field name="loan_line_ids">
 							<tree editable="True">
 								<field name="loan_amount"/>
@@ -380,7 +383,13 @@
 				 </notebook>
 				 <group col="4" colspan="4">
 						 <field name="repayment"/>
-						 <field name="repayment_period"/>
+						 <label for="repayment_period" string="Repayment Period"/>
+                            <div>
+                                <div>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                </div>
+                           </div>
 				</group>
 				 <group string="Loan Recieved From:" col="4" colspan="4">
 				 <field name="recieved_from"/>
@@ -432,11 +441,11 @@
 				 <group string="General and Traveler Information" col="4" colspan="4">
 					 <field name="today_date"/>
 					 <field name="travelrequest_no"/>
-					 <field name="traveller_email"/>
 					 <field name="name"/>
+					 <field name="traveller_email"/>
+					 <field name="traveller_department"/>
 					 <field name="traveller_job"/>
 					 <field name="traveller_phone"/>
-					 <field name="traveller_department"/>
 					 <field name="contact_phone"/>
 					 <field name="contact_name"/>
 					 <field name="traveller_employee_id"/>
@@ -444,13 +453,12 @@
 				 <group col="2" colspan="2">
 				 	<field name="purpose"/>
 				 </group>
-				 <group string="Classification of Traveler (check one)" col="4" colspan="4">
-					 <field name="ninas_employee"/>
-					 <field name="ninas_expert"/>
-					 <field name="ninas_assesor"/>
-					 <field name="ninas_guest"/>
-					 <field name="ninas_other"/>
-					 </group>
+				 <group string="Classification of Traveler (check one)"/>
+				 	<field name="classification_of_traveller" widget="radio"/>
+				 <group>
+				 	<field name="ninas_other" attrs="{'required':[('classification_of_traveller','=','other')],'invisible':[('classification_of_traveller','!=','other')]}"/>
+				 </group>
+					 
 				 <group string="Itinerary" col="4" colspan="4">
 					 <field name="departure_place"/>
 					 <field name="destination_place"/>
@@ -564,7 +572,7 @@
 				<sheet>
 					<group col="4" colspan="2">
 						<field name="name"/>
-						<field name="position" readonly="0"/>
+						<field name="position"/>
 						<field name="provider"/>
 						<field name="training_date"/>
 						<field name="duration"/>
@@ -573,7 +581,9 @@
 						<field name="capability"/>
 						<field name="refresh"/>
 						<field name="review"/>
-						<field name="notes"/>
+					</group>
+					<group>
+						<field name="notes" widget="html"/>
 					</group>
 				</sheet>
 				<div class="oe_chatter">

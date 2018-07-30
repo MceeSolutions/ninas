@@ -5,7 +5,27 @@
         sequence="25"
         web_icon="ninasmain,static/icon/ninas-logo.png"
         groups="helpdesk.group_helpdesk_user"/>
-  
+  	
+  	<!-- Car Report action-->
+    <record model="ir.actions.act_window" id="ninas_car_report_action">
+		<field name="name">Car Report</field>
+		<field name="res_model">car.report</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+    
+    <!-- checklist ticket action-->
+    <record model="ir.actions.act_window" id="ninas_checklist_ticket_action">
+		<field name="name">checklist ticket</field>
+		<field name="res_model">checklist.ticket</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+  	
 	<!-- action for halpdask team -->
     <record id="helpdesk.helpdesk_ticket_action_team" model="ir.actions.act_window">
         <field name="name">Applications</field>
@@ -36,6 +56,136 @@
                 No Applications to display.
             </p>
         </field>
+    </record>
+    
+    <record id="ninas_helpdesk_view_form_view" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//button[@name='assign_ticket_to_self']" position="before">
+                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',1)]}"/>
+			</xpath>
+			<xpath expr="//button[@name='assign_ticket_to_self']" position="replace">
+           			<button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" attrs="{'invisible':[('stage_id','!=',5)]}"/>
+			</xpath>
+			<xpath expr="//button[@name='assign_ticket_to_self']" position="after">
+                	<button type="object" name="button_confirm_sponsor" string="Confirm Sponsor/Proceed" attrs="{'invisible':[('stage_id','!=',1)]}"/>
+                	<button type="object" name="button_complete_approve" string="Approve" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-primary"/>
+                	<button type="object" name="button_complete_reject" string="Reject" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-danger"/>
+                	<button type="object" name="action_resources_available" string="Resource Available" attrs="{'invisible':[('stage_id','!=',5)]}"/>
+                	<button type="object" name="action_checklist_sent" string="Checklist Sent" attrs="{'invisible':[('stage_id','!=',9)]}"/>
+			</xpath>
+			<xpath expr="//button[@name='toggle_active']" position="before">
+		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
+                	<field string="Checklist" name="checklist_count" widget="statinfo"/>
+               </button>
+               <button type="object" class="oe_stat_button" name="open_customer_invoices" icon="fa-pencil-square-o">
+                   <field string="Invoices" name="invoice_count" widget="statinfo"/>
+               </button>
+               <button type="action" class="oe_stat_button" name="%(ninasmain.ninas_car_report_action)d" icon="fa-folder">
+                   <field string="C.A.R Report" name="car_count" widget="statinfo"/>
+               </button>
+			</xpath>
+			<!--  <xpath expr="//button[@name='toggle_active']" position="before">
+		    	
+			</xpath>-->
+           </field>
+    </record>
+    
+    
+        <!-- checklist.ticket  tree view-->
+    <record id="checklist_ticket_tree_view" model="ir.ui.view">
+		<field name="name">checklist.ticket.tree</field>
+		<field name="model">checklist.ticket</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="partner_id"/>
+		</field>
+	</record>
+
+    <record id="checklist_ticket_form_view" model="ir.ui.view">
+    <field name="name">checklist.ticket.form</field>
+    <field name="model">checklist.ticket</field>
+    <field name="priority" eval="2"/>
+    <field name="arch" type="xml">
+        <form string="Check List">
+			 <sheet>
+			    <group string="CheckList" col="1">
+			    	<field name="partner_id"/>
+                    <field name="quality_manual"/>
+                    <field name="procedures"/>
+				    <field name="work_inst"/>
+				    <field name="org_charts"/>
+				    <field name="report_rela"/>
+				    <field name="prof_testing"/>
+				    <field name="list_equip"/>
+				    <field name="cali_cert"/>
+				    <field name="evi_pay"/>
+			    </group>
+			 </sheet>
+			 <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+        </form>
+    </field>
+    </record>
+    
+    <!-- car report  tree view-->
+    <record id="car_report_tree_view" model="ir.ui.view">
+		<field name="name">car.report.tree</field>
+		<field name="model">car.report</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="name"/>
+			<field name="ref_no"/>
+			<field name="faculty_rep"/>
+			<field name="scope_assessed"/>
+		</field>
+	</record>
+
+    <record id="car_report_form_view" model="ir.ui.view">
+    <field name="name">car.report.form</field>
+    <field name="model">car.report</field>
+    <field name="priority" eval="2"/>
+    <field name="arch" type="xml">
+        <form string="Car Report">
+			 <sheet>
+			 	<group col="4" colspan="4">
+			 		<field name="name"/>
+					<field name="ref_no"/>
+					<field name="faculty_rep"/>
+					<field name="scope_assessed"/>
+			 	</group>
+				 <group string="PART 1: Detailed Observation and evidence" col="6" colspan="4">
+				 <field name="rel_equip"/>
+				 <field name="name_lead"/>
+				 <field name="name_rep"/>
+				 </group>
+				 <group string="Part 2: Corrective Action Taken">
+				 <field name="root_cause"/>
+				 <field name="corrective_action"/>
+				 <field name="rep_sign"/>
+				 </group>
+				 <group string="PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED" col="4" colspan="4">
+				 <field name="assessor_nc"/>
+				 <field name="assessor_sign"/>
+				 </group>
+				 <group string="PART 4: FOLLOW-UP AT NEXT ASSESSMENT" col="4" colspan="4">
+				 <field name="implemantation"/>
+				 <field name="sign_assessor"/>
+				 </group>
+			 </sheet>
+			 <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+        </form>
+    </field>
     </record>
 	  	
 	<template id="ninas_website_helpdesk_form_ticket_submit" inherit_id="website_helpdesk_form.ticket_submit">
@@ -249,7 +399,7 @@
 				                </tr>
 				            </thead>
 				           	<tbody class="container">
-				                <tr t-foreach="account" t-as="test">
+				                <tr t-foreach="test" t-as="test">
 				                    <td><input type="text" name="test" limit="1"/></td>
 				                    <td><input type="text" name="test" limit="1"/></td>
 				                </tr>
@@ -421,18 +571,7 @@
 		              </div>
 		          </div>
 		          
-		          <div class="form-group form-field o_website_form_required">
-		              <div class="col-md-3 col-sm-4 text-right">
-		                  <label class="control-label" for="assessment_type">Assessment Type</label>
-		              </div>
-		              <div class="col-md-7 col-sm-8">
-		              	<select class="form-control" name="assessment_type_id">
-						     <t t-foreach="assessment_type_id" t-as="assessment_type">
-						          <option t-attf-value="#{assessment_type.id}"><t t-esc="assessment_type.name"/></option>
-						     </t>
-						 </select>
-		              </div>
-		          </div>
+		          d
            		
            		<div class="form-group form-field o_website_form_custom">
                 	<div class="col-md-3 col-sm-4 text-right">
@@ -598,22 +737,45 @@
 		</field>
     </record>
         
+        
+        <record id="ninas_helpdesk_ticket_view_kanban" model="ir.ui.view">
+	        <field name="name">ninas.helpdesk.ticket.kanban</field>
+	        <field name="model">helpdesk.ticket</field>
+	        <field name="priority" eval="7"/>
+	        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_kanban"/>
+	        <field name="arch" type="xml">
+	            <xpath expr="//kanban[hasclass('o_kanban_small_column')]" position="attributes">
+	                <attribute name="quick_create">0</attribute>
+	                <attribute name="group_create">0</attribute>
+	            </xpath>
+	            
+	        </field>
+    	</record>
+    	
+    	
         <record id="ninas_helpdesk_ticket_view_form_now" model="ir.ui.view">
         <field name="name">ninas.helpdesk.ticket</field>
         <field name="model">helpdesk.ticket</field>
         <field name="priority" eval="7"/>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
+        	<field name="stage_id" position="replace">
+                <field name="stage_id" widget="statusbar" options="{'fold_field': 'fold'}"/>
+            </field>
             <field name="team_id" position="replace">
                 <field name="team_id" invisible="1"/>
             </field>
             <field name="team_id" position="after">
-                <field name="assessment_team_ids" widget="many2many_tags" domain="[('category_ids.is_assessor','=',True)]"/>
+            	<field name="resources_available" attrs="{'required':[('stage_id','=',5)], 'readonly':[('stage_id','!=',5)]}"/>
+                <field name="assessment_team_ids" widget="many2many_tags" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',5)], 'readonly':[('resources_available','=',False)]}"/>
+            </field>
+            <field name="partner_id" position="before">
+                <field name="checklist_sent" readonly="1"/>
             </field>
              <field name="ticket_type_id" position="replace">
                 <field name="ticket_type_id" invisible="1"/>
             </field>
-            <field name="ticket_type_id" position="after">
+            <field name="ticket_type_id" position="after"> 
                 <field name="assessment_type_id"/>
             </field>
             <field name="ticket_type_id" position="after">
@@ -623,10 +785,10 @@
                 <field name="user_id" invisible="1"/>
             </field>
             <field name="user_id" position="after">
-                <field name="lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]"/>
+                <field name="lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',5)], 'readonly':[('resources_available','=',False)]}"/>
             </field>
             <field name="deadline" position="after">
-                <field name="re_assessment_date" attrs="{'required':[('stage_id','=',3)], 'invisible':[('stage_id','!=',3)]}"/>
+                <field name="re_assessment_date" attrs="{'required':[('stage_id','=',21)], 'invisible':[('stage_id','!=',21)]}"/>
             </field>
         </field>
     </record>
@@ -653,10 +815,27 @@
            	       	</group>
            	       	<group col="4" colspan="4">
            	       	<field name="laboratory_legal_name"/>
-           	       	<field name="laboratory_address"/>
+           	       	
+           	       	<label for="laboratory_address" string="Laboratory Address"/>
+           	       	<div class="o_address_format">
+                        <field name="lab_number" placeholder="Number..." class="o_address_street"/>
+                        <field name="lab_street" placeholder="Street..." class="o_address_street"/>
+                        <field name="lab_city" placeholder="City" class="o_address_city"/>
+                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                    
            	       	<field name="telephone_number"/>
            	       	<field name="email_address"/>
-           	       	<field name="mailing_address"/>
+           	       	
+           	       	<label for="mailing_address" string="Mailing Address"/>
+           	       	<div class="o_address_format">
+                        <field name="mail_number" placeholder="Number..." class="o_address_street"/>
+                        <field name="mail_street" placeholder="Street..." class="o_address_street"/>
+                        <field name="mail_city" placeholder="City" class="o_address_city"/>
+                        <field name="mail_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                        <field name="mail_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    </div>
            	       	
            	       	</group>
            	    	<group>
@@ -774,6 +953,7 @@
            	    	
                 </sheet>
 			    </xpath>
+            
             </field>
     </record>
     
