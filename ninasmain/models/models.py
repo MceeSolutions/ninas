@@ -1128,6 +1128,10 @@ class Confidentiality(models.Model):
     _name = 'ninas.confidentiality'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
+    agreement = fields.Boolean(
+        required=True
+        )
+    
     state = fields.Selection(
         [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
         string='Status',

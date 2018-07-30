@@ -36,6 +36,8 @@ class Accreditation(models.Model):
     
     resources_available = fields.Boolean(string='Resources Available?')
     checklist_sent = fields.Boolean(string='Review Checklist Sent?')
+    conflict_agreement = fields.Boolean(string='contract Agreement?', readonly=True)
+    confidentiality_agreement = fields.Boolean(string='confidentiality Agreemnt?', readonly=True)
     
     #Application Form Sheet
     name_applicant = fields.Char(
@@ -328,12 +330,15 @@ class CreateInvoice(models.Model):
         self.write({'stage_id': 10})
         return {}
     
-    '''
+    
     @api.multi
-    def action_create_new(self):
-        self.write({'stage_id': 6})
+    def button_assessor_agreement(self):
+        self.write({'conflict_agreement': True})
+        self.write({'confidentiality_agreement': True})
+        self.write({'stage_id': 17})
         return {}
     
+    '''
     @api.multi
     def action_create_new(self):
         self.write({'stage_id': 6})
