@@ -6,7 +6,7 @@ from odoo import api, fields, models, SUPERUSER_ID
 import time
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
-#from pandas.tseries.offsets import BDay
+from pandas.tseries.offsets import BDay
 from odoo.exceptions import ValidationError
 
 
