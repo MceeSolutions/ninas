@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError
 ISO_STANDARD = [('iso1','ISO1'),('iso2','ISO2')]
 COMPLIANCE = [('C','Compliance'),('NC', 'Non-Compliance'),('NA','Not Applicable')]
 COMPLIANCE_STANDARD = [('C','Compliance'),('NC', 'Non-Compliance')]
-
+KEYS = [('5','Excellent'),('4','Very Good'), ('3','Good'),('2','Fair'),('1','Poor')]
 
 class BasicToolkitData(models.Model):
     _name = 'ninas.basic.toolkit.data'
@@ -112,8 +112,6 @@ class AssessmentAssessorFeedback(models.Model):
 
     details = fields.Text(
         string='Details',track_visibility='onchange')
-
-
 
 class AssessmentWitnessTemplate(models.Model):
     _name = 'ninas.witness.template'
@@ -1140,3 +1138,237 @@ class AssessmentConfirmationAssessor(models.Model):
 
     def decline(self):
         self.write({'state':'declined'})
+
+
+class AppraisalReportLeadAssessor(models.Model):
+    _name = 'ninas.appraisal.report.lead.assessor'
+    _description = 'NiNAS Appraisal Report Lead Assessor'
+    _inherit = 'ninas.basic.toolkit.data'
+
+    assessment_type = fields.Selection(
+        [('initial','Initial'), ('surveillance','Surveillance'), ('extension','Extension'),('re','Re-')],
+        string='Type of Assessment',
+        required=True,
+        track_visibility='onchange'
+    )
+
+    assessment_date = fields.Date(
+        string='Date of Assessment',
+        track_visibility='onchange',
+        default = lambda *a: time.strftime('%Y-%m-%d'),
+        required=True,
+    )
+
+    standard_used = fields.Char(
+        string='Guide / Standard used',
+        required=True,
+        track_visibility='onchange'
+    )
+
+    state = fields.Selection(
+        [('new','Draft'),('refused','Refused'),('approved','Approved'), ('director_approved','Director Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+
+    personal_attributes_criteria_1 = fields.Selection(KEYS,string='1.1 - Ethical, i.e. fair, truthful, sincere, honest and discrete.', track_visibility='onchange')
+    personal_attributes_criteria_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_attributes_criteria_2 = fields.Selection(KEYS,string='1.2 - Open-minded, i.e. willing to consider alternative ideas or points of view.', track_visibility='onchange')
+    personal_attributes_criteria_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_attributes_criteria_3 = fields.Selection(KEYS,string='1.3 - Diplomatic, i.e. tactful in dealing with people.', track_visibility='onchange')
+    personal_attributes_criteria_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_attributes_criteria_4 = fields.Selection(KEYS,string='1.4 - Observant, i.e. actively aware of physical surroundings and activities.', track_visibility='onchange')
+    personal_attributes_criteria_comments_4 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_attributes_criteria_5 = fields.Selection(KEYS,string='1.5 - Perceptive, i.e. instinctively aware of and able to understand situations.', track_visibility='onchange')
+    personal_attributes_criteria_comments_5 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_attributes_criteria_6 = fields.Selection(KEYS,string='1.6 - Versatile, i.e. adjusts readily to different situations.', track_visibility='onchange')
+    personal_attributes_criteria_comments_6 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_attributes_criteria_7 = fields.Selection(KEYS,string='1.7 - Tenacious, i.e. persistent, focused on achieving objectives.', track_visibility='onchange')
+    personal_attributes_criteria_comments_7 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_attributes_criteria_8 = fields.Selection(KEYS,string='1.8 - Decisive, i.e. reaches timely conclusions based on logical reasoning and analysis.', track_visibility='onchange')
+    personal_attributes_criteria_comments_8 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_attributes_criteria_9 = fields.Selection(KEYS,string='1.9 - Self-reliant, i.e. acts and functions independently while interacting effectively with others.', track_visibility='onchange')
+    personal_attributes_criteria_comments_9 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_attributes_criteria_10 = fields.Selection(KEYS,string='1.10 - Effective in communication with others.', track_visibility='onchange')
+    personal_attributes_criteria_comments_10 = fields.Char(string='Comments', track_visibility='onchange')
+
+    knowledge_assessment_skill_1 = fields.Selection(KEYS,string='2.1 - Apply assessment principles, procedures and techniques.', track_visibility='onchange')
+    knowledge_assessment_skill_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    knowledge_assessment_skill_2 = fields.Selection(KEYS,string='2.2 - Plan and organize the work effectively.', track_visibility='onchange')
+    knowledge_assessment_skill_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    knowledge_assessment_skill_3 = fields.Selection(KEYS,string='2.3 - Conduct the assessment within the agreed time schedule.', track_visibility='onchange')
+    knowledge_assessment_skill_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+    knowledge_assessment_skill_4 = fields.Selection(KEYS,string='2.4 - Prioritize and focus on matters of significance.', track_visibility='onchange')
+    knowledge_assessment_skill_comments_4 = fields.Char(string='Comments', track_visibility='onchange')
+    knowledge_assessment_skill_5 = fields.Selection(KEYS,string='2.5 - Collect information through effective interviewing, listening, observing and reviewing documents, records and data.', track_visibility='onchange')
+    knowledge_assessment_skill_comments_5 = fields.Char(string='Comments', track_visibility='onchange')
+    knowledge_assessment_skill_6 = fields.Selection(KEYS,string='2.6 - Understand the appropriateness and consequences of using sampling techniques for assessment.', track_visibility='onchange')
+    knowledge_assessment_skill_comments_6 = fields.Char(string='Comments', track_visibility='onchange')
+    knowledge_assessment_skill_7 = fields.Selection(KEYS,string='2.7 - Verify the accuracy of collected information.', track_visibility='onchange')
+    knowledge_assessment_skill_comments_7 = fields.Char(string='Comments', track_visibility='onchange')
+    knowledge_assessment_skill_8 = fields.Selection(KEYS,string='2.8 - Confirm the sufficiency and appropriateness of assessment evidence to support assessment findings and conclusions.', track_visibility='onchange')
+    knowledge_assessment_skill_comments_8 = fields.Char(string='Comments', track_visibility='onchange')
+    knowledge_assessment_skill_9 = fields.Selection(KEYS,string='2.9 - Prepare assessment reports', track_visibility='onchange')
+    knowledge_assessment_skill_comments_9 = fields.Char(string='Comments', track_visibility='onchange')
+    knowledge_assessment_skill_10 = fields.Selection(KEYS,string='2.10 - Maintain the confidentiality and security of information.', track_visibility='onchange')
+    knowledge_assessment_skill_comments_10 = fields.Char(string='Comments', track_visibility='onchange')
+    
+    skill_assessment_leadership_1 = fields.Selection(KEYS,string='3.1 - Plan the assessment and make effective use of resources during the assessment.', track_visibility='onchange')
+    skill_assessment_leadership_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    skill_assessment_leadership_2 = fields.Selection(KEYS,string='3.2 - Represent the assessment team in communications with the CAB’s personnel.', track_visibility='onchange')
+    skill_assessment_leadership_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    skill_assessment_leadership_3 = fields.Selection(KEYS,string='3.3 - Organize and direct assessment team members.', track_visibility='onchange')
+    skill_assessment_leadership_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+    skill_assessment_leadership_4 = fields.Selection(KEYS,string='3.4 - Lead the assessment team to reach the assessment conclusion.', track_visibility='onchange')
+    skill_assessment_leadership_comments_4 = fields.Char(string='Comments', track_visibility='onchange')
+    skill_assessment_leadership_5 = fields.Selection(KEYS,string='3.5 - Prevent and resolve conflict.', track_visibility='onchange')
+    skill_assessment_leadership_comments_5 = fields.Char(string='Comments', track_visibility='onchange')
+    skill_assessment_leadership_6 = fields.Selection(KEYS,string='3.6 - Prepare and complete the assessment report.', track_visibility='onchange')
+    skill_assessment_leadership_comments_6 = fields.Char(string='Comments', track_visibility='onchange')
+    
+    skill_assessment_reporting_1 = fields.Selection(KEYS,string='4.1 - Interpretation of requirements', track_visibility='onchange')
+    skill_assessment_reporting_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    skill_assessment_reporting_2 = fields.Selection(KEYS,string='4.2 - Documentation of evidence', track_visibility='onchange')
+    skill_assessment_reporting_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    skill_assessment_reporting_3 = fields.Selection(KEYS,string='4.3 - Clarity of writing', track_visibility='onchange')
+    skill_assessment_reporting_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+    skill_assessment_reporting_4 = fields.Selection(KEYS,string='4.4 - Timeliness of delivery', track_visibility='onchange')
+    skill_assessment_reporting_comments_4 = fields.Char(string='Comments', track_visibility='onchange')
+    
+    recommendations = fields.Text(string='Recommendations', track_visibility='onchange')
+    approval_date = fields.Date(string='Approval Date', track_visibility='onchange')
+    director_approval_date = fields.Date(string='Director Approval Date', track_visibility='onchange')
+
+    rate = fields.Integer('Total Rate')
+    grade = fields.Selection(
+        [('satisfactory','Satisfactory (80% and above)'), 
+        ('need_guidance','Need Guidance (80% and above) &amp; has comments for development needs'), 
+        ('unsatisfactory','Unsatisfactory (Less than 80%)')],
+        string='Grade'
+    )
+
+    def compute_grade(self):
+        for appraisal in self:
+            total_rate = 0
+            STAGE_1 = 10
+            STAGE_2 = 10
+            STAGE_3 = 6
+            STAGE_4 = 4
+            MAX_RATE = (STAGE_1 + STAGE_2 + STAGE_3 + STAGE_4) * 5
+            for i in range(1,STAGE_1+1):
+                rate = getattr(appraisal, 'personal_attributes_criteria_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_2+1):
+                rate = getattr(appraisal, 'knowledge_assessment_skill_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_3+1):
+                rate = getattr(appraisal, 'skill_assessment_leadership_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_4+1):
+                rate = getattr(appraisal, 'skill_assessment_reporting_'+str(i))
+                total_rate += int(rate) if rate else 0
+            appraisal.rate = total_rate/MAX_RATE * 100
+        return
+
+    def approve(self):         
+        self.write({'state':'approved', 'approval_date':time.strftime('%Y-%m-%d')})
+    
+    def director_approve(self):         
+        self.write({'state':'director_approved', 'director_approval_date':time.strftime('%Y-%m-%d')})
+
+    def draft(self):
+        self.write({'state':'new'})
+
+    def refuse(self):
+        self.write({'state':'refused'})
+    
+    @api.multi
+    def write(self, values):
+        super(AppraisalReportLeadAssessor, self).write(values)
+        if not 'rate' in values.keys():
+            self.compute_grade()
+        return True
+    
+    @api.model
+    def create(self, values):
+        appraisal = super(AppraisalReportLeadAssessor, self).create(values)
+        appraisal.compute_grade()
+        return appraisal
+
+
+class AppraisalReportTechnicalAssessor(models.Model):
+    _name = 'ninas.appraisal.report.technical.assessor'
+    _description = 'NiNAS Appraisal Report Technical Assessor'
+    _inherit = 'ninas.appraisal.report.lead.assessor'
+
+    technical_skills_1 = fields.Selection(KEYS,string='3.1 - Have up-to-date knowledge and understanding of the appropriate standards, regulations and guidelines relevant to his scope of assessment.', track_visibility='onchange')
+    technical_skills_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_2 = fields.Selection(KEYS,string='3.2 - Have knowledge and understanding of the relevant accreditation procedures.', track_visibility='onchange')
+    technical_skills_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_3 = fields.Selection(KEYS,string='3.3 - Be familiar with the technical activities of the CAB that lies under his scope of assessment', track_visibility='onchange')
+    technical_skills_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+
+    def compute_grade(self):
+        for appraisal in self:
+            total_rate = 0
+            STAGE_1 = 10
+            STAGE_2 = 10
+            STAGE_3 = 3
+            STAGE_4 = 4
+            MAX_RATE = (STAGE_1 + STAGE_2 + STAGE_3 + STAGE_4) * 5
+            for i in range(1,STAGE_1+1):
+                rate = getattr(appraisal, 'personal_attributes_criteria_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_2+1):
+                rate = getattr(appraisal, 'knowledge_assessment_skill_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_3+1):
+                rate = getattr(appraisal, 'technical_skills_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_4+1):
+                rate = getattr(appraisal, 'skill_assessment_reporting_'+str(i))
+                total_rate += int(rate) if rate else 0
+            appraisal.rate = total_rate/MAX_RATE * 100
+        return
+
+class AppraisalReportTechnicalExpert(models.Model):
+    _name = 'ninas.appraisal.report.technical.expert'
+    _description = 'NiNAS Appraisal Report Technical Expert'
+    _inherit = 'ninas.appraisal.report.lead.assessor'
+
+    personal_aspects_1 = fields.Selection(KEYS,string='1.1 - Ethical, i.e. fair, truthful, sincere, honest and discrete.', track_visibility='onchange')
+    personal_aspects_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_aspects_2 = fields.Selection(KEYS,string='1.2 - Diplomatic, i.e. tactful in dealing with people.', track_visibility='onchange')
+    personal_aspects_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_aspects_3 = fields.Selection(KEYS,string='1.3 - Observant, i.e. actively aware of physical surroundings and activities.', track_visibility='onchange')
+    personal_aspects_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_aspects_4 = fields.Selection(KEYS,string='1.4 - Perceptive, i.e. instinctively aware of and able to understand situations.', track_visibility='onchange')
+    personal_aspects_comments_4 = fields.Char(string='Comments', track_visibility='onchange')
+    personal_aspects_5 = fields.Selection(KEYS,string='1.5 - Self-reliant, i.e. acts and functions independently while interacting effectively with others.', track_visibility='onchange')
+    personal_aspects_comments_5 = fields.Char(string='Comments', track_visibility='onchange')
+
+    technical_skills_1 = fields.Selection(KEYS,string='2.1 - Have up-to-date knowledge and understanding of the appropriate standards, technical regulations and guidelines relevant to his technical scope.', track_visibility='onchange')
+    technical_skills_comments_1 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_2 = fields.Selection(KEYS,string='2.2 - Familiar with the technical activities of the CAB that he witnesses.', track_visibility='onchange')
+    technical_skills_comments_2 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_3 = fields.Selection(KEYS,string='2.3 - Understand the appropriateness and consequences of using sampling techniques.', track_visibility='onchange')
+    technical_skills_comments_3 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_4 = fields.Selection(KEYS,string='2.4 - Verify the accuracy of collected information.', track_visibility='onchange')
+    technical_skills_comments_4 = fields.Char(string='Comments', track_visibility='onchange')
+    technical_skills_5 = fields.Selection(KEYS,string='2.5 - Maintain the confidentiality and security of information.', track_visibility='onchange')
+    technical_skills_comments_5 = fields.Char(string='Comments', track_visibility='onchange')
+
+    def compute_grade(self):
+        for appraisal in self:
+            total_rate = 0
+            STAGE_1 = 5
+            STAGE_2 = 5
+            MAX_RATE = (STAGE_1 + STAGE_2) * 5
+            for i in range(1,STAGE_1+1):
+                rate = getattr(appraisal, 'personal_aspects_'+str(i))
+                total_rate += int(rate) if rate else 0
+            for i in range(1,STAGE_2+1):
+                rate = getattr(appraisal, 'technical_skills_'+str(i))
+                total_rate += int(rate) if rate else 0
+            appraisal.rate = total_rate/MAX_RATE * 100
+        return
