@@ -1239,7 +1239,9 @@ class AppraisalReportLeadAssessor(models.Model):
     approval_date = fields.Date(string='Approval Date', track_visibility='onchange')
     director_approval_date = fields.Date(string='Director Approval Date', track_visibility='onchange')
 
-    rate = fields.Integer('Total Rate')
+    max_rate = fields.Integer('Max Rate')
+    rate = fields.Float('Rate(%)')
+    total_rate = fields.Integer('Total Rate')
     grade = fields.Selection(
         [('satisfactory','Satisfactory (80% and above)'), 
         ('need_guidance','Need Guidance (80% and above) &amp; has comments for development needs'), 
@@ -1267,7 +1269,11 @@ class AppraisalReportLeadAssessor(models.Model):
             for i in range(1,STAGE_4+1):
                 rate = getattr(appraisal, 'skill_assessment_reporting_'+str(i))
                 total_rate += int(rate) if rate else 0
-            appraisal.rate = total_rate/MAX_RATE * 100
+            appraisal.write({
+                'rate':100.0 * total_rate/MAX_RATE, 
+                'max_rate': MAX_RATE,
+                'total_rate': total_rate
+            })
         return
 
     def approve(self):         
@@ -1328,7 +1334,11 @@ class AppraisalReportTechnicalAssessor(models.Model):
             for i in range(1,STAGE_4+1):
                 rate = getattr(appraisal, 'skill_assessment_reporting_'+str(i))
                 total_rate += int(rate) if rate else 0
-            appraisal.rate = total_rate/MAX_RATE * 100
+            appraisal.write({
+                'rate':100.0 * total_rate/MAX_RATE, 
+                'max_rate': MAX_RATE,
+                'total_rate': total_rate
+            })
         return
 
 class AppraisalReportTechnicalExpert(models.Model):
@@ -1370,5 +1380,9 @@ class AppraisalReportTechnicalExpert(models.Model):
             for i in range(1,STAGE_2+1):
                 rate = getattr(appraisal, 'technical_skills_'+str(i))
                 total_rate += int(rate) if rate else 0
-            appraisal.rate = total_rate/MAX_RATE * 100
+            appraisal.write({
+                'rate':100.0 * total_rate/MAX_RATE, 
+                'max_rate': MAX_RATE,
+                'total_rate': total_rate
+            })
         return
