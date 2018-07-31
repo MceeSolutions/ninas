@@ -996,16 +996,15 @@
                     <group col="2">
                         <field name="name"/>
                         <field name="application_id"/>
-                        <field name="institution_name"/>
+                        <field name="institution_name" string="Organization Name"/>
                         <field name="assessment_type"/>
                         <field name="assessment_date"/>
                         <field name="standard_used"/>
                     </group>
-                    <group string="Grades" col="4">
-                        <div name="rate">
-                            <label for="rate"/>
-                            <field name="rate" class="oe_inline" readonly="1"/>%%
-                        </div>
+                    <group string="Grades" col="2">
+                        <field name="max_rate" readonly="1"/>
+                        <field name="total_rate" readonly="1"/>
+                        <field name="rate" readonly="1"/>
                         <field name="grade"/>
                     </group>
                     <notebook>
@@ -1140,16 +1139,15 @@
                     <group col="2">
                         <field name="name"/>
                         <field name="application_id"/>
-                        <field name="institution_name"/>
+                        <field name="institution_name" string="Organization Name"/>
                         <field name="assessment_type"/>
                         <field name="assessment_date"/>
                         <field name="standard_used"/>
                     </group>
-                    <group string="Grades" col="4">
-                        <div name="rate">
-                            <label for="rate"/>
-                            <field name="rate" class="oe_inline" readonly="1"/>%%
-                        </div>
+                    <group string="Grades" col="2">
+                        <field name="max_rate" readonly="1"/>
+                        <field name="total_rate" readonly="1"/>
+                        <field name="rate" readonly="1"/>
                         <field name="grade"/>
                     </group>
                     <notebook>
@@ -1279,16 +1277,15 @@
                     <group col="2">
                         <field name="name"/>
                         <field name="application_id"/>
-                        <field name="institution_name"/>
+                        <field name="institution_name" string="Organization Name"/>
                         <field name="assessment_type"/>
                         <field name="assessment_date"/>
                         <field name="standard_used"/>
                     </group>
-                    <group string="Grades" col="4">
-                        <div name="rate">
-                            <label for="rate"/>
-                            <field name="rate" class="oe_inline" readonly="1"/>%%
-                        </div>
+                    <group string="Grades" col="2">
+                        <field name="max_rate" readonly="1"/>
+                        <field name="total_rate" readonly="1"/>
+                        <field name="rate" readonly="1"/>
                         <field name="grade"/>
                     </group>
                     <notebook>
