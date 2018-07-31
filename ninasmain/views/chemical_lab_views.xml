@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <record model="ir.ui.view" id="ninas_chemical_lab_tree_view">
+		    <field name="name">ninas.chemical_lab.tree</field>
+		    <field name="model">ninas.chemical_lab</field>
+		    <field name="type">tree</field>
+		    <field name="arch" type="xml">
+			    <tree>
+                    <field name="schedule_number"/>
+				    <field name="issue_no"/>
+				    <field name="institution"/>
+				    <field name="address"/>
+				    <field name="valid_no"/>
+			    </tree>
+		    </field>
+	    </record>
+
+        <record model="ir.ui.view" id="ninas_chemical_lab_form_view">
+			<field name="name">ninas.chemical_lab.form</field>
+			<field name="model">ninas.chemical_lab</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Chemical Testing Laboratory">
+					<sheet>
+						<group string="Chemical Testing Form" col="4" colspan="4">
+                            <field name="schedule_number"/>
+                            <field name="institution"/>
+                            <field name="address"/>
+							<field name="issue_no"/>
+				            <field name="valid_no"/>
+						</group>
+
+						<field name="chem_lab">
+							<tree editable="True">
+								<field name="products"/>
+                                <field name="tests"/>
+                                <field name="standards"/>
+                                <field name="techniques"/>
+							</tree>
+						</field>
+					</sheet>
+				</form>
+			</field>
+		</record>    
+
+		<record model="ir.actions.act_window" id="ninas_chemical_lab_action">
+            <field name="name">Chemical Testing Laboratory</field>
+            <field name="res_model">ninas.chemical_lab</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+<menuitem name="Chemical Testing Laboratory" id="ninas_assessment_type" parent="helpdesk.helpdesk_menu_config" action="ninas_chemical_lab_action" sequence="3"/>
+
+	</data>
+</odoo>
