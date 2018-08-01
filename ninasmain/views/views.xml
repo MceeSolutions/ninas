@@ -344,7 +344,47 @@
 			<field name="purpose"/>
 		</field>
 	</record>
-
+	
+	<!-- open and close action -->
+	<record model="ir.actions.act_window" id="open_close_action">
+		<field name="name">Opening and Closing Agenda</field>
+		<field name="res_model">ninas.open_close</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+	
+	<!-- medical lab action -->
+	<record model="ir.actions.act_window" id="medical_action">
+		<field name="name">Medical Laboratory</field>
+		<field name="res_model">ninas.medical</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+	
+	<!-- calibration lab action -->
+	<record model="ir.actions.act_window" id="calibration_action">
+		<field name="name">Calibration Laboratory</field>
+		<field name="res_model">ninas.calibration</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+	
+	<!-- chemimcal scope action -->
+	<record model="ir.actions.act_window" id="ninas_chemical_lab_action">
+            <field name="name">Chemical Testing Laboratory</field>
+            <field name="res_model">ninas.chemical_lab</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+	
     <record id="loan_request_form" model="ir.ui.view">
     <field name="name">loan.request.form</field>
     <field name="model">loan.request</field>
@@ -362,25 +402,26 @@
         	</header>
 			 <sheet>
 				 <group string="Request" col="4" colspan="4">
-				 <field name="name"/>
-				 <field name="purpose"/>
+				 <field name="name" attrs="{'readonly':[('state','!=','new')]}"/>
+				 <field name="purpose" attrs="{'readonly':[('state','!=','new')]}"/>
+				 <field name="currency_id" attrs="{'readonly':[('state','!=','new')]}"/>
 				 </group>
-				 <notebook>
-					 <page string="Terms Of Loan">
 					 <p class="text-center">
 					 	Terms of loan: Must be repaid within a Financial Year; monthly repayment and repayment period will be clearly stated here					
 					 </p>
+					 	<group class="oe_right">
+					 		<field name="loan_amt" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly':[('state','!=','new')]}"/>
+					 	</group>
 					 	<field name="loan_line_ids">
 							<tree editable="True">
-								<field name="loan_amount"/>
-								<field name="currency_id"/>
+								<field name="description"/>
+								<field name="loan_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
 							</tree>
 						</field>
 						<group class="oe_subtotal_footer oe_right">
                            <field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
-					 </page>
-				 </notebook>
+					 
 				 <group col="4" colspan="4">
 						 <field name="repayment"/>
 						 <label for="repayment_period" string="Repayment Period"/>
@@ -479,7 +520,18 @@
 				 <notebook>
 						<page name="expense" string="Expense"> 
 							<field name="account_ids">
+								<tree editable="bottom">
+									<field name="type"/>
+									<field name="account_id"/>
+									<field name="grant"/>
+									<field name="unit"/>
+									<field name="unit_price"/>
+									<field name="amount"/>
+								</tree>
 							</field>
+							<group class="oe_subtotal_footer oe_right">
+	                           <field name="total_unit_price" widget="monetary"/>
+	                        </group>
 						</page>
 					</notebook>
 				<group>
@@ -1475,8 +1527,217 @@
 		</field>
 	</record>
 	
-		
+	<!-- open and close -->
+	<record model="ir.ui.view" id="ninas_open_close_tree_view">
+		<field name="name">ninas.open_close.tree</field>
+		<field name="model">ninas.open_close</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="org"/>
+				<field name="today"/>
+				<field name="location"/>
+				<field name="la"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_open_close_form_view">
+		<field name="name">ninas.open_close.form</field>
+		<field name="model">ninas.open_close</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Opening and Closing Agenda">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="org"/>
+						<field name="today"/>
+						<field name="location"/>
+						<field name="la"/>
+					</group>
+					<notebook>
+						<page string= 'Opening Agenda'>
+							<group>
+								<field name="oc">
+									<tree editable="True">
+										<field name="sn"/>
+										<field name="agenda"/>
+									</tree>
+								</field>
+							</group>
+						</page>
+						<page string = 'Closing Agenda'>
+							<group>
+							<field name="oc2">
+								<tree editable="True">
+									<field name="sn"/>
+									<field name="agenda"/>
+								</tree>
+							</field>
+							</group>
+						</page>
+						<page string= 'Attendance'>
+							<group>
+								<field name="attendance">
+									<tree editable="True">
+										<field name="attendee"/>
+										<field name="position"/>
+										<field name="open"/>
+										<field name="close"/>
+									</tree>
+								</field>
+							</group>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<!-- medical lab -->
+	<record model="ir.ui.view" id="ninas_medical_tree_view">
+		<field name="name">ninas.medical.tree</field>
+		<field name="model">ninas.medical</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="institution"/>
+				<field name="address"/>
+				<field name="issue1"/>
+				<field name="valid"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_medical_form_view">
+		<field name="name">ninas.medical.form</field>
+		<field name="model">ninas.medical</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Medical Laboratory">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="institution"/>
+						<field name="address"/>
+						<field name="name"/>
+						<field name="issue1"/>
+						<field name="valid"/>
+					</group>
+					
+					<field name="med_lab">
+						<tree editable="True">
+							<field name="sample"/>
+							<field name="tests"/>
+							<field name="equipment"/>
+							<field name="method"/>
+						</tree>
+					</field>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<!-- calibration lab -->
+	<record model="ir.ui.view" id="ninas_calibration_tree_view">
+		<field name="name">ninas.calibration.tree</field>
+		<field name="model">ninas.calibration</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="institution"/>
+				<field name="address"/>
+				<field name="issue1"/>
+				<field name="valid"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_calibration_form_view">
+		<field name="name">ninas.calibration.form</field>
+		<field name="model">ninas.calibration</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Calibration Laboratory">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="institution"/>
+						<field name="address"/>
+						<field name="name"/>
+						<field name="issue1"/>
+						<field name="valid"/>
+					</group>
+					
+					<field name="cal_lab">
+						<tree editable="True">
+							<field name="mqty"/>
+							<field name="range"/>
+							<field name="cmc"/>
+							<field name="method"/>
+							<field name="equipment"/>
+						</tree>
+					</field>
+				</sheet>
+			</form>
+		</field>
+	</record>	
     
+    <!-- chemical scope view -->
+    <record model="ir.ui.view" id="ninas_chemical_lab_tree_view">
+		    <field name="name">ninas.chemical_lab.tree</field>
+		    <field name="model">ninas.chemical_lab</field>
+		    <field name="type">tree</field>
+		    <field name="arch" type="xml">
+			    <tree>
+                    <field name="schedule_number"/>
+				    <field name="issue_no"/>
+				    <field name="institution"/>
+				    <field name="address"/>
+				    <field name="valid_no"/>
+			    </tree>
+		    </field>
+	    </record>
+         <record model="ir.ui.view" id="ninas_chemical_lab_form_view">
+			<field name="name">ninas.chemical_lab.form</field>
+			<field name="model">ninas.chemical_lab</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Chemical Testing Laboratory">
+					<sheet>
+						<group string="Chemical Testing Form" col="4" colspan="4">
+                            <field name="schedule_number"/>
+                            <field name="institution"/>
+                            <field name="address"/>
+							<field name="issue_no"/>
+				            <field name="valid_no"/>
+						</group>
+ 						<field name="chem_lab">
+							<tree editable="True">
+								<field name="products"/>
+                                <field name="tests"/>
+                                <field name="standards"/>
+                                <field name="techniques"/>
+							</tree>
+						</field>
+					</sheet>
+				</form>
+			</field>
+		</record>
+    
+    
+    <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_main_menu"/>
+    <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_tools_main_menu" parent="ninas_lead_toolkit_main_menu"/>
+    
+    <menuitem name="Open Close" id="open_close_menu" parent="ninas_lead_toolkit_tools_main_menu"
+              action="open_close_action"/>
+    <menuitem name="Medical Lab Scope" id="medical_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
+              action="medical_action"/>
+    <menuitem name="Calibration Lab Scope" id="calibration_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
+              action="calibration_action"/>
+    <menuitem name="Chemical Lab Scope" id="chemical_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
+              action="ninas_chemical_lab_action"/>
+              
 	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
     <menuitem name="Loan Request" id="loan_request_menu" parent="request_main_menu"
               action="LoanRequest_action_window"/>

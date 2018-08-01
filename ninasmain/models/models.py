@@ -116,6 +116,9 @@ class LoanRequest(models.Model):
         comodel_name='loan.req',
         inverse_name='employee_id')
     
+    loan_amt = fields.Monetary(
+        string='Loan Amount', required=True)
+    
     @api.multi
     def button_reset(self):
         self.write({'state': 'new'})
@@ -160,6 +163,7 @@ class LoanReq(models.Model):
     _name = 'loan.req'
     
     loan_amount = fields.Monetary(string='Loan Amount')
+    description = fields.Char(string='Month Repaid')
     
     currency_id = fields.Many2one('res.currency', 'Currency')
     
@@ -242,9 +246,12 @@ class TravelRequest(models.Model):
     ceo_date = fields.Date(
         string='Date', readonly=True)
     
-    account_ids = fields.Many2many(
-        comodel_name='account.account')
+    account_ids = fields.One2many(
+        comodel_name='ninas.travel.account',
+        inverse_name='travel_request_id')
     
+    total_unit_price = fields.Float(string='Total Unit Price', compute='_total_unit', readonly=True)
+    total_amount = fields.Char(string='Total Amount')
     
     @api.multi
     def button_reset(self):
@@ -290,6 +297,29 @@ class TravelRequest(models.Model):
         if vals.get('travelrequest_no', 'New') == 'New':
             vals['travelrequest_no'] = self.env['ir.sequence'].next_by_code('travel.request') or '/'
         return super(TravelRequest, self).create(vals)
+    
+    
+    @api.depends('account_ids.unit_price')
+    def _total_unit(self):
+        total_unit_price = 0.0
+        for line in self.account_ids:
+            self.total_unit_price += line.unit_price
+            
+class TravelAccount(models.Model):
+    _name = 'ninas.travel.account'
+    
+    travel_request_id =fields.Many2one(
+        comodel_name='travel.request')
+    
+    type = fields.Char(string='Type Of Expense')
+    account_id = fields.Many2one(
+        comodel_name='account.account', string='Account')
+    grant = fields.Char(string='Grant')
+    unit = fields.Char(string='Unit(s)')
+    unit_price = fields.Float(string='Unit Price')
+    amount = fields.Float(string='Sub Amount', readonly=True)
+
+    
     
 class Hrrecruitment(models.Model):
     _name = 'ninas.hr.recruitment'
@@ -1366,3 +1396,284 @@ class ABudget(models.Model):
     def mul(self):
         self.amount = self.units  *  self.cost
         return True
+    
+    
+class OpenClose(models.Model):
+    _name = 'ninas.open_close'
+    _description = 'Opening and Closing Agenda'
+
+    org = fields.Char(
+        #related = ''
+        string = 'Organization'
+        )
+    location = fields.Char(
+        string = 'Location'
+        )
+    la = fields.Char(
+        #comodel_name = 'hr.employee',
+        string = 'Lead Assessor'
+        )
+    today = fields.Date(
+        string = 'Date',
+        default= date.today(),
+        readonly=1
+        )
+    oc = fields.One2many(
+        comodel_name = 'open.close',
+        inverse_name = 'name',
+        string = 'Opening Agenda'
+        )
+    oc2 = fields.One2many(
+        comodel_name = 'open.close2',
+        inverse_name = 'name',
+        string = 'Closing Agenda'
+        )
+    attendance = fields.One2many(
+        comodel_name = 'ninas.attendance',
+        inverse_name = 'name',
+        string = 'Attendance'
+    )
+
+class OC(models.Model):
+    _name = 'open.close'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='Name of Payee',
+        required=0
+        )
+    sn = fields.Integer(
+        string="S/N"
+        )
+    agenda = fields.Char(
+        string = 'Activity',
+        required=0
+        )
+
+class OC2(models.Model):
+    _name = 'open.close2'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='Name of Payee',
+        required=0
+        )
+    sn = fields.Integer(
+        string="S/N"
+        )
+    agenda = fields.Char(
+        string = 'Activity',
+        required=0
+        )
+    
+class NinasAttendance(models.Model):
+    _name = 'ninas.attendance'
+
+    name = fields.Char(
+        string=""
+        )
+    attendee = fields.Many2one(
+        comodel_name = 'hr.employee',
+        string ='Attendee',
+        required=0
+    )
+    position = fields.Char(
+        related = 'attendee.job_id.name',
+        string = 'Position',
+        readonly = 1
+    )
+    open = fields.Boolean(
+        string = 'Open'
+    )
+    close = fields.Boolean(
+        string = 'Close'
+    )
+    
+class MedicalLab(models.Model):
+    _name = 'ninas.medical'
+    _description = 'Medical Laboratory'
+
+    #name of institution
+    institution = fields.Char(
+        string = 'Name of Laboratory',
+        required=1
+        )
+    address = fields.Char(
+        string = 'Address of Laboratory',
+        readonly=1
+        )
+    #auto generate eg: M0001
+    name = fields.Char(
+        string="Schedule No.",
+        readonly=1
+        )
+    issue1 = fields.Date(
+        string = 'Issue No. 1',
+        required=1
+        )
+    valid = fields.Date(
+        string="Valid To",
+        required=1
+        )
+    med_lab = fields.One2many(
+        comodel_name = 'med.lab',
+        inverse_name = 'name',
+        string = 'Medical Laboratory'
+        )
+
+class MedLab(models.Model):
+    _name = 'med.lab'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='',
+        required=0
+        )
+    sample = fields.Char(
+        string='Type of Sample',
+        required=1
+        )
+    tests = fields.Char(
+        string = 'Type of Tests',
+        required=1
+        )
+    equipment = fields.Char(
+        string = 'Equipment',
+        required=1
+        )
+    method = fields.Char(
+        string='Method Used',
+        required=1
+        )    
+    
+class CalibrationLab(models.Model):
+    _name = 'ninas.calibration'
+    _description = 'Calibration Laboratory'
+
+    #name of institution
+    institution = fields.Char(
+        string = 'Name of Laboratory',
+        required=1
+        )
+    address = fields.Char(
+        string = 'Address of Laboratory',
+        readonly = 1
+        )
+    #auto generate eg: C0001
+    name = fields.Char(
+        string="Schedule No.",
+        required=0
+        )
+    issue1 = fields.Date(
+        string = 'Issue No. 1',
+        required=1
+        )
+    valid = fields.Date(
+        string="Valid To",
+        required=1
+        )
+    cal_lab = fields.One2many(
+        comodel_name = 'cal.lab',
+        inverse_name = 'name',
+        string = 'Calibration Laboratory'
+        )
+
+class CalLab(models.Model):
+    _name = 'cal.lab'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='',
+        required=0
+        )
+    mqty = fields.Char(
+        string='Measured Quantity',
+        required=1
+        )
+    range = fields.Float(
+        string = 'Range',
+        required=1
+        )
+    cmc = fields.Float(
+        string = 'Calibration and Measurement Capacity',
+        required=1
+        )
+    method = fields.Char(
+        string='Brief Description of Calibration Method',
+        required=1
+        )
+    equipment = fields.Char(
+        string='Brief Description of Calibration Equipment',
+        required=1
+        )
+    
+class ChemicalLab(models.Model):
+    _name= 'ninas.chemical_lab'
+    _description= 'Chemical Testing Laboratory'
+    
+    issue_no= fields.Date(
+        string='Issue No. 1',
+        required=1
+    )
+    institution= fields.Char(
+        string= 'Name of Laboratory',
+        required=1
+    )
+    address= fields.Char(
+        string='Address of Laboratory',
+        required=1
+    )
+    schedule_number= fields.Char(
+        string='Schedule No.',
+        required=1
+    ) 
+    valid_no= fields.Date(
+        string='Valid To',
+        required=1
+    )
+    chem_lab= fields.One2many(
+        comodel_name='chem.lab',
+        inverse_name='name',
+        string='Chemical Laboratory'
+    )
+class ChemLab(models.Model):
+    _name= 'chem.lab'
+    
+    name= fields.Char(
+        string="Name",
+        required=1
+    )
+    employee_id= fields.Many2one(
+        comodel_name='hr.employee',
+        string='',
+        required=0
+    )
+    products= fields.Char(
+        string='Materials/ Products Tested',
+        required=1
+    )
+    tests= fields.Char(
+        string='Type of Tests/ Property Measured /Range of Managements',
+        required=1
+    )
+    standards= fields.Char(
+        string='Standard Specifications',
+        required=1
+    )
+    techniques= fields.Char(
+        string='Techniques Used',
+        required=1
+    )
+    
