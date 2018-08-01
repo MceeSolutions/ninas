@@ -117,7 +117,7 @@ class LoanRequest(models.Model):
         inverse_name='employee_id')
     
     loan_amt = fields.Monetary(
-        string='Loan Amount', required=True)
+        string='Loan Amount')
     
     @api.multi
     def button_reset(self):
