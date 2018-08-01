@@ -1409,8 +1409,8 @@ class OpenClose(models.Model):
     location = fields.Char(
         string = 'Location'
         )
-    la = fields.Char(
-        #comodel_name = 'hr.employee',
+    la = fields.Many2one(
+        comodel_name = 'hr.employee',
         string = 'Lead Assessor'
         )
     today = fields.Date(

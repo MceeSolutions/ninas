@@ -1537,7 +1537,7 @@
 				<field name="org"/>
 				<field name="today"/>
 				<field name="location"/>
-				<field name="la"/>
+				<field name="la" domain="[('category_ids.is_assessor','=',True)]"/>
 			</tree>
 		</field>
 	</record>
@@ -1737,6 +1737,8 @@
               action="calibration_action"/>
     <menuitem name="Chemical Lab Scope" id="chemical_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
               action="ninas_chemical_lab_action"/>
+    <menuitem name="Activity Budget" id="activity_budget_menu" parent="ninas_lead_toolkit_tools_main_menu"
+              action="activity_budget_action"/>
               
 	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
     <menuitem name="Loan Request" id="loan_request_menu" parent="request_main_menu"
@@ -1745,7 +1747,7 @@
               action="TravelRequest_action_window"/>
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
-    <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="request_main_menu"
+    <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="contract_agreement_main_menu"
               action="ninas_code_of_conduct_action"/>
     
     <menuitem name="Contract Agreement" id="contract_agreement_main_menu" parent="helpdesk.menu_helpdesk_root"/>
@@ -1754,12 +1756,9 @@
     <menuitem name="Confidentiality" id="confidentiality_menu" parent="contract_agreement_main_menu"
               action="ninas_confidentiality_action"/>
               
-    <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="request_main_menu"
+    <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_contract_agreement_action"/>
-  	<menuitem name="Activity Budget" id="activity_budget_menu" parent="request_main_menu"
-              action="activity_budget_action"/>
-              
-              
+                            
     <menuitem name="Vouchers" id="bank_vouchert_main_menu" parent="account.menu_finance_receivables"/>          
     <menuitem name="Bank voucher" id="bank_voucher_menu" parent="bank_vouchert_main_menu"
               action="ninas_bank_voucher_action"/>
