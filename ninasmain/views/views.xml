@@ -1747,14 +1747,14 @@
               action="TravelRequest_action_window"/>
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
-    <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="contract_agreement_main_menu"
-              action="ninas_code_of_conduct_action"/>
     
     <menuitem name="Contract Agreement" id="contract_agreement_main_menu" parent="helpdesk.menu_helpdesk_root"/>
     <menuitem name="Conflict Of Interest" id="conflict_of_interest_menu" parent="contract_agreement_main_menu"
               action="ninas_conflict_of_interest_action"/>
     <menuitem name="Confidentiality" id="confidentiality_menu" parent="contract_agreement_main_menu"
               action="ninas_confidentiality_action"/>
+    <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="contract_agreement_main_menu"
+              action="ninas_code_of_conduct_action"/>
               
     <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_contract_agreement_action"/>
