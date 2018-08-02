@@ -66,7 +66,8 @@
         <field name="arch" type="xml">
            <xpath expr="//button[@name='assign_ticket_to_self']" position="before">
                 	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',1)]}"/>
-                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',17)]}"/>
+                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|',('stage_id','!=',17), ('preassessment_needed','!=',True)]}"/>
+                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',12)]}"/>
 			</xpath>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="replace">
            			<button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" attrs="{'invisible':[('stage_id','!=',5)]}"/>
@@ -76,8 +77,19 @@
                 	<button type="object" name="button_complete_approve" string="Approve" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-primary"/>
                 	<button type="object" name="button_complete_reject" string="Reject" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-danger"/>
                 	<button type="object" name="action_resources_available" string="Resource Available" attrs="{'invisible':[('stage_id','!=',5)]}"/>
-                	<button type="object" name="action_checklist_sent" string="Checklist Sent" attrs="{'invisible':[('stage_id','!=',9)]}"/>
+                	<button type="object" name="action_checklist_sent" string="Checklist Filled?" attrs="{'invisible':[('stage_id','!=',9)]}"/>
                 	<button type="object" name="button_assessor_agreement" string="Contract Agreements Signed" attrs="{'invisible':[('stage_id','!=',10)]}"/>
+                	<button type="object" name="button_ready_assessment" string="Proceed" attrs="{'invisible':[('stage_id','!=',17)]}"/>
+					<button type="object" name="button_assessment_plan" string="Ready" attrs="{'invisible':[('stage_id','!=',19)]}" class="btn btn-primary"/>                	
+                	<button type="object" name="button_assessment" string="Submit" attrs="{'invisible':[('stage_id','!=',12)]}" class="btn btn-primary"/>
+					<button type="object" name="button_car" string="Assessment Done?" attrs="{'invisible':[('stage_id','!=',11)]}"/>
+                	<button type="object" name="button_decision_making" string="CAR Sent / Approved" attrs="{'invisible':[('stage_id','!=',13)]}"/>
+                	
+                	
+                	<button type="object" name="button_awaiting_approval" string="Contract Agreements Signed" attrs="{'invisible':[('stage_id','!=',16)]}"/>
+                	<button type="object" name="button_approved_app" string="Resource Available" attrs="{'invisible':[('stage_id','!=',20)]}"/>
+                	<button type="object" name="button_pending_closure" string="Checklist Sent" attrs="{'invisible':[('stage_id','!=',21)]}"/>
+                	<button type="object" name="button_closed" string="Close Application?" class="btn btn-primary" attrs="{'invisible':[('stage_id','!=',18)]}"/>
 			</xpath>
 			<xpath expr="//button[@name='toggle_active']" position="before">
 		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
@@ -279,7 +291,7 @@
 	                   </div>
                  </div>
                  
-                  <div class="form-group form-field o_website_form_custom">
+                  <!-- <div class="form-group form-field o_website_form_custom">
                 	<div class="col-md-3 col-sm-4 text-right">
                  		<label class="control-label" for="account">account</label>
 	               </div>
@@ -288,7 +300,7 @@
 					         <input type="text" name="account[]" limit="1"/>
 					     </t>
 	               </div>
-	         	</div> 
+	         	</div>  -->
                  
                  <div class="form-group form-field">
 	                   <div class="col-md-3 col-sm-4 text-right">
@@ -387,7 +399,7 @@
 					
 		          <br/>
 		          
-		          <div class="container">
+		          <!-- <div class="container">
 			          <strong>
 			          	<u>List the Test Names and Methods below, as in the format shown above, for which your laboratory seeks
 		          		accreditation:</u>
@@ -408,7 +420,7 @@
 				            </tbody>
 				    </table>
 				    
-		          </div>
+		          </div> -->
 		        	
 		        	
 		        	
@@ -769,12 +781,13 @@
             </field>
             <field name="team_id" position="after">
             	<field name="resources_available" attrs="{'required':[('stage_id','=',5)], 'readonly':[('stage_id','!=',5)]}"/>
-            	<field name="conflict_agreement" attrs="{'required':[('stage_id','=',5)], 'readonly':[('stage_id','!=',10)]}"/>
+            	<field name="conflict_agreement" attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
+                <field name="preassessment_needed" attrs="{'invisible':[('stage_id','!=',17)]}"/>
                 <field name="assessment_team_ids" widget="many2many_tags" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',5)], 'readonly':[('resources_available','=',False)]}"/>
             </field>
             <field name="partner_id" position="before">
                 <field name="checklist_sent" readonly="1"/>
-                <field name="confidentiality_agreement" attrs="{'required':[('stage_id','=',10)]}"/>
+                <field name="confidentiality_agreement" attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
             </field>
              <field name="ticket_type_id" position="replace">
                 <field name="ticket_type_id" invisible="1"/>
@@ -793,6 +806,10 @@
             </field>
             <field name="deadline" position="after">
                 <field name="re_assessment_date" attrs="{'required':[('stage_id','=',21)], 'invisible':[('stage_id','!=',21)]}"/>
+            </field>
+            <field name="priority" position="after">
+            	<field name="document_review" attrs="{'required':[('stage_id','=',17)], 'readonly':[('stage_id','!=',17)]}"/>
+                <field name="assessment_date" attrs="{'required':[('stage_id','=',12)], 'readonly':[('stage_id','!=',12)]}"/>
             </field>
         </field>
     </record>

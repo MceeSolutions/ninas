@@ -34,10 +34,14 @@ class Accreditation(models.Model):
     
     re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
     
-    resources_available = fields.Boolean(string='Resources Available?')
-    checklist_sent = fields.Boolean(string='Review Checklist Sent?')
-    conflict_agreement = fields.Boolean(string='contract Agreement?', readonly=True)
-    confidentiality_agreement = fields.Boolean(string='confidentiality Agreemnt?', readonly=True)
+    resources_available = fields.Boolean(string='Resources Available?', track_visibility='onchange')
+    checklist_sent = fields.Boolean(string='Review Checklist Filled?', track_visibility='onchange')
+    conflict_agreement = fields.Boolean(string='contract Agreement?', readonly=True, track_visibility='onchange')
+    confidentiality_agreement = fields.Boolean(string='confidentiality Agreemnt?', readonly=True, track_visibility='onchange')
+    preassessment_needed = fields.Boolean(string='pre-assessment Needed?', track_visibility='onchange')
+    document_review = fields.Selection([('yes', 'Yes.')],
+                                       string='Document(s) Reviewed?', track_visibility='onchange')
+    assessment_date = fields.Date(string='Assessment Date', track_visibility='onchange')
     
     #Application Form Sheet
     name_applicant = fields.Char(
@@ -338,27 +342,58 @@ class CreateInvoice(models.Model):
         self.write({'stage_id': 17})
         return {}
     
-    '''
+   
     @api.multi
-    def action_create_new(self):
-        self.write({'stage_id': 6})
+    def button_ready_assessment(self):
+        self.write({'stage_id': 19})
         return {}
     
     @api.multi
-    def action_create_new(self):
-        self.write({'stage_id': 6})
+    def button_assessment_plan(self):
+        self.write({'stage_id': 12})
         return {}
     
     @api.multi
-    def action_create_new(self):
-        self.write({'stage_id': 6})
+    def button_assessment(self):
+        self.write({'stage_id': 11})
+        return {}
+    
+    
+    
+    @api.multi
+    def button_car(self):
+        self.write({'stage_id': 13})
         return {}
     
     @api.multi
-    def action_create_new(self):
-        self.write({'stage_id': 6})
+    def button_decision_making(self):
+        self.write({'stage_id': 16})
         return {}
-    '''
+    
+    @api.multi
+    def button_awaiting_approval(self):
+        self.write({'stage_id': 20})
+        return {}
+    
+    
+    
+    
+    
+    @api.multi
+    def button_approved_app(self):
+        self.write({'stage_id': 21})
+        return {}
+    
+    @api.multi
+    def button_pending_closure(self):
+        self.write({'stage_id': 18})
+        return {}
+    
+    @api.multi
+    def button_closed(self):
+        self.write({'stage_id': 4})
+        return {}
+    
     
 class Checklist(models.Model):
     _name = "checklist.ticket"
