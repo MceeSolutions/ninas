@@ -291,7 +291,7 @@
 					 	<field name="loan_line_ids">
 							<tree editable="True">
 								<field name="loan_amount"/>
-								<field name="loan_paid" attrs="{'readonly':[('state','!=','paid')]}"/><!-- groups="ninasmain.group_admin_finance_officer"-->
+								<field name="loan_paid" attrs="{'readonly':[('state','!=','paid')]}" groups="ninasmain.group_admin_finance_officer"/>
 								<field name="currency_id" readonly="1" invisible="1"/>
 								<field name="state" invisible="1"/>
 							</tree>
