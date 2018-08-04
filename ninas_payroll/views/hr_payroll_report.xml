@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+        id="ninas_payslip_details_report"
+        model="hr.payslip"
+        string="NiNAS PaySlip Details"
+        report_type="qweb-pdf"
+        name="ninas_payroll.report_ninaspayslipdetails" 
+        file="ninas_payroll.report_ninaspayslipdetails"
+        print_report_name="'NiNAS Payslip Details - %s' % (object.employee_id.name)"
+    />
+</odoo>

@@ -283,13 +283,17 @@
 				 <group string="Request" col="4" colspan="4">
 				 <field name="name"/>
 				 <field name="purpose"/>
+				 <field name="balance" readonly="1"/>
+				 <field name="currency_id" readonly="1" invisible="1"/>
 				 </group>
 				 <notebook>
 					 <page string="Terms Of Loan">
 					 	<field name="loan_line_ids">
 							<tree editable="True">
 								<field name="loan_amount"/>
-								<field name="currency_id"/>
+								<field name="loan_paid" attrs="{'readonly':[('state','!=','paid')]}"/><!-- groups="ninasmain.group_admin_finance_officer"-->
+								<field name="currency_id" readonly="1" invisible="1"/>
+								<field name="state" invisible="1"/>
 							</tree>
 						</field>
 						<group class="oe_subtotal_footer oe_right">
