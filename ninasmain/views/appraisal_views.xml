@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ninas_appraisal_form_view">
+            <field name="name">ninas.appraisal.form</field>
+            <field name="model">ninas.appraisal</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Appraisal Form">
+                    <group string="Performance Appraisal and Personal Development" colspan="4" col="4">
+                        <field name="employee_id"/>
+                        <field name="employee_title"/>
+                        <field name="appraiser"/>
+                        <field name="appraiser_title"/>
+                        <field name="reviewer"/>
+                        <field name="reviewer_title"/>
+                    </group>
+                    <notebook>
+                        <page name="Objectives" string="Objectives">
+                            <group string="Objective Review">
+                                <field name="objectives" widget="html"/>
+                            </group>
+                        </page>
+                        <page name="Personal Performance" string="Personal Performance">
+                            <group string="Peformance Rating">
+                            <field name="performance" widget="html"/>
+                            </group>
+                        </page>
+                        <page name="Personal Development" string="Personal Development Plan">
+                            <group string="Peformance Development Plan" colspan="4" cols="4">
+                                <field name="superior"/>
+                                <field name="acceptable"/>
+                                <field name="incomplete"/>
+                                <field name="unsatisfactory"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <field name="reason"/>
+                            </group>
+                        </page>
+                        <page name="Comments" string="Comments">
+                            <group string="Appraisers Comments">
+                                <field name="appraiser_comments"/>
+                            </group>
+                                <group colspan="4" col="4">
+                                    <field name="appraiser"/>
+                                    <field name="date"/>
+                                </group>
+                            <group string="Appraisees Comments">
+                                <field name="appraisee_comments"/>
+                            </group>
+                                <group colspan="4" col="4">
+                                    <field name="appraisee"/>
+                                    <field name="date"/>
+                                </group>
+                            <group string="Reviewer Comments">
+                                <field name="reviewer_comments"/>
+                            </group>
+                                <group colspan="4" col="4">
+                                    <field name="reviewer"/>
+                                    <field name="date"/>
+                                </group>
+                        </page>
+                    </notebook>
+                </form>    
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="ninas_appraisal_action">
+            <field name="name">Appraisal Form</field>
+            <field name="res_model">ninas.appraisal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        <menuitem name="Appraisal Form" id="ninas_appraisal_menu" parent="helpdesk.helpdesk_menu_config" action="ninas_appraisal_action" sequence="4"/>
+    </data>
+</odoo>

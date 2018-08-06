@@ -31,7 +31,9 @@
        # 'views/helpdesk_views.xml',
         'views/stock_view.xml',
         'views/hr_views.xml',
-       'views/chemical_lab_views.xml',
+        'views/chemical_lab_views.xml',
+        'views/vehicle_log_views.xml',
+        'views/appraisal_views.xml',
         'views/views.xml'
         ],
     'css':[],

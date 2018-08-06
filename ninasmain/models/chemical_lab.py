@@ -12,28 +12,28 @@ class ChemicalLab(models.Model):
     issue_no= fields.Date(
         string='Issue No. 1',
         required=1
-    )
+        )
     institution= fields.Char(
         string= 'Name of Laboratory',
         required=1
-    )
+        )
     address= fields.Char(
         string='Address of Laboratory',
         required=1
-    )
+        )
     schedule_number= fields.Char(
         string='Schedule No.',
         required=1
-    ) 
+        ) 
     valid_no= fields.Date(
         string='Valid To',
         required=1
-    )
+        )
     chem_lab= fields.One2many(
         comodel_name='chem.lab',
         inverse_name='name',
         string='Chemical Laboratory'
-    )
+         )
 
 class Lab(models.Model):
     _name= 'chem.lab'

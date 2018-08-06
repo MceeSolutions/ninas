@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ninas_vehicle_tree_view">
+            <field name="name">ninas.vehicle_log.tree</field>
+            <field name="model">ninas.vehicle_log</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                    <field name="date"/>
+                    <field name="serial_no"/>
+                    <field name="vehicle_plate"/>
+                    <field name="journey_to"/>
+                    <field name="journey_from"/>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ninas_vehicle_log_form_view">
+            <field name="name">ninas.vehicle_log.form</field>
+            <field name="model">ninas.vehicle_log</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle Daily Log">
+                    <sheet>
+                        <group string="Vehicle Daily Log" colspan="6" col="4">
+                            <field name="date"/>
+                            <field name="serial_no"/>
+                            <field name="fuel"/>
+                            <field name="meter"/>
+                            <field name="vehicle_plate"/>   
+                        </group>
+                            <group colspan="6" col="4">
+                            <field name="journey_from"/>
+                            <field name="journey_to"/>
+                        </group>
+                        <notebook>
+                            <page name="Daily log" string="Daily Log">
+                                <field name="daily_log">
+                                    <tree editable="True">
+                                        <field name="employee_id"/>
+                                        <field name="time_in"/>
+                                        <field name="time_out"/>
+                                        <field name="meter_in"/>
+                                        <field name="meter_out"/>
+                                        <field name="kilometers"/>
+                                        <field name="fuelunit"/>
+                                        <field name="purpose"/>
+                                        <field name="destination"/>
+                                        <field name="passengers"/>
+                                </tree>
+                            </field>  
+                        </page> 
+                    </notebook>       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ninas_vehicle_log_action">
+            <field name="name">Vehicle Daily Log</field>
+            <field name="res_model">ninas.vehicle_log</field>
+            <field name="view_type">form</field>
+            <field name="view_model">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        
+        <menuitem name="Vehicle Daily Log" id ="ninas_vehicle_log" parent="helpdesk.helpdesk_menu_config" action="ninas_vehicle_log_action" sequence="4"/>
+
+    </data>
+</odoo>    

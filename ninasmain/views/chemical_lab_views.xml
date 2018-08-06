@@ -53,7 +53,7 @@
             <field name="context">{}</field>
         </record>
 
-<menuitem name="Chemical Testing Laboratory" id="ninas_assessment_type" parent="helpdesk.helpdesk_menu_config" action="ninas_chemical_lab_action" sequence="3"/>
+	<menuitem name="Chemical Testing Laboratory" id="ninas_chemical_lab_menu" parent="helpdesk.helpdesk_menu_config" action="ninas_chemical_lab_action" sequence="3"/>
 
 	</data>
 </odoo>
