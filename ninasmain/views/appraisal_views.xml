@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <form string="Appraisal Form">
                     <group string="Performance Appraisal and Personal Development" colspan="4" col="4">
-                        <field name="employee_id"/>
-                        <field name="employee_title"/>
+                        <field name="appraisee"/>
+                        <field name="appraisee_title"/>
                         <field name="appraiser"/>
                         <field name="appraiser_title"/>
                         <field name="reviewer"/>

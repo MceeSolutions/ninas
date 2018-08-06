@@ -313,7 +313,6 @@ class SurveillanceReport(models.Model):
     def refuse(self):
         self.write({'state':'refused'})
 
-
     def compute_duration(self, values):
         duration = 0
         start_date = self.start_date

@@ -9,26 +9,36 @@ class AppraisalForm(models.Model):
     _name='ninas.appraisal'
     _description='Appraisal Form'
 
-    employee_id=fields.Char(
-        string='Name')
+   # employee_id=fields.Many2one(
+    #    comodel_name='hr.employee',
+    #    string='Employee')
 
-    employee_title=fields.Char(
-        string='Job Title')
+    appraisee=fields.Many2one(
+        comodel_name='hr.employee',
+        string='Employee')
 
-    appraiser=fields.Char(
+    appraisee_title=fields.Char(
+        string='Job Title',
+        related='appraisee.job_id.name',
+        readonly=True)
+
+    appraiser=fields.Many2one(
+        comodel_name='hr.employee',
         string='Appraiser')
     
-    appraisee=fields.Char(
-        string='Appraisee')
-
     appraiser_title=fields.Char(
-        string='Job Title')
+        string='Job Title',
+        related='appraiser.job_id.name',
+        readonly=True)
 
-    reviewer=fields.Char(
+    reviewer=fields.Many2one(
+        comodel_name='hr.employee',
         string='Reviewer')
 
     reviewer_title=fields.Char(
-        string='Job Title')
+        string='Job Title',
+        related='reviewer.job_id.name',
+        readonly=True)
 
     objectives=fields.Text(
         string='Review of Objectives Achieved, Partially Achieved and Why')

@@ -15,7 +15,6 @@
 			    </tree>
 		    </field>
 	    </record>
-
         <record model="ir.ui.view" id="ninas_chemical_lab_form_view">
 			<field name="name">ninas.chemical_lab.form</field>
 			<field name="model">ninas.chemical_lab</field>
@@ -43,7 +42,6 @@
 				</form>
 			</field>
 		</record>    
-
 		<record model="ir.actions.act_window" id="ninas_chemical_lab_action">
             <field name="name">Chemical Testing Laboratory</field>
             <field name="res_model">ninas.chemical_lab</field>
@@ -52,8 +50,6 @@
             <field name="domain">[]</field>
             <field name="context">{}</field>
         </record>
-
 	<menuitem name="Chemical Testing Laboratory" id="ninas_chemical_lab_menu" parent="helpdesk.helpdesk_menu_config" action="ninas_chemical_lab_action" sequence="3"/>
-
 	</data>
 </odoo>
