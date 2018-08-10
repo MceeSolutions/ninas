@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record model="ir.ui.view" id="decision_form_tree_view">
+			<field name="name">ninas.decision_form.tree</field>
+			<field name="model">ninas.decision_form</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="institution_name"/>
+					<field name="ref"/>
+					<field name="assess_type"/>
+					<field name="assessment_date"/>
+				</tree>
+			</field>
+		</record>
+	
+	<record model="ir.ui.view" id="decision_form_form_view">
+		<field name="name">ninas.decision_form.form</field>
+		<field name="model">ninas.decision_form</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Decision Form">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="institution_name"/>
+						<field name="ref"/>
+						<field name="representative"/>
+						<field name="scope"/>
+						<field name="assessor_id"/>
+						<field name="assess_type"/>
+						<field name="assessment_date"/>
+					</group>
+					<group col="2" colspan="2">
+						<field name="la_recommendation"/>
+						<field name="aac_recommendation"/>
+						<field name="da_recommendation"/>
+					</group>
+					<group col="4" colspan="2">
+						<field name="ceo"/>
+						<field name="note"/>
+						<field name="date"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<record model="ir.actions.act_window" id="decision_form_action">
+		<field name="name">Decision Form</field>
+		<field name="res_model">ninas.decision_form</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+
+	<menuitem name="Decision Form" id="decision_form_menu" parent="helpdesk.helpdesk_menu_config" action="decision_form_action" sequence="5"/>
+
+	</data>		
+</odoo>
+

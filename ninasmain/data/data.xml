@@ -16,5 +16,13 @@
         	<field name="employee" eval="False"/>
         </record>
         
+		<record id="seq_vehicle_serial_number" model="ir.sequence">
+        	<field name="name">Serial No</field>
+        	<field name="code">ninas.vehicle_log</field>
+        	<field name="prefix">v</field>
+        	<field name="padding">3</field>
+        	<field name="serial_no" eval="False"/>
+        </record>
+
     </data>
 </odoo>

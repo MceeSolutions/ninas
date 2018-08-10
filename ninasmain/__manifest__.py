@@ -32,6 +32,7 @@
         'views/stock_view.xml',
         'views/hr_views.xml',
         'views/chemical_lab_views.xml',
+        'views/decision_form_views.xml',
         'views/vehicle_log_views.xml',
         'views/appraisal_views.xml',
         'views/views.xml'
@@ -39,5 +40,4 @@
     'css':[],
     'demo_xml':[],
     'test':[],            
-    
     }
