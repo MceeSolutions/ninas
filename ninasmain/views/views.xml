@@ -402,9 +402,12 @@
         	</header>
 			 <sheet>
 				 <group string="Request" col="4" colspan="4">
-				 <field name="name" attrs="{'readonly':[('state','!=','new')]}"/>
-				 <field name="purpose" attrs="{'readonly':[('state','!=','new')]}"/>
-				 <field name="currency_id" attrs="{'readonly':[('state','!=','new')]}"/>
+				 
+				 <field name="name"/>
+				 <field name="purpose"/>
+				 <field name="balance" readonly="1"/>
+				 <field name="currency_id" readonly="1" invisible="1"/>
+				 
 				 </group>
 					 <p class="text-center">
 					 	Terms of loan: Must be repaid within a Financial Year; monthly repayment and repayment period will be clearly stated here					
@@ -414,8 +417,13 @@
 					 	</group>
 					 	<field name="loan_line_ids">
 							<tree editable="True">
+
 								<field name="description"/>
-								<field name="loan_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+								<field name="loan_amount"/>
+								<field namssse="loan_paid" attrs="{'readonly':[('state','=','paid')]}" groups="ninasmain.group_admin_finance_officer"/>
+								<field name="currency_id" readonly="1" invisible="1"/>
+								<field name="state" invisible="1"/>
+
 							</tree>
 						</field>
 						<group class="oe_subtotal_footer oe_right">

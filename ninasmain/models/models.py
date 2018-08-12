@@ -7,6 +7,7 @@ import datetime
 from datetime import date, timedelta
 from odoo import api, fields, models
 from docutils.nodes import organization
+from odoo.exceptions import ValidationError
 
 
 class Employee(models.Model):
@@ -107,8 +108,8 @@ class LoanRequest(models.Model):
         string='Name', readonly=True)
     date_recevfrom = fields.Date(string='Date', readonly=True)
     date_recevfromname = fields.Date(string='Date', readonly=True)
-    
-    currency_id = fields.Many2one('res.currency', 'Currency')
+    balance = fields.Monetary(string='Loan Balance', currency_field='currency_id', compute='_get_balance', store=True)
+    currency_id = fields.Many2one(related='name.user_id.company_id.currency_id', store=True)
     amount_total = fields.Monetary(compute='_total_naira',
         string='Total Amount', readonly=True, store=True)
     
@@ -118,6 +119,19 @@ class LoanRequest(models.Model):
     
     loan_amt = fields.Monetary(
         string='Loan Amount')
+
+    @api.model
+    def create(self, values):
+        req = self.search([('name','=',values['name']),('state','!=','paid')])
+        if not req:
+            return super(LoanRequest, self).create(values)
+        else:
+            raise ValidationError('You cannot have more than one loan request.')
+
+    @api.depends('state', 'loan_line_ids', 'loan_line_ids.loan_amount', 'loan_line_ids.loan_paid')
+    def _get_balance(self):
+        for request in self:
+            request.balance = sum(request.loan_line_ids.mapped('loan_amount')) - sum(request.loan_line_ids.mapped('loan_paid'))
     
     @api.multi
     def button_reset(self):
@@ -165,10 +179,14 @@ class LoanReq(models.Model):
     loan_amount = fields.Monetary(string='Loan Amount')
     description = fields.Char(string='Month Repaid')
     
-    currency_id = fields.Many2one('res.currency', 'Currency')
+    loan_paid = fields.Monetary(string='Amount Paid')
+    currency_id = fields.Many2one(related='employee_id.currency_id', store=True)
     
     employee_id = fields.Many2one('loan.request', 'Employee', invisible=True)
-
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), 
+        ('reject','Rejected'), ('paid','Paid'), ('confirm','Confirmed')],
+        related='employee_id.state', store=True)
         
     
 class TravelRequest(models.Model):
