@@ -93,6 +93,17 @@
 
     </record>    
 	
+	<record id="partner_ninas" model="ir.ui.view">
+	    <field name="name">partner.ninas</field>
+	    <field name="model">res.partner</field>
+	    <field name="inherit_id" ref="base.view_partner_form"/>
+	    <field name="arch" type="xml">
+	    <field name="vat" position="after">
+    		<field name="vendor_tin"/>
+		</field>
+	    </field>
+	</record>
+	
 	<!-- hr appraisal Request 
 	<record id="ninas_hr_appraisal" model="ir.ui.view">
         <field name="name">ninas.hr.appraisal</field>
@@ -333,17 +344,6 @@
 		<field name="domain">[]</field>
 		<field name="context">{}</field>
 	</record>
-    
-    <!-- loan request  tree view-->
-    <record id="loan_request_tree_view" model="ir.ui.view">
-		<field name="name">loan.request.tree</field>
-		<field name="model">loan.request</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<field name="name"/>
-			<field name="purpose"/>
-		</field>
-	</record>
 	
 	<!-- open and close action -->
 	<record model="ir.actions.act_window" id="open_close_action">
@@ -384,6 +384,47 @@
             <field name="domain">[]</field>
             <field name="context">{}</field>
         </record>
+        
+   <!-- assessment_plan_action-->
+    <record model="ir.actions.act_window" id="ninas_assessment_plan_action">
+		<field name="name">Assessment Plan</field>
+		<field name="res_model">ninas.assessment_plan</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+        
+   <!-- decision form action -->
+   <record model="ir.actions.act_window" id="decision_form_action">
+		<field name="name">Decision Form</field>
+		<field name="res_model">ninas.decision_form</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+	
+	<!-- appraisal form action -->
+	<record model="ir.actions.act_window" id="ninas_appraisal_action">
+	           <field name="name">Appraisal Form</field>
+	           <field name="res_model">ninas.appraisal</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">tree,form</field>
+	           <field name="domain">[]</field>
+	           <field name="context">{}</field>
+	</record>
+        
+    <!-- loan request  tree view-->
+    <record id="loan_request_tree_view" model="ir.ui.view">
+		<field name="name">loan.request.tree</field>
+		<field name="model">loan.request</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="name"/>
+			<field name="purpose"/>
+		</field>
+	</record>
 	
     <record id="loan_request_form" model="ir.ui.view">
     <field name="name">loan.request.form</field>
@@ -402,12 +443,12 @@
         	</header>
 			 <sheet>
 				 <group string="Request" col="4" colspan="4">
-				 
+\
 				 <field name="name"/>
 				 <field name="purpose"/>
 				 <field name="balance" readonly="1"/>
 				 <field name="currency_id" readonly="1" invisible="1"/>
-				 
+
 				 </group>
 					 <p class="text-center">
 					 	Terms of loan: Must be repaid within a Financial Year; monthly repayment and repayment period will be clearly stated here					
@@ -419,11 +460,12 @@
 							<tree editable="True">
 
 								<field name="description"/>
+
 								<field name="loan_amount"/>
 								<field namssse="loan_paid" attrs="{'readonly':[('state','=','paid')]}" groups="ninasmain.group_admin_finance_officer"/>
 								<field name="currency_id" readonly="1" invisible="1"/>
 								<field name="state" invisible="1"/>
-
+								
 							</tree>
 						</field>
 						<group class="oe_subtotal_footer oe_right">
@@ -911,6 +953,9 @@
 						<field name="ref_number"/>
 						<field name="amount_received"/>
 					</group>
+					<group>
+						<field name="description"/>
+					</group>
 					
 					<notebook>
 					<page name="expense_claim" string="Expense Claim">
@@ -935,22 +980,19 @@
                             </group>
 						<group col="4" colspan="2">
 							<field name="prepared"/>
-							<field name="date"/>
+							<field name="date_prepared"/>
 							<field name="reviewed"/>
-							<field name="date"/>
+							<field name="date_reviewed"/>
 							<field name="authorised"/>
-							<field name="date"/>
+							<field name="date_authorised"/>
 							<field name="account_number"/>
 							<field name="bank"/>
 						</group>
 					</page>
 					
 					<page name="finance" string="Finance Only">
-						<group>
-							<field name="reviewed"/>
-						</group>
 						<group col="4" colspan="2">
-							<field name="signature"/>
+							<field name="reviewed"/>
 							<field name="date"/>
 						</group>
 					</page>
@@ -1732,8 +1774,213 @@
 				</form>
 			</field>
 		</record>
+		
+		
+	<!-- assessment_plan_tree_view -->
+	<record model="ir.ui.view" id="ninas_assessment_plan_tree_view">
+		<field name="name">ninas.assessment_plan.tree</field>
+		<field name="model">ninas.assessment_plan</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="assessment_date"/>
+				<field name="organisation"/>
+				<field name="reference_number"/>
+				<field name="company_rep"/>
+			</tree>
+		</field>
+	</record>
+	
+		<!-- assessment_plan_form_view -->
+	<record model="ir.ui.view" id="ninas_assessment_plan_form_view">
+		<field name="name">ninas.assessment_plan.form</field>
+		<field name="model">ninas.assessment_plan</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Assessment Form">
+				<sheet>
+					<separator string="Initial / Re-Assessment Plan"/>
+					<group col="4" colspan="2">
+						<field name="reference_number"/>
+						<field name="organisation"/>
+						<field name="contact_person"/>
+						<field name="address"/>
+						<field name="telephone"/>
+						<field name="company_rep"/>
+						<field name="assessment_date"/>
+						<field name="lead_assessor"/>
+						<field name="technical_assessor"/>
+					</group>
+					<notebook>
+						<page name="day_1" string="Day 1 - LA observed by TTA">
+							<field name="day1_ids" text-align="left">
+								<tree editable="True">
+									<field name="start_time"/>
+									<field name="end_time"/>
+									<field name="activity"/>
+								</tree>
+							</field>
+						</page>
+						<page name="day_2" string="Day 2 - TTA under supervision of LA">
+							<field name="day2_ids">
+								<tree editable="True">
+									<field name="start_time"/>
+									<field name="end_time"/>
+									<field name="activity"/>
+								</tree>
+							</field>
+						</page>
+						<page name="day_3" string="Day 3 - LA partial">
+							<field name="day3_ids" text-align="left">
+								<tree editable="True">
+									<field name="start_time"/>
+									<field name="end_time"/>
+									<field name="activity"/>
+								</tree>
+							</field>
+						</page>
+						<page name="day_4" string="Day 4 - TTA under supervision of LA">
+							<field name="day4_ids" text-align="left">
+								<tree editable="True">
+									<field name="start_time"/>
+									<field name="end_time"/>
+									<field name="activity"/>
+								</tree>
+							</field>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+    
+    <!-- decision form tree/form view -->
+    <record model="ir.ui.view" id="decision_form_tree_view">
+			<field name="name">ninas.decision_form.tree</field>
+			<field name="model">ninas.decision_form</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="institution_name"/>
+					<field name="ref"/>
+					<field name="assess_type"/>
+					<field name="assessment_date"/>
+				</tree>
+			</field>
+		</record>
+	
+	<record model="ir.ui.view" id="decision_form_form_view">
+		<field name="name">ninas.decision_form.form</field>
+		<field name="model">ninas.decision_form</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Decision Form">
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="institution_name"/>
+						<field name="ref"/>
+						<field name="representative"/>
+						<field name="scope"/>
+						<field name="assessor_id"/>
+						<field name="assess_type"/>
+						<field name="assessment_date"/>
+					</group>
+					<group col="2" colspan="2">
+						<field name="la_recommendation"/>
+						<field name="aac_recommendation"/>
+						<field name="da_recommendation"/>
+					</group>
+					<group col="4" colspan="2">
+						<field name="ceo"/>
+						<field name="note"/>
+						<field name="date"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<!-- appraial form -->
+		<record model="ir.ui.view" id="ninas_appraisal_tree_view">
+			<field name="name">ninas.appraisal.tree</field>
+			<field name="model">ninas.appraisal</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="appraisee"/>
+					<field name="appraiser"/>
+				</tree>
+			</field>
+		</record>
+	
+	  <record model="ir.ui.view" id="ninas_appraisal_form_view">
+            <field name="name">ninas.appraisal.form</field>
+            <field name="model">ninas.appraisal</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Appraisal Form">
+                <sheet>
+                    <group string="Performance Appraisal and Personal Development" colspan="4" col="4">
+                        <field name="appraisee"/>
+                        <field name="appraisee_title"/>
+                        <field name="appraiser"/>
+                        <field name="appraiser_title"/>
+                        <field name="reviewer"/>
+                        <field name="reviewer_title"/>
+                    </group>
+                    <notebook>
+                        <page name="Objectives" string="Objectives">
+                            <group string="Objective Review">
+                                <field name="objectives" widget="html"/>
+                            </group>
+                        </page>
+                        <page name="Personal Performance" string="Personal Performance">
+                            <group string="Peformance Rating">
+                            <field name="performance" widget="html"/>
+                            </group>
+                        </page>
+                        <page name="Personal Development" string="Personal Development Plan">
+                            <group string="Peformance Development Plan" colspan="4" cols="4">
+                                <field name="superior"/>
+                                <field name="acceptable"/>
+                                <field name="incomplete"/>
+                                <field name="unsatisfactory"/>
+                            </group>
+                            <group colspan="4" col="4">
+                                <field name="reason"/>
+                            </group>
+                        </page>
+                        <page name="Comments" string="Comments">
+                            <group string="Appraisers Comments">
+                                <field name="appraiser_comments"/>
+                            </group>
+                                <group colspan="4" col="4">
+                                    <field name="appraiser"/>
+                                    <field name="date"/>
+                                </group>
+                            <group string="Appraisees Comments">
+                                <field name="appraisee_comments"/>
+                            </group>
+                                <group colspan="4" col="4">
+                                    <field name="appraisee"/>
+                                    <field name="date"/>
+                                </group>
+                            <group string="Reviewer Comments">
+                                <field name="reviewer_comments"/>
+                            </group>
+                                <group colspan="4" col="4">
+                                    <field name="reviewer"/>
+                                    <field name="date"/>
+                                </group>
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>    
+            </field>
+		</record>
     
     
+    <!-- MenuItems -->
     <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_main_menu"/>
     <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_tools_main_menu" parent="ninas_lead_toolkit_main_menu"/>
     
@@ -1747,6 +1994,11 @@
               action="ninas_chemical_lab_action"/>
     <menuitem name="Activity Budget" id="activity_budget_menu" parent="ninas_lead_toolkit_tools_main_menu"
               action="activity_budget_action"/>
+    <menuitem name="Assessment Plan" id="ninas_assessment_plan_menuitem" parent="ninas_lead_toolkit_tools_main_menu" 
+    		  action="ninas_assessment_plan_action"/>
+    <menuitem name="Decision Form" id="decision_form_menu" parent="ninas_lead_toolkit_tools_main_menu" 
+    		  action="decision_form_action"/>
+    		  
               
 	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
     <menuitem name="Loan Request" id="loan_request_menu" parent="request_main_menu"
@@ -1775,9 +2027,9 @@
               
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
     
-    <menuitem name="Diesel Consumption" id="ninas_diesel_consumption_menuitem" parent="hr.menu_hr_root" action="ninas_diesel_consumption_action"/>
+    <menuitem name="Diesel Consumption" id="ninas_diesel_consumption_menuitem" parent="maintenance.menu_maintenance_title" action="ninas_diesel_consumption_action"/>
               
-   	<menuitem name="Receipt Register" id="register_receipt_menu" parent="stock.menu_stock_root"/>
+   	<menuitem name="Receipt Register" id="register_receipt_menu" parent="stock.menu_stock_root" groups="base.group_system"/>
     <menuitem name="Monthly Consumable Receipt" id="tests_request_menu" parent="register_receipt_menu"
               action="Test_action_window"/>
               
@@ -1787,5 +2039,8 @@
 	<menuitem name="Mission Report" id="mission_request_menu" parent="expense_request_menuitem"
               action="ninas_mission_report_action"/>
               
+    <menuitem name="Appraisal Form" id="ninas_appraisal_menu" parent="hr_appraisal.menu_hr_appraisal_root" 
+   			  action="ninas_appraisal_action"/>
+   			  
   </data>
 </odoo>

@@ -9,6 +9,11 @@ from odoo import api, fields, models
 from docutils.nodes import organization
 from odoo.exceptions import ValidationError
 
+class Partner(models.Model):
+    _name = 'res.partner'
+    _inherit = 'res.partner'
+
+    vendor_tin = fields.Char('TIN')
 
 class Employee(models.Model):
     _inherit = 'hr.employee'
@@ -331,7 +336,7 @@ class TravelAccount(models.Model):
     
     type = fields.Char(string='Type Of Expense')
     account_id = fields.Many2one(
-        comodel_name='account.account', string='Account')
+        comodel_name='account.account', string='GL')
     grant = fields.Char(string='Grant')
     unit = fields.Char(string='Unit(s)')
     unit_price = fields.Float(string='Unit Price')
@@ -842,14 +847,19 @@ class NinasExpenseClaim(models.Model):
         string ='Name of Payee',
         required=1
         )
-    employee_code = fields.Integer(
-        string='Employee Code',
+    employee_code = fields.Char(
+        related='employee_id.employee',
+        string='Employee Code'
         )
     ref_number = fields.Integer(
         string='Ref. No. (Receipts to be numbered serially)',
         )
     amount_received = fields.Float(
         string='Amount Received From Finance'
+        )
+    prepared = fields.Char(
+        string='Prepared by',
+        readonly=True
         )
     item_date = fields.Date(
         string = 'Date',
@@ -883,13 +893,15 @@ class NinasExpenseClaim(models.Model):
         )
     prepared = fields.Char(
         string='Prepared by',
-        required=1
+        readonly=True
         )
     reviewed = fields.Char(
-        string ='Reviewed by'
+        string ='Reviewed by',
+        readonly=True
         )
     authorised = fields.Char(
-        string = 'Authorised Manager/Signatory'
+        string = 'Authorised Manager/Signatory',
+        readonly=True
         )
     account_number = fields.Char(
         string= 'Account Number'
@@ -903,9 +915,29 @@ class NinasExpenseClaim(models.Model):
     signature = fields.Char(
         string = 'Signature'
         )
-    date = fields.Date(
-        string= 'Date'
+    date_prepared = fields.Date(
+        string= 'Date',
+        readonly=True
         )
+    date_reviewed = fields.Date(
+        string= 'Date',
+        readonly=True
+        )
+    date_authorised = fields.Date(
+        string= 'Date',
+        readonly=True
+        )
+    
+    date = fields.Date(
+        string= 'Date',
+        readonly=True
+        )
+    
+    description = fields.Text(
+        string='Description',
+        required=True
+        )
+    
     expense_claim = fields.One2many(
         comodel_name='expense.claim',
         inverse_name='employee_id',
@@ -920,11 +952,15 @@ class NinasExpenseClaim(models.Model):
     @api.multi
     def button_submit(self):
         self.write({'state': 'submit'})
+        self.prepared = self._uid
+        self.date_prepared = date.today()
         return {}
     
     @api.multi
     def button_approve(self):
         self.write({'state': 'approve'})
+        self.reviewed = self._uid
+        self.date_reviewed = date.today()
         return {}
     
     @api.multi
@@ -935,6 +971,8 @@ class NinasExpenseClaim(models.Model):
     @api.multi
     def button_validate(self):
         self.write({'state': 'validate'})
+        self.authorised = self._uid
+        self.date_authorised = date.today()
         return {}
     
     @api.multi
@@ -960,7 +998,7 @@ class ExpenseClaim(models.Model):
         required=1
         )
     item = fields.Char(
-        string='Item (Description)',
+        string='Item',
         required=0
         )
     unit_code = fields.Char(
@@ -1694,4 +1732,171 @@ class ChemLab(models.Model):
         string='Techniques Used',
         required=1
     )
+    
+      
+class AssessmentPlan(models.Model):
+    _name = 'ninas.assessment_plan'
+    _description = 'Assessment Plan Form'
+    reference_number = fields.Char(string='Reference Number', readonly=True, required=True, index=True, copy=False, default='New') #auto-sgenerated?
+    organisation = fields.Char(string='Organisation', required=1)
+    contact_person = fields.Char(string='Contact Person', required=1)
+    address = fields.Char(string='Address')
+    telephone = fields.Char(string='Telephone')
+    company_rep = fields.Char(string='Company Representative', required=1)
+    assessment_date = fields.Date(string='Assessment Date', required=1)
+    lead_assessor = fields.Char(string='Lead Assessor')
+    technical_assessor = fields.Char(string='Technical Assessor')
+    day1_ids = fields.One2many(
+        comodel_name='ninas.assessment.plan.activity',
+        inverse_name='assessment_plan_id')
+    day2_ids = fields.One2many(
+        comodel_name='ninas.assessment.plan.activity',
+        inverse_name='assessment_plan_id_2')
+    day3_ids = fields.One2many(
+        comodel_name='ninas.assessment.plan.activity',
+        inverse_name='assessment_plan_id_3')
+    day4_ids = fields.One2many(
+        comodel_name='ninas.assessment.plan.activity',
+        inverse_name='assessment_plan_id_4')
+    # @api.depends('reference_number')
+    # def generate_ref(self):
+    #     added = 0
+    #     for ref in self:
+    #         added+=1
+    #         ref.reference_number = reference_number + added
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('reference_number', 'New') == 'New':
+            vals['reference_number'] = self.env['ir.sequence'].next_by_code('ninas.assessment_plan') or '/'
+        return super(AssessmentPlan, self).create(vals)
+    
+class AssessmentActivity(models.Model):
+    _name = 'ninas.assessment.plan.activity'
+    assessment_plan_id = fields.Many2one(comodel_name='ninas.assessment_plan')
+    assessment_plan_id_2 = fields.Many2one(comodel_name='ninas.assessment_plan')
+    assessment_plan_id_3 = fields.Many2one(comodel_name='ninas.assessment_plan')
+    assessment_plan_id_4 = fields.Many2one(comodel_name='ninas.assessment_plan')
+    start_time = fields.Float(string='Start Time')
+    end_time = fields.Float(string='End Time')
+    activity = fields.Char(string='Activity') 
+    
+    
+    
+class DecisionForm(models.Model):
+    _name = 'ninas.decision_form'
+    _description = 'Decision Form'
+    #this should pull the application info (rep, assessor, institution)
+    ref = fields.Char(
+        string='Reference No.',
+        required=1)
+    #link to actual employee_id
+    assessor_id = fields.Char(
+        #comodel_name = 'hr.employee',
+        string ='Assessor Name',
+        readonly=1)
+    representative = fields.Char(
+        string='Name of Institution Representative',
+        readonly=1)
+    scope = fields.Char(
+        string='Accreditation Scope',
+        readonly=1)
+    institution_name = fields.Char(
+        string='Name of Institution',
+        readonly=1)
+    assess_type = fields.Char(
+        string ='Type of Assessment')
+    assessment_date = fields.Date(
+        string = 'Assessment Date',
+        required=1)
+    la_recommendation = fields.Char(
+        string="Lead Assessor's Recommendation",
+        required=1)
+    aac_recommendation = fields.Char(
+        string="AAC Recommendation",
+        required=1)
+    da_recommendation = fields.Char(
+        string="Director of Accreditation's Recommendation",
+        required=1)
+    #today's date on change (save)
+    date = fields.Date(
+        string= 'Date')
+    ceo = fields.Selection(
+        [('1','Unconditional accreditation/renewal of accreditation to be granted'),
+        ('2','Accreditation/renewal of accreditation to be deferred until all non-conformances have been cleared'),
+        ('3','Accreditation/renewal of accreditation is not recommended'),
+        ('4','For re-assessment only: Suspension of accreditation status or part thereof')],
+        string = 'CEO')
+    note = fields.Char(
+        default='The period of suspension shall not extend beyond the date of expiry of the Certificate of Accreditation',
+        readonly=1)
+
+
+class AppraisalForm(models.Model):
+    _name='ninas.appraisal'
+    _description='Appraisal Form'
+
+   # employee_id=fields.Many2one(
+    #    comodel_name='hr.employee',
+    #    string='Employee')
+
+    appraisee=fields.Many2one(
+        comodel_name='hr.employee',
+        string='Employee')
+
+    appraisee_title=fields.Char(
+        string='Job Title',
+        related='appraisee.job_id.name',
+        readonly=True)
+
+    appraiser=fields.Many2one(
+        comodel_name='hr.employee',
+        string='Appraiser')
+    
+    appraiser_title=fields.Char(
+        string='Job Title',
+        related='appraiser.job_id.name',
+        readonly=True)
+
+    reviewer=fields.Many2one(
+        comodel_name='hr.employee',
+        string='Reviewer')
+
+    reviewer_title=fields.Char(
+        string='Job Title',
+        related='reviewer.job_id.name',
+        readonly=True)
+
+    objectives=fields.Text(
+        string='Review of Objectives Achieved, Partially Achieved and Why')
+
+    performance=fields.Text(
+        string='Review of Personal Performance')
+
+    superior=fields.Boolean(
+        string='Superior')
+
+    acceptable=fields.Boolean(
+        string='Fully Acceptable')
+
+    incomplete=fields.Boolean(
+        string='Incomplete')
+
+    unsatisfactory=fields.Boolean(
+        string='Unsaticfactory')
+
+    reason=fields.Text(
+        string='Reason for Rating')
+
+    appraiser_comments=fields.Text(
+        string='Appraiser Comments')
+
+    appraisee_comments=fields.Text(
+        string='Appraisee Comments')
+    
+    reviewer_comments=fields.Text(
+        string='Reviwer Comments')
+    
+    date=fields.Date(
+        string='Date')
     

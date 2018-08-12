@@ -33,5 +33,14 @@
         	<field name="employee" eval="False"/>
         </record>
         
+        <record id="seq_reference_number" model="ir.sequence">
+        	<field name="name">Reference Number</field>
+        	<field name="code">ninas.assessment_plan</field>
+			<field name="prefix">AP</field>
+        	<field name="padding">3</field>
+        	<field name="reference_number" eval="False"/>
+        </record>
+        
+        
     </data>
 </odoo>
