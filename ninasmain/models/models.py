@@ -6,12 +6,21 @@ import datetime
 
 from datetime import date, timedelta
 from odoo import api, fields, models
+from docutils.nodes import organization
 from odoo.exceptions import ValidationError
 
+class Partner(models.Model):
+    _name = 'res.partner'
+    _inherit = 'res.partner'
+
+    vendor_tin = fields.Char('TIN')
 
 class Employee(models.Model):
     _inherit = 'hr.employee'
-
+    
+    employee = fields.Char(
+        string='Employee ID', readonly=True, index=True, copy=False, default='New')
+    
     fname = fields.Char(string='First Name')
     lname = fields.Char(string='Last Name')
     address = fields.Char(string='street address')
@@ -31,17 +40,23 @@ class Employee(models.Model):
     spouse_employer = fields.Char(string='Spouse Employer')
     spouse_phone = fields.Char(string='Spouse Phone')
     title = fields.Char(string='Title')
-    employee = fields.Char(string='Employee ID')
+#    employee = fields.Char(string='Employee ID')
     start_date = fields.Date(string='Start Date')
     salary = fields.Char(string='Salary')
-    Training_date = fields.Date(string='Training Date')
+    Training_date = fields.Date(string='Next Training Date')
     levelof_exp = fields.Selection([
         ('0', 'All'),
         ('1', 'Beginner'),
         ('2', 'Intermediate'),
         ('3', 'Professional')], string='Level Of Expertise',
         default='1')
-
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('employee', 'New') == 'New':
+            vals['employee'] = self.env['ir.sequence'].next_by_code('hr.employee') or '/'
+        return super(Employee, self).create(vals)
+    
 class HrAppraisals(models.Model):
     _inherit = "hr.appraisal"
     
@@ -81,12 +96,15 @@ class LoanRequest(models.Model):
         string='Purpose of Loan', required=True)
     terms_ofloan = fields.Char(
         string='Terms of Loan')
-    repayment = fields.Selection([
-        ('soon','As soon as there is funding'),('other','Other')],
+    repayment = fields.Text(
         string='Repayment')
-    repayment_period = fields.Selection([
-        ('oneoff','One Off'),('other','Other')],
+    repayment_period = fields.Char(
         string='Repayment Period')
+    
+    start_date = fields.Datetime(string='Start Date')
+    end_date = fields.Datetime(string='End Date')
+    
+    
     recieved_from = fields.Many2one(
         comodel_name="hr.employee",
         string='Recieved Name', readonly=True)
@@ -104,6 +122,9 @@ class LoanRequest(models.Model):
         comodel_name='loan.req',
         inverse_name='employee_id')
     
+    loan_amt = fields.Monetary(
+        string='Loan Amount')
+
     @api.model
     def create(self, values):
         req = self.search([('name','=',values['name']),('state','!=','paid')])
@@ -161,8 +182,11 @@ class LoanReq(models.Model):
     _name = 'loan.req'
     
     loan_amount = fields.Monetary(string='Loan Amount')
+    description = fields.Char(string='Month Repaid')
+    
     loan_paid = fields.Monetary(string='Amount Paid')
     currency_id = fields.Many2one(related='employee_id.currency_id', store=True)
+    
     employee_id = fields.Many2one('loan.request', 'Employee', invisible=True)
     state = fields.Selection(
         [('new','New'),('submit', 'Submitted'), ('approve','Approved'), 
@@ -184,15 +208,22 @@ class TravelRequest(models.Model):
     travelrequest_no = fields.Char(
         string='Travel request Number', readonly=True, required=True, index=True, copy=False, default='New')
     traveller_email = fields.Char(
-        string='Travellers Email Address')
-    name = fields.Char(string='Name', required=True)
-    traveller_job = fields.Char(string='Traveller Job Title')
-    traveller_phone = fields.Char(string='Traveller Phone')
-    traveller_department = fields.Char(string='Department')
-    contact_phone = fields.Char(string='Contact Phone')
-    contact_name = fields.Char(string='Contact Name')
-    traveller_employee_id = fields.Char(string='Travellers Employee ID')
+        related='name.work_email',
+        string='Travellers Email Address', readonly=True)
+    name = fields.Many2one(
+        comodel_name="hr.employee",
+        string='Travellers Name', required=True)
+    traveller_job = fields.Char(related='name.job_id.name',string='Traveller Job Title', readonly=True)
+    traveller_phone = fields.Char(related='name.work_phone',string='Traveller Phone', readonly=True)
+    traveller_department = fields.Char(related='name.department_id.name',string='Department', readonly=True)
+    contact_phone = fields.Char(related='name.telphone',string='Contact Phone', readonly=True)
+    contact_name = fields.Char(related='name.fname',string='Contact Name', readonly=True)
+    traveller_employee_id = fields.Char(related='name.employee',string='Travellers Employee ID', readonly=True)
     purpose = fields.Text(string='Purpose and Benefit of Travel', required=True)
+    
+    classification_of_traveller = fields.Selection([
+        ('employee','Ninas Employee'),('expert','Ninas Expert'),('assessor','Ninas Assessor'),('guest','Ninas Guest'),('other','Others(Describe)')])
+    
     ninas_employee = fields.Boolean(string='Ninas Employee')
     ninas_expert = fields.Boolean(string='Ninas Expert')
     ninas_assesor = fields.Boolean(string='Ninas Assessor')
@@ -238,9 +269,12 @@ class TravelRequest(models.Model):
     ceo_date = fields.Date(
         string='Date', readonly=True)
     
-    account_ids = fields.Many2many(
-        comodel_name='account.account')
+    account_ids = fields.One2many(
+        comodel_name='ninas.travel.account',
+        inverse_name='travel_request_id')
     
+    total_unit_price = fields.Float(string='Total Unit Price', compute='_total_unit', readonly=True)
+    total_amount = fields.Char(string='Total Amount')
     
     @api.multi
     def button_reset(self):
@@ -286,6 +320,29 @@ class TravelRequest(models.Model):
         if vals.get('travelrequest_no', 'New') == 'New':
             vals['travelrequest_no'] = self.env['ir.sequence'].next_by_code('travel.request') or '/'
         return super(TravelRequest, self).create(vals)
+    
+    
+    @api.depends('account_ids.unit_price')
+    def _total_unit(self):
+        total_unit_price = 0.0
+        for line in self.account_ids:
+            self.total_unit_price += line.unit_price
+            
+class TravelAccount(models.Model):
+    _name = 'ninas.travel.account'
+    
+    travel_request_id =fields.Many2one(
+        comodel_name='travel.request')
+    
+    type = fields.Char(string='Type Of Expense')
+    account_id = fields.Many2one(
+        comodel_name='account.account', string='GL')
+    grant = fields.Char(string='Grant')
+    unit = fields.Char(string='Unit(s)')
+    unit_price = fields.Float(string='Unit Price')
+    amount = fields.Float(string='Sub Amount', readonly=True)
+
+    
     
 class Hrrecruitment(models.Model):
     _name = 'ninas.hr.recruitment'
@@ -348,10 +405,10 @@ class TrainingTracker(models.Model):
         required=1
         )
     #pull this from employee records and set required to true
-    position = fields.Many2one(
-        comodel_name = 'hr.job',
+    position = fields.Char(
+        related='name.job_id.name',
+        readonly=True,
         string='Position',
-        required=0
         )
     provider = fields.Char(
         string='Provider',
@@ -368,8 +425,9 @@ class TrainingTracker(models.Model):
         string='Qualification',
         required=0
         )
-    budget = fields.Integer(
-        string='Budget',
+    budget = fields.Many2one(
+        comodel_name='account.account',
+        string='Expense Account',
         required=1
         )
     duration = fields.Selection(
@@ -389,8 +447,8 @@ class TrainingTracker(models.Model):
         required=0,
         default='400'
         )
-    review = fields.Char(
-        string ='Review on'
+    review = fields.Date(
+        string ='Next Training Date'
         )
     refresh = fields.Boolean(
         )
@@ -789,14 +847,19 @@ class NinasExpenseClaim(models.Model):
         string ='Name of Payee',
         required=1
         )
-    employee_code = fields.Integer(
-        string='Employee Code',
+    employee_code = fields.Char(
+        related='employee_id.employee',
+        string='Employee Code'
         )
     ref_number = fields.Integer(
         string='Ref. No. (Receipts to be numbered serially)',
         )
     amount_received = fields.Float(
         string='Amount Received From Finance'
+        )
+    prepared = fields.Char(
+        string='Prepared by',
+        readonly=True
         )
     item_date = fields.Date(
         string = 'Date',
@@ -830,13 +893,15 @@ class NinasExpenseClaim(models.Model):
         )
     prepared = fields.Char(
         string='Prepared by',
-        required=1
+        readonly=True
         )
     reviewed = fields.Char(
-        string ='Reviewed by'
+        string ='Reviewed by',
+        readonly=True
         )
     authorised = fields.Char(
-        string = 'Authorised Manager/Signatory'
+        string = 'Authorised Manager/Signatory',
+        readonly=True
         )
     account_number = fields.Char(
         string= 'Account Number'
@@ -850,9 +915,29 @@ class NinasExpenseClaim(models.Model):
     signature = fields.Char(
         string = 'Signature'
         )
-    date = fields.Date(
-        string= 'Date'
+    date_prepared = fields.Date(
+        string= 'Date',
+        readonly=True
         )
+    date_reviewed = fields.Date(
+        string= 'Date',
+        readonly=True
+        )
+    date_authorised = fields.Date(
+        string= 'Date',
+        readonly=True
+        )
+    
+    date = fields.Date(
+        string= 'Date',
+        readonly=True
+        )
+    
+    description = fields.Text(
+        string='Description',
+        required=True
+        )
+    
     expense_claim = fields.One2many(
         comodel_name='expense.claim',
         inverse_name='employee_id',
@@ -867,11 +952,15 @@ class NinasExpenseClaim(models.Model):
     @api.multi
     def button_submit(self):
         self.write({'state': 'submit'})
+        self.prepared = self._uid
+        self.date_prepared = date.today()
         return {}
     
     @api.multi
     def button_approve(self):
         self.write({'state': 'approve'})
+        self.reviewed = self._uid
+        self.date_reviewed = date.today()
         return {}
     
     @api.multi
@@ -882,6 +971,8 @@ class NinasExpenseClaim(models.Model):
     @api.multi
     def button_validate(self):
         self.write({'state': 'validate'})
+        self.authorised = self._uid
+        self.date_authorised = date.today()
         return {}
     
     @api.multi
@@ -907,7 +998,7 @@ class ExpenseClaim(models.Model):
         required=1
         )
     item = fields.Char(
-        string='Item (Description)',
+        string='Item',
         required=0
         )
     unit_code = fields.Char(
@@ -973,4 +1064,839 @@ class StoreReqEdit(models.Model):
         self.mapped('move_lines')._action_cancel()
         self.write({'state': 'draft'})
         return {}
+
+
+class DieselConsumption(models.Model):
+    _name = 'ninas.diesel.consumption'
+
+    date_input=fields.Date(
+        string='Date',
+        required=True
+        )
+    diesel_level_start=fields.Float(
+        string='Diesel Level Start',
+        default=0,
+        )
+    time_started=fields.Datetime(
+        string='Time Started',
+        default=0,
+        )
+    engine_temp_start=fields.Float(
+        string='Engine Temperature',
+        default=0,
+        )
+    oil_level_start=fields.Float(
+        string='Oil Level',
+        default=0,
+        )
+    battery_voltage_start=fields.Float(
+        string='Battery Voltage',
+        default=0,
+        )
+    diesel_level_end=fields.Float(
+        string='Diesel Level End',
+        default=0,
+        )
+    time_ended=fields.Datetime(
+        string='Time Ended',
+        default=0,
+        )
+    engine_temp_end=fields.Float(
+        string='Engine Temperature',
+        default=0,
+        )
+    oil_level_end=fields.Float(
+        string='Oil Level',
+        default=0,
+        )
+    battery_voltage_end=fields.Float(
+        string='Battery Voltage',
+        default=0,
+        )
+    diesel_available=fields.Float(
+        compute='_subtract_',
+        string='Diesel Level'
+        )
+
+    @api.multi
+    def _subtract_(self):
+        for num in self:
+            diesel_available = num.diesel_level_start - num.diesel_level_end
+            num.diesel_available = diesel_available
+
+
+
+class CodeofConduct(models.Model):
+    _name = 'ninas.code.conduct'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    state = fields.Selection(
+        [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    agreement = fields.Boolean(
+        string='I have read and concur with NiNAS’s Code of Conduct (Sections 1-7).',
+        required=True
+        )
+    date = fields.Date(
+        )
+    date_today = fields.Date(
+        )
+    description = fields.Text(
+        )
+    name = fields.Many2one(
+        comodel_name='hr.employee',
+        string='Employee Printed name:',
+        readonly=True)
+    date_signed = fields.Date(
+        string='Date',
+        readonly=True)
+
+    @api.multi
+    def button_accept(self):
+        self.write({'state': 'accept'})
+        self.date_signed = date.today()
+        self.name = self._uid
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+    
+class ConflictofInterest(models.Model):
+    _name = 'ninas.conflict.interest'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    state = fields.Selection(
+        [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    agreement = fields.Boolean(
+        string='I have read and concur with NiNAS’s Code of Conduct (Sections 2-7).',
+        required=True
+        )
+    date = fields.Date(
+        )
+    date_today = fields.Date(
+        )
+    description = fields.Text(
+        )
+    name = fields.Char(
+        string='Name of Institution or Persone:')
+    
+    printed_name = fields.Char(related='name',readonly=True,
+        string='Printed Name')
+    
+    location = fields.Char(
+        string='Location')
+    date_signed = fields.Date(
+        string='Date',
+        readonly=True)
+
+    @api.multi
+    def button_accept(self):
+        self.write({'state': 'accept'})
+        self.date_signed = date.today()
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+
+
+class Confidentiality(models.Model):
+    _name = 'ninas.confidentiality'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    agreement = fields.Boolean(
+        required=True
+        )
+    
+    state = fields.Selection(
+        [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    name = fields.Char(
+        string='Name of Institution or Persone:',required=True)
+    location = fields.Char(
+        string='Location',required=True)
+    name_rep = fields.Char(
+        string='Name of Person:',required=True)
+    
+    date = fields.Date(
+        )
+    description = fields.Text(
+        )
+    
+    signed = fields.Char(related='name_rep',readonly=True,
+        string='Signed')
+
+    date_signed = fields.Date(
+        string='Date',
+        readonly=True)
+
+    @api.multi
+    def button_accept(self):
+        self.write({'state': 'accept'})
+        self.date_signed = date.today()
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        return {}
+
+
+class PettyCash(models.Model):
+    _name = 'ninas.petty_cash'
+
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+
+    date_entered=fields.Date(
+        string='Date',
+        required=True
+        )
+    ref_no=fields.Char(
+        string='Ref No'
+        )
+    name_of_payee=fields.Char(
+        string='Name of Payee',
+        required=True
+        )
+    amount_naira=fields.Integer(
+        string='Amount (Naira)',
+        required=False
+        )
+    description=fields.Text(
+        string='Description of Payment',
+        required=True
+        )
+    accounts_charge=fields.Char(
+        string='Account Chargeable'
+        )
+    grant=fields.Char(
+        string='Grant'
+        )
+    budget_line=fields.Char(
+        string='Budget line'
+        )
+    gl=fields.Char(
+        string='GL'
+        )
+    prepared_by=fields.Many2one(
+        comodel_name="hr.employee",
+        string='Prepared by',
+        readonly=True
+        )
+    approved_by=fields.Many2one(
+        comodel_name="hr.employee",
+        string='Approved by',
+        readonly=True
+        )
+
+    @api.multi
+    def button_submit(self):
+        self.write({'state':'submit'})
+        self.prepared_by = self._uid
+        return {}
+
+    @api.multi
+    def button_approve(self):
+        self.write({'state':'approve'})
+        self.approved_by = self._uid
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state':'reject'})
+        return {}
+
+
+class ContractAgreement(models.Model):
+    _name = 'ninas.contract.agreement'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    date = fields.Date(string='Effective Date', required=True)
+    name = fields.Char(string='Name', required=True)
+    
+    contract_line_ids = fields.One2many(
+        comodel_name='ninas.contract.agreement.items',
+        inverse_name='item')
+    
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    amount_total = fields.Monetary(compute='_total_amount',
+        string='Total', readonly=True, store=True)
+    
+    assessor_name = fields.Char(string='Name')
+    organization_name = fields.Char(string='Organizatoin Name')
+    assessor_address = fields.Char(string='Physical & postal Address')
+    city_country = fields.Char(string='City/Country')
+    
+    contract_date = fields.Date(string='Date')
+    
+    assessor_expert_name = fields.Char(string='Assessor/Expert’s (Name)')
+    management_rep = fields.Char(string="On behalf of NINAS (Management Representative)")
+    assessor_sign = fields.Date(string='Assessor/Expert’s (Sign)')
+    assessor_ref = fields.Char(string='Assessor/Expert’s Ref No')
+    
+
+    @api.depends('contract_line_ids.amount')
+    def _total_amount(self):
+        amount_total = 0.0
+        for line in self.contract_line_ids:
+            self.amount_total += line.amount
+
+    
+class ContractAgreementItems(models.Model):
+    _name = 'ninas.contract.agreement.items'
+    
+    item=fields.Char(string='Item')
+    amount=fields.Monetary(string='Amount')
+    currency_id = fields.Many2one('res.currency', 'Currency')
+    
+class ActivityBudget(models.Model):
+    _name = 'ninas.activity_budget'
+    _description = 'Activity Budget Template'
+
+    employee_id= fields.Char(
+        #related = 'Employee Name'
+        #required=1,
+        )
+    employee = fields.Integer(
+        #related = ''
+        string='Employee Code',
+        #required=1,
+        readonly=1
+        )
+    purpose = fields.Text(
+        string="Purpose/Description of Activity",
+        required=1
+        )
+    date = fields.Date(
+        string = 'Activity Date',
+        required=1,
+        )
+    total = fields.Float(
+        compute = 'sum',
+        string="Total Amount",
+        readonly=1
+        )
+    activity_budget = fields.One2many(
+        comodel_name = 'activity.budget',
+        inverse_name = 'name',
+        string = 'Activity Budget'
+        )
+
+    @api.one
+    def sum(self):
+        total = 0.0
+        for line in self.activity_budget:
+            self.total += line.amount
+         
+class ABudget(models.Model):
+    _name = 'activity.budget'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='',
+        required=0
+        )
+    item = fields.Char(
+        string='Items',
+        required=0
+        )
+    units = fields.Integer(
+        string = 'No. of Units',
+        required=0
+        )
+    cost = fields.Float(
+        string = 'Unit Cost',
+        required=0
+        )
+    amount = fields.Float(
+        compute = 'mul',
+        string = 'Amount',
+        readonly=1
+        )
+    remarks = fields.Char(
+        string = 'Remarks',
+        required=0
+        )
+    fund_code = fields.Char(
+        #related = 'Employee Name'
+        string = 'Fund Code',
+        #required=1
+        )
+    budget_code = fields.Char(
+        #related = 'Employee Name',
+        string = 'Budget Line Code',
+        #required=1
+        )
+
+    @api.one
+    def mul(self):
+        self.amount = self.units  *  self.cost
+        return True
+    
+    
+class OpenClose(models.Model):
+    _name = 'ninas.open_close'
+    _description = 'Opening and Closing Agenda'
+
+    org = fields.Char(
+        #related = ''
+        string = 'Organization'
+        )
+    location = fields.Char(
+        string = 'Location'
+        )
+    la = fields.Many2one(
+        comodel_name = 'hr.employee',
+        string = 'Lead Assessor'
+        )
+    today = fields.Date(
+        string = 'Date',
+        default= date.today(),
+        readonly=1
+        )
+    oc = fields.One2many(
+        comodel_name = 'open.close',
+        inverse_name = 'name',
+        string = 'Opening Agenda'
+        )
+    oc2 = fields.One2many(
+        comodel_name = 'open.close2',
+        inverse_name = 'name',
+        string = 'Closing Agenda'
+        )
+    attendance = fields.One2many(
+        comodel_name = 'ninas.attendance',
+        inverse_name = 'name',
+        string = 'Attendance'
+    )
+
+class OC(models.Model):
+    _name = 'open.close'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='Name of Payee',
+        required=0
+        )
+    sn = fields.Integer(
+        string="S/N"
+        )
+    agenda = fields.Char(
+        string = 'Activity',
+        required=0
+        )
+
+class OC2(models.Model):
+    _name = 'open.close2'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='Name of Payee',
+        required=0
+        )
+    sn = fields.Integer(
+        string="S/N"
+        )
+    agenda = fields.Char(
+        string = 'Activity',
+        required=0
+        )
+    
+class NinasAttendance(models.Model):
+    _name = 'ninas.attendance'
+
+    name = fields.Char(
+        string=""
+        )
+    attendee = fields.Many2one(
+        comodel_name = 'hr.employee',
+        string ='Attendee',
+        required=0
+    )
+    position = fields.Char(
+        related = 'attendee.job_id.name',
+        string = 'Position',
+        readonly = 1
+    )
+    open = fields.Boolean(
+        string = 'Open'
+    )
+    close = fields.Boolean(
+        string = 'Close'
+    )
+    
+class MedicalLab(models.Model):
+    _name = 'ninas.medical'
+    _description = 'Medical Laboratory'
+
+    #name of institution
+    institution = fields.Char(
+        string = 'Name of Laboratory',
+        required=1
+        )
+    address = fields.Char(
+        string = 'Address of Laboratory',
+        readonly=1
+        )
+    #auto generate eg: M0001
+    name = fields.Char(
+        string="Schedule No.",
+        readonly=1
+        )
+    issue1 = fields.Date(
+        string = 'Issue No. 1',
+        required=1
+        )
+    valid = fields.Date(
+        string="Valid To",
+        required=1
+        )
+    med_lab = fields.One2many(
+        comodel_name = 'med.lab',
+        inverse_name = 'name',
+        string = 'Medical Laboratory'
+        )
+
+class MedLab(models.Model):
+    _name = 'med.lab'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='',
+        required=0
+        )
+    sample = fields.Char(
+        string='Type of Sample',
+        required=1
+        )
+    tests = fields.Char(
+        string = 'Type of Tests',
+        required=1
+        )
+    equipment = fields.Char(
+        string = 'Equipment',
+        required=1
+        )
+    method = fields.Char(
+        string='Method Used',
+        required=1
+        )    
+    
+class CalibrationLab(models.Model):
+    _name = 'ninas.calibration'
+    _description = 'Calibration Laboratory'
+
+    #name of institution
+    institution = fields.Char(
+        string = 'Name of Laboratory',
+        required=1
+        )
+    address = fields.Char(
+        string = 'Address of Laboratory',
+        readonly = 1
+        )
+    #auto generate eg: C0001
+    name = fields.Char(
+        string="Schedule No.",
+        required=0
+        )
+    issue1 = fields.Date(
+        string = 'Issue No. 1',
+        required=1
+        )
+    valid = fields.Date(
+        string="Valid To",
+        required=1
+        )
+    cal_lab = fields.One2many(
+        comodel_name = 'cal.lab',
+        inverse_name = 'name',
+        string = 'Calibration Laboratory'
+        )
+
+class CalLab(models.Model):
+    _name = 'cal.lab'
+    
+    name = fields.Char(
+        string=""
+        )
+    employee_id = fields.Many2one(  
+        comodel_name = 'hr.employee',
+        string ='',
+        required=0
+        )
+    mqty = fields.Char(
+        string='Measured Quantity',
+        required=1
+        )
+    range = fields.Float(
+        string = 'Range',
+        required=1
+        )
+    cmc = fields.Float(
+        string = 'Calibration and Measurement Capacity',
+        required=1
+        )
+    method = fields.Char(
+        string='Brief Description of Calibration Method',
+        required=1
+        )
+    equipment = fields.Char(
+        string='Brief Description of Calibration Equipment',
+        required=1
+        )
+    
+class ChemicalLab(models.Model):
+    _name= 'ninas.chemical_lab'
+    _description= 'Chemical Testing Laboratory'
+    
+    issue_no= fields.Date(
+        string='Issue No. 1',
+        required=1
+    )
+    institution= fields.Char(
+        string= 'Name of Laboratory',
+        required=1
+    )
+    address= fields.Char(
+        string='Address of Laboratory',
+        required=1
+    )
+    schedule_number= fields.Char(
+        string='Schedule No.',
+        required=1
+    ) 
+    valid_no= fields.Date(
+        string='Valid To',
+        required=1
+    )
+    chem_lab= fields.One2many(
+        comodel_name='chem.lab',
+        inverse_name='name',
+        string='Chemical Laboratory'
+    )
+class ChemLab(models.Model):
+    _name= 'chem.lab'
+    
+    name= fields.Char(
+        string="Name",
+        required=1
+    )
+    employee_id= fields.Many2one(
+        comodel_name='hr.employee',
+        string='',
+        required=0
+    )
+    products= fields.Char(
+        string='Materials/ Products Tested',
+        required=1
+    )
+    tests= fields.Char(
+        string='Type of Tests/ Property Measured /Range of Managements',
+        required=1
+    )
+    standards= fields.Char(
+        string='Standard Specifications',
+        required=1
+    )
+    techniques= fields.Char(
+        string='Techniques Used',
+        required=1
+    )
+    
+      
+class AssessmentPlan(models.Model):
+    _name = 'ninas.assessment_plan'
+    _description = 'Assessment Plan Form'
+    reference_number = fields.Char(string='Reference Number', readonly=True, required=True, index=True, copy=False, default='New') #auto-sgenerated?
+    organisation = fields.Char(string='Organisation', required=1)
+    contact_person = fields.Char(string='Contact Person', required=1)
+    address = fields.Char(string='Address')
+    telephone = fields.Char(string='Telephone')
+    company_rep = fields.Char(string='Company Representative', required=1)
+    assessment_date = fields.Date(string='Assessment Date', required=1)
+    lead_assessor = fields.Char(string='Lead Assessor')
+    technical_assessor = fields.Char(string='Technical Assessor')
+    day1_ids = fields.One2many(
+        comodel_name='ninas.assessment.plan.activity',
+        inverse_name='assessment_plan_id')
+    day2_ids = fields.One2many(
+        comodel_name='ninas.assessment.plan.activity',
+        inverse_name='assessment_plan_id_2')
+    day3_ids = fields.One2many(
+        comodel_name='ninas.assessment.plan.activity',
+        inverse_name='assessment_plan_id_3')
+    day4_ids = fields.One2many(
+        comodel_name='ninas.assessment.plan.activity',
+        inverse_name='assessment_plan_id_4')
+    # @api.depends('reference_number')
+    # def generate_ref(self):
+    #     added = 0
+    #     for ref in self:
+    #         added+=1
+    #         ref.reference_number = reference_number + added
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('reference_number', 'New') == 'New':
+            vals['reference_number'] = self.env['ir.sequence'].next_by_code('ninas.assessment_plan') or '/'
+        return super(AssessmentPlan, self).create(vals)
+    
+class AssessmentActivity(models.Model):
+    _name = 'ninas.assessment.plan.activity'
+    assessment_plan_id = fields.Many2one(comodel_name='ninas.assessment_plan')
+    assessment_plan_id_2 = fields.Many2one(comodel_name='ninas.assessment_plan')
+    assessment_plan_id_3 = fields.Many2one(comodel_name='ninas.assessment_plan')
+    assessment_plan_id_4 = fields.Many2one(comodel_name='ninas.assessment_plan')
+    start_time = fields.Float(string='Start Time')
+    end_time = fields.Float(string='End Time')
+    activity = fields.Char(string='Activity') 
+    
+    
+    
+class DecisionForm(models.Model):
+    _name = 'ninas.decision_form'
+    _description = 'Decision Form'
+    #this should pull the application info (rep, assessor, institution)
+    ref = fields.Char(
+        string='Reference No.',
+        required=1)
+    #link to actual employee_id
+    assessor_id = fields.Char(
+        #comodel_name = 'hr.employee',
+        string ='Assessor Name',
+        readonly=1)
+    representative = fields.Char(
+        string='Name of Institution Representative',
+        readonly=1)
+    scope = fields.Char(
+        string='Accreditation Scope',
+        readonly=1)
+    institution_name = fields.Char(
+        string='Name of Institution',
+        readonly=1)
+    assess_type = fields.Char(
+        string ='Type of Assessment')
+    assessment_date = fields.Date(
+        string = 'Assessment Date',
+        required=1)
+    la_recommendation = fields.Char(
+        string="Lead Assessor's Recommendation",
+        required=1)
+    aac_recommendation = fields.Char(
+        string="AAC Recommendation",
+        required=1)
+    da_recommendation = fields.Char(
+        string="Director of Accreditation's Recommendation",
+        required=1)
+    #today's date on change (save)
+    date = fields.Date(
+        string= 'Date')
+    ceo = fields.Selection(
+        [('1','Unconditional accreditation/renewal of accreditation to be granted'),
+        ('2','Accreditation/renewal of accreditation to be deferred until all non-conformances have been cleared'),
+        ('3','Accreditation/renewal of accreditation is not recommended'),
+        ('4','For re-assessment only: Suspension of accreditation status or part thereof')],
+        string = 'CEO')
+    note = fields.Char(
+        default='The period of suspension shall not extend beyond the date of expiry of the Certificate of Accreditation',
+        readonly=1)
+
+
+class AppraisalForm(models.Model):
+    _name='ninas.appraisal'
+    _description='Appraisal Form'
+
+   # employee_id=fields.Many2one(
+    #    comodel_name='hr.employee',
+    #    string='Employee')
+
+    appraisee=fields.Many2one(
+        comodel_name='hr.employee',
+        string='Employee')
+
+    appraisee_title=fields.Char(
+        string='Job Title',
+        related='appraisee.job_id.name',
+        readonly=True)
+
+    appraiser=fields.Many2one(
+        comodel_name='hr.employee',
+        string='Appraiser')
+    
+    appraiser_title=fields.Char(
+        string='Job Title',
+        related='appraiser.job_id.name',
+        readonly=True)
+
+    reviewer=fields.Many2one(
+        comodel_name='hr.employee',
+        string='Reviewer')
+
+    reviewer_title=fields.Char(
+        string='Job Title',
+        related='reviewer.job_id.name',
+        readonly=True)
+
+    objectives=fields.Text(
+        string='Review of Objectives Achieved, Partially Achieved and Why')
+
+    performance=fields.Text(
+        string='Review of Personal Performance')
+
+    superior=fields.Boolean(
+        string='Superior')
+
+    acceptable=fields.Boolean(
+        string='Fully Acceptable')
+
+    incomplete=fields.Boolean(
+        string='Incomplete')
+
+    unsatisfactory=fields.Boolean(
+        string='Unsaticfactory')
+
+    reason=fields.Text(
+        string='Reason for Rating')
+
+    appraiser_comments=fields.Text(
+        string='Appraiser Comments')
+
+    appraisee_comments=fields.Text(
+        string='Appraisee Comments')
+    
+    reviewer_comments=fields.Text(
+        string='Reviwer Comments')
+    
+    date=fields.Date(
+        string='Date')
     
