@@ -23,14 +23,12 @@
         	<field name="code">travel.request</field>
         	<field name="prefix">TR</field>
         	<field name="padding">3</field>
-        	<field name="travelrequest_no" eval="False"/>
         </record>
         
         <record id="seq_employee_id" model="ir.sequence">
         	<field name="name">Employee ID</field>
         	<field name="code">hr.employee</field>
         	<field name="padding">5</field>
-        	<field name="employee" eval="False"/>
         </record>
         
         <record id="seq_reference_number" model="ir.sequence">
@@ -38,7 +36,6 @@
         	<field name="code">ninas.assessment_plan</field>
 			<field name="prefix">AP</field>
         	<field name="padding">3</field>
-        	<field name="reference_number" eval="False"/>
         </record>
         
         

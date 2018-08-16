@@ -399,7 +399,10 @@ class Checklist(models.Model):
     _name = "checklist.ticket"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
-    ticket_id = fields.Many2one(comdel_name='helpdesk.ticket')
+    ticket_id = assessment_type_id = fields.Many2one(
+        comodel_name='helpdesk.ticket',
+        string='Application ID',
+        track_visibility='onchange')
     
     partner_id = fields.Many2one('res.partner', string='Applicant')
     
