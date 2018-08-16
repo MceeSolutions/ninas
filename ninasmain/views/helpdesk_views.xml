@@ -222,7 +222,7 @@
             	<label class="control-label" for="partner_name">Applicant’s Authorized Representative’s Name</label>                  
        		</xpath>
        		
-       		<xpath expr="//div[@class='form-group form-field o_website_form_required']" position="after">
+       		<xpath expr="//div[hasclass('form-group', 'form-field', 'o_website_form_required')]" position="after">
        			<div class="form-group form-field o_website_form_required">
 		              <div class="col-md-3 col-sm-4 text-right">
 		                  <label class="control-label" for="applicant_rep_title">Authorized Representative’s Title</label>
@@ -570,7 +570,7 @@
                  
        		</xpath>
             
-            <xpath expr="//div[@class='form-group']" position="before">
+            <xpath expr="//div[hasclass('form-group')]" position="before">
             
             	<div class="form-group form-field o_website_form_required">
 		              <div class="col-md-3 col-sm-4 text-right">
@@ -636,7 +636,7 @@
         
         
         <template id="ninas_website_helpdesk_form_ticket_submited" inherit_id="website_helpdesk_form.ticket_submited">
-            <xpath expr="//div[@class='container']" position="replace">
+            <xpath expr="//div[hasclass('container')]" position="replace">
            		<div clas="row">
                         <t t-if="request.session.get('form_builder_model_model', '') == 'helpdesk.ticket'">
                             <t t-set="ticket" t-value="request.website._website_form_last_record().sudo()"/>
@@ -651,7 +651,7 @@
         </template>
         
         <template id="ninas_team" inherit_id="website_helpdesk.team">
-            <xpath expr="//div[@class='navbar-header']" position="replace">
+            <xpath expr="//div[hasclass('navbar-header')]" position="replace">
            		 <div class="navbar-header">
                         <div class="navbar-brand">Accreditation</div>
                     </div>
@@ -701,7 +701,7 @@
 	            </t>
 	        </xpath>
 	        
-	        <xpath expr="//tr[@class='active']" position="replace">
+	        <xpath expr="//tr[hasclass('active')]" position="replace">
 	        	 <tr class="active">
                             <th>Application Number</th>
                             <th>Description</th><th/>
@@ -756,7 +756,7 @@
 			<xpath expr="//a[@name='133']" position="replace">
 	                <a name="133" type="action">Opened Application Analysis</a>
 			</xpath>-->
-			<xpath expr="//div[@class='o_kanban_card_manage_title']" position="replace">
+			<xpath expr="//div[hasclass('o_kanban_card_manage_title')]" position="replace">
 				<div class="o_kanban_card_manage_title">
                     <span>View Applications</span>
                 </div>
