@@ -66,8 +66,9 @@
         <field name="arch" type="xml">
            <xpath expr="//button[@name='assign_ticket_to_self']" position="before">
                 	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',1)]}"/>
-                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" />
-                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',12)]}"/>
+                	<!-- <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" />
+                	 -->
+                	 <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',12)]}"/>
 			</xpath>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="replace">
            			<button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" attrs="{'invisible':[('stage_id','!=',5)]}"/>
@@ -84,12 +85,15 @@
                 	<button type="object" name="button_assessment" string="Submit" attrs="{'invisible':[('stage_id','!=',12)]}" class="btn btn-primary"/>
 					<button type="object" name="button_car" string="Assessment Done?" attrs="{'invisible':[('stage_id','!=',11)]}"/>
                 	<button type="object" name="button_decision_making" string="CAR Sent / Approved" attrs="{'invisible':[('stage_id','!=',13)]}"/>
+                	<button type="object" name="button_awaiting_approval" string="Send Decision Package" attrs="{'invisible':[('stage_id','!=',16)]}"/>
+                	<button type="object" name="button_approved_app" string="CEO Approval" attrs="{'invisible':[('stage_id','!=',20)]}" class="btn btn-success"/>
+                	<button type="object" name="button_reject_app" string="CEO Reject" attrs="{'invisible':[('stage_id','!=',20)]}" class="btn btn-danger"/>
                 	
                 	
-                	<button type="object" name="button_awaiting_approval" string="Next Stage" attrs="{'invisible':[('stage_id','!=',16)]}"/>
-                	<button type="object" name="button_approved_app" string="Next Stage" attrs="{'invisible':[('stage_id','!=',20)]}"/>
-                	<button type="object" name="button_pending_closure" string="Next Stage" attrs="{'invisible':[('stage_id','!=',21)]}"/>
-                	<button type="object" name="button_closed" string="Close Application?" class="btn btn-primary" attrs="{'invisible':[('stage_id','!=',18)]}"/>
+                	<!-- <button type="object" name="button_pending_closure" string="Next Stage" attrs="{'invisible':[('stage_id','!=',21)]}"/>
+                	 -->
+                	<button type="object" name="button_closed" string="Close Application?" class="btn btn-warning" attrs="{'invisible':[('stage_id','!=',18)]}"/>
+                	<button type="object" name="button_reset_app" string="Ready For Review" class="btn btn-primary" attrs="{'invisible':[('stage_id','!=',18)]}"/>
 			</xpath>
 			<xpath expr="//button[@name='toggle_active']" position="before">
 		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
@@ -816,9 +820,11 @@
             </field>
             <field name="user_id" position="after">
                 <field name="lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',5)], 'readonly':[('resources_available','=',False)]}"/>
+           		<field name="tech_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'readonly':[('resources_available','=',False)]}"/>
+            	<field name="ac_members" widget="many2many_tags" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}"/>
             </field>
             <field name="deadline" position="after">
-                <field name="re_assessment_date" attrs="{'required':[('stage_id','=',21)], 'invisible':[('stage_id','!=',21)]}"/>
+                <field name="re_assessment_date" attrs="{'required':[('stage_id','=',20)], 'readonly':[('stage_id','!=',20)]}"/>
             </field>
             <field name="priority" position="after">
             	<field name="document_review" attrs="{'required':[('stage_id','=',17)], 'readonly':[('stage_id','!=',17)]}"/>

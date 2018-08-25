@@ -1370,16 +1370,17 @@ class ActivityBudget(models.Model):
     _name = 'ninas.activity_budget'
     _description = 'Activity Budget Template'
 
-    employee_id= fields.Char(
-        #related = 'Employee Name'
-        #required=1,
+    employee_id= fields.Many2one(
+        comodel_name = 'hr.employee',
+        required=1,
         )
-    employee = fields.Integer(
-        #related = ''
+    
+    employee_code = fields.Char(
+        related='employee_id.employee',
         string='Employee Code',
-        #required=1,
         readonly=1
         )
+    
     purpose = fields.Text(
         string="Purpose/Description of Activity",
         required=1
@@ -1458,8 +1459,8 @@ class OpenClose(models.Model):
     _name = 'ninas.open_close'
     _description = 'Opening and Closing Agenda'
 
-    org = fields.Char(
-        #related = ''
+    org = fields.Many2one(
+        comodel_name = 'res.partner',
         string = 'Organization'
         )
     location = fields.Char(
@@ -1738,14 +1739,14 @@ class AssessmentPlan(models.Model):
     _name = 'ninas.assessment_plan'
     _description = 'Assessment Plan Form'
     reference_number = fields.Char(string='Reference Number', readonly=True, required=True, index=True, copy=False, default='New') #auto-sgenerated?
-    organisation = fields.Char(string='Organisation', required=1)
-    contact_person = fields.Char(string='Contact Person', required=1)
-    address = fields.Char(string='Address')
-    telephone = fields.Char(string='Telephone')
+    organisation = fields.Many2one(comodel_name='res.partner', string='Organisation', required=1)
+    contact_person = fields.Char(related='organisation.child_ids.name', string='Contact Person', required=1)
+    address = fields.Char(related='organisation.street', string='Address')
+    telephone = fields.Char(related='organisation.phone', string='Telephone')
     company_rep = fields.Char(string='Company Representative', required=1)
     assessment_date = fields.Date(string='Assessment Date', required=1)
-    lead_assessor = fields.Char(string='Lead Assessor')
-    technical_assessor = fields.Char(string='Technical Assessor')
+    lead_assessor = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor')
+    technical_assessor = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor')
     day1_ids = fields.One2many(
         comodel_name='ninas.assessment.plan.activity',
         inverse_name='assessment_plan_id')
@@ -1786,47 +1787,73 @@ class AssessmentActivity(models.Model):
 class DecisionForm(models.Model):
     _name = 'ninas.decision_form'
     _description = 'Decision Form'
+    
+    
     #this should pull the application info (rep, assessor, institution)
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket', 
+        string='Accreditation ID',
+        required=True,
+        track_visibility='onchange',)
+    
     ref = fields.Char(
         string='Reference No.',
         required=1)
+    
     #link to actual employee_id
-    assessor_id = fields.Char(
-        #comodel_name = 'hr.employee',
+    assessor_id = fields.Many2one(
+        comodel_name = 'hr.employee',
+        related='application_id.lead_assessor_id',
         string ='Assessor Name',
         readonly=1)
+    
     representative = fields.Char(
+        related='application_id.partner_id.name',
         string='Name of Institution Representative',
+        store=True,
         readonly=1)
+    
     scope = fields.Char(
         string='Accreditation Scope',
         readonly=1)
+    
     institution_name = fields.Char(
+        related='application_id.partner_id.company_name',
         string='Name of Institution',
+        store=True,
         readonly=1)
-    assess_type = fields.Char(
-        string ='Type of Assessment')
+    
+    assess_type = fields.Many2one(
+        related='application_id.assessment_type_id',
+        string ='Type of Assessment', readonly=1)
+    
     assessment_date = fields.Date(
+        related='application_id.assessment_date',
         string = 'Assessment Date',
-        required=1)
-    la_recommendation = fields.Char(
+        required=1, readonly=1)
+    
+    la_recommendation = fields.Text(
         string="Lead Assessor's Recommendation",
         required=1)
-    aac_recommendation = fields.Char(
+    
+    aac_recommendation = fields.Text(
         string="AAC Recommendation",
         required=1)
-    da_recommendation = fields.Char(
+    da_recommendation = fields.Text(
         string="Director of Accreditation's Recommendation",
         required=1)
+    
     #today's date on change (save)
     date = fields.Date(
-        string= 'Date')
+        string= 'Date', default=date.today())
+    
     ceo = fields.Selection(
         [('1','Unconditional accreditation/renewal of accreditation to be granted'),
         ('2','Accreditation/renewal of accreditation to be deferred until all non-conformances have been cleared'),
         ('3','Accreditation/renewal of accreditation is not recommended'),
         ('4','For re-assessment only: Suspension of accreditation status or part thereof')],
         string = 'CEO')
+    
     note = fields.Char(
         default='The period of suspension shall not extend beyond the date of expiry of the Certificate of Accreditation',
         readonly=1)

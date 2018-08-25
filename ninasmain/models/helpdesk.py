@@ -31,6 +31,10 @@ class Accreditation(models.Model):
         track_visibility='onchange')
     
     lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor', track_visibility='onchange',)
+    tech_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor', track_visibility='onchange',)
+    
+    ac_members= fields.Many2many(comodel_name='hr.employee',
+                                 string='AC Members')
     
     re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
     
@@ -385,8 +389,18 @@ class CreateInvoice(models.Model):
         return {}
     
     @api.multi
-    def button_pending_closure(self):
+    def button_reject_app(self):
         self.write({'stage_id': 18})
+        return {}
+    
+#    @api.multi
+#    def button_pending_closure(self):
+#        self.write({'stage_id': 18})
+#        return {}
+    
+    @api.multi
+    def button_reset_app(self):
+        self.write({'stage_id': 20})
         return {}
     
     @api.multi
