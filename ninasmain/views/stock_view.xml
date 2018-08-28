@@ -1,26 +1,6 @@
 <odoo>
   <data>
   
-   <!-- Car Report action-->
-    <record model="ir.actions.act_window" id="ninas_car_report_action">
-		<field name="name">Car Report</field>
-		<field name="res_model">car.report</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[]</field>
-		<field name="context">{}</field>
-	</record>
-    
-    <!-- checklist ticket action-->
-    <record model="ir.actions.act_window" id="ninas_checklist_ticket_action">
-		<field name="name">checklist ticket</field>
-		<field name="res_model">checklist.ticket</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[]</field>
-		<field name="context">{}</field>
-	</record>
-  
   <!-- 
   	<record id="ninas_purchase_tree_view" model="ir.ui.view">
         <field name="name">ninas.purchase.tree</field>
@@ -148,31 +128,29 @@
            </field>
     </record>
     
-    <record id="ninas_helpdesk_view_form_view" model="ir.ui.view">
-        <field name="name">helpdesk.ticket.form</field>
-        <field name="model">helpdesk.ticket</field>
-        <field name="priority" eval="7" />
-        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
-        <field name="arch" type="xml">
-           <xpath expr="//button[@name='assign_ticket_to_self']" position="before">
-                	<button type="object" name="action_create_new" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new"/>
-			</xpath>
-			<xpath expr="//button[@name='toggle_active']" position="before">
-		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
-                	<field string="Checklist" name="checklist_count" widget="statinfo"/>
-               </button>
-               <button type="action" class="oe_stat_button" name="%(account.action_invoice_tree1)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-pencil-square-o">
-                   <field string="Invoices" name="invoice_count" widget="statinfo"/>
-               </button>
-               <button type="action" class="oe_stat_button" name="%(ninasmain.ninas_car_report_action)d" icon="fa-folder">
-                   <field string="C.A.R Report" name="car_count" widget="statinfo"/>
-               </button>
-			</xpath>
-			<!--  <xpath expr="//button[@name='toggle_active']" position="before">
-		    	
-			</xpath>-->
-           </field>
-    </record>
+    <record id="account.action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_invoice')]</field>
+            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a customer invoice.
+              </p><p>
+                Odoo's electronic invoicing allows to ease and fasten the
+                collection of customer payments. Your customer receives the
+                invoice by email and he can pay online and/or import it
+                in his own system.
+              </p><p>
+                The discussions with your customer are automatically displayed at
+                the bottom of each invoice.
+              </p>
+            </field>
+        </record>
     
     
     <record id="ninas_stock_form_view" model="ir.ui.view">
@@ -325,99 +303,6 @@
             </field>
         </record>
     
-    
-    <!-- checklist.ticket  tree view-->
-    <record id="checklist_ticket_tree_view" model="ir.ui.view">
-		<field name="name">checklist.ticket.tree</field>
-		<field name="model">checklist.ticket</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<field name="name"/>
-			<field name="current_stage"/>
-		</field>
-	</record>
-
-    <record id="checklist_ticket_form_view" model="ir.ui.view">
-    <field name="name">checklist.ticket.form</field>
-    <field name="model">checklist.ticket</field>
-    <field name="priority" eval="2"/>
-    <field name="arch" type="xml">
-        <form string="Check List">
-			 <sheet>
-				 <group col="4" colspan="4">
-				 <field name="name"/>
-				 <field name="current_stage"/>
-				 </group>
-				 <notebook>
-					<page name="stages" string="Stages">
-						 <group col="4" colspan="2">
-							<field name="stage_one"/>
-						 	<field name="stage_two"/>
-						 	<field name="stage_three"/>
-						 	<field name="stage_four"/>
-					 	</group>
-					 </page>
-				 </notebook>
-			 </sheet>
-        </form>
-    </field>
-    </record>
-    
-    <!-- car report  tree view-->
-    <record id="car_report_tree_view" model="ir.ui.view">
-		<field name="name">car.report.tree</field>
-		<field name="model">car.report</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<field name="name"/>
-			<field name="ref_no"/>
-			<field name="faculty_rep"/>
-			<field name="scope_assessed"/>
-		</field>
-	</record>
-
-    <record id="car_report_form_view" model="ir.ui.view">
-    <field name="name">car.report.form</field>
-    <field name="model">car.report</field>
-    <field name="priority" eval="2"/>
-    <field name="arch" type="xml">
-        <form string="Car Report">
-			 <sheet>
-			 	<group col="4" colspan="4">
-			 		<field name="name"/>
-					<field name="ref_no"/>
-					<field name="faculty_rep"/>
-					<field name="scope_assessed"/>
-			 	</group>
-				 <group string="PART 1: Detailed Observation and evidence" col="6" colspan="4">
-				 <field name="rel_equip"/>
-				 <field name="name_lead"/>
-				 <field name="name_rep"/>
-				 </group>
-				 <group string="Part 2: Corrective Action Taken">
-				 <field name="root_cause"/>
-				 <field name="corrective_action"/>
-				 <field name="rep_sign"/>
-				 </group>
-				 <group string="PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED" col="4" colspan="4">
-				 <field name="assessor_nc"/>
-				 <field name="assessor_sign"/>
-				 </group>
-				 <group string="PART 4: FOLLOW-UP AT NEXT ASSESSMENT" col="4" colspan="4">
-				 <field name="implemantation"/>
-				 <field name="sign_assessor"/>
-				 </group>
-			 </sheet>
-			 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
-        </form>
-    </field>
-    </record>
-    
-    
 	
     
     <record id="purchase_rfq" model="ir.actions.act_window">
@@ -446,7 +331,7 @@
       <field name="name">Store Request</field>
       <field name="res_model">stock.picking</field>
       <field name="view_mode">tree,form</field>
-      <field name="context" eval='{"default_is_locked":False}'/>
+      <field name="context" eval='{"default_is_locked":False,"default_picking_type_id":ref("ninasmain.stock_picking_type_emp")}'/>
     </record>
     
 	<menuitem name="Store Request" id="store_request" parent="stock.menu_stock_root"
