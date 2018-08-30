@@ -73,8 +73,12 @@ class ApplicationForm(models.Model):
     signed_by_authorized_rep = fields.Char(
         string='Signed by Authorized Representative:',
         track_visibility='onchange')
-    place_and_date = fields.Char(
-        string='Place and date:',
+    
+    place_sign = fields.Char(
+        string='Place:',
+        track_visibility='onchange')
+    place_date = fields.Date(
+        string='Date:',
         track_visibility='onchange')
     print_name_below = fields.Char(
         string='Print Name below:',

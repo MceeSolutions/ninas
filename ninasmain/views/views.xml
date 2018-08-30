@@ -1801,6 +1801,7 @@
 			<form string="Assessment Form">
 				<sheet>
 					<separator string="Initial / Re-Assessment Plan"/>
+					<group><field name="application_id"/></group>
 					<group col="4" colspan="2">
 						<field name="reference_number"/>
 						<field name="organisation"/>

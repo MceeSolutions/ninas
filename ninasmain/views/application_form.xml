@@ -91,7 +91,8 @@
            	    		<page string="Agreement">
            	    			<group col="4" colspan="4">
            	    			<field name="signed_by_authorized_rep"/>
-           	    			<field name="place_and_date"/>
+           	    			<field name="place_sign"/>
+           	    			<field name="place_date"/>
            	    			</group>
            	    			<group>
            	    				<field name="print_name_below"/>
