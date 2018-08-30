@@ -510,7 +510,7 @@ class CarReportAttachment(models.Model):
     
     ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
     name = fields.Char(string='Attachment Name')
-    attachment_description = fields.Text(string='Attachment Description')
+    attachment_description = fields.Char(string='Attachment Description')
     attachment_ids = fields.Many2many(
         comodel_name='ir.attachment',
         string='Attachment')

@@ -12,7 +12,7 @@ class Accreditation(http.Controller):
         lab_state_id = http.request.env['res.country.state'].sudo().search([])
         lab_country_id = http.request.env['res.country'].sudo().search([('name','=','Nigeria')])
         mail_state_id = http.request.env['res.country.state'].sudo().search([])
-        mail_country_id = http.request.env['res.country'].sudo().search([('name','=','Nigeria')])
+        mail_country_id = http.request.env['res.country'].sudo().search([])
         account = http.request.env['helpdesk.ticket'].sudo().search([])
         test = http.request.env['helpdesk.ticket'].sudo().search([])
         if request.env.user.partner_id != request.env.ref('base.public_partner'):
