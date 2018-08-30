@@ -348,7 +348,6 @@
                          <label class="control-label" for="laboratory_address">Laboratory Address (Number and Street, City, State and Country)</label>
                      </div>
                      <div class="col-md-1 col-sm-4">
-                     	<label class="control-label" for="laboratory_address">Laboratory Address (Number and Street, City, State and Country)</label>
                          <input type="text" class="form-control o_website_form_input" name="lab_number" required="1" placeholder="Number"/>
                      </div>
                      <div class="col-md-3 col-sm-4">
