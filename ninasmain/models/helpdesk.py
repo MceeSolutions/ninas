@@ -145,7 +145,7 @@ class Accreditation(models.Model):
     place_sign = fields.Char(
         string='Place:',
         track_visibility='onchange')
-    place_date = fields.Date(
+    place_date = fields.Char(
         string='Date:',
         track_visibility='onchange')
     
