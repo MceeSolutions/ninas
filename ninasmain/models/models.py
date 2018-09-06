@@ -1738,15 +1738,24 @@ class ChemLab(models.Model):
 class AssessmentPlan(models.Model):
     _name = 'ninas.assessment_plan'
     _description = 'Assessment Plan Form'
+    
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket', 
+        string='Accreditation ID',
+        required=True,
+        track_visibility='onchange',)
+    
     reference_number = fields.Char(string='Reference Number', readonly=True, required=True, index=True, copy=False, default='New') #auto-sgenerated?
-    organisation = fields.Many2one(comodel_name='res.partner', string='Organisation', required=1)
-    contact_person = fields.Char(related='organisation.child_ids.name', string='Contact Person', required=1)
-    address = fields.Char(related='organisation.street', string='Address')
-    telephone = fields.Char(related='organisation.phone', string='Telephone')
-    company_rep = fields.Char(string='Company Representative', required=1)
+    organisation = fields.Char(related='application_id.partner_id.parent_id.name', string='Organisation', readonly=1)
+    contact_person = fields.Char(related='application_id.partner_id.child_ids.name', string='Contact Person', required=1)
+    address = fields.Char(related='application_id.partner_id.street', string='Address')
+    telephone = fields.Char(related='application_id.partner_id.phone', string='Telephone')
+    company_rep = fields.Char(related='application_id.partner_id.name', string='Company Representative', required=1)
+    
     assessment_date = fields.Date(string='Assessment Date', required=1)
-    lead_assessor = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor')
+    lead_assessor = fields.Many2one(related='application_id.lead_assessor_id', comodel_name='hr.employee', string='Lead Assessor')
     technical_assessor = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor')
+    
     day1_ids = fields.One2many(
         comodel_name='ninas.assessment.plan.activity',
         inverse_name='assessment_plan_id')

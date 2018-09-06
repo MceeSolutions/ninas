@@ -9,7 +9,7 @@ from datetime import date, timedelta
 from odoo import api, fields, models
 #from gevent._ssl3 import name
 #from plainbox.impl.unit import file
-
+from ast import literal_eval
 
 class Accreditation(models.Model):
     _inherit = 'helpdesk.ticket'
@@ -137,9 +137,18 @@ class Accreditation(models.Model):
     signed_by_authorized_rep = fields.Char(
         string='Signed by Authorized Representative:',
         track_visibility='onchange')
+    
     place_and_date = fields.Char(
-        string='Place and date:',
+        string='Place:',
         track_visibility='onchange')
+    
+    place_sign = fields.Char(
+        string='Place:',
+        track_visibility='onchange')
+    place_date = fields.Char(
+        string='Date:',
+        track_visibility='onchange')
+    
     print_name_below = fields.Char(
         string='Print Name below:',
         track_visibility='onchange')
@@ -293,9 +302,20 @@ class CreateInvoice(models.Model):
      
        return res
     
+    '''
     @api.multi
     def open_customer_invoices(self):
-
+        self.ensure_one()
+        action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.id))
+        return action
+    
+    
+    '''
+    @api.multi
+    def open_customer_invoices(self):
+        
         return {
             'type': 'ir.actions.act_window',
             'name': ('Customer Invoices'),
@@ -304,7 +324,7 @@ class CreateInvoice(models.Model):
             'domain':[('type','=','out_invoice')],
             'context': {'search_default_partner_id': self.partner_id.id}
         }
-
+    
 
         
     @api.multi
@@ -470,7 +490,30 @@ class CarReport(models.Model):
     sign_assessor = fields.Date(string='Signature of Assessor/ Date')
     ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
     
+    attachment_count = fields.Integer(compute="_car_count",string="C.A.R")
     
+    @api.multi
+    def _car_count(self):
+        car_rep = self.env['car.report.attachment']
+        for car in self:
+            domain = [('ticket_id', '=', car.id)]
+            car_ids = car_rep.search(domain)
+            cars = car_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.car_count = car_count
+        return True
+    
+class CarReportAttachment(models.Model):
+    _name = 'car.report.attachment'
+    
+    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
+    name = fields.Char(string='Attachment Name')
+    attachment_description = fields.Char(string='Attachment Description')
+    attachment_ids = fields.Many2many(
+        comodel_name='ir.attachment',
+        string='Attachment')
     
     
     
