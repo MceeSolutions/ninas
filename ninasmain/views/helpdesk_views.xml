@@ -794,18 +794,18 @@
 	        <field name="sequence" type="int">50</field>
     	</record>
         
-        <template id="ninas_team" inherit_id="website_helpdesk.team">
+        <template id="ninas_accreditation_team" inherit_id="website_helpdesk.team">
             <xpath expr="//div[hasclass('navbar-header')]" position="replace">
            		 <div class="navbar-header">
                         <div class="navbar-brand">Accreditation</div>
                     </div>
             </xpath>
             
-             <xpath expr="//a[@t-attf-href='/helpdesk/#{slug(tteam)}']" position="replace">
+             <!-- <xpath expr="//a[@t-attf-href='/helpdesk/#{slug(tteam)}']" position="replace">
                  	<a t-attf-href="/accreditation/#{slug(tteam)}">
 	                     <span t-field="tteam.name"/>
 	                 </a>
-            </xpath>
+            </xpath> -->
             
             <xpath expr="//t[@t-set='additional_title']" position="replace">
 	         	<t t-set="additional_title">Accreditation</t>
