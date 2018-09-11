@@ -1877,6 +1877,11 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Decision Form">
+				<header>
+	        		<button name="button_aac" string="Submit" type="object" class="btn btn-primary" states="la_recommendation" groups="base.group_user"/>
+	        		<button name="button_da" string="Submit" type="object" class="btn btn-primary" states="aac_recommendation" groups="base.group_user"/>
+	        		<field name="state" widget="statusbar" statusbar_visible="la_recommendation,aac_recommendation,da_recommendation" readonly="1"/>
+	        	</header>
 				<sheet>
 				<group><field name="application_id"/></group>
 					<group col="4" colspan="2">
@@ -1888,11 +1893,17 @@
 						<field name="assess_type"/>
 						<field name="assessment_date"/>
 					</group>
-					<group col="2" colspan="2">
-						<field name="la_recommendation"/>
-						<field name="aac_recommendation"/>
-						<field name="da_recommendation"/>
-					</group>
+					<notebook>
+						<page string="Lead Assessor's Recommendation">
+							<field name="la_recommendation" attrs="{'required': [('state','in',('la_recommendation'))]}"/>
+						</page>
+						<page string="AAC Recommendation">
+							<field name="aac_recommendation" widget="html" attrs="{'required': [('state','in',('aac_recommendation'))]}"/>
+						</page>
+						<page string="Director of Accreditation's Recommendation">
+							<field name="da_recommendation" widget="html" attrs="{'required': [('state','in',('da_recommendation'))]}"/>
+						</page>
+					</notebook>
 					<group col="4" colspan="2">
 						<field name="ceo"/>
 						<field name="note"/>
@@ -2018,6 +2029,8 @@
               action="ninas_confidentiality_action"/>
     <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="contract_agreement_main_menu"
               action="ninas_code_of_conduct_action"/>
+    <menuitem name="Decision Form" id="decision_form_menu" parent="helpdesk.menu_helpdesk_root" 
+    		  action="decision_form_action"/>
               
     <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_contract_agreement_action"/>

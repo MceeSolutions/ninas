@@ -38,6 +38,8 @@ class Accreditation(models.Model):
     
     re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
     
+    creation_date = fields.Date(default = date.today() , string='Application Date')
+    
     resources_available = fields.Boolean(string='Resources Available?', track_visibility='onchange')
     checklist_sent = fields.Boolean(string='Review Checklist Filled?', track_visibility='onchange')
     conflict_agreement = fields.Boolean(string='contract Agreement?', readonly=True, track_visibility='onchange')
@@ -438,7 +440,7 @@ class Checklist(models.Model):
         string='Application ID',
         track_visibility='onchange')
     
-    partner_id = fields.Many2one('res.partner', string='Applicant')
+    partner_id = fields.Many2one(comodel_name='res.partner', related='ticket_id.partner_id', string='Applicant')
     
     quality_manual = fields.Boolean(
         string='A copy of current version of Quality Manual',
