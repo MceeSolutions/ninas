@@ -1187,7 +1187,7 @@ class ConflictofInterest(models.Model):
     description = fields.Text(
         )
     name = fields.Char(
-        string='Name of Institution or Persone:')
+        string='Name of Institution or Person:')
     
     printed_name = fields.Char(related='name',readonly=True,
         string='Printed Name')
@@ -1843,14 +1843,14 @@ class DecisionForm(models.Model):
     
     la_recommendation = fields.Text(
         string="Lead Assessor's Recommendation",
-        required=1)
+        required=0)
     
     aac_recommendation = fields.Text(
         string="AAC Recommendation",
-        required=1)
+        required=0)
     da_recommendation = fields.Text(
         string="Director of Accreditation's Recommendation",
-        required=1)
+        required=0)
     
     #today's date on change (save)
     date = fields.Date(
@@ -1866,8 +1866,23 @@ class DecisionForm(models.Model):
     note = fields.Char(
         default='The period of suspension shall not extend beyond the date of expiry of the Certificate of Accreditation',
         readonly=1)
-
-
+    
+    state = fields.Selection(
+        [('la_recommendation', "Lead Assessor's Recommendation"), ('aac_recommendation','AAC Recommendation'), ('da_recommendation',"Director of Accreditation's Recommendation")],
+        string='Status',
+        default='la_recommendation',
+        track_visibility='onchange')
+    
+    @api.multi
+    def button_aac(self):
+        self.write({'state': 'aac_recommendation'})
+        return {}
+    
+    @api.multi
+    def button_da(self):
+        self.write({'state': 'da_recommendation'})
+        return {}
+    
 class AppraisalForm(models.Model):
     _name='ninas.appraisal'
     _description='Appraisal Form'

@@ -110,7 +110,7 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
            <xpath expr="//button[@name='assign_ticket_to_self']" position="before">
-                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',1)]}"/>
+                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',1)]}" />
                 	<!-- <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" />
                 	 -->
                 	 <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',12)]}"/>
@@ -196,6 +196,7 @@
 		<field name="model">checklist.ticket</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
+			<field name="ticket_id"/>
 			<field name="partner_id"/>
 		</field>
 	</record>
@@ -207,18 +208,38 @@
     <field name="arch" type="xml">
         <form string="Check List">
 			 <sheet>
-			    <group string="CheckList" col="1">
-			    	<field name="partner_id"/>
-                    <field name="quality_manual"/>
-                    <field name="procedures"/>
-				    <field name="work_inst"/>
-				    <field name="org_charts"/>
-				    <field name="report_rela"/>
-				    <field name="prof_testing"/>
-				    <field name="list_equip"/>
-				    <field name="cali_cert"/>
-				    <field name="evi_pay"/>
-			    </group>
+			 		<group colspan="2">
+			 			<field name="ticket_id" required="1"/>
+			 			<field name="partner_id" readonly="1"/>
+			 		</group>
+			    	
+                    <field name="quality_manual"/><span>
+								A copy of current version of Quality Manual
+								</span><br/><br/>
+                    <field name="procedures"/><span>
+								Operating Procedures
+								</span><br/><br/>
+				    <field name="work_inst"/><span>
+								Work Instructions
+								</span><br/><br/>
+				    <field name="org_charts"/><span>
+								Up-to-date Organisational Chart(with identity of key personnel involved in each function
+								</span><br/><br/>
+				    <field name="report_rela"/><span>
+								If part of a larger organisation, include a chart of the laboratory’s position and reporting relationships within the organisation
+								</span><br/><br/>
+				    <field name="prof_testing"/><span>
+								Proficiency testing plan and proficiency test results with any corrective action response (if applicable)
+								</span><br/><br/>
+				    <field name="list_equip"/><span>
+								A list of all the equipment used to support the tests or calibrations including in-house (i.e. equipment calibrations that your lab performs) and external calibrations (i.e. those that an external calibration laboratory performs), and rented/borrowed equipment.
+								</span><br/><br/>
+				    <field name="cali_cert"/><span>
+								For Calibration Applicants Only: a sample of a calibration certificate which your laboratory issued and uncertainty calculations that support the Measurement Uncertainties to be claimed on your scope of accreditation.
+								</span><br/><br/>
+				    <field name="evi_pay"/><span>
+								Additional Requirement: Evidence of payment or funding support
+								</span><br/><br/>
 			 </sheet>
 			 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -298,10 +319,16 @@
             <xpath expr="//h2" position="before">
             	<div class="container">
             	<ul class="wizard pull-middle hidden-xs">
-			            <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
-			                Payment<span class="chevron"></span>
+			            <li t-att-class="(step==10 and 'text-primary') or 'text-muted'" id="step10">
+			                Application Information<span class="chevron"></span>
 			            </li>
-			            <li t-att-class="(step==50 and 'text-primary') or 'text-muted'" id="step50">
+			            <li t-att-class="(step==20 and 'text-primary') or 'text-muted'" id="step20">
+			                Confirmation<span class="chevron"></span>
+			            </li>
+			            <li t-att-class="(step==30 and 'text-primary') or 'text-muted'" id="step30">
+			                Confirmation<span class="chevron"></span>
+			            </li>
+			            <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
 			                Confirmation<span class="chevron"></span>
 			            </li>
 		       		 </ul><br/><br/>
@@ -408,13 +435,13 @@
                          <label class="control-label" for="mailing_address">Mailing Address (if different from the laboratory location – Number, Street, City, State, Country)</label>
                      </div>
                 	 <div class="col-md-1 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="mail_number" required="1" placeholder="Number"/>
+                         <input type="text" class="form-control o_website_form_input" name="mail_number" placeholder="Number"/>
                      </div>
                      <div class="col-md-3 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="mail_street" required="1" placeholder="Street"/>
+                         <input type="text" class="form-control o_website_form_input" name="mail_street" placeholder="Street"/>
                      </div>
                      <div class="col-md-3 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="mail_city" required="1" placeholder="City"/>
+                         <input type="text" class="form-control o_website_form_input" name="mail_city" placeholder="City"/>
                      </div><br/><br/>
                      <div class="col-md-3 col-sm-4">
                          <select class="form-control" name="mail_state_id">
@@ -760,6 +787,13 @@
             </xpath>
         </template>
         
+        <record id="website_helpdesk.website_menu_helpdesk" model="website.menu">
+	        <field name="name">Accreditation</field>
+	        <field name="url" eval="'/accreditation/'"/>
+	        <field name="parent_id" ref="website.main_menu"/>
+	        <field name="sequence" type="int">50</field>
+    	</record>
+        
         <template id="ninas_team" inherit_id="website_helpdesk.team">
             <xpath expr="//div[hasclass('navbar-header')]" position="replace">
            		 <div class="navbar-header">
@@ -767,15 +801,25 @@
                     </div>
             </xpath>
             
+             <xpath expr="//a[@t-attf-href='/helpdesk/#{slug(tteam)}']" position="replace">
+                 	<a t-attf-href="/accreditation/#{slug(tteam)}">
+	                     <span t-field="tteam.name"/>
+	                 </a>
+            </xpath>
+            
+            <xpath expr="//t[@t-set='additional_title']" position="replace">
+	         	<t t-set="additional_title">Accreditation</t>
+       		</xpath>
+            
             <xpath expr="//a[@t-attf-href='/helpdesk/#{team.id}/submit']" position="replace">
-                 	<a id="submit-ticket" t-attf-href="/helpdesk/#{team.id}/submit">
+                 	<a id="submit-ticket" t-attf-href="/accreditation/#{team.id}/submit">
                     	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">Submit an Application</button>
                     </a>
             </xpath>
             
             <xpath expr="//a[@t-attf-href='/my/tickets']" position="replace">
-                 	<a id="submit-ticket" t-attf-href="/my/tickets">
-                    	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">View my Application</button>
+                 	<a id="submit-ticket" t-attf-href="/my/home">
+                    	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">View My Account</button>
                   	</a>
             </xpath>
             
@@ -901,6 +945,9 @@
         	<field name="stage_id" position="replace">
                 <field name="stage_id" widget="statusbar" options="{'fold_field': 'fold'}"/>
             </field>
+            <field name="name" position="replace">
+               <h1><field name="name" class="field_name" placeholder="Subject..." readonly="True"/></h1>
+            </field>
             <field name="team_id" position="replace">
                 <field name="team_id" invisible="1"/>
             </field>
@@ -938,6 +985,9 @@
             	<field name="document_review" attrs="{'required':[('stage_id','=',17)], 'readonly':[('stage_id','!=',17)]}"/>
                 <field name="assessment_date" attrs="{'required':[('stage_id','=',12)], 'readonly':[('stage_id','!=',12)]}"/>
             </field>
+            <field name="tag_ids" position="after">
+            	<field name="creation_date" readonly="1"/>
+            </field>
         </field>
     </record>
     
@@ -958,57 +1008,57 @@
            	       	</group>
            	       	
            	       	<group string="Part I. Application Information" col="4" colspan="4">
-           	       		<field name="name_applicant"/>
-           	       		<field name="applicant_rep_title"/>
+           	       		<field name="name_applicant" readonly="True"/>
+           	       		<field name="applicant_rep_title" readonly="True"/>
            	       	</group>
            	       	<group col="4" colspan="4">
-           	       	<field name="laboratory_legal_name"/>
+           	       	<field name="laboratory_legal_name" readonly="True"/>
            	       	
            	       	<label for="laboratory_address" string="Laboratory Address"/>
            	       	<div class="o_address_format">
-                        <field name="lab_number" placeholder="Number..." class="o_address_street"/>
-                        <field name="lab_street" placeholder="Street..." class="o_address_street"/>
-                        <field name="lab_city" placeholder="City" class="o_address_city"/>
-                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
-                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                        <field name="lab_number" placeholder="Number..." class="o_address_street" readonly="True"/>
+                        <field name="lab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+                        <field name="lab_city" placeholder="City" class="o_address_city" readonly="True"/>
+                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
                     </div>
                     
-           	       	<field name="telephone_number"/>
-           	       	<field name="email_address"/>
+           	       	<field name="telephone_number" readonly="True"/>
+           	       	<field name="email_address" readonly="True"/>
            	       	
            	       	<label for="mailing_address" string="Mailing Address"/>
            	       	<div class="o_address_format">
-                        <field name="mail_number" placeholder="Number..." class="o_address_street"/>
-                        <field name="mail_street" placeholder="Street..." class="o_address_street"/>
-                        <field name="mail_city" placeholder="City" class="o_address_city"/>
-                        <field name="mail_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
-                        <field name="mail_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                        <field name="mail_number" placeholder="Number..." class="o_address_street" readonly="True"/>
+                        <field name="mail_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+                        <field name="mail_city" placeholder="City" class="o_address_city" readonly="True"/>
+                        <field name="mail_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+                        <field name="mail_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
                     </div>
            	       	
            	       	</group>
            	    	<group>
            	    	<field name="account">
            	    		<tree editable="True">
-           	    			<field name="contact_name"/>
-		           	       	<field name="telephone"/>
-		           	       	<field name="email"/>
-		           	       	<field name="alternate_email"/>
+           	    			<field name="contact_name" readonly="True"/>
+		           	       	<field name="telephone" readonly="True"/>
+		           	       	<field name="email" readonly="True"/>
+		           	       	<field name="alternate_email" readonly="True"/>
            	    		</tree>
            	    	</field>
-           	    		<field name="name_address_of_owners"/>
+           	    		<field name="name_address_of_owners" readonly="True"/>
            	    	</group>
            	    	
            	    	<notebook>
            	    		<page string="Type &amp; Size of Laboratory:">
 	           	    		<group>
-	           	    		<field name="testing_lab"/>
-	           	    		<field name="calibration_lab"/>
-	           	    		<field name="med_lab"/>
+	           	    		<field name="testing_lab" readonly="True"/>
+	           	    		<field name="calibration_lab" readonly="True"/>
+	           	    		<field name="med_lab" readonly="True"/>
 	           	    		</group>
 	           	    		<group string="Size of Laboratory (the number of tests being carried out)">
-	           	    			<field name="tertiary_level_lab"/>
-		           	    		<field name="secondary_level_lab"/>
-		           	    		<field name="primary_level_lab"/>
+	           	    			<field name="tertiary_level_lab" readonly="True"/>
+		           	    		<field name="secondary_level_lab" readonly="True"/>
+		           	    		<field name="primary_level_lab" readonly="True"/>
 	           	    		</group>
            	    		</page>
            	    		<page string="Tests">
@@ -1035,29 +1085,29 @@
            	    		
            	    		<field name="test">
 	           	    		<tree editable="True">
-		           	    		<field name="test_name"/>
-		           	    		<field name="test_method"/>
+		           	    		<field name="test_name" readonly="True"/>
+		           	    		<field name="test_method" readonly="True"/>
 	           	    		</tree>
            	    		</field>
            	    		
            	    		<group>
-	           	    		<field name="lab_capabilities" placeholder="Please enter a brief description of the types of other tests or calibrations that the laboratory currently conducts which you do not plan to include on your scope of accreditation at this time"/>
-	           	    		<field name="num_of_lab_staff" placeholder="Please enter the total number of laboratory personnel, including those who may conduct testing work off-site."/>
+	           	    		<field name="lab_capabilities" placeholder="Please enter a brief description of the types of other tests or calibrations that the laboratory currently conducts which you do not plan to include on your scope of accreditation at this time" readonly="True"/>
+	           	    		<field name="num_of_lab_staff" placeholder="Please enter the total number of laboratory personnel, including those who may conduct testing work off-site." readonly="True"/>
            	    		</group>
            	    		</page>
            	    		<page string="Agreement">
            	    			<group col="4" colspan="4">
-           	    			<field name="signed_by_authorized_rep"/>
-           	    			<field name="place_sign"/>
-           	    			<field name="place_date"/>
+           	    			<field name="signed_by_authorized_rep" readonly="True"/>
+           	    			<field name="place_sign" readonly="True"/>
+           	    			<field name="place_date" readonly="True"/>
            	    			</group>
            	    			<group>
-           	    				<field name="print_name_below"/>
+           	    				<field name="print_name_below" readonly="True"/>
            	    			</group>
            	    			<group col="6" colspan="3">
-           	    				<field name="telephone"/>
-           	    				<field name="fax"/>
-           	    				<field name="email"/>
+           	    				<field name="telephone" readonly="True"/>
+           	    				<field name="fax" readonly="True"/>
+           	    				<field name="email" readonly="True"/>
            	    			</group>
            	    			<span>I have read, I understand and I agree with the information provided in the Guide for Laboratories Applying to NiNAS for Accreditation, and agrees that the laboratory</span><br/>
                             <span>a) commit to fulfill continually the requirements for accreditation for the scope for which accreditation is sought or granted and commit to provide evidence of fulfillment. This includes agreement to adapt to changes in the requirements for accreditation;</span><br/>
