@@ -318,7 +318,7 @@
             
             <xpath expr="//h2" position="before">
             	<div class="container">
-            	<ul class="wizard pull-middle hidden-xs">
+            	<!-- <ul class="wizard pull-middle hidden-xs">
 			            <li t-att-class="(step==10 and 'text-primary') or 'text-muted'" id="step10">
 			                Application Information<span class="chevron"></span>
 			            </li>
@@ -331,7 +331,7 @@
 			            <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
 			                Confirmation<span class="chevron"></span>
 			            </li>
-		       		 </ul><br/><br/>
+		       		 </ul><br/><br/>-->
 	            	<h1 class="text-center">NIGERIA NATIONAL ACCREDITATION SERVICE</h1>
 					<h3 class="text-center">F 072A APPLICATION FOR ACCREDITATION OF TESTING, CALIBRATION OR MEDICAL
 											LABORATORY ISO/IEC 17025 &amp; ISO 15189</h3>
@@ -800,12 +800,6 @@
                         <div class="navbar-brand">Accreditation</div>
                     </div>
             </xpath>
-            
-             <!-- <xpath expr="//a[@t-attf-href='/helpdesk/#{slug(tteam)}']" position="replace">
-                 	<a t-attf-href="/accreditation/#{slug(tteam)}">
-	                     <span t-field="tteam.name"/>
-	                 </a>
-            </xpath> -->
             
             <xpath expr="//t[@t-set='additional_title']" position="replace">
 	         	<t t-set="additional_title">Accreditation</t>
