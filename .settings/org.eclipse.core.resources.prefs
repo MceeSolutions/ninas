@@ -1,4 +1,10 @@
 eclipse.preferences.version=1
+encoding//muk_web_preview/__init__.py=utf-8
+encoding//muk_web_preview/__manifest__.py=utf-8
+encoding//muk_web_preview_attachment/__init__.py=utf-8
+encoding//muk_web_preview_attachment/__manifest__.py=utf-8
+encoding//muk_web_preview_attachment/models/__init__.py=utf-8
+encoding//muk_web_preview_attachment/models/ir_attachment.py=utf-8
 encoding//ninas_payroll/__manifest__.py=utf-8
 encoding//ninas_payroll/models/hr_payslip.py=utf-8
 encoding//ninas_toolkits/__manifest__.py=utf-8

@@ -15,6 +15,16 @@
 		<field name="domain">[]</field>
 		<field name="context">{}</field>
 	</record>
+	
+	<!-- Car Report attachment action-->
+    <record model="ir.actions.act_window" id="ninas_car_report_attachment_action">
+		<field name="name">Car Report Attachment</field>
+		<field name="res_model">car.report.attachment</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
     
     <!-- checklist ticket action-->
     <record model="ir.actions.act_window" id="ninas_checklist_ticket_action">
@@ -58,6 +68,41 @@
         </field>
     </record>
     
+    <!-- <record id="ninas_action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_invoice')]</field>
+            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a customer invoice.
+              </p><p>
+                Odoo's electronic invoicing allows to ease and fasten the
+                collection of customer payments. Your customer receives the
+                invoice by email and he can pay online and/or import it
+                in his own system.
+              </p><p>
+                The discussions with your customer are automatically displayed at
+                the bottom of each invoice.
+              </p>
+            </field>
+        </record>-->
+        
+         <record id="ninas_action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban,calendar,graph,pivot</field>
+            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="domain">[('type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
+            <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
+    
     <record id="ninas_helpdesk_view_form_view" model="ir.ui.view">
         <field name="name">helpdesk.ticket.form</field>
         <field name="model">helpdesk.ticket</field>
@@ -66,8 +111,9 @@
         <field name="arch" type="xml">
            <xpath expr="//button[@name='assign_ticket_to_self']" position="before">
                 	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',1)]}"/>
-                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" />
-                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',12)]}"/>
+                	<!-- <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" />
+                	 -->
+                	 <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':[('stage_id','!=',12)]}"/>
 			</xpath>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="replace">
            			<button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" attrs="{'invisible':[('stage_id','!=',5)]}"/>
@@ -84,12 +130,15 @@
                 	<button type="object" name="button_assessment" string="Submit" attrs="{'invisible':[('stage_id','!=',12)]}" class="btn btn-primary"/>
 					<button type="object" name="button_car" string="Assessment Done?" attrs="{'invisible':[('stage_id','!=',11)]}"/>
                 	<button type="object" name="button_decision_making" string="CAR Sent / Approved" attrs="{'invisible':[('stage_id','!=',13)]}"/>
+                	<button type="object" name="button_awaiting_approval" string="Send Decision Package" attrs="{'invisible':[('stage_id','!=',16)]}"/>
+                	<button type="object" name="button_approved_app" string="CEO Approval" attrs="{'invisible':[('stage_id','!=',20)]}" class="btn btn-success"/>
+                	<button type="object" name="button_reject_app" string="CEO Reject" attrs="{'invisible':[('stage_id','!=',20)]}" class="btn btn-danger"/>
                 	
                 	
-                	<button type="object" name="button_awaiting_approval" string="Next Stage" attrs="{'invisible':[('stage_id','!=',16)]}"/>
-                	<button type="object" name="button_approved_app" string="Next Stage" attrs="{'invisible':[('stage_id','!=',20)]}"/>
-                	<button type="object" name="button_pending_closure" string="Next Stage" attrs="{'invisible':[('stage_id','!=',21)]}"/>
-                	<button type="object" name="button_closed" string="Close Application?" class="btn btn-primary" attrs="{'invisible':[('stage_id','!=',18)]}"/>
+                	<!-- <button type="object" name="button_pending_closure" string="Next Stage" attrs="{'invisible':[('stage_id','!=',21)]}"/>
+                	 -->
+                	<button type="object" name="button_closed" string="Close Application?" class="btn btn-warning" attrs="{'invisible':[('stage_id','!=',18)]}"/>
+                	<button type="object" name="button_reset_app" string="Ready For Review" class="btn btn-primary" attrs="{'invisible':[('stage_id','!=',18)]}"/>
 			</xpath>
 			<xpath expr="//button[@name='toggle_active']" position="before">
 		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
@@ -98,6 +147,9 @@
                <button type="object" class="oe_stat_button" name="open_customer_invoices" icon="fa-pencil-square-o">
                    <field string="Invoices" name="invoice_count" widget="statinfo"/>
                </button>
+               <!--<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_action_invoice_tree1)d" icon="fa-pencil-square-o">
+                   <field string="Invoices" name="invoice_count" widget="statinfo"/>
+               </button>-->
                <button type="action" class="oe_stat_button" name="%(ninasmain.ninas_car_report_action)d" icon="fa-folder">
                    <field string="C.A.R Report" name="car_count" widget="statinfo"/>
                </button>
@@ -108,6 +160,35 @@
            </field>
     </record>
     
+    
+    
+    <!-- car.report.attachment  tree view-->
+    <record id="car_report_attachment_tree_view" model="ir.ui.view">
+		<field name="name">car.report.attachment.tree</field>
+		<field name="model">car.report.attachment</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="name"/>
+            <field name="attachment_description"/>
+		</field>
+	</record>
+
+    <record id="car_report_attachment_form_view" model="ir.ui.view">
+    <field name="name">car.report.attachment.form</field>
+    <field name="model">car.report.attachment</field>
+    <field name="priority" eval="2"/>
+    <field name="arch" type="xml">
+        <form string="Car Report Attachment">
+			 <sheet>
+			    <group string="Attachments" col="4" colspan="4">
+			    	<field name="name"/>
+                    <field name="attachment_description"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+			    </group>
+			 </sheet>
+        </form>
+    </field>
+    </record>
     
         <!-- checklist.ticket  tree view-->
     <record id="checklist_ticket_tree_view" model="ir.ui.view">
@@ -168,6 +249,11 @@
     <field name="arch" type="xml">
         <form string="Car Report">
 			 <sheet>
+               	<div class="oe_button_box" name="button_box">
+                    <button type="action" class="oe_stat_button" name="%(ninasmain.ninas_car_report_attachment_action)d" icon="fa-folder">
+                   		<field string="Attachments" name="attachment_count" widget="statinfo"/>
+               		</button>
+                </div>
 			 	<group col="4" colspan="4">
 			 		<field name="name"/>
 					<field name="ref_no"/>
@@ -203,19 +289,34 @@
     </record>
 	  	
 	<template id="ninas_website_helpdesk_form_ticket_submit" inherit_id="website_helpdesk_form.ticket_submit">
+            <!-- <xpath expr="//div[hasclass('row')]" position="replace">
+           		 <div class="navbar-header">
+                        <div class="navbar-brand">Accreditation</div>
+                    </div>
+            </xpath> -->
             
             <xpath expr="//h2" position="before">
-            	<h1 class="text-center">NIGERIA NATIONAL ACCREDITATION SERVICE</h1>
-				<h3 class="text-center">F 072A APPLICATION FOR ACCREDITATION OF TESTING, CALIBRATION OR MEDICAL
-										LABORATORY ISO/IEC 17025 &amp; ISO 15189</h3>
-				<h4 class="text-left">Confidentiality Policy</h4>
-				<h5 class="container">According to the NiNAS Code of Conduct: All NiNAS Assessors, Staff and Committee members are required to keep
-				information about your application confidential. Following a successful accreditation, the only information published by
-				NiNAS will be your accredited scope and contact details. NiNAS may be required by law to share other information or may
-				publish information that is already in the public domain.</h5>
-				<strong>
-					Part I. Application Information
-				</strong><br/>
+            	<div class="container">
+            	<ul class="wizard pull-middle hidden-xs">
+			            <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
+			                Payment<span class="chevron"></span>
+			            </li>
+			            <li t-att-class="(step==50 and 'text-primary') or 'text-muted'" id="step50">
+			                Confirmation<span class="chevron"></span>
+			            </li>
+		       		 </ul><br/><br/>
+	            	<h1 class="text-center">NIGERIA NATIONAL ACCREDITATION SERVICE</h1>
+					<h3 class="text-center">F 072A APPLICATION FOR ACCREDITATION OF TESTING, CALIBRATION OR MEDICAL
+											LABORATORY ISO/IEC 17025 &amp; ISO 15189</h3>
+					<h4 class="text-left">Confidentiality Policy</h4>
+					<h5 class="container">According to the NiNAS Code of Conduct: All NiNAS Assessors, Staff and Committee members are required to keep
+					information about your application confidential. Following a successful accreditation, the only information published by
+					NiNAS will be your accredited scope and contact details. NiNAS may be required by law to share other information or may
+					publish information that is already in the public domain.</h5>
+					<strong>
+						Part I. Application Information
+					</strong>
+				</div>
 			</xpath>
 			
 			<xpath expr="//label[@for='partner_name']" position="replace">
@@ -228,7 +329,7 @@
 		                  <label class="control-label" for="applicant_rep_title">Authorized Representative’s Title</label>
 		              </div>
 		              <div class="col-md-7 col-sm-8">
-		              	<select name="applicant_rep_title">
+		              	<select class="form-control o_website_form_input" name="applicant_rep_title">
 							  <option value="mr">Mr.</option>
 							  <option value="ms">Ms.</option>
 							  <option value="mrs">Mrs.</option>
@@ -259,8 +360,28 @@
                      <div class="col-md-3 col-sm-4 text-right">
                          <label class="control-label" for="laboratory_address">Laboratory Address (Number and Street, City, State and Country)</label>
                      </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="laboratory_address" required="1"/>
+                     <div class="col-md-1 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="lab_number" required="1" placeholder="Number"/>
+                     </div>
+                     <div class="col-md-3 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="lab_street" required="1" placeholder="Street"/>
+                     </div>
+                     <div class="col-md-3 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="lab_city" required="1" placeholder="City"/>
+                     </div><br/><br/>
+                     <div class="col-md-3 col-sm-4">
+                         <select class="form-control" name="lab_state_id">
+						     <t t-foreach="lab_state_id" t-as="lab_state_id">
+						          <option t-attf-value="#{lab_state_id.id}"><t t-esc="lab_state_id.name"/></option>
+						     </t>
+						 </select>
+                     </div>
+                     <div class="col-md-4 col-sm-4">
+                         <select class="form-control" name="lab_country_id">
+						     <t t-foreach="lab_country_id" t-as="lab_country_id">
+						          <option t-attf-value="#{lab_country_id.id}"><t t-esc="lab_country_id.name"/></option>
+						     </t>
+						 </select>
                      </div>
                  </div>
                  
@@ -282,13 +403,34 @@
                      </div>
                  </div>
                  
-                 <div class="form-group form-field o_website_form_required">
+                 <div class="form-group form-field">
                      <div class="col-md-3 col-sm-4 text-right">
                          <label class="control-label" for="mailing_address">Mailing Address (if different from the laboratory location – Number, Street, City, State, Country)</label>
                      </div>
-                     <div class="col-md-7 col-sm-8">
-	                       <textarea class="form-control o_website_form_input" name="mailing_address"/>
-	                   </div>
+                	 <div class="col-md-1 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="mail_number" required="1" placeholder="Number"/>
+                     </div>
+                     <div class="col-md-3 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="mail_street" required="1" placeholder="Street"/>
+                     </div>
+                     <div class="col-md-3 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="mail_city" required="1" placeholder="City"/>
+                     </div><br/><br/>
+                     <div class="col-md-3 col-sm-4">
+                         <select class="form-control" name="mail_state_id">
+						     <t t-foreach="mail_state_id" t-as="mail_state_id">
+						          <option t-attf-value="#{mail_state_id.id}"><t t-esc="mail_state_id.name"/></option>
+						     </t>
+						 </select>
+                     </div>
+                     <div class="col-md-4 col-sm-4">
+                         <select class="form-control" name="mail_country_id">
+                         	<option value="">Country...</option>
+						     <t t-foreach="mail_country_id" t-as="mail_country_id">
+						          <option t-attf-value="#{mail_country_id.id}"><t t-esc="mail_country_id.name"/></option>
+						     </t>
+						 </select>
+                     </div>
                  </div>
                  
                   <!-- <div class="form-group form-field o_website_form_custom">
@@ -356,7 +498,7 @@
                  
                  <div class="form-group form-field">
                      <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="secondary_level_lab">Secondary level lab 11-20 Tests</label>
+                         <label class="control-label" for="secondary_level_lab">Secondary level lab (11-20 Tests)</label>
                      </div>
                      <div class="col-md-1 col-sm-1">
                          <input type="checkbox" class="form-control o_website_form_input" name="secondary_level_lab"/>
@@ -466,7 +608,7 @@
                          <label class="control-label" for="email_address">Signed by Authorized Representative:</label>
                      </div>
                      <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="signed_by_authorized_rep" required="1"/>
+                         <input type="text" class="form-control o_website_form_input" name="signed_by_authorized_rep" t-att-value="default_values.get('name', '')" required="1"/>
                      </div>
                  </div>
                  
@@ -474,19 +616,13 @@
                      <div class="col-md-3 col-sm-4 text-right">
                          <label class="control-label" for="email_address">Place and date:</label>
                      </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="place_and_date" required="1"/>
+                     <div class="col-md-4 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="place_sign" required="1"/>
+                     </div>
+                     <div class="col-md-3 col-sm-4">
+                         <input type="date" class="form-control o_website_form_input" name="place_date" required="1"/>
                      </div>
                  </div> 
-                 
-                 <div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="email_address">Print Name below:</label>
-                     </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="print_name_below" required="1"/>
-                     </div>
-                 </div>
                  
                  <div class="form-group form-field o_website_form_required">
                      <div class="col-md-3 col-sm-4 text-right">
@@ -497,7 +633,7 @@
                      </div>
                  </div>
                  
-                 <div class="form-group form-field o_website_form_required">
+                 <div class="form-group form-field">
                      <div class="col-md-3 col-sm-4 text-right">
                          <label class="control-label" for="fax">Fax</label>
                      </div>
@@ -515,6 +651,21 @@
                      </div>
                  </div>
                  
+                 <div class="form-group form-field o_website_form_required">
+		              <div class="col-md-3 col-sm-4 text-right">
+		                  <label class="control-label" for="funding">Funding</label>
+		              </div>
+		              <div class="col-md-7 col-sm-8">
+		              	<select class="form-control o_website_form_input" name="funding">
+							  <option value="not_funded">Not Funded</option>
+							  <option value="partly_funded">Partly Funded</option>
+							  <option value="fully_funded">Fully Funded</option>
+						</select>
+		              </div>
+		          </div>
+	          
+	          <div class="container">
+	          
                  <span>I have read, I understand and I agree with the information provided in the <strong>Guide for Laboratories Applying to NiNAS for Accreditation,</strong> and agrees that the laboratory</span><br/>
                             <span>a) commit to fulfill continually the requirements for accreditation for the scope for which accreditation is sought or granted and commit to provide evidence of fulfillment. This includes agreement to adapt to changes in the requirements for accreditation;</span><br/>
                             <span>b) cooperate as is necessary to enable the accreditation body to verify fulfillment of requirements for accreditation;</span><br/>
@@ -542,7 +693,14 @@
            	    				<span>☐	A list of all equipment used to support the tests or calibrations including in-house (i.e. equipment calibrations that your lab perform) and external calibrations (i.e. those that an external calibration laboratory performs), and rented/borrowed equipment.</span><br/>
            	    				<span>☐	For Calibration Applicants Only:  a sample of a calibration certificate which you laboratory issues and uncertainty calculations that support the Measurement Uncertainties to be claimed on your scope of accreditation.</span><br/>
            	    </p>
-           	    
+           	    <div class="form-group form-field o_website_form_custom">
+                	<div class="col-md-3 col-sm-4 text-right">
+                 		<label class="control-label" for="attachments">Attachments</label>
+	               </div>
+	               <div class="col-md-7 col-sm-8">
+	                 <input type="file" class="form-control o_website_form_input" name="attachments" required="1" multiple=""/>
+	               </div>
+	          </div>
            	  <p>
            	  	<strong>
            	  		Mailing/Emailing Instructions
@@ -567,57 +725,9 @@
 	           	  	Questions?: Please direct them to: <a href="https://www.ninas.ng">Applications@NiNAS.ng</a> or call: +234 (0) 81 7976 4868
 	           	  </strong>
            	  </p>
-                 
+           	</div> 
        		</xpath>
             
-            <xpath expr="//div[hasclass('form-group')]" position="before">
-            
-            	<div class="form-group form-field o_website_form_required">
-		              <div class="col-md-3 col-sm-4 text-right">
-		                  <label class="control-label" for="assessment_type">Assessment Type</label>
-		              </div>
-		              <div class="col-md-7 col-sm-8">
-		              	<select class="form-control" name="assessment_type_id">
-						     <t t-foreach="assessment_type_id" t-as="assessment_type">
-						          <option t-attf-value="#{assessment_type.id}"><t t-esc="assessment_type.name"/></option>
-						     </t>
-						 </select>
-		              </div>
-		          </div>
-           		
-           		<div class="form-group form-field o_website_form_required">
-		              <div class="col-md-3 col-sm-4 text-right">
-		                  <label class="control-label" for="funding">Funding</label>
-		              </div>
-		              <div class="col-md-7 col-sm-8">
-		              	<select name="funding">
-							  <option value="not_funded">Not Funded</option>
-							  <option value="partly_funded">Partly Funded</option>
-							  <option value="fully_funded">Fully Funded</option>
-						</select>
-		              </div>
-		          </div>
-		          
-		          d
-           		
-           		<div class="form-group form-field o_website_form_custom">
-                	<div class="col-md-3 col-sm-4 text-right">
-                 		<label class="control-label" for="attachments">Attachments</label>
-	               </div>
-	               <div class="col-md-7 col-sm-8">
-	                 <input type="file" class="form-control o_website_form_input" name="attachments" required="1" multiple=""/>
-	               </div>
-	          </div> 
-	          
-	          <!-- <div class="form-group form-field o_website_form_custom">
-                	<div class="col-md-3 col-sm-4 text-right">
-                 		<label class="control-label" for="attachment_id">Attachment two</label>
-	               </div>
-	               <div class="col-md-7 col-sm-8">
-	                 <input type="file" class="form-control o_website_form_input" name="attachment_id" required="1"/>
-	               </div>
-	          </div>  -->
-            </xpath>
             
         <xpath expr="//t[@t-set='additional_title']" position="replace">
 	         	<t t-set="additional_title">Applications</t>
@@ -710,7 +820,7 @@
 	        </xpath>
    		</template>
         
-        <!-- function -->
+        <!-- parsing function -->
         
         <function model="ir.model.fields" name="formbuilder_whitelist">
         <value>helpdesk.ticket</value>
@@ -729,11 +839,11 @@
             'telephone_number',
             'email_address',
             'mailing_address',
-            'account',
-            'name_address_of_owners',
+            'account','lab_number','lab_street','lab_city','lab_state_id','lab_country_id',
+            'name_address_of_owners','mail_number','mail_street','mail_city','mail_state_id','mail_country_id',
             'testing_lab','calibration_lab','med_lab',
             'tertiary_level_lab','secondary_level_lab','primary_level_lab',
-            'lab_capabilities','num_of_lab_staff','signed_by_authorized_rep','place_and_date',
+            'lab_capabilities','num_of_lab_staff','signed_by_authorized_rep','place_sign','place_date',
             'print_name_below','telephone','email','fax'
         ]"/>
     </function>
@@ -772,8 +882,10 @@
 	        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_kanban"/>
 	        <field name="arch" type="xml">
 	            <xpath expr="//kanban[hasclass('o_kanban_small_column')]" position="attributes">
+	                <attribute name="edit">0</attribute>
 	                <attribute name="quick_create">0</attribute>
 	                <attribute name="group_create">0</attribute>
+	                <attribute name="options">{'edit':False}</attribute>
 	            </xpath>
 	            
 	        </field>
@@ -816,9 +928,11 @@
             </field>
             <field name="user_id" position="after">
                 <field name="lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',5)], 'readonly':[('resources_available','=',False)]}"/>
+           		<field name="tech_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'readonly':[('resources_available','=',False)]}"/>
+            	<field name="ac_members" widget="many2many_tags" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}"/>
             </field>
             <field name="deadline" position="after">
-                <field name="re_assessment_date" attrs="{'required':[('stage_id','=',21)], 'invisible':[('stage_id','!=',21)]}"/>
+                <field name="re_assessment_date" attrs="{'required':[('stage_id','=',20)], 'readonly':[('stage_id','!=',20)]}"/>
             </field>
             <field name="priority" position="after">
             	<field name="document_review" attrs="{'required':[('stage_id','=',17)], 'readonly':[('stage_id','!=',17)]}"/>
@@ -833,7 +947,7 @@
             <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
             <field name="arch" type="xml">
                <xpath expr="//sheet" position="after">
-                	<sheet>
+                	<sheet readonly="True">
            	    	<group string="Confidentiality Policy">	
 	           	    	<span>
 	                        According to the NiNAS Code of Conduct: All NiNAS Assessors, Staff and Committee members are required to keep
@@ -934,7 +1048,8 @@
            	    		<page string="Agreement">
            	    			<group col="4" colspan="4">
            	    			<field name="signed_by_authorized_rep"/>
-           	    			<field name="place_and_date"/>
+           	    			<field name="place_sign"/>
+           	    			<field name="place_date"/>
            	    			</group>
            	    			<group>
            	    				<field name="print_name_below"/>

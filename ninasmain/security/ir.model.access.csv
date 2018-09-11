@@ -44,3 +44,4 @@ access_ninas_assessment_plan,ninas.assessment_plan,model_ninas_assessment_plan,b
 access_ninas_assessment_plan_activity,ninas.assessment.plan.activity,model_ninas_assessment_plan_activity,base.group_user,1,1,1,0
 access_ninas_decision_form,ninas.decision_form,model_ninas_decision_form,base.group_user,1,1,1,0
 access_ninas_appraisal,ninas.appraisal,model_ninas_appraisal,base.group_user,1,1,1,0
+access_car_report_attachment,car.report.attachment,model_car_report_attachment,base.group_user,1,1,1,0

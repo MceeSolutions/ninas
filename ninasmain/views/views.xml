@@ -1131,7 +1131,7 @@
 			<field name="arch" type="xml">
 				<form string="Code Of Conduct">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
 		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
 		        	</header>
@@ -1536,7 +1536,7 @@
 		<field name="arch" type="xml">
 			<tree>
 				<field name="employee_id"/>
-				<field name="employee"/>
+				<field name="employee_code"/>
 				<field name="purpose"/>
 				<field name="date"/>
 				<field name="total"/>
@@ -1553,7 +1553,7 @@
 				<sheet>
 					<group col="4" colspan="2">
 						<field name="employee_id"/>
-						<field name="employee"/>
+						<field name="employee_code"/>
 						<field name="date"/>
 					</group>
 					<group col="2" colspan="2">
@@ -1604,7 +1604,7 @@
 						<field name="org"/>
 						<field name="today"/>
 						<field name="location"/>
-						<field name="la"/>
+						<field name="la" domain="[('category_ids.is_assessor','=',True)]"/>
 					</group>
 					<notebook>
 						<page string= 'Opening Agenda'>
@@ -1801,6 +1801,7 @@
 			<form string="Assessment Form">
 				<sheet>
 					<separator string="Initial / Re-Assessment Plan"/>
+					<group><field name="application_id"/></group>
 					<group col="4" colspan="2">
 						<field name="reference_number"/>
 						<field name="organisation"/>
@@ -1809,8 +1810,8 @@
 						<field name="telephone"/>
 						<field name="company_rep"/>
 						<field name="assessment_date"/>
-						<field name="lead_assessor"/>
-						<field name="technical_assessor"/>
+						<field name="lead_assessor" domain="[('category_ids.is_assessor','=',True)]"/>
+						<field name="technical_assessor" domain="[('category_ids.is_assessor','=',True)]"/>
 					</group>
 					<notebook>
 						<page name="day_1" string="Day 1 - LA observed by TTA">
@@ -1877,6 +1878,7 @@
 		<field name="arch" type="xml">
 			<form string="Decision Form">
 				<sheet>
+				<group><field name="application_id"/></group>
 					<group col="4" colspan="2">
 						<field name="institution_name"/>
 						<field name="ref"/>
