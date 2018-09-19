@@ -12,7 +12,7 @@
     'author':'Mcee',               
     'website': 'https://mceesolutions.com',
     'category': 'ninas',
-    'version':'11.0.0.0.49',
+    'version':'11.0.0.0.50',
     'application': True,
     'insatallable': True,
     'auto-install': True,
@@ -32,6 +32,8 @@
         'views/stock_view.xml',
         'views/hr_views.xml',
         'views/application_form.xml',
+        'report/ninas_conflict_interest_report_template.xml',
+        'report/ninas_conflict_interest_report.xml',
         'views/views.xml'
         ],
     'css':[],

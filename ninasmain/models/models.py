@@ -1225,7 +1225,7 @@ class Confidentiality(models.Model):
         track_visibility='onchange')
     
     name = fields.Char(
-        string='Name of Institution or Persone:',required=True)
+        string='Name of Institution or Person:',required=True)
     location = fields.Char(
         string='Location',required=True)
     name_rep = fields.Char(

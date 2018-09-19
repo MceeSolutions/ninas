@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<report
+	id="action_ninas_conflict_interest_report"
+	model="ninas.conflict.interest"
+	string="Conflict of Interest"
+	report_type="qweb-pdf"
+	name="ninasmain.ninas_conflict_interest_report"
+	file="ninasmain.ninas_conflict_interest_report"
+	print_report_name="'%s - %s %s' %(object.name, object.location, object.printed_name)"
+	/>
+</odoo>

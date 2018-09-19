@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="ninas_conflict_interest_report">
+		<t t-call="web.html_container">
+			<t t-foreach="docs" t-as="student">
+			<t t-call="web.external_layout">
+			
+			<div class="page">
+			
+				<tabel class="table table-condensed">
+					<tr>
+						<td>
+						Name of Institution:<span t-field="student.name"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+						Name of Rep:<span t-field="student.printed_name"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+						Location:<span t-field="student.location"/>
+						</td>
+					</tr>
+				</tabel>
+				
+			</div>
+			
+			</t>
+			
+			</t>
+		</t>
+	</template>
+</odoo>

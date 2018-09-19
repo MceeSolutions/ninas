@@ -794,7 +794,7 @@
 	        <field name="sequence" type="int">50</field>
     	</record>
         
-        <template id="ninas_accreditation_team" inherit_id="website_helpdesk.team">
+        <template id="ninas_team" inherit_id="website_helpdesk.team">
             <xpath expr="//div[hasclass('navbar-header')]" position="replace">
            		 <div class="navbar-header">
                         <div class="navbar-brand">Accreditation</div>
