@@ -42,8 +42,39 @@ class WebsiteHelpdesk(http.Controller):
         # For breadcrumb index: get all team
         result['teams'] = teams
         return request.render("website_helpdesk.team", result)
+'''    
+class WebForms(http.Controller):
+    @http.route('/ninas/codeofconduct', auth="public", website=True)
+    def index(self, **kw):
+        name = http.request.env['hr.employee'].sudo().search([])
+        Sections = http.request.env['ninas.code.conduct']
+        return http.request.render("ninasmain.index", {
+            'sections':Sections.search([])})
     
-    
+    @http.route('/test/path', type='http', methods=['POST'], auth="public", website=True, csrf=False)
+    def test_path(self, **kw):
+        #here in kw you can get the inputted value
+        print (kw['name'])
+        
+    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
+    def website_form(self, model_name, **kwargs):
+        return super(WebForms, self).website_form(model_name, **kwargs)
+'''
+        
+class WebForms(http.Controller):
+
+    @http.route('/ninas/codeofconduct', type='http', auth="public", website=True)
+    def index(self, **kw):
+        name = http.request.env['hr.employee'].sudo().search([])
+        return http.request.render("ninasmain.index",{ 'name':name})
+
+class WebsiteForm(WebsiteForm):
+
+    # Check and insert values from the form on the model <model>
+    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
+    def index(self, model_name, **kwargs):
+        return super(WebsiteForm, self).website_form(model_name, **kwargs)
+
 """
 
 from odoo import http

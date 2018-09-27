@@ -15,4 +15,5 @@ encoding//ninasmain/models/helpdesk.py=utf-8
 encoding//ninasmain/models/models.py=utf-8
 encoding//ninasmain/models/stock.py=utf-8
 encoding//ninasmain/report/__init__.py=utf-8
+encoding//ninasmain/report/ninas_code_conduct_report.py=utf-8
 encoding//ninasmain/report/ninas_conflict_interest_report.py=utf-8

@@ -1140,17 +1140,17 @@ class CodeofConduct(models.Model):
         string='I have read and concur with NiNAS’s Code of Conduct (Sections 1-7).',
         required=True
         )
-    date = fields.Date(
+    date = fields.Char(
         )
-    date_today = fields.Date(
+    date_today = fields.Char(
         )
     description = fields.Text(
         )
     name = fields.Many2one(
         comodel_name='hr.employee',
         string='Employee Printed name:',
-        readonly=True)
-    date_signed = fields.Date(
+        readonly=False)
+    date_signed = fields.Char(
         string='Date',
         readonly=True)
 

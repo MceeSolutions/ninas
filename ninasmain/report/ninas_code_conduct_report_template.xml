@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="ninas_code_conduct_report">
+		<t t-call="web.html_container">
+			<t t-foreach="docs" t-as="student">
+			<t t-call="web.external_layout">
+			
+			<div class="page">
+				<center>
+					NiNAS CODE OF CONDUCT-SECTION 8: EMPLOYEE AGREEMENT
+				</center><br/>
+				
+				<tabel class="table table-condensed">
+					<tr>
+						<td>
+						Agreement:<span t-field="student.agreement"/>
+						<br/>
+						<p>
+							I have read and concur with NiNAS’s Code of Conduct (Sections 1-7).
+						</p>
+						<p>
+							I understand that I must comply with the expectations outlined within these Sections of the Code in performing my duties and activities 
+							on behalf of NiNAS, and that failure to do so may result in disciplinary action or termination. 
+						</p>
+						<p>
+							<span t-field="student.date"/>as of the date this form was signed, I do not have any actual or potential conflicts of interest as defined by Section 3 of this Code. If any actual or
+						</p>
+						<p>
+							<span t-field="student.date_today"/>potential conflict(s) of interest arise after signing this form, I agree to divulge them immediately to the NiNAS CEO or the Chair of NiNAS.
+							as of the date this form was signed, the following actual or potential conflict(s) of interest exist and are detailed below (attached separate pages as necessary).
+							If other actual or potential conflict(s) of interest arise after completing this form, I agree to divulge them immediately to the NiNAS CEO or the Chair of Board of Directors of NiNAS.
+						</p>
+						</td>
+					</tr><br/>
+					<tr>
+						<td>
+						Employee Printed name:<span t-field="student.name"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+						Date:<span t-field="student.date_signed"/>
+						</td>
+					</tr>
+				</tabel>
+				
+			</div>
+			
+			</t>
+			
+			</t>
+		</t>
+	</template>
+</odoo>
