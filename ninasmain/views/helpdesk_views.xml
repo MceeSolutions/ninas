@@ -162,6 +162,34 @@
     
     
     
+    <!-- mobile.app.attachment  tree view-->
+    <record id="mobile_app_attachment_tree_view" model="ir.ui.view">
+		<field name="name">mobile.app.attachment.tree</field>
+		<field name="model">mobile.app.attachment</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="name"/>
+            <field name="attachment_description"/>
+		</field>
+	</record>
+
+    <record id="mobile_app_attachment_form_view" model="ir.ui.view">
+    <field name="name">mobile.app.attachment.form</field>
+    <field name="model">mobile.app.attachment</field>
+    <field name="priority" eval="2"/>
+    <field name="arch" type="xml">
+        <form string="Mobile App Attachment">
+			 <sheet>
+			    <group string="Attachments" col="4" colspan="4">
+			    	<field name="name"/>
+                    <field name="attachment_description"/>
+                    <field name="attachment_image" widget="image"/>
+			    </group>
+			 </sheet>
+        </form>
+    </field>
+    </record>
+    
     <!-- car.report.attachment  tree view-->
     <record id="car_report_attachment_tree_view" model="ir.ui.view">
 		<field name="name">car.report.attachment.tree</field>
@@ -980,7 +1008,20 @@
                 <field name="assessment_date" attrs="{'required':[('stage_id','=',12)], 'readonly':[('stage_id','!=',12)]}"/>
             </field>
             <field name="tag_ids" position="after">
-            	<field name="creation_date" readonly="1"/>
+            	<field name="creation_date" readonly="1"/>            	
+            </field>
+            <field name="description" position="after">
+            	<notebook>
+	            	<page string="Mobile App Attachments">
+	            		<field name="mobile_app_attachment_ids">
+		            		<tree editable="True">
+		            			<field name="name" required="1"/>
+		            			<field name="attachment_description" required="1"/>
+		            			<field name="attachment_image" required="1"/>
+		            		</tree>
+		            	</field>
+	            	</page>
+            	</notebook>            	
             </field>
         </field>
     </record>
@@ -1175,8 +1216,19 @@
 		<field name="domain">[]</field>
 		<field name="context">{}</field>
 	</record>
+	
+	<!-- assessment type action -->
+    <record model="ir.actions.act_window" id="mobile_app_attachment_action">
+		<field name="name">Mobile App Attechments</field>
+		<field name="res_model">mobile.app.attachment</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
     
   <menuitem name="Assesment Type" id="ninas_assessment_type" parent="helpdesk.helpdesk_menu_config" action="ninas_assessment_type_action"/>
+  <menuitem name="Mobile App Attachment" id="mobile_app_attachment" parent="helpdesk.helpdesk_menu_config" action="mobile_app_attachment_action"/>
         
   </data>
 </odoo>

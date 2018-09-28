@@ -165,6 +165,13 @@ class Accreditation(models.Model):
         string='Email',
         track_visibility='onchange')
     
+    mobile_app_attachment_ids = fields.One2many(
+        comodel_name = 'mobile.app.attachment',
+        inverse_name = 'ticket_id',
+        string='Mobile App Attachment',
+        track_visibility='onchange',
+        help='Attachments from the NiNAS Mobile app will be seen and accessible from here')
+    
 class Accounts(models.Model):
     _name = 'application.account'
     
@@ -515,6 +522,16 @@ class CarReportAttachment(models.Model):
     attachment_description = fields.Char(string='Attachment Description')
     attachment_ids = fields.Many2many(
         comodel_name='ir.attachment',
+        string='Attachment')
+    
+class MobileAppAttachment(models.Model):
+    _name = 'mobile.app.attachment'
+    
+    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
+    name = fields.Char(string='Attachment Name')
+    attachment_description = fields.Char(string='Attachment Description')
+    attachment_image = fields.Binary(
+        attachment=True, store=True,
         string='Attachment')
     
     
