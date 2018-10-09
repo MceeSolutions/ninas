@@ -10,6 +10,7 @@ from odoo import api, fields, models
 #from gevent._ssl3 import name
 #from plainbox.impl.unit import file
 from ast import literal_eval
+from odoo.exceptions import ValidationError, Warning
 
 class Accreditation(models.Model):
     _inherit = 'helpdesk.ticket'
@@ -42,6 +43,7 @@ class Accreditation(models.Model):
     
     resources_available = fields.Boolean(string='Resources Available?', track_visibility='onchange')
     checklist_sent = fields.Boolean(string='Review Checklist Filled?', track_visibility='onchange')
+    checklist_id = fields.Many2one(comodel_name='checklist.ticket', string='Review Checklist Filled?', track_visibility='onchange')
     conflict_agreement = fields.Boolean(string='contract Agreement?', readonly=True, track_visibility='onchange')
     confidentiality_agreement = fields.Boolean(string='confidentiality Agreemnt?', readonly=True, track_visibility='onchange')
     preassessment_needed = fields.Boolean(string='pre-assessment Needed?', track_visibility='onchange')
@@ -220,7 +222,7 @@ class CreateInvoice(models.Model):
         track_visibility='always')
     
     invoice_count = fields.Integer(compute="_invoice_count", string="Invoices", store=False)
-    checklist_count = fields.Integer(compute="_checklist_count",string="Checklist")
+    checklist_count = fields.Integer(compute="_checklist_count",string="Checklist", store=False)
     car_count = fields.Integer(compute="_car_count",string="C.A.R")
     
     @api.multi
@@ -239,7 +241,7 @@ class CreateInvoice(models.Model):
     def _checklist_count(self):
         oe_checklist = self.env['checklist.ticket']
         for pa in self:
-            domain = [('ticket_id', '=', pa.id)]
+            domain = [('partner_id', '=', pa.partner_id.id)]
             pres_ids = oe_checklist.search(domain)
             pres = oe_checklist.browse(pres_ids)
             checklist_count = 0
@@ -247,6 +249,7 @@ class CreateInvoice(models.Model):
                 checklist_count+=1
             pa.checklist_count = checklist_count
         return True
+    
     
     @api.multi
     def _car_count(self):
@@ -333,8 +336,6 @@ class CreateInvoice(models.Model):
             'domain':[('type','=','out_invoice')],
             'context': {'search_default_partner_id': self.partner_id.id}
         }
-    
-
         
     @api.multi
     def button_confirm_sponsor(self):
@@ -357,14 +358,20 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def action_resources_available(self):
-        self.write({'resources_available': True})
-        self.write({'stage_id': 9})
+        if self.resources_available == False:
+            raise Warning('You must set Assessment Team And Lead Assessor!')
+        else:
+            self.write({'resources_available': True})
+            self.write({'stage_id': 9})
         return {}
     
     @api.multi
     def action_checklist_sent(self):
-        self.write({'checklist_sent': True})
-        self.write({'stage_id': 10})
+        if self.checklist_count == 0:
+            raise Warning('You must review the CheckList First!')
+        else:
+            self.write({'checklist_sent': True})
+            self.write({'stage_id': 10})
         return {}
     
     

@@ -46,7 +46,7 @@
         <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                Click create a new ticket.
+                Click create a new Application.
             </p>
         </field>
     </record>
@@ -122,9 +122,9 @@
                 	<button type="object" name="button_confirm_sponsor" string="Confirm Sponsor/Proceed" attrs="{'invisible':[('stage_id','!=',1)]}"/>
                 	<button type="object" name="button_complete_approve" string="Approve" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-primary"/>
                 	<button type="object" name="button_complete_reject" string="Reject" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-danger"/>
-                	<button type="object" name="action_resources_available" string="Resource Available" attrs="{'invisible':[('stage_id','!=',5)]}"/>
-                	<button type="object" name="action_checklist_sent" string="Checklist Filled?" attrs="{'invisible':[('stage_id','!=',9)]}"/>
-                	<button type="object" name="button_assessor_agreement" string="Contract Agreements Signed" attrs="{'invisible':[('stage_id','!=',10)]}"/>
+                	<button type="object" name="action_resources_available" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary"/>
+                	<button type="object" name="action_checklist_sent" string="PROCEED" attrs="{'invisible':[('stage_id','!=',9)]}" class="btn btn-primary"/>
+                	<button type="object" name="button_assessor_agreement" string="PROCEED" attrs="{'invisible':[('stage_id','!=',10)]}" class="btn btn-primary"/>
                 	<button type="object" name="button_ready_assessment" string="Proceed" attrs="{'invisible':[('stage_id','!=',17)]}"/>
 					<button type="object" name="button_assessment_plan" string="Ready" attrs="{'invisible':[('stage_id','!=',19)]}" class="btn btn-primary"/>                	
                 	<button type="object" name="button_assessment" string="Submit" attrs="{'invisible':[('stage_id','!=',12)]}" class="btn btn-primary"/>
