@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="gateway_config_form_view" model="ir.ui.view">
+            <field name="name">gateway.config.form</field>
+            <field name="model">gateway.config</field>
+            <field name="arch" type="xml">
+                <form string="Gateway Config">
+                    <sheet>
+                        <group col="2" colspan="4">
+                            <field name="name"/>
+                            <field name="url"/>
+                            <field name="access_code"/>
+                            <field name="username"/>
+                            <field name="password"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>  
+
+        <record id="gateway_config_tree_view" model="ir.ui.view">
+            <field name="name">gateway.config.tree</field>
+            <field name="model">gateway.config</field>
+            <field name="arch" type="xml">
+                <tree string="Gateway Config">
+                    <field name="name"/>
+                    <field name="url"/>
+                </tree>
+            </field>
+        </record>  
+	
+	
+	    <record model="ir.actions.act_window" id="gateway_config_action">
+            <field name="name">Gateway Config</field>
+            <field name="res_model">gateway.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem name="Payment Gateway" id="gateway_config_menu" parent="base.next_id_9" action="gateway_config_action"/>
+
+    </data>
+</odoo>
