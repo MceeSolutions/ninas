@@ -8,9 +8,12 @@
     'sequence': 38,
     'website': '',
     'depends': [
-        'ninas_payroll',
+        'ninas_payroll','account_accountant','account',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'security/gateway_security.xml',
         'views/gateway_view.xml',
+        'views/partner.xml',
     ],
 }
