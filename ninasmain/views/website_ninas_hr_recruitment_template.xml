@@ -14,7 +14,7 @@
             </xpath>
             
             <!-- Step 1 - personal and contact information -->
-            <xpath expr="//div[@class='form-group form-field o_website_form_required_custom']" position="before">
+            <xpath expr="//div[hasclass('form-group', 'form-field', 'o_website_form_required_custom')]" position="before">
                 <div class="form-group form-field o_website_form_custom">
                     <div class="col-md-3 col-sm-4 text-right">
                         <label class="control-label" for="job_discovery">How did you hear about this post</label>
@@ -29,7 +29,7 @@
                 </div>
             </xpath>
 
-            <xpath expr="//div[@class='form-group form-field o_website_form_required_custom']" position="replace">
+            <xpath expr="//div[hasclass('form-group', 'form-field', 'o_website_form_required_custom')]" position="replace">
                 <div class="form-group form-field o_website_form_required_custom">
                     <div class="col-md-3 col-sm-4 text-right">
                         <label class="control-label" for="partner_first_name">First Name</label>
@@ -50,7 +50,7 @@
             <xpath expr="//label[@for='partner_phone']" position="replace">
                 <label class="control-label" for="partner_phone">Home</label>
             </xpath>
-            <xpath expr="//div[@class='form-group form-field']" position="before">
+            <xpath expr="//div[hasclass('form-group', 'form-field')]" position="before">
                 <div class="form-group form-field o_website_form_custom">
                     <div class="col-md-3 col-sm-4 text-right">
                         <label class="control-label" for="partner_mobile">Mobile</label>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </xpath>
-            <xpath expr="//div[@class='form-group form-field']" position="before">
+            <xpath expr="//div[hasclass('form-group', 'form-field')]" position="before">
                 <div class="form-group form-field o_website_form_custom">
                     <div class="col-md-3 col-sm-4 text-right">
                         <label class="control-label" for="partner_work">Work</label>
@@ -70,7 +70,7 @@
                     </div>
                 </div>
             </xpath>
-            <xpath expr="//div[@class='form-group form-field']" position="before">
+            <xpath expr="//div[hasclass('form-group', 'form-field')]" position="before">
                 <div class="form-group form-field o_website_form_required">
                     <div class="col-md-3 col-sm-4 text-right">
                         <label class="control-label" for="mode_of_contact">Preferred Contact</label>
@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </xpath>
-            <xpath expr="//div[@class='form-group form-field']" position="before">
+            <xpath expr="//div[hasclass('form-group', 'form-field')]" position="before">
                 <div class="form-group form-field o_website_form_required_custom">
                     <div class="col-md-3 col-sm-4 text-right">
                         <label class="control-label" for="partner_address">Address</label>
@@ -104,7 +104,7 @@
             </xpath>
 
             <!-- Step 2 - referees -->
-            <xpath expr="//div[@class='form-group form-field']" position="before">
+            <xpath expr="//div[hasclass('form-group', 'form-field')]" position="before">
                 <div class="form-group form-field o_website_form_required_custom">
                     <div class="col-md-3 col-sm-4 text-right">
                         <label class="control-label" for="referee1">Referee (Name)</label>
@@ -153,7 +153,7 @@
                 </div>
             </xpath>
 
-            <xpath expr="//div[@class='form-group form-field']" position="before">
+            <xpath expr="//div[hasclass('form-group', 'form-field')]" position="before">
                 <div class="form-group form-field o_website_form_required_custom">
                     <div class="col-md-3 col-sm-4 text-right">
                         <label class="control-label" for="referee2">Referee (Name)</label>
