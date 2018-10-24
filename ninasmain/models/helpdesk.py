@@ -7,6 +7,8 @@ import datetime
 
 from datetime import date, timedelta
 from odoo import api, fields, models
+from datetime import *
+from dateutil.relativedelta import *
 #from gevent._ssl3 import name
 #from plainbox.impl.unit import file
 from ast import literal_eval
@@ -14,6 +16,8 @@ from odoo.exceptions import ValidationError, Warning
 
 class Accreditation(models.Model):
     _inherit = 'helpdesk.ticket'
+    
+    current_date = date.today() + relativedelta(years=2)
     
     attachment_ids = fields.Many2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'helpdesk.ticket')], string='Attachments')
 
@@ -37,7 +41,7 @@ class Accreditation(models.Model):
     ac_members= fields.Many2many(comodel_name='hr.employee',
                                  string='AC Members')
     
-    re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
+    re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange', default=current_date)
     
     creation_date = fields.Date(default = date.today() , string='Application Date')
     
@@ -50,6 +54,7 @@ class Accreditation(models.Model):
     document_review = fields.Selection([('yes', 'Yes.')],
                                        string='Document(s) Reviewed?', track_visibility='onchange')
     assessment_date = fields.Date(string='Assessment Date', track_visibility='onchange')
+    
     
     #Application Form Sheet
     name_applicant = fields.Char(

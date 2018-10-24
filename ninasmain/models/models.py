@@ -345,18 +345,64 @@ class TravelAccount(models.Model):
     
     
 class Hrrecruitment(models.Model):
-    _name = 'ninas.hr.recruitment'
-    _description = 'NiNAS HR Recruitment'
+    # _name = 'ninas.hr.recruitment'
+    # _description = 'NiNAS HR Recruitment'
     _inherit = 'hr.applicant'
 
     name = fields.Char(string='Application ID')
-    first_name = fields.Char(string='First Name')
-    last_name = fields.Char(string='Last Name')
-    address = fields.Char(string='Address')
-    job_discovery = fields.Selection([('',''),('newspaper','Newspaper'),('website', 'Website'), ('word of mouth','Word of Mouth')],
-        string='How did you hear about this post or where did you see it advertised:',
-        default='',
+    
+    partner_first_name = fields.Char(string='First Name', required=0)
+    partner_last_name = fields.Char(string='Last Name', required=0)
+    #partner_phone
+    #partner_mobile
+    partner_work = fields.Char(string='Work', required=0)
+    mode_of_contact = fields.Selection([('home','Home'),('mobile','Mobile'),('work','Work')], 
+        string="Preferred mode of contact",
         track_visibility='onchange')
+    partner_address = fields.Char(string='Address')
+    partner_sub_address = fields.Char(string='Where are you living now if not at this address')
+
+    job_discovery = fields.Selection([('newspaper','Newspaper'),('website', 'Website'), ('word of mouth','Word of Mouth')],
+        string='How did you hear about this post',
+        track_visibility='onchange')
+
+    referee1 = fields.Char(string="Referee")
+    referee1_position = fields.Char(string="Referee Position")
+    referee1_email = fields.Char(string="Referee Email")
+    ref1_contact_before_interview = fields.Selection([('no','No'),('yes', 'Yes')],
+        string='May we contact this person before your interview')
+    ref1_contact_before_offer = fields.Selection([('no','No'),('yes', 'Yes')],
+        string='May we contact this person before your offer')
+    
+    referee2 = fields.Char(string="Referee")
+    referee2_position = fields.Char(string="Referee Position")
+    referee2_email = fields.Char(string="Referee Email")
+    ref2_contact_before_interview = fields.Selection([('no','No'),('yes', 'Yes')],
+        string='May we contact this person before your interview')
+    ref2_contact_before_offer = fields.Selection([('no','No'),('yes', 'Yes')],
+        string='May we contact this person before your offer')
+
+    last_position = fields.Char(string="Position Held / Job Title")
+    employer_name = fields.Char(string="Employer Name (organisation, company, etc")
+    employed_from = fields.Char(string="Date Employed From", readonly=1)
+    employed_to = fields.Char(string="Date Employed To", readonly=1)
+    previous_work_address = fields.Char(string="Address or Work Location")
+    reason_for_leaving = fields.Char(string="Reason for leaving / wanting to leave")
+    notice_period = fields.Char(string="How much notice must you give your present employer")
+    main_responsibilities = fields.Char(string="Describe your main responsibilities")
+
+    prev_employment_ids = fields.One2many(comodel_name='ninas.prev.employment',
+        inverse_name='prev_employment_id')
+
+class PreviousEmployment(models.Model):
+    _name = 'ninas.prev.employment'
+
+    prev_employment_id = fields.Many2one(comodel_name='hr.applicant')
+    job_title = fields.Char(string="Position Held / Job Title")
+    prev_emp_name = fields.Char(string="Employer Name (organisation, company, etc")
+    emp_from = fields.Char(string="Date Employed From", readonly=1)
+    emp_to = fields.Char(string="Date Employed To", readonly=1)
+    leaving = fields.Char(string="Reason for leaving / wanting to leave")
 
 class ConsRecpted(models.Model):
     _name = 'month.consumable'

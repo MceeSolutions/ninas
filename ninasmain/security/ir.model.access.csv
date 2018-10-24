@@ -46,3 +46,4 @@ access_ninas_decision_form,ninas.decision_form,model_ninas_decision_form,base.gr
 access_ninas_appraisal,ninas.appraisal,model_ninas_appraisal,base.group_user,1,1,1,0
 access_car_report_attachment,car.report.attachment,model_car_report_attachment,base.group_user,1,1,1,0
 access_mobile_app_attachment,mobile.app.attachment,model_mobile_app_attachment,base.group_user,1,1,1,0
+access_ninas_prev_employment,ninas.prev.employment,model_ninas_prev_employment,base.group_user,1,1,1,0

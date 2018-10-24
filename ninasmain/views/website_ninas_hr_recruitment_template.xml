@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- job application Form -->
+        <template id="ninas_report_header_custom" inherit_id="website_hr_recruitment.apply">
+            <xpath expr="//h1" position="replace">
+                <h1 class="text-center">Recruitment Form</h1>
+            </xpath>
+            <xpath expr="//h1" position="after">
+                <h4 class="text-center">Please send your completed form to hr@ninas.ng</h4>
+                <h5 class="text-center">Please note CV will not be accepted</h5>
+                <div class="text-center">Job Reference/Vacancy ID: "job_id" </div>
+                <field name="job_discovery"/>
+            </xpath>
+            
+            <!-- Step 1 - personal and contact information -->
+            <xpath expr="//div[@class='form-group form-field o_website_form_required_custom']" position="before">
+                <div class="form-group form-field o_website_form_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="job_discovery">How did you hear about this post</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <select name="job_discovery">
+                                <option value="newspaper">Newspaper</option>
+                                <option value="website">Website</option>
+                                <option value="word_of_mouth">Word of Mouth</option>
+                        </select>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[@class='form-group form-field o_website_form_required_custom']" position="replace">
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="partner_first_name">First Name</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="partner_name" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="partner_last_name">Last Name</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="partner_last_name" required=""/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='partner_phone']" position="replace">
+                <label class="control-label" for="partner_phone">Home</label>
+            </xpath>
+            <xpath expr="//div[@class='form-group form-field']" position="before">
+                <div class="form-group form-field o_website_form_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="partner_mobile">Mobile</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="partner_mobile" required=""/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@class='form-group form-field']" position="before">
+                <div class="form-group form-field o_website_form_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="partner_work">Work</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="partner_work" required=""/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@class='form-group form-field']" position="before">
+                <div class="form-group form-field o_website_form_required">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="mode_of_contact">Preferred Contact</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <select name="mode_of_contact">
+                                <option value="home">Home</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="work">Work</option>
+                        </select>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@class='form-group form-field']" position="before">
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="partner_address">Address</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="partner_address" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="partner_sub_address">Where are you living now if not at this address</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="partner_sub_address" required=""/>
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- Step 2 - referees -->
+            <xpath expr="//div[@class='form-group form-field']" position="before">
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="referee1">Referee (Name)</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="referee1" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="referee1_position">Position</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="referee1_position" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="referee1_email">Email</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="referee1_email" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="ref1_contact_before_interview">May we contact this person before your interview</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <select name="ref1_contact_before_interview">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="ref1_contact_before_offer">May we contact this person before your offer</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <select name="ref1_contact_before_offer">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[@class='form-group form-field']" position="before">
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="referee2">Referee (Name)</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="referee2" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="referee2_position">Position</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="referee2_position" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="referee2_email">Email</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="referee2_email" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="ref2_contact_before_interview">May we contact this person before your interview</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <select name="ref2_contact_before_interview">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="ref2_contact_before_offer">May we contact this person before your offer</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <select name="ref2_contact_before_offer">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 3 - most_recent_employment -->
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="last_position">Most Recent Position Held</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="last_position" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="employer_name">Employer Name (Organisation, Company, etc.)</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="employer_name" required=""/>
+                    </div>
+                </div>
+        
+                <div class="form-group form-field o_website_form_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="employed_from">Date Employed From</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="date" class="form-control o_website_form_input" name="employed_from" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="employed_to">Date Employed To</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="date" class="form-control o_website_form_input" name="employed_to" required=""/>
+                    </div>
+                </div>
+
+                <div class="form-group form-field o_website_form_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="previous_work_address">Address</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="previous_work_address" required=""/>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_required_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="reason_for_leaving">Reason For Leaving / Wanting to Leave</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <textarea class="form-control o_website_form_input" name="reason_for_leaving"></textarea>
+                    </div>
+                </div>
+                <div class="form-group form-field o_website_form_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="notice_period">How much notice must you give your present employer</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="notice_period" required=""/>
+                    </div>
+                </div>
+
+                <!-- Step 4 - previous_employment -->
+                <div class="form-group form-field o_website_form_custom">
+                    <div class="col-md-3 col-sm-4 text-right">
+                        <label class="control-label" for="notice_period">How much notice must you give your present employer</label>
+                    </div>
+                    <div class="col-md-7 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="notice_period" required=""/>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <!-- parsing function -->
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>hr.applicant</value>
+            <value eval="[
+                'description',
+                'email_from',
+                'partner_name','partner_first_name','partner_last_name',
+                'partner_phone','partner_mobile','partner_work','mode_of_contact','job_discovery',
+                'job_id',
+                'department_id',
+                'partner_first_name','partner_last_name','partner_work','partner_address', 'partner_sub_address',
+                'referee1','referee1_position','referee1_email','ref1_contact_before_interview','ref1_contact_before_offer',
+                'referee2','referee2_position','referee2_email','ref2_contact_before_interview','ref2_contact_before_offer',
+                'last_position','employer_name','previous_work_address','reason_for_leaving','notice_period'
+            ]"/>
+        </function>
+
+    </data>
+</odoo>

@@ -136,66 +136,74 @@
         </field>
     </record>
     
-	<!-- template 
-	<template id="ninas_report_header_custom" inherit_id="website_hr_recruitment.apply">
-            <xpath expr="//div" position="after">
-                <div class="col-md-3 col-sm-4 text-right">
-                    <label class="control-label" for="name">First Name</label>
-                </div>
-            </xpath>
-        </template>
-	-->
-	
-	<!-- Job Application Form 
-	<template id="ninas_report_header_custom" inherit_id="website_hr_recruitment.apply">
-		<xpath expr="//h1" position="replace">
-            <h1 class="text-center">Recruitment Form</h1>
-        </xpath>
-		<xpath expr="//h1" position="after">
-			<h4 class="text-center">Please send your completed form to hr@ninas.ng</h4>
-			<h5 class="text-center">Please note CV will not be accepted</h5>
-			<div class="text-center">Job Reference/Vacancy ID: "job_id" </div>
-			<group col="4" colspan="2">
+	<!-- job application form-->
+		<record id="ninas_hr_recruitment_form_view" model="ir.ui.view">
+		<field name="name">ninas.hr.recruitment.form</field>
+		<field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
+		<field name="arch" type="xml">
+			<field name="partner_id" position="before">
 				<field name="job_discovery"/>
-			</group>
-		</xpath>
-		<xpath expr="//div[@class='form-group form-field o_website_form_required_custom']" position="replace">
-			<div class="form-group form-field o_website_form_required_custom">
-				<div class="col-md-3 col-sm-4 text-right">
-					<label class="control-label" for="first_name">Name</label>
-				</div>
-				<div class="col-md-7 col-sm-8">
-					<input type="text" class="form-control o_website_form_input" name="first_name" required=""/>
-				</div>
-			</div>
-			<div class="form-group form-field o_website_form_required_custom">
-				<div class="col-md-3 col-sm-4 text-right">
-					<label class="control-label" for="address">Address</label>
-				</div>
-				<div class="col-md-7 col-sm-8">
-					<input type="text" class="form-control o_website_form_input" name="address" required=""/>
-				</div>
-			</div>
-		</xpath>
-		<xpath expr="//div[@class='form-group form-field o_website_form_custom']" position="after">
-			<div class="form-group form-field o_website_form_custom">
-				<div class="col-md-3 col-sm-4 text-right">
-					<label class="control-label" for="Resume">Other Attachments</label>
-				</div>
-				<div class="col-md-7 col-sm-8">
-					<input type="file" class="form-control o_website_form_input" name="other_attachments"/>
-				</div>
-			</div>
-		</xpath>
-		<xpath expr="//div[@class='form-group']" position="replace">
-			<div class="form-group">
-				<div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-					<span class="btn btn-primary btn-lg o_website_form_send">Next</span>
-					<span id="o_website_form_result"></span>
-				</div>
-			</div>
-		</xpath>
-    </template>-->
+			</field>
+			<field name="partner_id" position="replace">
+				<field name="partner_first_name"/>
+				<field name="partner_last_name"/>
+			</field>
+			<field name="partner_mobile" position="after">
+				<field name="partner_work"/>
+				<field name="mode_of_contact"/>
+			</field>
+			<field name="user_id" position="after">
+				<field name="partner_address"/>
+				<field name="partner_sub_address"/>
+			</field>
+			<sheet>
+				<notebook>
+					<page name="referees" string="Referees">
+						<separator string="Referee 1"/>
+						<group col="4" colspan="4">
+							<field name="referee1"/>
+							<field name="referee1_position"/>
+							<field name="referee1_email"/>
+							<field name="ref1_contact_before_interview"/>
+							<field name="ref1_contact_before_offer"/>
+						</group>
+						<separator string="Referee 2"/>
+						<group col="4" colspan="4">
+							<field name="referee2"/>
+							<field name="referee2_position"/>
+							<field name="referee2_email"/>
+							<field name="ref2_contact_before_interview"/>
+							<field name="ref2_contact_before_offer"/>
+						</group>
+					</page>
+					<page name="previous_employment" string="Previous Employment">
+						<separator string="Present or Last Post"/>
+						<group col="4" colspan="4">
+							<field name="last_position"/>
+							<field name="employer_name"/>
+							<field name="employed_from"/>
+							<field name="employed_to"/>
+							<field name="previous_work_address"/>
+							<field name="reason_for_leaving"/>
+							<field name="notice_period"/>
+							<field name="main_responsibilities"/>
+						</group>
+						<separator string="Previous employment or relevant voluntary work (put the most recent first)"/>
+						<field name="prev_employment_ids">
+							<tree editable="True">
+								<field name="job_title"/>
+								<field name="prev_emp_name"/>
+								<field name="emp_from"/>
+								<field name="emp_to"/>
+								<field name="leaving"/>
+							</tree>
+						</field>
+					</page>
+				</notebook>
+			</sheet>
+		</field>
+	</record>
 	
 	
     <!-- Loan Request action-->          
