@@ -15,5 +15,6 @@
         'security/gateway_security.xml',
         'views/gateway_view.xml',
         'views/partner.xml',
+        'views/sequence.xml',
     ],
 }

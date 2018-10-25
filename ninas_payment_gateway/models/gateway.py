@@ -53,7 +53,7 @@ class BankTransfer(models.Model):
 
     amount = fields.Float(string='Amount', required=True, track_visibility='onchange')
     payment_date = fields.Date(string='Payment Date', default=lambda *a: time.strftime("%Y-%m-%d"), required=True, track_visibility='onchange')
-    name = fields.Char(string='Reference', track_visibility='onchange', required=True)
+    name = fields.Char(string='Reference', track_visibility='onchange', required=True, copy=False)
     remarks = fields.Char(string='Remarks', track_visibility='onchange')
     vendor_code = fields.Char(related='partner_id.code', string='Vendor Code', store=True, track_visibility='onchange')
     partner_id = fields.Many2one(comodel_name='res.partner', string='Partner', track_visibility='onchange')
@@ -61,10 +61,14 @@ class BankTransfer(models.Model):
     partner_bank = fields.Many2one(comodel_name='ninas.bank',string='Bank', track_visibility='onchange')
     vendor_acctnumber = fields.Char(string='Vendor Account Number', track_visibility='onchange')
     vendor_bankcode = fields.Char(related='partner_bank.sort_code', string='Vendor Bank Code', store=True, track_visibility='onchange')
-    state = fields.Selection(TRANSFER_STATUS,string='Status',track_visibility='onchange', default='outgoing')
-    log_ids = fields.One2many(comodel_name='ninas.bank.transfer.logs', inverse_name='bank_transfer_id', string='Log(s)')
+    state = fields.Selection(TRANSFER_STATUS,string='Status',track_visibility='onchange', default='outgoing', copy=False)
+    log_ids = fields.One2many(comodel_name='ninas.bank.transfer.logs', inverse_name='bank_transfer_id', string='Log(s)', copy=False)
 
-
+    @api.model
+    def create(self, values):
+        values['name'] = self.env['ir.sequence'].next_by_code('ninas.bank.transfer')
+        return super(BankTransfer, self).create(values)
+    
     @api.multi
     def mark_outgoing(self):
         self.write({'state':'outgoing'})
@@ -99,13 +103,13 @@ class BankTransfer(models.Model):
                             </fil:TransactionRequery>
                         </soapenv:Body>
                         </soapenv:Envelope>"""%(tr, accesscode,username,password)
-            print(body)
+            #print(body)
             
             headers = {'content-type': 'text/xml'}
                     
         response = requests.post(url,data=body,headers=headers)
         message = code = False
-        print(response.text)
+        #print(response.text)
         if response.status_code == 200:            
             soup = BeautifulSoup(response.text, "lxml")
             try:
@@ -117,7 +121,7 @@ class BankTransfer(models.Model):
                 message = e
         
         for transfer in self:
-            self.env['ninas.bank.transfer.logs'].create({
+            self.env['ninas.bank.transfer.logs'].sudo().create({
                 'status_code':response.status_code,
                 'response':response.text,
                 'message':message,
@@ -257,7 +261,7 @@ class BankTransfer(models.Model):
                 message = e
         
         for transfer in self:
-            self.env['ninas.bank.transfer.logs'].create({
+            self.env['ninas.bank.transfer.logs'].sudo().create({
                 'status_code':response.status_code,
                 'response':response.text,
                 'message':message,
@@ -282,3 +286,82 @@ class BankTransferLogs(models.Model):
     message = fields.Text(string='Message')
     response = fields.Text(string='Full Response')
     bank_transfer_id = fields.Many2one(comodel_name='ninas.bank.transfer', string='Bank Transfer')
+
+
+class AllAccountBalance(models.Model):
+    _name = 'ninas.account.balance'
+    _description = 'NiNAS Account Balances'
+    _order = 'create_date DESC'
+
+    name = fields.Char(string='Reference', required=True)
+    account_number = fields.Char(string='Account Number')
+    code = fields.Char(string='Response Code')
+    message = fields.Char(string='Response Description')
+    count = fields.Char(string='No. of Accounts')
+    balance_line_ids = fields.One2many(comodel_name='ninas.account.balance.lines', inverse_name='balance_id', string='Balance Lines')
+
+    @api.multi
+    def get_balance(self):
+        self.ensure_one()
+        gateway = self.env['gateway.config'].sudo().search([], limit=1)
+        accesscode = gateway.access_code
+        username = gateway.username
+        password = gateway.password
+        url = gateway.url
+        headers = {'content-type': 'text/xml'}
+        hash = hashlib.sha512()
+    
+        if self.account_number:
+            hash.update((accesscode+username+password+self.account_number).encode('utf-8'))
+            hash = hash.hexdigest().upper()
+
+            tr = """<Customerid>%s</Customerid>
+                    <username>%s</username>
+                    <password>%s</password>
+                    <accountnumber>%s</accountnumber>
+                    <hash>%s</hash>"""%(accesscode,username, password, self.account_number, hash)
+            
+            body = """<?xml version="1.0" encoding="utf-8"?>
+                    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                    <soap:Body>
+                        <fil:AccountBalancesRetrieval xmlns="http://tempuri.org/GAPS_Uploader/FileUploader">
+                        <fil:xmlString>%s</fil:xmlString>
+                        </fil:AccountBalancesRetrieval>
+                    </soap:Body>
+                    </soap:Envelope>"""%(tr)
+            
+        else:
+            hash.update((accesscode+username+password).encode('utf-8'))
+            hash = hash.hexdigest().upper()
+
+            tr = """<Customerid>%s</Customerid>
+                    <username>%s</username>
+                    <password >%s</password>
+                    <hash>%s</hash>"""%(accesscode, username, password, hash)
+            
+            body = """<?xml version="1.0" encoding="utf-8"?>
+                    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+                    <soap:Body>
+                        <fil:AllAccountBalancesRetrieval xmlns="http://tempuri.org/GAPS_Uploader/FileUploader">
+                        <fil:xmlString>%s</fil:xmlString>
+                        </fil:AllAccountBalancesRetrieval>
+                    </soap:Body>
+                    </soap:Envelope>"""%(tr)
+            
+        response = requests.post(url,data=body,headers=headers)
+        message = code = False
+        print(body)
+        print(response.text)
+
+
+class AccountBalanceLines(models.Model):
+    _name = 'ninas.account.balance.lines'
+    _description = 'NiNAS Account Balance Lines'
+    _order = 'create_date DESC'
+
+    name = fields.Char(string='Account Number')
+    legder_balance = fields.Monetary(string='Ledger Balance')
+    available_balance = fields.Monetary(string='Available Balance')
+    currency_id = fields.Many2one(comodel_name='res.currency', string='Currency')
+    balance_id = fields.Many2one(comodel_name='ninas.account.balance', string='Balance')
+    hash = fields.Char(string='Hash')

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="transfer_seq_name" model="ir.sequence">
+            <field name="name">Transfer Reference Sequence</field>
+            <field name="code">ninas.bank.transfer</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">NPG/</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="padding">10</field>
+            <field name="implementation">standard</field>
+        </record>
+    </data>
+</odoo>
