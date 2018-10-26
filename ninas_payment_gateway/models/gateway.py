@@ -12,6 +12,15 @@ TRANSFER_STATUS = [
     ('received','Received'),('exception','Transfer Failed'),
     ('cancel','Cancelled')]
 
+def escape(s):
+    s = s.replace("<", "&lt;")
+    s = s.replace(">", "&gt;")
+    #s = s.replace("&", "&amp;")
+    return s
+    
+def filter(s):
+    return re.sub('\s+', '', s)
+
 class GatewayConfig(models.Model):
     _name = 'gateway.config'
     _description = 'Gateway Config'
@@ -53,7 +62,7 @@ class BankTransfer(models.Model):
 
     amount = fields.Float(string='Amount', required=True, track_visibility='onchange')
     payment_date = fields.Date(string='Payment Date', default=lambda *a: time.strftime("%Y-%m-%d"), required=True, track_visibility='onchange')
-    name = fields.Char(string='Reference', track_visibility='onchange', required=True, copy=False)
+    name = fields.Char(string='Reference', track_visibility='onchange', required=False, copy=False)
     remarks = fields.Char(string='Remarks', track_visibility='onchange')
     vendor_code = fields.Char(related='partner_id.code', string='Vendor Code', store=True, track_visibility='onchange')
     partner_id = fields.Many2one(comodel_name='res.partner', string='Partner', track_visibility='onchange')
@@ -86,7 +95,7 @@ class BankTransfer(models.Model):
         url = gateway.url
 
         for transfer in self:
-            tr = self.escape("<TransactionRequeryRequest><TransRef>%s</TransRef></TransactionRequeryRequest>"%(transfer.name))
+            tr = escape("<TransactionRequeryRequest><TransRef>%s</TransRef></TransactionRequeryRequest>"%(transfer.name))
             body = """<?xml version="1.0" encoding="utf-8"?>
                         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:fil="http://tempuri.org/GAPS_Uploader/FileUploader">
                         <soapenv:Header/>
@@ -167,7 +176,7 @@ class BankTransfer(models.Model):
                                  transfer.vendor_bankcode or '',)
             transactions += '</transaction>'
         transactions += '</transactions>'
-        filtered_transactions = self.filter(transactions)
+        filtered_transactions = filter(transactions)
         #print(filtered_transactions)
 
         transfer_request = self.get_transfer_request(filtered_transactions)
@@ -179,7 +188,7 @@ class BankTransfer(models.Model):
 
     def get_transfer_request(self, transactions):   
         gateway = self.env['gateway.config'].sudo().search([], limit=1)
-        transdetails = '<transdetails>%s</transdetails>'%self.escape(transactions)
+        transdetails = '<transdetails>%s</transdetails>'%escape(transactions)
         accesscode = gateway.access_code
         username = gateway.username
         password = gateway.password
@@ -198,14 +207,7 @@ class BankTransfer(models.Model):
             'url':url
         }
     
-    def escape(self, s):
-        s = s.replace("<", "&lt;")
-        s = s.replace(">", "&gt;")
-        #s = s.replace("&", "&amp;")
-        return s
     
-    def filter(self, s):
-        return re.sub('\s+', '', s)
     
     def transfers(self, transfer_request, type):
         url = transfer_request['url']   
@@ -297,6 +299,7 @@ class AllAccountBalance(models.Model):
     account_number = fields.Char(string='Account Number')
     code = fields.Char(string='Response Code')
     message = fields.Char(string='Response Description')
+    response = fields.Char(string='Full Response')
     count = fields.Char(string='No. of Accounts')
     balance_line_ids = fields.One2many(comodel_name='ninas.account.balance.lines', inverse_name='balance_id', string='Balance Lines')
 
@@ -334,23 +337,41 @@ class AllAccountBalance(models.Model):
             hash.update((accesscode+username+password).encode('utf-8'))
             hash = hash.hexdigest().upper()
 
-            tr = """<Customerid>%s</Customerid>
-                    <username>%s</username>
-                    <password >%s</password>
-                    <hash>%s</hash>"""%(accesscode, username, password, hash)
+            tr = escape(""""<Customerid>%s</Customerid>
+                            <username>%s</username>
+                            <password >%s</password>
+                            <hash>%s</hash>"""%(accesscode, username, password, hash))
             
             body = """<?xml version="1.0" encoding="utf-8"?>
                     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
                     <soap:Body>
-                        <fil:AllAccountBalancesRetrieval xmlns="http://tempuri.org/GAPS_Uploader/FileUploader">
-                        <fil:xmlString>%s</fil:xmlString>
-                        </fil:AllAccountBalancesRetrieval>
+                        <AllAccountBalancesRetrieval xmlns="http://tempuri.org/GAPS_Uploader/FileUploader">
+                        <xmlString>%s</xmlString>
+                        </AllAccountBalancesRetrieval>
                     </soap:Body>
                     </soap:Envelope>"""%(tr)
             
         response = requests.post(url,data=body,headers=headers)
         message = code = False
-        print(body)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, "lxml")
+            try:
+                if self.account_number:
+                    singletransfersresult = soup.singletransfersresult.string
+                    result = BeautifulSoup(singletransfersresult, "lxml")
+                else:
+                    allaccountbalancesretrievalresult = soup.allaccountbalancesretrievalresult.string
+                    print(1)
+                    print(allaccountbalancesretrievalresult)
+                    result = BeautifulSoup(allaccountbalancesretrievalresult, "lxml")
+                    print(2)
+                    print(result)
+                code = result.rescode.string
+                message = result.message.string
+            except Exception as e:
+                message = e
+        self.write({'code':code, 'message':message, 'response':response.text})
+        #print(body)
         print(response.text)
 
 

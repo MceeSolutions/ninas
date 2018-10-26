@@ -92,16 +92,16 @@
                     </header>
                     <sheet>
                         <group col="4" colspan="4">
-                            <field name="name" attrs="{'readonly':[('state','!=',['outgoing'])]}"/>
-                            <field name="partner_id" attrs="{'readonly':[('state','!=',['outgoing'])]}"/>
-                            <field name="amount" attrs="{'readonly':[('state','!=',['outgoing'])]}"/>
-                            <field name="payment_date" attrs="{'readonly':[('state','!=',['outgoing'])]}"/>
-                            <field name="remarks" attrs="{'readonly':[('state','!=',['outgoing'])]}"/>
+                            <field name="name" readonly="1"/>
+                            <field name="partner_id" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="amount" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="payment_date" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="remarks" attrs="{'readonly':[('state','!=','outgoing')]}"/>
                             <field name="vendor_code" readonly="1"/>
                             <field name="vendor_name" readonly="1"/>
-                            <field name="partner_bank" attrs="{'readonly':[('state','!=',['outgoing'])]}"/>
-                            <field name="vendor_acctnumber" attrs="{'readonly':[('state','!=',['outgoing'])]}"/>
-                            <field name="vendor_bankcode" readonly="1" attrs="{'readonly':[('state','!=',['outgoing'])]}"/>
+                            <field name="partner_bank" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="vendor_acctnumber" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="vendor_bankcode" readonly="1" attrs="{'readonly':[('state','!=','outgoing')]}"/>
                         </group>
                         <notebook>
                             <page string="Logs">
@@ -196,6 +196,9 @@
                                         </group>
                                     </form>
                                 </field>
+                            </page>
+                            <page string="Response">
+                                <field name="response"/>
                             </page>
                         </notebook>
                     </sheet>
