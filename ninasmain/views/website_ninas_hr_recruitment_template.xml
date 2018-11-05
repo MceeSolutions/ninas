@@ -7,9 +7,7 @@
                 <h1 class="text-center">Recruitment Form</h1>
             </xpath>
             <xpath expr="//h1" position="after">
-                <h4 class="text-center">Please send your completed form to hr@ninas.ng</h4>
-                <h5 class="text-center">Please note CV will not be accepted</h5>
-                <div class="text-center">Job Reference/Vacancy ID: "job_id" </div>
+                <div class="text-center">Job Reference/Vacancy ID:</div>
                 <field name="job_discovery"/>
             </xpath>
             
@@ -20,10 +18,11 @@
                         <label class="control-label" for="job_discovery">How did you hear about this post</label>
                     </div>
                     <div class="col-md-7 col-sm-8">
-                        <select name="job_discovery">
+		              	<select class="form-control o_website_form_input" name="job_discovery">
                                 <option value="newspaper">Newspaper</option>
                                 <option value="website">Website</option>
                                 <option value="word_of_mouth">Word of Mouth</option>
+                                <option value="others">Others</option>
                         </select>
                     </div>
                 </div>
@@ -76,7 +75,7 @@
                         <label class="control-label" for="mode_of_contact">Preferred Contact</label>
                     </div>
                     <div class="col-md-7 col-sm-8">
-                        <select name="mode_of_contact">
+		              	<select class="form-control o_website_form_input" name="mode_of_contact">
                                 <option value="home">Home</option>
                                 <option value="mobile">Mobile</option>
                                 <option value="work">Work</option>
@@ -134,7 +133,7 @@
                         <label class="control-label" for="ref1_contact_before_interview">May we contact this person before your interview</label>
                     </div>
                     <div class="col-md-7 col-sm-8">
-                        <select name="ref1_contact_before_interview">
+		              	<select class="form-control o_website_form_input" name="ref1_contact_before_interview">
                                 <option value="no">No</option>
                                 <option value="yes">Yes</option>
                         </select>
@@ -145,7 +144,7 @@
                         <label class="control-label" for="ref1_contact_before_offer">May we contact this person before your offer</label>
                     </div>
                     <div class="col-md-7 col-sm-8">
-                        <select name="ref1_contact_before_offer">
+		              	<select class="form-control o_website_form_input" name="ref1_contact_before_offer">
                                 <option value="no">No</option>
                                 <option value="yes">Yes</option>
                         </select>
@@ -183,7 +182,7 @@
                         <label class="control-label" for="ref2_contact_before_interview">May we contact this person before your interview</label>
                     </div>
                     <div class="col-md-7 col-sm-8">
-                        <select name="ref2_contact_before_interview">
+		              	<select class="form-control o_website_form_input" name="ref2_contact_before_interview">
                             <option value="no">No</option>
                             <option value="yes">Yes</option>
                         </select>
@@ -194,7 +193,7 @@
                         <label class="control-label" for="ref2_contact_before_offer">May we contact this person before your offer</label>
                     </div>
                     <div class="col-md-7 col-sm-8">
-                        <select name="ref2_contact_before_offer">
+		              	<select class="form-control o_website_form_input" name="ref2_contact_before_offer">
                             <option value="no">No</option>
                             <option value="yes">Yes</option>
                         </select>
@@ -271,6 +270,11 @@
                     </div>
                 </div>
             </xpath>
+            
+            <xpath expr="//input[@name='Resume']" position="replace">
+            	<input type="file" class="form-control o_website_form_input" name="Resume" multiple=""/>
+            </xpath>
+            
         </template>
 
         <!-- parsing function -->

@@ -9,6 +9,7 @@ encoding//ninas_payroll/__manifest__.py=utf-8
 encoding//ninas_payroll/models/hr_payslip.py=utf-8
 encoding//ninas_toolkits/__manifest__.py=utf-8
 encoding//ninas_toolkits/models/toolkit.py=utf-8
+encoding//ninasmain/__init__.py=utf-8
 encoding//ninasmain/__manifest__.py=utf-8
 encoding//ninasmain/models/__init__.py=utf-8
 encoding//ninasmain/models/helpdesk.py=utf-8

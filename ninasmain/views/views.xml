@@ -59,6 +59,7 @@
 				</xpath>
  				
 			 <xpath expr="//page[@name='personal_information']" position="inside">
+
 	             <group string="Fullname" col="4" colspan="4">
 					<field name="name"/>
 					<field name="lname"/>
@@ -79,17 +80,16 @@
 				</group>
              </xpath>
       	
-       <xpath expr="//page[@name='public']" position="inside">
-	             <group col="4" colspan="4">
-					<field name="title"/>
-					<field name="levelof_exp" widget="priority"/>
-					<field name="employee"/>
-					<field name="start_date"/>
-					<field name="salary" widget="monetary"/>
-				</group>
-             </xpath>
-      
-           </field> 
+		       <xpath expr="//page[@name='public']" position="inside">
+			             <group col="4" colspan="4">
+							<field name="title"/>
+							<field name="levelof_exp" widget="priority"/>
+							<field name="employee"/>
+							<field name="start_date"/>
+							<field name="salary" widget="monetary"/>
+						</group>
+		       </xpath>
+          </field> 
 
     </record>    
 	
@@ -129,10 +129,21 @@
                 <field name="assigned_to"/>
             </field>
              <field name="name" position="before">
-                <field name="title"/>
-                <field name="agency"/>
                 <field name="planned_leave"/>
             </field>
+        </field>
+    </record>
+    
+    <!-- Leave Request -->
+	<record id="ninas_view_holiday_allocation_tree" model="ir.ui.view">
+        <field name="name">ninas.hr.allocation.tree</field>
+        <field name="model">hr.holidays</field>
+        <field name="priority" eval="7"/>
+        <field name="inherit_id" ref="hr_holidays.view_holiday_simple"/>
+        <field name="arch" type="xml">
+             <xpath expr="//tree" position="attributes">
+	                <attribute name="default_order">create_date</attribute>
+	            </xpath>
         </field>
     </record>
     
@@ -422,6 +433,16 @@
 	           <field name="domain">[]</field>
 	           <field name="context">{}</field>
 	</record>
+	
+	<!-- vehicle form action -->
+	<record model="ir.actions.act_window" id="ninas_vehicle_request_action">
+	           <field name="name">Vehicle Request Form</field>
+	           <field name="res_model">ninas.vehicle.request</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">tree,form</field>
+	           <field name="domain">[]</field>
+	           <field name="context">{}</field>
+	</record>
         
     <!-- loan request  tree view-->
     <record id="loan_request_tree_view" model="ir.ui.view">
@@ -668,8 +689,8 @@
 			<tree>
 				<field name="name"/>
 				<field name="provider"/>
-				<field name="training_date"/>
-				<field name="duration"/>
+				<field name="training_start_date"/>
+				<field name="training_date_end"/>
 			</tree>
 		</field>
 	</record>
@@ -685,8 +706,8 @@
 						<field name="name"/>
 						<field name="position"/>
 						<field name="provider"/>
-						<field name="training_date"/>
-						<field name="duration"/>
+						<field name="training_start_date"/>
+						<field name="training_date_end"/>
 						<field name="budget"/>
 						<field name="qualification"/>
 						<field name="capability"/>
@@ -762,6 +783,70 @@
 						<field name="employee_name"/>
 						<field name="approved_by"/>
 					</group>
+				</sheet>
+				<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			        </div>
+			</form>
+		</field>
+	</record>
+	
+	<!-- ninas.vehicle.request -->
+	<record model="ir.ui.view" id="ninas_vehicle_request_tree_view">
+		<field name="name">ninas.vehicle.request.tree</field>
+		<field name="model">ninas.vehicle.request</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="time_requires"/>
+				<field name="date_request"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_advance_request_form_view">
+		<field name="name">ninas.vehicle.request.form</field>
+		<field name="model">ninas.vehicle.request</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Vehicle Request Form">
+				<header>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit" groups="ninasmain.group_hr_line_manager"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit" groups="ninasmain.group_hr_line_manager"/>
+        		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+        	</header>
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="name" required="1"/>
+						<field name="time_requires" required="1"/>
+						<field name="date_request" required="1"/>
+						</group>
+						<group>
+							<field name="purpose_requested" required="1"/>
+						</group>
+							<group col="4" colspan="2">
+								<field name="purpose_official" /> 
+								<field name="purpose_personal"/>
+						</group>
+						<group>
+						<field name="address" required="1"/>
+						</group>
+						
+						<notebook>
+							<page string="Authorizing Officer">
+								<group col="4" colspan="2">
+									<field name="vehicle_no"/>
+									<field name="drivers_name"/>
+									<field name="authorized_sign" readonly="1"/>
+									<field name="sign_date" readonly="1"/>
+								</group>
+							</page>
+						</notebook>
 				</sheet>
 				<div class="oe_chatter">
 			             <field name="message_follower_ids" widget="mail_followers"/>
@@ -2052,6 +2137,8 @@
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
     
     <menuitem name="Diesel Consumption" id="ninas_diesel_consumption_menuitem" parent="maintenance.menu_maintenance_title" action="ninas_diesel_consumption_action"/>
+    <menuitem name="Vehicle Request" id="ninas_vehicle_request_menuitem" parent="maintenance.menu_maintenance_title" action="ninas_vehicle_request_action"/>
+
               
    	<menuitem name="Receipt Register" id="register_receipt_menu" parent="stock.menu_stock_root" groups="base.group_system"/>
     <menuitem name="Monthly Consumable Receipt" id="tests_request_menu" parent="register_receipt_menu"

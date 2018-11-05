@@ -14,6 +14,7 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     vendor_tin = fields.Char('TIN')
+    vendor_code = fields.Char('Code/Vendor No.')
 
 class Employee(models.Model):
     _inherit = 'hr.employee'
@@ -51,6 +52,8 @@ class Employee(models.Model):
         ('3', 'Professional')], string='Level Of Expertise',
         default='1')
     
+    employee_tin = fields.Char(string='Employee Tin Number')
+    
     @api.model
     def create(self, vals):
         if vals.get('employee', 'New') == 'New':
@@ -78,6 +81,11 @@ class Holidays(models.Model):
     planned_leave = fields.Selection(
         [('yes','Yes'),('no', 'No')],
         string='Planned Leave')
+    
+    date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+    date_to = fields.Date('End Date', readonly=True, copy=False,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     
     
 class LoanRequest(models.Model):
@@ -362,7 +370,7 @@ class Hrrecruitment(models.Model):
     partner_address = fields.Char(string='Address')
     partner_sub_address = fields.Char(string='Where are you living now if not at this address')
 
-    job_discovery = fields.Selection([('newspaper','Newspaper'),('website', 'Website'), ('word of mouth','Word of Mouth')],
+    job_discovery = fields.Selection([('newspaper','Newspaper'),('website', 'Website'), ('word of mouth','Word of Mouth'), ('others','Others')],
         string='How did you hear about this post',
         track_visibility='onchange')
 
@@ -454,18 +462,19 @@ class TrainingTracker(models.Model):
     position = fields.Char(
         related='name.job_id.name',
         readonly=True,
-        string='Position',
+        string='Position'
         )
-    provider = fields.Char(
+    provider = fields.Many2one(
+        comodel_name = 'res.partner',
         string='Provider',
         required=1
         )
-    training_date = fields.Date(
-        string = 'Training Date'
+    training_date_end = fields.Datetime(
+        string = 'Training End Date'
         )
     #in case training lasts for days/weeks -- else, duration will be set to less than 20 hours
-    start_date = fields.Date(
-        string= 'Start Date'
+    training_start_date = fields.Datetime(
+        string= 'Training Start Date'
         )
     qualification = fields.Char(
         string='Qualification',
@@ -474,11 +483,6 @@ class TrainingTracker(models.Model):
     budget = fields.Many2one(
         comodel_name='account.account',
         string='Expense Account',
-        required=1
-        )
-    duration = fields.Selection(
-        [(i, i) for i in range(20)],
-        string='Duration (hrs)',
         required=1
         )
     unit = fields.Char(
@@ -1996,4 +2000,75 @@ class AppraisalForm(models.Model):
     
     date=fields.Date(
         string='Date')
+    
+class VehicleRequestForm(models.Model):
+    _name='ninas.vehicle.request'
+    _description='vehicle request Form'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    name=fields.Many2one(
+        comodel_name="hr.employee",
+        string='Name')
+    
+    time_requires=fields.Datetime(
+        string='Time Required')
+    
+    date_request=fields.Date(
+        string='Date')
+    
+    purpose_requested=fields.Text(
+        string='Purpose')
+    
+    purpose_official=fields.Boolean(
+        string='Official')
+    
+    purpose_personal=fields.Boolean(
+        string='Personal')
+    
+    address = fields.Text(
+        string='Address')
+    
+    vehicle_no = fields.Char(
+        string='Assigned Vehicle No')
+    
+    drivers_name = fields.Many2one(
+        comodel_name="hr.employee",
+        string='Drivers Name')
+    
+    authorized_sign = fields.Many2one(
+        comodel_name="hr.employee",
+        string='Signature')
+    
+    sign_date = fields.Date(
+        string='Date') 
+    
+    
+    @api.multi
+    def button_reset(self):
+        self.write({'state': 'new'})
+        return {}
+    
+    @api.multi
+    def button_submit(self):
+        self.write({'state': 'submit'})
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'approve'})
+        self.authorized_sign = self._uid
+        self.sign_date = date.today()
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state': 'reject'})
+        return {}
+    
     
