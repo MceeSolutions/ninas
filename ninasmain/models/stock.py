@@ -142,3 +142,17 @@ class PurchaseOrderLine(models.Model):
                 partner_ids.append(partner.id)
             self.order_id.message_post(subject=subject,body=subject,partner_ids=partner_ids)
             
+class Inventory(models.Model):
+    _name = "stock.inventory"
+    _inherit = "stock.inventory"
+    
+    name = fields.Char(
+        'Inventory Reference',
+        readonly=True, required=True, default='New')
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('stock.inventory') or '/'
+        return super(Inventory, self).create(vals)
+            

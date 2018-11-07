@@ -701,6 +701,12 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Employee Training Tracker">
+				<header>
+	        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="new" groups="ninasmain.group_hr_line_manager"/>
+	        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="new" groups="ninasmain.group_hr_line_manager"/>
+	        		<button name="button_approve_lm" string="Approve" type="object" class="btn btn-primary" states="validate"/>
+	        		<field name="state" widget="statusbar" statusbar_visible="new,validate,approve,reject" readonly="1"/>
+	        	</header>
 				<sheet>
 					<group col="4" colspan="2">
 						<field name="name"/>
@@ -2135,6 +2141,8 @@
               action="petty_cash_action"/>
               
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
+    <menuitem name="Mission Report" id="mission_request_menu" parent="hr.menu_hr_root"
+              action="ninas_mission_report_action"/>
     
     <menuitem name="Diesel Consumption" id="ninas_diesel_consumption_menuitem" parent="maintenance.menu_maintenance_title" action="ninas_diesel_consumption_action"/>
     <menuitem name="Vehicle Request" id="ninas_vehicle_request_menuitem" parent="maintenance.menu_maintenance_title" action="ninas_vehicle_request_action"/>
@@ -2147,8 +2155,7 @@
 	<menuitem name="Expense Request" id="expense_request_menuitem" parent="hr_expense.menu_hr_expense_root"/>
 	<menuitem name="Expense claims" id="expense_claim_menu" parent="expense_request_menuitem"
               action="ninas_expense_claim_action"/>
-	<menuitem name="Mission Report" id="mission_request_menu" parent="expense_request_menuitem"
-              action="ninas_mission_report_action"/>
+	
               
     <menuitem name="Appraisal Form" id="ninas_appraisal_menu" parent="hr_appraisal.menu_hr_appraisal_root" 
    			  action="ninas_appraisal_action"/>

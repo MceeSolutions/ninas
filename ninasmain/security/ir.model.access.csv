@@ -6,7 +6,8 @@ access_month_consumable_emp,month.consumable,model_month_consumable,base.group_u
 access_month_consumable_mang,month.consumable,model_month_consumable,stock.group_stock_manager,1,1,1,0
 access_month_consumables_emp,month.consumables,model_month_consumables,base.group_user,1,0,0,0
 access_month_consumables_mang,month.consumables,model_month_consumables,stock.group_stock_manager,1,1,1,0
-access_ninas_training_tracker_emp,ninas.training_tracker,model_ninas_training_tracker,base.group_user,1,1,1,0
+access_ninas_training_tracker_emp,ninas.training_tracker,model_ninas_training_tracker,base.group_user,1,0,0,0
+access_ninas_training_tracker_admin,ninas.training_tracker,model_ninas_training_tracker,ninasmain.group_admin_finance_officer,1,1,1,0
 access_ninas_advance_request_emp,ninas.advance_request,model_ninas_advance_request,base.group_user,1,1,1,0
 access_ninas_mission_report_emp,ninas.mission_report,model_ninas_mission_report,base.group_user,1,1,1,0
 access_ninas_bank_voucher_emp,ninas.bank_voucher,model_ninas_bank_voucher,base.group_user,1,1,1,0
@@ -20,7 +21,6 @@ access_ninas_application_form_emp,ninas.application.form,model_ninas_application
 access_ninas_application_account_emp,application.account,model_application_account,base.group_user,1,1,1,0
 access_ninas_test_method_emp,test.method,model_test_method,base.group_user,1,1,1,0
 access_assessment_type,assessment.type,model_assessment_type,base.group_user,1,1,1,0
-access_ninas_hr_recruitment,ninas.hr.recruitment,model_ninas_hr_recruitment,base.group_user,1,1,1,0
 access_ninas_petty_cash,ninas.petty.cash,model_ninas_petty_cash,base.group_user,1,1,1,0
 access_ninas_diesel_consumption,ninas.diesel.consumption,model_ninas_diesel_consumption,base.group_user,1,1,1,0
 access_activity_budget,activity.budget,model_activity_budget,base.group_user,1,1,1,0

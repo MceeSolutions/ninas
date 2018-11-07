@@ -44,7 +44,10 @@ class Employee(models.Model):
 #    employee = fields.Char(string='Employee ID')
     start_date = fields.Date(string='Start Date')
     salary = fields.Char(string='Salary')
+    
+    
     Training_date = fields.Date(string='Next Training Date')
+    
     levelof_exp = fields.Selection([
         ('0', 'All'),
         ('1', 'Beginner'),
@@ -334,7 +337,7 @@ class TravelRequest(models.Model):
     def _total_unit(self):
         total_unit_price = 0.0
         for line in self.account_ids:
-            self.total_unit_price += line.unit_price
+            self.total_unit_price += line.amount
             
 class TravelAccount(models.Model):
     _name = 'ninas.travel.account'
@@ -346,11 +349,15 @@ class TravelAccount(models.Model):
     account_id = fields.Many2one(
         comodel_name='account.account', string='GL')
     grant = fields.Char(string='Grant')
-    unit = fields.Char(string='Unit(s)')
+    unit = fields.Integer(string='Unit(s)')
     unit_price = fields.Float(string='Unit Price')
-    amount = fields.Float(string='Sub Amount', readonly=True)
+    amount = fields.Float(string='Sub Amount', readonly=True, compute='_sub_amount')
 
-    
+    @api.depends('unit','unit_price')
+    def _sub_amount(self):
+        amount = 0.0
+        for self in self:
+            self.amount = self.unit_price * self.unit
     
 class Hrrecruitment(models.Model):
     # _name = 'ninas.hr.recruitment'
@@ -452,6 +459,12 @@ class TrainingTracker(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = 'Employee Training Tracker'
     
+    state = fields.Selection(
+        [('new','New'), ('validate','HR Approved'), ('approve','Line Manager Approved'), ('reject','Rejected')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
     #link to actual employee_id
     name = fields.Many2one(
         comodel_name = 'hr.employee',
@@ -506,6 +519,21 @@ class TrainingTracker(models.Model):
         string='Notes'
         )
     
+    
+    @api.multi
+    def button_approve(self):
+        self.write({'state': 'validate'})
+        return {}
+    
+    @api.multi
+    def button_approve_lm(self):
+        self.write({'state': 'approve'})
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state': 'reject'})
+        return {}
     
 class AdvanceRequest(models.Model):
     _name = 'ninas.advance_request'

@@ -336,6 +336,9 @@
     
 	<menuitem name="Store Request" id="store_request" parent="stock.menu_stock_root"
               action="store_req_action1_window"/>
-
+	
+	<!-- changed transfers to Allocation -->
+	<menuitem id="stock.all_picking" name="Allocations" parent="stock.menu_stock_warehouse_mgmt" sequence="5" action="stock.action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
+	
   </data>
 </odoo>
