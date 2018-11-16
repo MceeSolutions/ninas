@@ -42,7 +42,7 @@ class WebsiteHelpdesk(http.Controller):
         # For breadcrumb index: get all team
         result['teams'] = teams
         return request.render("website_helpdesk.team", result)
-'''    
+ 
 class WebForms(http.Controller):
     @http.route('/ninas/codeofconduct', auth="public", website=True)
     def index(self, **kw):
@@ -59,7 +59,7 @@ class WebForms(http.Controller):
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
         return super(WebForms, self).website_form(model_name, **kwargs)
-'''
+
 '''        
 class WebForms(http.Controller):
 

@@ -41,7 +41,7 @@ class Accreditation(models.Model):
     ac_members= fields.Many2many(comodel_name='hr.employee',
                                  string='AC Members')
     
-    re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange', default=current_date)
+    re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
     
     creation_date = fields.Date(default = date.today() , string='Application Date')
     
@@ -351,6 +351,7 @@ class CreateInvoice(models.Model):
     def button_complete_approve(self):
         self.write({'stage_id': 5})
         return {}
+    
     @api.multi
     def button_complete_reject(self):
         self.write({'stage_id': 1})
@@ -367,7 +368,7 @@ class CreateInvoice(models.Model):
             raise Warning('You must set Assessment Team And Lead Assessor!')
         else:
             self.write({'resources_available': True})
-            self.write({'stage_id': 9})
+            self.write({'stage_id': 10})
         return {}
     
     @api.multi
@@ -376,7 +377,7 @@ class CreateInvoice(models.Model):
             raise Warning('You must review the CheckList First!')
         else:
             self.write({'checklist_sent': True})
-            self.write({'stage_id': 10})
+            self.write({'stage_id': 9})
         return {}
     
     
@@ -426,6 +427,8 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_approved_app(self):
+        current_date = date.today() + relativedelta(years=2)
+        self.re_assessment_date = current_date
         self.write({'stage_id': 21})
         return {}
     
