@@ -6,7 +6,6 @@ from odoo.addons.website_form.controllers.main import WebsiteForm
 
 class Accreditation(http.Controller):
     @http.route('''/accreditation/<model("helpdesk.team", "[('use_website_helpdesk_form','=',True)]"):team>/submit''', type='http', auth="user", website=True)
-    
     def index(self, **kw):
         default_values = {}
         assessment_type_id = http.request.env['assessment.type'].sudo().search([])
