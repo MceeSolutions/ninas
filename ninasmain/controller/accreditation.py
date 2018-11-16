@@ -60,7 +60,7 @@ class WebForms(http.Controller):
     def website_form(self, model_name, **kwargs):
         return super(WebForms, self).website_form(model_name, **kwargs)
 '''
-        
+'''        
 class WebForms(http.Controller):
 
     @http.route('/ninas/codeofconduct', type='http', auth="public", website=True)
@@ -74,7 +74,7 @@ class WebsiteForm(WebsiteForm):
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def index(self, model_name, **kwargs):
         return super(WebsiteForm, self).website_form(model_name, **kwargs)
-
+'''
 """
 
 from odoo import http
