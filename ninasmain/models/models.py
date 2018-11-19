@@ -360,8 +360,8 @@ class TravelAccount(models.Model):
             self.amount = self.unit_price * self.unit
     
 class Hrrecruitment(models.Model):
-    # _name = 'ninas.hr.recruitment'
-    # _description = 'NiNAS HR Recruitment'
+    _name = 'ninas.hr.recruitment'
+    _description = 'NiNAS HR Recruitment'
     _inherit = 'hr.applicant'
 
     name = fields.Char(string='Application ID')
