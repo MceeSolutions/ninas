@@ -4,5 +4,5 @@ access_ninas_bank,access_ninas_bank,model_ninas_bank,,1,1,1,0
 access_ninas_bank_transfer,access_ninas_bank_transfer,model_ninas_bank_transfer,,1,1,1,0
 access_ninas_bank_transfer_logs,access_ninas_bank_transfer_logs,model_ninas_bank_transfer_logs,,1,0,0,0
 access_ninas_account_balance,access_ninas_account_balance,model_ninas_account_balance,,1,0,0,0
-access_ninas_account_balance_lines,access_ninas_account_balance_lines,model_ninas_account_balance_lines,,1,0,0,0
+access_ninas_account_balance_line,access_ninas_account_balance_line,model_ninas_account_balance_line,,1,0,0,0
 access_ninas_bulk_transfer,access_ninas_bulk_transfer,model_ninas_bulk_transfer,,1,0,0,0

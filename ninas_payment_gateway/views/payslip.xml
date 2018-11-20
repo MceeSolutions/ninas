@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ninas_hr_payslip_run_form" model="ir.ui.view">
+        <field name="name">ninas.hr.payslip.run.form</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='draft_payslip_run']" position="after">
+                <button name="generate_bank_transfers" type="object" string="Generate Bulk Transaction" states="close" class="oe_highlight"/>
+            </xpath>
+            <field name="credit_note" position="after">
+                <field name="bulk_transfer_id" readonly="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

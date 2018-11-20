@@ -17,9 +17,9 @@
     'insatallable': True,
     'auto-install': True,
         
-    'depends': ['base', 'hr', 'hr_holidays', 'hr_recruitment', 'website', 'stock', 'mail', 'sale',
-                'purchase', 'account_budget', 'hr_payroll', 'helpdesk', 'hr_expense', 'hr_appraisal',
-                'maintenance','website_helpdesk','website_helpdesk_form', 'hr_payroll', 'hr_contract'],
+    'depends': ['hr_holidays', 'hr_recruitment', 'website', 'stock', 'mail', 'sale',
+                'purchase', 'account_budget', 'helpdesk', 'hr_expense', 'hr_appraisal',
+                'maintenance','website_helpdesk','website_helpdesk_form', 'hr_payroll'],
     'external_dependencies': {
         'python': [],
         'bin': []
