@@ -65,7 +65,7 @@
                             <field name="communication" attrs="{'readonly':[('state','!=','outgoing')]}"/>
                             <field name="partner_bank" required="1" domain="[('id','in',bank_ids)]" attrs="{'readonly':[('state','!=','outgoing')]}"/>
                             <field name="vendor_acct_id" required="1" domain="[('currency_id','=',currency_id),('partner_id','=',partner_id),('bank_id','=',partner_bank)]" options="{'no_create_edit': True}" attrs="{'readonly':[('state','!=','outgoing')]}"/>
-                            <field name="debit_account_id" required="1" domain="[('currency_id','=',currency_id),('type','=','bank')]"/>
+                            <field name="debit_account_id" required="1" domain="['|', ('currency_id','=',currency_id),('currency_id','=',False), ('type','=','bank')]"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="vendor_acctnumber" readonly="1" invisible="1"/>
                             <field name="vendor_bankcode" invisible="1" readonly="1" attrs="{'readonly':[('state','!=','outgoing')]}"/>
@@ -182,7 +182,7 @@
                                                 <field name="communication" attrs="{'readonly':[('state','!=','outgoing')]}"/>
                                                 <field name="partner_bank" required="1" domain="[('id','in',bank_ids)]" attrs="{'readonly':[('state','!=','outgoing')]}"/>
                                                 <field name="vendor_acct_id" required="1" domain="[('currency_id','=',currency_id),('partner_id','=',partner_id),('bank_id','=',partner_bank)]" options="{'no_create_edit': True}" attrs="{'readonly':[('state','!=','outgoing')]}"/>
-                                                <field name="debit_account_id" required="1" domain="[('currency_id','=',currency_id),('type','=','bank')]"/>
+                                                <field name="debit_account_id" required="1" domain="['|', ('currency_id','=',currency_id),('currency_id','=',False),('type','=','bank')]"/>
                                                 <field name="vendor_acctnumber" readonly="1" invisible="1"/>
                                                 <field name="vendor_bankcode" invisible="1" readonly="1" attrs="{'readonly':[('state','!=','outgoing')]}"/>
                                                 <field name="currency_id" invisible="1"/>
