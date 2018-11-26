@@ -843,7 +843,7 @@
 	        <field name="sequence" type="int">50</field>
     	</record>
         
-        <template id="ninas_team" inherit_id="website_helpdesk.team">
+        <template id="ninas_teams" inherit_id="website_helpdesk.team">
             <xpath expr="//div[hasclass('navbar-header')]" position="replace">
            		 <div class="navbar-header">
                         <div class="navbar-brand">Accreditation</div>
@@ -854,9 +854,15 @@
 	         	<t t-set="additional_title">Accreditation</t>
        		</xpath>
             
+            <xpath expr="//a[@t-attf-href='/helpdesk/#{team.id}/submit']" position="replace">
+                 	<a id="submit-ticket" t-attf-href="/accreditation/#{team.id}/submit">
+                    	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">Submit an Application.</button>
+                    </a>
+            </xpath>
+            
             <xpath expr="//a[@t-attf-href='/my/tickets']" position="replace">
                  	<a id="submit-ticket" t-attf-href="/my/home">
-                    	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">View My Account.</button>
+                    	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">View My Account</button>
                   	</a>
             </xpath>
             
