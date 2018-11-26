@@ -29,11 +29,30 @@ class Accreditation(models.Model):
         string='Assesment Type',
         track_visibility='onchange')
     
+    assessment_plan_id = fields.Many2one(
+        comodel_name='ninas.assessment_plan',
+        string='Assesment Plan',
+        track_visibility='onchange')
+
+    
     funding = fields.Selection(
         [('not_funded','Not Funded'),('partly_funded', 'Partly Funded'),('fully_funded', 'Fully Funded')],
         string='Funding',
         default='not_funded',
         track_visibility='onchange')
+    
+    funding_company_name = fields.Char(
+        string='Company Name',
+        track_visibility='onchange')
+    
+    funding_company_rep = fields.Char(
+        string='Company Representative Name',
+        track_visibility='onchange')
+    
+    funding_company_rep_num = fields.Char(
+        string='Company Representative Number',
+        track_visibility='onchange')
+    
     
     lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor', track_visibility='onchange',)
     tech_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor', track_visibility='onchange',)
@@ -53,7 +72,7 @@ class Accreditation(models.Model):
     preassessment_needed = fields.Boolean(string='pre-assessment Needed?', track_visibility='onchange')
     document_review = fields.Selection([('yes', 'Yes.')],
                                        string='Document(s) Reviewed?', track_visibility='onchange')
-    assessment_date = fields.Date(string='Assessment Date', track_visibility='onchange')
+    assessment_date = fields.Date(string='Assessment Date', related='assessment_plan_id.assessment_date', track_visibility='onchange', readonly=True)
     
     
     #Application Form Sheet
@@ -130,6 +149,12 @@ class Accreditation(models.Model):
     primary_level_lab = fields.Boolean(
         string='Primary level lab (1-10)',
         track_visibility='onchange')
+    
+    number_of_scopes = fields.Selection(
+        [('above_20','(>20)'),('11_to_20', '11-20'),('1_to_10', '(1-10)')],
+        string='Number of Scopes',
+        track_visibility='onchange')
+    
     
     test = fields.One2many(
         comodel_name='test.method',
@@ -318,6 +343,19 @@ class CreateInvoice(models.Model):
        }
      
        return res
+    
+    @api.multi
+    def invoice_prompt(self):
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_admin_finance_officer')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "An invoice is required for {}".format(self.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     '''
     @api.multi

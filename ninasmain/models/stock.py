@@ -155,4 +155,36 @@ class Inventory(models.Model):
         if vals.get('name', 'New') == 'New':
             vals['name'] = self.env['ir.sequence'].next_by_code('stock.inventory') or '/'
         return super(Inventory, self).create(vals)
+    
+class AccountInvoice(models.Model):
+    _inherit = "account.invoice"
+    
+    date_invoice = fields.Date(string='Invoice Date', default = date.today(),
+        readonly=True, states={'draft': [('readonly', False)]}, index=True,
+        help="Keep empty to use the current date", copy=False)
+    
+    @api.multi
+    def _onchange_send_validated_message(self):
+        if self.state in ['draft']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('account.group_account_invoice')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Invoice {} has been validated".format(self.number)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
+        return True
+    
+    @api.multi
+    def invoice_validate(self):
+        for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
+            invoice.message_subscribe([invoice.partner_id.id])
+        self._check_duplicate_supplier_reference()
+        self._onchange_send_validated_message()
+        return self.write({'state': 'open'})
+
+    
             

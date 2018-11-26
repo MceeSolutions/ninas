@@ -49,3 +49,4 @@ access_mobile_app_attachment,mobile.app.attachment,model_mobile_app_attachment,b
 access_ninas_prev_employment,ninas.prev.employment,model_ninas_prev_employment,base.group_user,1,1,1,0
 access_ninas_vehicle_request,ninas.vehicle.request,model_ninas_vehicle_request,base.group_user,1,1,1,0
 access_ninas_hr_recruitment,ninas.hr.recruitment,model_ninas_hr_recruitment,base.group_user,1,1,1,0
+access_assessor_form_attachment,assessor.form.attachment,model_assessor_form_attachment,base.group_user,1,1,1,0

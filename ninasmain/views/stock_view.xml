@@ -91,6 +91,21 @@
     </record>
     
     
+    <record id="ninas_invoice_form_view" model="ir.ui.view">
+        <field name="name">account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//button[@name='action_invoice_open']" position="replace">
+				<button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight o_invoice_validate" groups="ninasmain.group_ceo"/>
+			</xpath>
+			<xpath expr="//button[@name='action_invoice_open']" position="after">
+				<button name="send_validated_message" type="object" states="open" string="Notification" class="oe_highlight o_invoice_validate" groups="ninasmain.group_ceo"/>
+			</xpath>
+           </field>
+    </record>
+    
     <record id="ninas_hr_job_form_view" model="ir.ui.view">
         <field name="name">hr.job.form</field>
         <field name="model">hr.job</field>

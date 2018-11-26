@@ -110,10 +110,10 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
            <xpath expr="//button[@name='assign_ticket_to_self']" position="before">
-                	<button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|', ('stage_id','!=',1), ('funding','=','fully_funded')]}"/>
+                	<button type="object" name="invoice_prompt" string="Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|', ('stage_id','!=',1), ('funding','=','fully_funded')]}" groups="ninasmain.group_admin_finance_officer"/>
                 	<!-- <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" />
                 	 -->
-                	 <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|','|', ('stage_id','!=',17), ('funding','=','fully_funded'), ('preassessment_needed','=',True),]}"/>
+                	 <button type="object" name="invoice_prompt" string="Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|','|', ('stage_id','!=',17), ('funding','=','fully_funded'), ('preassessment_needed','=',True),]}" groups="ninasmain.group_admin_finance_officer"/>
 			</xpath>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="replace">
            			<button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" attrs="{'invisible':[('stage_id','!=',5)]}"/>
@@ -121,7 +121,7 @@
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="after">
                 	<button type="object" name="button_confirm_sponsor" string="Confirm Sponsor/Proceed" attrs="{'invisible':[('stage_id','!=',1)]}" confirm="Are you sure you want to Proceed?"/>
                 	<button type="object" name="button_complete_approve" string="Approve" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-primary" confirm="Are you sure all uploaded documents are completed?"/>
-                	<button type="object" name="button_complete_reject" string="Reject" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-danger"/>
+                	<!-- <button type="object" name="button_complete_reject" string="Reject" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-danger"/>-->
                 	<button type="object" name="action_resources_available" string="PROCEED" attrs="{'invisible':[('stage_id','!=',9)]}" class="btn btn-primary"/>
                 	<button type="object" name="action_checklist_sent" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary"/>
                 	<button type="object" name="button_assessor_agreement" string="PROCEED" attrs="{'invisible':[('stage_id','!=',10)]}" class="btn btn-primary" confirm="Please Make sure AL and LA has signed conflict of interest and confidentiality forms"/>
@@ -346,6 +346,8 @@
             
             <xpath expr="//h2" position="before">
             	<div class="container">
+            	<h5 class="pull-right">Customer Helpline: +234 (0) 81 7976 4868</h5>
+            	<br/>
             	<!-- <ul class="wizard pull-middle hidden-xs">
 			            <li t-att-class="(step==10 and 'text-primary') or 'text-muted'" id="step10">
 			                Application Information<span class="chevron"></span>
@@ -539,22 +541,42 @@
                  
                   
                  <div class="form-group form-field">
-                 	<strong>
-                 		<p class='container'>
-                 		Size of Laboratory (the number of tests being carried out)
-                 		</p>
-                 	</strong>
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="tertiary_level_lab">Tertiary level lab/ Tests (&gt;20)</label>
-                     </div>
-                     <div class="col-md-1 col-sm-1">
-                         <input type="checkbox" class="form-control o_website_form_input" name="tertiary_level_lab"/>
-                     </div>
+	                 	<strong>
+	                 		<p class='container'>
+	                 		Scope of Accreditation Requested
+	                 		</p>
+	                 	</strong>
+	                 <div class="form-group form-field">
+	                     <div class="col-md-3 col-sm-4 text-right">
+	                         <label class="control-label" for="number_of_scopes">( &gt; 20)</label>
+	                     </div>
+	                     <div class="col-md-1 col-sm-1">
+			              	<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="above_20" checked=""/>
+						</div>
+	                 </div>
+	                 <div class="form-group form-field">
+	                     <div class="col-md-3 col-sm-4 text-right">
+	                         <label class="control-label" for="number_of_scopes">(11-20 Tests)</label>
+	                     </div>
+	                     <div class="col-md-1 col-sm-1">
+			              	<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="11_to_20"/>
+						</div>
+	                 </div>
+	                 <div class="form-group form-field">
+	                     <div class="col-md-3 col-sm-4 text-right">
+	                         <label class="control-label" for="number_of_scopes">(1-10)</label>
+	                     </div>
+	                     <div class="col-md-1 col-sm-1">
+			              	<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="1_to_10" />
+						</div>
+	                 </div>
                  </div>
                  
-                 <div class="form-group form-field">
+                <!-- <div class="form-group form-field">
+                		<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="11_to_20"/> (11-20 Tests)<br/>
+						<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="1_to_10"/> (1-10)  
                      <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="secondary_level_lab">Secondary level lab (11-20 Tests)</label>
+                         <label class="control-label" for="secondary_level_lab">(11-20 Tests)</label>
                      </div>
                      <div class="col-md-1 col-sm-1">
                          <input type="checkbox" class="form-control o_website_form_input" name="secondary_level_lab"/>
@@ -563,12 +585,12 @@
                  
                  <div class="form-group form-field">
                      <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="primary_level_lab">Primary level lab (1-10)</label>
+                         <label class="control-label" for="primary_level_lab">(1-10)</label>
                      </div>
                      <div class="col-md-1 col-sm-1">
                          <input type="checkbox" class="form-control o_website_form_input" name="primary_level_lab"/>
                      </div>
-                 </div>
+                 </div>-->
                  
     				<p class="container">
     					<strong>Tests:</strong> Please list all the fields of testing and the test methods under each field for which the laboratory seeks
@@ -719,6 +741,21 @@
 						</select>
 		              </div>
 		          </div>
+		          
+		          <div class="form-group form-field o_website_form">
+                     <div class="col-md-3 col-sm-4 text-right">
+                         <label class="control-label" for="laboratory_address">Funding Company Details</label>
+                     </div>
+                     <div class="col-md-2 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="funding_company_name" placeholder="Company"/>
+                     </div>
+                     <div class="col-md-3 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="funding_company_rep" placeholder="Company Representative"/>
+                     </div>
+                     <div class="col-md-2 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="funding_company_rep_num" placeholder="Representative Number"/>
+                     </div>
+                 </div>
 	          
 	          <div class="container">
 	          
@@ -757,30 +794,13 @@
 	                 <input type="file" class="form-control o_website_form_input" required="1" multiple=""/>
 	               </div>
 	          </div>
-           	  <p>
-           	  	<strong>
-           	  		Mailing/Emailing Instructions
-           	  	</strong>
-           	  	Electronic submissions are preferred to: <a href="https://www.ninas.ng">Applications@NiNAS.ng</a>
-           	  </p>
-           	  
-           	  <p>
-           	  <span>If mailing paper copies, please return the entire application along with the requested supporting documentation and payment of fees to:</span><br/>
-           	    				<span>
-           	    				Nigeria National Accreditation Service (NiNAS) c/o UNIDO NQIP<br/>
-								Bank of Industry Building,<br/>
-								7th floor<br/>
-								256 Herbert Macaulay Way,<br/>
-								Central Business District,<br/>
-								Abuja, Nigeria<br/>
-           	    				</span>
-           	  </p>
-           	  
+	          
            	  <p>
 	           	  <strong>
-	           	  	Questions?: Please direct them to: <a href="https://www.ninas.ng">Applications@NiNAS.ng</a> or call: +234 (0) 81 7976 4868
+	           	  	Questions?: Please direct them to: <a href="https://ninas.ng/about/contact/">Contact Us</a> or call: +234 (0) 81 7976 4868
 	           	  </strong>
            	  </p>
+           	  
            	</div> 
        		</xpath>
             
@@ -893,8 +913,8 @@
         <value>helpdesk.ticket</value>
         <value eval="[
             'partner_name','name_applicant',
-            'partner_email',
-            'name',
+            'partner_email', 'funding_company_name', 'funding_company_rep', 'funding_company_rep_num',
+            'name', 'number_of_scopes',
             'description',
             'team_id',
             'partner_id',
@@ -992,6 +1012,9 @@
             </field>
             <field name="ticket_type_id" position="after">
                 <field name="funding" attrs="{'readonly':[('stage_id','!=',1)]}"/>
+                <field name="funding_company_name" attrs="{'readonly':[('stage_id','!=',1)]}"/>
+                <field name="funding_company_rep" attrs="{'readonly':[('stage_id','!=',1)]}"/>
+                <field name="funding_company_rep_num" attrs="{'readonly':[('stage_id','!=',1)]}"/>
             </field>
             <field name="user_id" position="replace">
                 <field name="user_id" invisible="1"/>
@@ -1006,7 +1029,7 @@
             </field>
             <field name="priority" position="after">
             	<field name="document_review" attrs="{'required':[('stage_id','=',17)], 'readonly':[('stage_id','!=',17)]}"/>
-                <field name="assessment_date" attrs="{'required':[('stage_id','=',12)], 'readonly':[('stage_id','!=',12)]}"/>
+                <field name="assessment_date"/>
             </field>
             <field name="tag_ids" position="after">
             	<field name="creation_date" readonly="1"/>            	
@@ -1091,10 +1114,13 @@
 	           	    		<field name="calibration_lab" readonly="True"/>
 	           	    		<field name="med_lab" readonly="True"/>
 	           	    		</group>
-	           	    		<group string="Size of Laboratory (the number of tests being carried out)">
+	           	    		<!-- <group string="Size of Laboratory (the number of tests being carried out)">
 	           	    			<field name="tertiary_level_lab" readonly="True"/>
 		           	    		<field name="secondary_level_lab" readonly="True"/>
 		           	    		<field name="primary_level_lab" readonly="True"/>
+	           	    		</group>-->
+	           	    		<group string="Number Of Scopes">
+	           	    			<field name="number_of_scopes" readonly="True"/>
 	           	    		</group>
            	    		</page>
            	    		<page string="Tests">
@@ -1169,18 +1195,6 @@
            	    				<span>☐	The proficiency testing plan and proficiency test results, with any corrective action response (if applicable).</span><br/>
            	    				<span>☐	A list of all equipment used to support the tests or calibrations including in-house (i.e. equipment calibrations that your lab perform) and external calibrations (i.e. those that an external calibration laboratory performs), and rented/borrowed equipment.</span><br/>
            	    				<span>☐	For Calibration Applicants Only:  a sample of a calibration certificate which you laboratory issues and uncertainty calculations that support the Measurement Uncertainties to be claimed on your scope of accreditation.</span><br/>
-           	    			</group>
-           	    			<group string="Mailing/Emailing Instructions">
-           	    				<span>Electronic submissions are preferred to:  Applications@NiNAS.ng</span><br/>
-           	    				<span>If mailing paper copies, please return the entire application along with the requested supporting documentation and payment of fees to:</span><br/>
-           	    				<span>
-           	    				Nigeria National Accreditation Service (NiNAS) c/o UNIDO NQIP<br/>
-								Bank of Industry Building,<br/>
-								7th floor<br/>
-								256 Herbert Macaulay Way,<br/>
-								Central Business District,<br/>
-								Abuja, Nigeria<br/>
-           	    				</span>
            	    			</group>
            	    			<group string="Questions?:  Please direct them to: Applications@NiNAS.ng  or call: +234 (0) 81 7976 4868"></group>
            	    		</page>

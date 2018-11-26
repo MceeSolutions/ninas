@@ -347,7 +347,7 @@ class TravelAccount(models.Model):
     
     type = fields.Char(string='Type Of Expense')
     account_id = fields.Many2one(
-        comodel_name='account.account', string='GL')
+        comodel_name='account.account', string='General Ledger')
     grant = fields.Char(string='Grant')
     unit = fields.Integer(string='Unit(s)')
     unit_price = fields.Float(string='Unit Price')
@@ -544,7 +544,7 @@ class AdvanceRequest(models.Model):
 #                         'Student name must be unique!')]
 #    _inherit = 'mail.thread'
     state = fields.Selection(
-        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation'), ('confirmed','Payment Confirmed')],
         string='Status',
         default='new',
         track_visibility='onchange')
@@ -654,6 +654,11 @@ class AdvanceRequest(models.Model):
     @api.multi
     def button_ceo(self):
         self.write({'state': 'ceo'})
+        return {}
+    
+    @api.multi
+    def button_confirm_payment(self):
+        self.write({'state': 'confirmed'})
         return {}
     
 class MissionReport(models.Model):
@@ -915,7 +920,7 @@ class NinasExpenseClaim(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
 
     state = fields.Selection(
-        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation'), ('confirmed','Payment Confirmed')],
         string='Status',
         default='new',
         track_visibility='onchange')
@@ -1056,6 +1061,11 @@ class NinasExpenseClaim(models.Model):
     @api.multi
     def button_ceo(self):
         self.write({'state': 'ceo'})
+        return {}
+    
+    @api.multi
+    def button_confirm_payment(self):
+        self.write({'state': 'confirmed'})
         return {}
     
 class ExpenseClaim(models.Model):
@@ -1344,24 +1354,26 @@ class PettyCash(models.Model):
 
     date_entered=fields.Date(
         string='Date',
-        required=True
+        required=True, default = date.today()
         )
     ref_no=fields.Char(
         string='Ref No'
         )
-    name_of_payee=fields.Char(
+    name_of_payee=fields.Many2one(
+        comodel_name='hr.employee',
         string='Name of Payee',
         required=True
         )
     amount_naira=fields.Integer(
         string='Amount (Naira)',
-        required=False
+        required=True
         )
     description=fields.Text(
         string='Description of Payment',
         required=True
         )
-    accounts_charge=fields.Char(
+    accounts_charge=fields.Many2one(
+        comodel_name='account.account',
         string='Account Chargeable'
         )
     grant=fields.Char(
@@ -1371,15 +1383,15 @@ class PettyCash(models.Model):
         string='Budget line'
         )
     gl=fields.Char(
-        string='GL'
+        string='General Ledger'
         )
     prepared_by=fields.Many2one(
-        comodel_name="hr.employee",
+        comodel_name="res.users",
         string='Prepared by',
         readonly=True
         )
     approved_by=fields.Many2one(
-        comodel_name="hr.employee",
+        comodel_name="res.users",
         string='Approved by',
         readonly=True
         )
@@ -2070,7 +2082,7 @@ class VehicleRequestForm(models.Model):
         string='Drivers Name')
     
     authorized_sign = fields.Many2one(
-        comodel_name="hr.employee",
+        comodel_name="res.users",
         string='Signature')
     
     sign_date = fields.Date(
@@ -2085,6 +2097,18 @@ class VehicleRequestForm(models.Model):
     @api.multi
     def button_submit(self):
         self.write({'state': 'submit'})
+        if self.state in ['submit']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_logistics')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Vehicle request from {} has been made".format(self.name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
+        return True
         return {}
     
     @api.multi
@@ -2092,11 +2116,38 @@ class VehicleRequestForm(models.Model):
         self.write({'state': 'approve'})
         self.authorized_sign = self._uid
         self.sign_date = date.today()
+        if self.state in ['approve']:
+            config = self.env['mail.template'].sudo().search([('name','=','vehicle request approved')], limit=1)
+            mail_obj = self.env['mail.mail']
+            if config:
+                values = config.generate_email(self.id)
+                mail = mail_obj.create(values)
+                if mail:
+                    mail.send()
         return {}
     
     @api.multi
     def button_reject(self):
         self.write({'state': 'reject'})
+        if self.state in ['reject']:
+            config = self.env['mail.template'].sudo().search([('name','=','vehicle request rejected')], limit=1)
+            mail_obj = self.env['mail.mail']
+            if config:
+                values = config.generate_email(self.id)
+                mail = mail_obj.create(values)
+                if mail:
+                    mail.send()
         return {}
+    
+class AssessorFormAttachment(models.Model):
+    _name = 'assessor.form.attachment'
+    
+    name = fields.Char(string='Form Name', required=True)
+    description = fields.Char(string='Form Description', required=True)
+    attachment_ids = fields.Many2many(
+        comodel_name='ir.attachment',
+        string='Attachment', required=True)
+    
+    
     
     
