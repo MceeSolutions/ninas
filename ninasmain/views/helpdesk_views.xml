@@ -855,8 +855,8 @@
        		</xpath>
             
             <xpath expr="//a[@t-attf-href='/helpdesk/#{team.id}/submit']" position="replace">
-                 	<a id="submit-ticket" t-attf-href="/accreditation/#{team.id}/submit">
-                    	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">Submit an Application</button>
+                 	<a id="submit-tickets" t-attf-href="/accreditation/#{team.id}/submit">
+                    	<button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">Submit an Application.</button>
                     </a>
             </xpath>
             
