@@ -1,0 +1,98 @@
+<odoo>
+    <data>
+        <record id="ninas_partner_view" model="ir.ui.view">
+            <field name="name">ninas.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="function" position="before">
+                    <field name="code" required="1"/>
+                </field>
+                <xpath expr="//page[@name='internal_notes']" position="after">
+                    <page name="bank_accounts" string="Bank Accounts">
+                        <field name="bank_ids">
+                            <tree>
+                                <field name="acc_number"/>
+                                <field name="bank_id"/>
+                                <field name="currency_id"/>
+                            </tree>
+                            <form>
+                                <group col="4" colspan="4">
+                                    <field name="acc_number"/>
+                                    <field name="bank_id"/>
+                                    <field name="currency_id"/>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="ninas_bank_form_view" model="ir.ui.view">
+            <field name="name">res.bank.form</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="bic" position="replace">
+                    <field name="bic" string="Sort Code" required="1"/>
+                    <field name="code"/>
+                </field>
+            </field>
+        </record>  
+
+        <record id="ninas_bank_tree_view" model="ir.ui.view">
+            <field name="name">res.bank.tree</field>
+            <field name="model">res.bank</field>
+            <field name="inherit_id" ref="base.view_res_bank_tree"/>
+            <field name="arch" type="xml">
+                <field name="bic" position="replace">
+                    <field name="bic" string="Sort Code"/>
+                    <field name="code"/>
+                </field>
+            </field>
+        </record>  
+	
+	
+	    <record model="ir.actions.act_window" id="ninas_bank_action">
+            <field name="name">Banks</field>
+            <field name="res_model">res.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="ninas_bank_account_form_view" model="ir.ui.view">
+            <field name="name">res.partner.bank.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="acc_number" position="after">
+                    <field name="partner_id"/>
+                </field>
+            </field>
+        </record>  
+
+        <record id="ninas_bank_account_tree_view" model="ir.ui.view">
+            <field name="name">res.partner.bank.tree</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_tree"/>
+            <field name="arch" type="xml">
+                <field name="acc_number" position="after">
+                    <field name="partner_id"/>
+                </field>
+            </field>
+        </record>  
+	
+	
+	    <record model="ir.actions.act_window" id="ninas_bank_account_action">
+            <field name="name">Bank Accounts</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+    </data>
+</odoo>

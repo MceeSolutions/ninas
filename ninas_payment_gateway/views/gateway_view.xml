@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="gateway_config_form_view" model="ir.ui.view">
+            <field name="name">gateway.config.form</field>
+            <field name="model">gateway.config</field>
+            <field name="arch" type="xml">
+                <form string="Gateway Config">
+                    <sheet>
+                        <group col="2" colspan="4">
+                            <field name="name"/>
+                            <field name="url" widget="url"/>
+                            <field name="access_code"/>
+                            <field name="username"/>
+                            <field name="password" password="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>  
+
+        <record id="gateway_config_tree_view" model="ir.ui.view">
+            <field name="name">gateway.config.tree</field>
+            <field name="model">gateway.config</field>
+            <field name="arch" type="xml">
+                <tree string="Gateway Config">
+                    <field name="name"/>
+                    <field name="url" widget="url"/>
+                </tree>
+            </field>
+        </record>  
+	
+	
+	    <record model="ir.actions.act_window" id="gateway_config_action">
+            <field name="name">Gateway Config</field>
+            <field name="res_model">gateway.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        
+
+        <record id="ninas_bank_transfer_form_view" model="ir.ui.view">
+            <field name="name">ninas.bank.transfer.form</field>
+            <field name="model">ninas.bank.transfer</field>
+            <field name="arch" type="xml">
+                <form string="Bank Transaction">
+                    <header>
+                        <button string="Approve" name="approve" type="object" states="outgoing" class="oe_highlight"/>
+                        <button string="Transfer" name="transfer_funds" type="object" context="{'transfer_type':'single'}" states="approve" class="oe_highlight"/>
+                        <button name="mark_outgoing" string="Retry" type="object" states="exception,cancel"/>
+                        <button name="check_status" string="Status" type="object" states="sent"/>
+                        <button name="cancel" string="Cancel" type="object" states="outgoing"/>
+                        <field name="state" widget="statusbar" statusbar_visible="outgoing,approve,sent,received,exception,cancel"/>
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="amount" readonly="1"/>
+                            <field name="payment_date" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="remarks" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="communication" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="partner_bank" required="1" domain="[('id','in',bank_ids)]" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="vendor_acct_id" required="1" domain="[('currency_id','=',currency_id),('partner_id','=',partner_id),('bank_id','=',partner_bank)]" options="{'no_create_edit': True}" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="debit_account_id" required="1" domain="['|', ('currency_id','=',currency_id),('currency_id','=',False), ('type','=','bank')]"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="vendor_acctnumber" readonly="1" invisible="1"/>
+                            <field name="vendor_bankcode" invisible="1" readonly="1" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="vendor_code" readonly="1" invisible="1"/>
+                            <field name="vendor_name" readonly="1" invisible="1"/>
+                            <field name="debit_acctnumber" readonly="1" invisible="1"/>
+                            <field name="bank_ids" invisible="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Logs">
+                                <field name="log_ids" options="{'no_create':True,'no_delete':True}" readonly="1">
+                                    <tree readonly="1">
+                                        <field name="status_code"/>
+                                        <field name="code"/>
+                                        <field name="message"/>
+                                        <field name="create_date"/>
+                                    </tree>
+                                    <form readonly="1">
+                                        <group cols="2" readonly="1">
+                                            <field name="status_code"/>
+                                            <field name="code"/>
+                                            <field name="message"/>
+                                            <field name="response"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>  
+
+        <record id="ninas_bank_transfer_tree_view" model="ir.ui.view">
+            <field name="name">ninas.bank.transfer.tree</field>
+            <field name="model">ninas.bank.transfer</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Transaction">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
+                    <field name="payment_date"/>
+                    <field name="remarks"/>
+                    <field name="vendor_code" invisible="1"/>
+                    <field name="vendor_name" invisible="1"/>
+                    <field name="partner_bank"/>
+                    <field name="debit_account_id"/>
+                    <field name="state"/>
+                    <field name="currency_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>  
+	
+	
+	    <record model="ir.actions.act_window" id="ninas_single_transfer_action">
+            <field name="name">Single Transaction</field>
+            <field name="res_model">ninas.bank.transfer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="ninas_bulk_transfer_form_view" model="ir.ui.view">
+            <field name="name">ninas.bulk.transfer.form</field>
+            <field name="model">ninas.bulk.transfer</field>
+            <field name="arch" type="xml">
+                <form string="Bulk Transaction">
+                    <header>
+                        <button string="Approve" name="approve" type="object" states="outgoing" class="oe_highlight"/>
+                        <button string="Transfer" name="transfer_funds" context="{'transfer_type':'bulk', 'active_id':active_id}" type="object" states="approve" class="oe_highlight"/>
+                        <button name="mark_outgoing" string="Retry" type="object" states="exception,cancel"/>
+                        <button name="reset" string="Reset" type="object" states="sent"/>
+                        <button name="cancel" string="Cancel" type="object" states="outgoing"/>
+                        <field name="state" widget="statusbar" statusbar_visible="outgoing,approve,sent,received,exception,cancel"/>
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name" readonly="1"/>
+                            <field name="payment_date" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                            <field name="remarks" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                        </group>
+                        <notebook>
+                            <page string="Transfers">
+                                <field name="transfer_ids" options="{'no_create':True,'no_delete':True}">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="partner_id"/>
+                                        <field name="amount"/>
+                                        <field name="partner_bank"/>
+                                        <field name="vendor_acct_id"/>
+                                        <field name="state"/>
+                                    </tree>
+                                    <form>
+                                        <header>
+                                            <!--button string="Approve" name="approve" type="object" states="outgoing" class="oe_highlight"/>
+                                            <button string="Transfer" name="transfer_funds" type="object" states="approve" class="oe_highlight"/>
+                                            <button name="mark_outgoing" string="Retry" type="object" states="exception,cancel"/>
+                                            <button name="check_status" string="Status" type="object" states="sent"/>
+                                            <button name="cancel" string="Cancel" type="object" states="outgoing"/-->
+                                            <field name="state" widget="statusbar" statusbar_visible="outgoing,approve,sent,received,exception,cancel"/>
+                                        </header>
+                                        <sheet>
+                                            <group cols="4" colspan="4">
+                                                <field name="name" readonly="1"/>
+                                                <field name="partner_id" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                                                <field name="amount" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                                                <field name="payment_date" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                                                <field name="remarks" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                                                <field name="communication" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                                                <field name="partner_bank" required="1" domain="[('id','in',bank_ids)]" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                                                <field name="vendor_acct_id" required="1" domain="[('currency_id','=',currency_id),('partner_id','=',partner_id),('bank_id','=',partner_bank)]" options="{'no_create_edit': True}" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                                                <field name="debit_account_id" required="1" domain="['|', ('currency_id','=',currency_id),('currency_id','=',False),('type','=','bank')]"/>
+                                                <field name="vendor_acctnumber" readonly="1" invisible="1"/>
+                                                <field name="vendor_bankcode" invisible="1" readonly="1" attrs="{'readonly':[('state','!=','outgoing')]}"/>
+                                                <field name="currency_id" invisible="1"/>
+                                                <field name="vendor_code" readonly="1" invisible="1"/>
+                                                <field name="vendor_name" readonly="1" invisible="1"/>
+                                                <field name="debit_acctnumber" readonly="1" invisible="1"/>
+                                                <field name="bank_ids" invisible="1"/>
+                                            </group>
+                                            <notebook>
+                                                <page string="Logs">
+                                                    <field name="log_ids" options="{'no_create':True,'no_delete':True}" readonly="1">
+                                                        <tree readonly="1">
+                                                            <field name="status_code"/>
+                                                            <field name="code"/>
+                                                            <field name="message"/>
+                                                            <field name="create_date"/>
+                                                        </tree>
+                                                        <form>
+                                                            <group cols="2" readonly="1">
+                                                                <field name="status_code"/>
+                                                                <field name="code"/>
+                                                                <field name="message"/>
+                                                                <field name="response"/>
+                                                            </group>
+                                                        </form>
+                                                    </field>
+                                                </page>
+                                            </notebook>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Logs">
+                                <field name="log_ids" options="{'no_create':True,'no_delete':True}" readonly="1">
+                                    <tree readonly="1">
+                                        <field name="status_code"/>
+                                        <field name="code"/>
+                                        <field name="message"/>
+                                        <field name="create_date"/>
+                                    </tree>
+                                    <form readonly="1">
+                                        <group cols="2" readonly="1">
+                                            <field name="status_code"/>
+                                            <field name="code"/>
+                                            <field name="message"/>
+                                            <field name="response"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>  
+
+        <record id="ninas_bulk_transfer_tree_view" model="ir.ui.view">
+            <field name="name">ninas.bulk.transfer.tree</field>
+            <field name="model">ninas.bulk.transfer</field>
+            <field name="arch" type="xml">
+                <tree string="Bulk Transactions">
+                    <field name="name"/>
+                    <field name="payment_date"/>
+                    <field name="remarks"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>  
+	
+	
+	    <record model="ir.actions.act_window" id="ninas_bulk_transfer_action">
+            <field name="name">Bulk Transactions</field>
+            <field name="res_model">ninas.bulk.transfer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="ninas_account_balance_form_view" model="ir.ui.view">
+            <field name="name">ninas.account.balance.form</field>
+            <field name="model">ninas.account.balance</field>
+            <field name="arch" type="xml">
+                <form string="Account Balances">
+                    <header>
+                        <button string="Retrieve Balance" name="get_balance" type="object" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name"/>
+                            <field name="account_number" attrs="{'readonly':[('balance_line_ids','!=',[])]}"/>
+                            <field name="code" readonly="1"/>
+                            <field name="message" readonly="1"/>
+                            <field name="count" readonly="1" attrs="{'invisible':[('account_number','!=',False)]}"/>
+                            
+                        </group>
+                        <notebook>
+                            <page string="Balances">
+                                <field name="balance_line_ids" readonly="1">
+                                    <tree readonly="1">
+                                        <field name="name"/>
+                                        <field name="legder_balance"/>
+                                        <field name="available_balance"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </tree>
+                                    <form readonly="1">
+                                        <sheet>
+                                            <group cols="2" readonly="1">
+                                                <field name="name"/>
+                                                <field name="legder_balance"/>
+                                                <field name="available_balance"/>
+                                                <field name="currency_id" readonly="1"/>
+                                            </group>
+                                        </sheet>
+                                        <div class="oe_chatter">
+                                            <field name="message_follower_ids" widget="mail_followers"/>
+                                            <field name="message_ids" widget="mail_thread"/>
+                                        </div>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Response">
+                                <field name="response"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>  
+
+        <record id="ninas_account_balance_tree_view" model="ir.ui.view">
+            <field name="name">ninas.account.balance.tree</field>
+            <field name="model">ninas.account.balance</field>
+            <field name="arch" type="xml">
+                <tree string="Account Balances">
+                    <field name="name"/>
+                    <field name="account_number"/>
+                    <field name="code"/>
+                    <field name="message"/>
+                    <field name="count"/>
+                </tree>
+            </field>
+        </record>  
+	
+	    <record model="ir.actions.act_window" id="ninas_account_balance_action">
+            <field name="name">Account Balances</field>
+            <field name="res_model">ninas.account.balance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <menuitem name="Banking" id="ninas_banking_main_menu" parent="account.menu_finance"/>
+        <menuitem name="Settings" id="gateway_config_menu" parent="ninas_banking_main_menu" action="gateway_config_action" sequence="1" groups="base.group_no_one"/>
+
+        <menuitem name="Transactions" id="ninas_transaction_main_menu" parent="ninas_banking_main_menu"/>
+        <menuitem name="Single Transaction" id="single_transfer_menu" parent="ninas_transaction_main_menu" action="ninas_single_transfer_action" sequence="3"/>
+        <menuitem name="Bulk Transactions" id="bulk_transfer_menu" parent="ninas_transaction_main_menu" action="ninas_bulk_transfer_action" sequence="1"/>
+        
+        <menuitem name="Banks" id="ninas_bank_main_menu" parent="ninas_banking_main_menu" sequence="9"/>
+        <menuitem name="Banks" id="ninas_bank_menu" parent="ninas_bank_main_menu" action="ninas_bank_action" sequence="9"/>
+        <menuitem name="Account Balances" id="ninas_account_balance_menu" parent="ninas_bank_main_menu" action="ninas_account_balance_action" sequence="10"/>
+        <menuitem name="Bank Accounts" id="ninas_bank_account_menu" parent="ninas_bank_main_menu" action="ninas_bank_account_action" sequence="9" groups="base.group_no_one"/>
+
+
+    </data>
+</odoo>
