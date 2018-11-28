@@ -2148,6 +2148,76 @@ class AssessorFormAttachment(models.Model):
         comodel_name='ir.attachment',
         string='Attachment', required=True)
     
+class RecommendationForm(models.Model):
+    _name='ninas.recommendation.form'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    name = fields.Char(
+        string="Name of Institurion or Lab",
+        track_visibility='onchange')
+    
+    address_of_institution= fields.Char(
+        string='Address of Institurion or Lab',
+        track_visibility='onchange')
+    
+    institution_number = fields.Char(
+        string='Number')
+    institution_street = fields.Char(
+        string='Street')
+    institution_city = fields.Char(
+        string='Number')
+    institution_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
+    institution_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    
+    reference_no = fields.Char(
+        string="Reference Number",
+        track_visibility='onchange')
+    
+    name_of_institution_rep = fields.Char(
+        string="Name of Institurion Representative",
+        track_visibility='onchange')
+    
+    accreditation_scope = fields.Char(
+        string="Accreditation Scope",
+        track_visibility='onchange')
+    
+    name_assessor = fields.Many2many(
+        comodel_name='hr.employee',
+        string="Name Assessor(s)",
+        track_visibility='onchange')
+    
+    type_assessment = fields.Selection([('pre_assesment', 'Pre-assesment'), ('initial', 'Initial'), ('re_assesment', 'Re-assesment')],
+        string='Type of Assessment', track_visibility='onchange')
+    
+    assessment_date = fields.Date(
+        string="Accreditation Date",
+        track_visibility='onchange')
+    
+    satisfactory_yes = fields.Boolean(string='Yes')
+    
+    satisfactory_no = fields.Boolean(string='No')
+    
+    recommendation = fields.Selection(
+        [('1','Unconditional accreditation/renewal of accreditation to be granted'),
+        ('2','Accreditation/renewal of accreditation to be deferred until all non-conformances have been cleared'),
+        ('3','Accreditation/renewal of accreditation is not recommended'),
+        ('4','For re-assessment only: Suspension of accreditation status or part thereof')],
+        string = 'Recommendation')
+    
+    further_comment = fields.Text(string='Any other Comment:')
+    
+    name_sign = fields.Many2one(
+        comodel_name='res.users',
+        string="Name / Signature",
+        track_visibility='onchange', readonly=True)
+    
+    date = fields.Date(
+        string="Date",
+        track_visibility='onchange', readonly=True)
+    
+    
+    
+    
     
     
     

@@ -163,9 +163,24 @@ class AccountInvoice(models.Model):
         readonly=True, states={'draft': [('readonly', False)]}, index=True,
         help="Keep empty to use the current date", copy=False)
     
+    
+    
     @api.multi
     def _onchange_send_validated_message(self):
-        if self.state in ['draft']:
+        group_id = self.env['ir.model.data'].xmlid_to_object('account.group_account_invoice')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Invoice {} has been validated".format(self.number)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
+    
+    
+    @api.multi
+    def onchange_send_paid_message(self):
             group_id = self.env['ir.model.data'].xmlid_to_object('account.group_account_invoice')
             user_ids = []
             partner_ids = []
@@ -173,10 +188,9 @@ class AccountInvoice(models.Model):
                 user_ids.append(user.id)
                 partner_ids.append(user.partner_id.id)
             self.message_subscribe_users(user_ids=user_ids)
-            subject = "Invoice {} has been validated".format(self.number)
+            subject = "Invoice {} has been paid".format(self.number)
             self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
             return False
-        return True
     
     @api.multi
     def invoice_validate(self):
@@ -185,6 +199,11 @@ class AccountInvoice(models.Model):
         self._check_duplicate_supplier_reference()
         self._onchange_send_validated_message()
         return self.write({'state': 'open'})
+    
 
+    
+    
+    
+    
     
             

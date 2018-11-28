@@ -110,20 +110,21 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
            <xpath expr="//button[@name='assign_ticket_to_self']" position="before">
-                	<button type="object" name="invoice_prompt" string="Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|', ('stage_id','!=',1), ('funding','=','fully_funded')]}" groups="ninasmain.group_admin_finance_officer"/>
+                	<button type="object" name="confirm_funding" string="Confirm Sponsorship" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|', ('stage_id','!=',3), ('funding','=','fully_funded')]}"/>
+                	<button type="object" name="confirmed_funding" string="Confirm Sponsorship" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|', ('stage_id','!=',3), ('funding','!=','fully_funded')]}" confirm="Application Fully Funded?"/>
                 	<!-- <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" />
                 	 -->
-                	 <button type="object" name="invoice_prompt" string="Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|','|', ('stage_id','!=',17), ('funding','=','fully_funded'), ('preassessment_needed','=',True),]}" groups="ninasmain.group_admin_finance_officer"/>
+                	 <button type="object" name="invoice_prompt" string="Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|','|', ('stage_id','!=',17), ('funding','=','fully_funded'), ('preassessment_needed','=',True),]}" />
 			</xpath>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="replace">
-           			<button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" attrs="{'invisible':[('stage_id','!=',5)]}"/>
+           			<button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" invisible="1"/>
 			</xpath>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="after">
-                	<button type="object" name="button_confirm_sponsor" string="Confirm Sponsor/Proceed" attrs="{'invisible':[('stage_id','!=',1)]}" confirm="Are you sure you want to Proceed?"/>
-                	<button type="object" name="button_complete_approve" string="Approve" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-primary" confirm="Are you sure all uploaded documents are completed?"/>
+                	<button type="object" name="button_confirm_sponsor" string="Proceed" attrs="{'invisible':[('stage_id','!=',1)]}" confirm="Are you sure all uploaded documents are completed?"/>
+                	<button type="object" name="button_complete_approved" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary"/>
                 	<!-- <button type="object" name="button_complete_reject" string="Reject" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-danger"/>-->
                 	<button type="object" name="action_resources_available" string="PROCEED" attrs="{'invisible':[('stage_id','!=',9)]}" class="btn btn-primary"/>
-                	<button type="object" name="action_checklist_sent" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary"/>
+                	<button type="object" name="action_checklist_sent" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary" invisible="1"/>
                 	<button type="object" name="button_assessor_agreement" string="PROCEED" attrs="{'invisible':[('stage_id','!=',10)]}" class="btn btn-primary" confirm="Please Make sure AL and LA has signed conflict of interest and confidentiality forms"/>
                 	<button type="object" name="button_ready_assessment" string="Proceed" attrs="{'invisible':[('stage_id','!=',17)]}" />
 					<button type="object" name="button_assessment_plan" string="Ready" attrs="{'invisible':[('stage_id','!=',19)]}" class="btn btn-primary" confirm="Please confirm that CAR's has been completely filled out"/>                	
@@ -309,10 +310,12 @@
 					<field name="faculty_rep"/>
 					<field name="scope_assessed"/>
 			 	</group>
-				 <group string="PART 1: Detailed Observation and evidence" col="6" colspan="4">
-				 <field name="rel_equip"/>
+				 <group string="PART 1: Detailed Observation and evidence" col="4" colspan="2">
 				 <field name="name_lead"/>
 				 <field name="name_rep"/>
+				 </group>
+				 <group col="4" colspan="2">
+				 	<field name="rel_equip"/>
 				 </group>
 				 <group string="Part 2: Corrective Action Taken">
 				 <field name="root_cause"/>
@@ -996,7 +999,7 @@
             </field>
             <field name="team_id" position="after">
             	<field name="preassessment_needed" attrs="{'invisible':[('stage_id','!=',17)]}"/>
-            	<field name="resources_available" attrs="{'required':[('stage_id','=',9)], 'readonly':[('stage_id','!=',9)]}"/>
+            	<field name="resources_available" attrs="{'required':[('stage_id','=',5)], 'readonly':[('stage_id','!=',5)]}"/>
             	<field name="conflict_agreement" attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
                 <field name="assessment_team_ids" widget="many2many_tags" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',9)], 'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>
             </field>
@@ -1011,7 +1014,7 @@
                 <field name="assessment_type_id"/>
             </field>
             <field name="ticket_type_id" position="after">
-                <field name="funding" attrs="{'readonly':[('stage_id','!=',1)]}"/>
+                <field name="funding" attrs="{'readonly':[('stage_id','!=',3)]}"/>
                 <field name="funding_company_name" attrs="{'readonly':[('stage_id','!=',1)]}"/>
                 <field name="funding_company_rep" attrs="{'readonly':[('stage_id','!=',1)]}"/>
                 <field name="funding_company_rep_num" attrs="{'readonly':[('stage_id','!=',1)]}"/>

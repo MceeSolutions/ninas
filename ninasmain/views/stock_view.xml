@@ -100,9 +100,9 @@
            <xpath expr="//button[@name='action_invoice_open']" position="replace">
 				<button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight o_invoice_validate" groups="ninasmain.group_ceo"/>
 			</xpath>
-			<xpath expr="//button[@name='action_invoice_open']" position="after">
+			<!-- <xpath expr="//button[@name='action_invoice_open']" position="after">
 				<button name="send_validated_message" type="object" states="open" string="Notification" class="oe_highlight o_invoice_validate" groups="ninasmain.group_ceo"/>
-			</xpath>
+			</xpath> -->
            </field>
     </record>
     

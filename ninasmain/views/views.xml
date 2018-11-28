@@ -396,7 +396,7 @@
 	
 	<!-- chemimcal scope action -->
 	<record model="ir.actions.act_window" id="ninas_chemical_lab_action">
-            <field name="name">Chemical Testing Laboratory</field>
+            <field name="name">Testing Laboratory</field>
             <field name="res_model">ninas.chemical_lab</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -448,6 +448,16 @@
     <record model="ir.actions.act_window" id="ninas_assessor_form_attachment_action">
 		<field name="name">Assessor Form Attachment</field>
 		<field name="res_model">assessor.form.attachment</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+	
+	<!-- recommendation form action-->
+    <record model="ir.actions.act_window" id="ninas_recommendation_form_action">
+		<field name="name">Recommendation Form</field>
+		<field name="res_model">ninas.recommendation.form</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[]</field>
@@ -1867,7 +1877,7 @@
 			<field name="arch" type="xml">
 				<form string="Chemical Testing Laboratory">
 					<sheet>
-						<group string="Chemical Testing Form" col="4" colspan="4">
+						<group string="Testing Form" col="4" colspan="4">
                             <field name="schedule_number"/>
                             <field name="institution"/>
                             <field name="address"/>
@@ -2132,6 +2142,75 @@
 	        </form>
 	    </field>
 	    </record>
+
+
+
+		<!-- ninas.recommendation.form tree view-->
+	    <record id="ninas_ninas_recommendation_form_tree_view" model="ir.ui.view">
+			<field name="name">ninas.recommendation.form</field>
+			<field name="model">ninas.recommendation.form</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="name"/>
+				<field name="accreditation_scope"/>
+				<field name="type_assessment"/>
+	            <field name="reference_no"/>
+			</field>
+		</record>
+	
+	    <record id="ninas_recommendation_form_view" model="ir.ui.view">
+	    <field name="name">ninas.recommendation.form</field>
+	    <field name="model">ninas.recommendation.form</field>
+	    <field name="priority" eval="2"/>
+	    <field name="arch" type="xml">
+	        <form string="Recommendation Form">
+				 <sheet>
+				 	<span>Accreditation Decision Recommendation Form F 773 A</span>
+				 	<p>This form is to be used by the AAC Members to review assessment reports and
+					make recommendation on accreditation decision-making</p>
+					<group>
+						<field name="reference_no"/>
+					</group>
+				    <group col="4" colspan="4">
+				    	<field name="name"/>
+				    	<label for="address_of_institution" string="Address of Institurion or Lab"/>
+	           	       	<div class="o_address_format">
+	                        <field name="institution_number" placeholder="Number..." class="o_address_street"/>
+	                        <field name="institution_street" placeholder="Street..." class="o_address_street"/>
+	                        <field name="institution_city" placeholder="City" class="o_address_city"/>
+	                        <field name="institution_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+	                        <field name="institution_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+	                    </div>
+	                    <field name="name_of_institution_rep"/>
+	                    <field name="accreditation_scope"/>
+	                    </group>
+	                    <group col="6" colspan="3">
+	                    	<field name="name_assessor" domain="[('category_ids.is_assessor','=',True)]" widget="many2many_tags"/>
+	                    	<field name="type_assessment"/>
+	                    	<field name="assessment_date"/>
+	                    </group>
+	                    <span>I confirm that these recommendations are based on the following documents
+						provided by NiNAS (Please tick the relevant box)</span>
+						<p>I am satisfied that the information is sufficient to decide that the requirements
+						for accreditation have been met. Yes<field name="satisfactory_yes"/> No<field name="satisfactory_no"/></p>
+						<group string="Recommendation">
+							<field name="recommendation"/>
+						</group>
+	                    <P><b>Note: </b>The period of suspension shall not extend beyond the date of expiry of the
+						Certificate of Accreditation</P>
+						<group>
+							<field name="further_comment"/>
+						</group>
+	                    <group col="4" colspan="4">
+	                    	<field name="name_sign"/>
+	                    	<field name="date"/>
+	                    </group>
+				 </sheet>
+	        </form>
+	    </field>
+	    </record>
+
+
     
     
     
@@ -2145,7 +2224,7 @@
               action="medical_action"/>
     <menuitem name="Calibration Lab Scope" id="calibration_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
               action="calibration_action"/>
-    <menuitem name="Chemical Lab Scope" id="chemical_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
+    <menuitem name="Testing Lab Scope" id="chemical_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
               action="ninas_chemical_lab_action"/>
     <menuitem name="Assessment Plan" id="ninas_assessment_plan_menuitem" parent="ninas_lead_toolkit_tools_main_menu" 
     		  action="ninas_assessment_plan_action"/>
@@ -2170,8 +2249,6 @@
               action="ninas_confidentiality_action"/>
     <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="contract_agreement_main_menu"
               action="ninas_code_of_conduct_action"/>
-    <menuitem name="Decision Form" id="decision_form_menu" parent="helpdesk.menu_helpdesk_root" 
-    		  action="decision_form_action"/>
               
     <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_contract_agreement_action"/>
@@ -2204,6 +2281,15 @@
     
     <menuitem name="Forms" id="form_menu" parent="ninas_assessor_forms_main_menu"
               action="ninas_assessor_form_attachment_action"/>
+              
+              
+   	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png"/>
+    <menuitem name="AAC" id="ninas_aac_tools_main_menu" parent="ninas_aac_main_menu"/>
+    
+    <menuitem name="Recommendaion Form" id="recommendation_form_menu" parent="ninas_aac_main_menu"
+              action="ninas_recommendation_form_action" sequence="1"/>
+   	<menuitem name="Decision Form" id="decision_form_menu" parent="ninas_aac_main_menu" 
+    		  action="decision_form_action" sequence="2"/>
     
   </data>
 </odoo>

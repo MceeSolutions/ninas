@@ -382,13 +382,17 @@ class CreateInvoice(models.Model):
         
     @api.multi
     def button_confirm_sponsor(self):
-        self.write({'stage_id': 3})
+        self.write({'stage_id': 5})
         return {}
     
     @api.multi
-    def button_complete_approve(self):
-        self.write({'stage_id': 5})
-        return {}
+    def button_complete_approved(self):
+        if self.resources_available == False:
+            raise Warning('Resources are not available')
+        else:
+            self.invoice_prompt()
+            self.write({'stage_id': 3})
+        return True
     
     @api.multi
     def button_complete_reject(self):
@@ -398,6 +402,19 @@ class CreateInvoice(models.Model):
     @api.multi
     def button_complete_approve(self):
         self.write({'stage_id': 5})
+        return {}
+    
+    @api.multi
+    def confirm_funding(self):
+        if self.funding not in ['fully_funded'] and self.invoice_count == 0:
+            raise Warning('No invoice has been generated for this Application')
+        else:
+            self.write({'stage_id': 9})
+        return {}
+    
+    @api.multi
+    def confirmed_funding(self):
+        self.write({'stage_id': 9})
         return {}
     
     @api.multi
@@ -540,7 +557,7 @@ class CarReport(models.Model):
     ref_no = fields.Integer(string='Reference No:')
     faculty_rep = fields.Char(string='Name/Signature of Facility Representative:')
     scope_assessed = fields.Char(string='Scope Assessed:')
-    rel_equip = fields.Char(string='Relevant Standard Requirement')
+    rel_equip = fields.Text(string='Relevant Standard Requirement')
     name_lead =fields.Char(string='Name/Signature of Lead Assessor / Date')
     name_rep = fields.Char(string='Name /Signature of Representative/ Date')
     root_cause = fields.Text(string='(Root Cause Analysis)')
