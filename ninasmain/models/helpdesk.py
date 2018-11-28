@@ -82,7 +82,7 @@ class Accreditation(models.Model):
     applicant_rep_title = fields.Selection([('mr','Mr.'),('ms', 'Ms.'), ('mrs','Mrs.'), ('dr','DR.'), ('engr','Engr.'), ('prof','Prof.')],
         string='Authorized Representative’s Title',
         track_visibility='onchange')
-    laboratory_legal_name = fields.Text(
+    laboratory_legal_name = fields.Char(
         string="Laboratory’s Legal Name",
         track_visibility='onchange')
     

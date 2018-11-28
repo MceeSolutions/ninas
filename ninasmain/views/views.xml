@@ -2151,8 +2151,8 @@
 			<field name="model">ninas.recommendation.form</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
+				<field name="application_id"/>
 				<field name="name"/>
-				<field name="accreditation_scope"/>
 				<field name="type_assessment"/>
 	            <field name="reference_no"/>
 			</field>
@@ -2164,12 +2164,19 @@
 	    <field name="priority" eval="2"/>
 	    <field name="arch" type="xml">
 	        <form string="Recommendation Form">
+	        	<header>
+	        		<button name="button_done" string="Done" type="object" class="btn btn-primary" states="incomplete"/>
+	        		<field name="state" widget="statusbar" statusbar_visible="incomplete,done" readonly="1"/>
+	        	</header>
 				 <sheet>
 				 	<span>Accreditation Decision Recommendation Form F 773 A</span>
 				 	<p>This form is to be used by the AAC Members to review assessment reports and
 					make recommendation on accreditation decision-making</p>
-					<group>
+					<group col="4" colspan="4">
 						<field name="reference_no"/>
+					</group>
+					<group>
+						<field name="application_id"/>
 					</group>
 				    <group col="4" colspan="4">
 				    	<field name="name"/>
@@ -2194,7 +2201,7 @@
 						<p>I am satisfied that the information is sufficient to decide that the requirements
 						for accreditation have been met. Yes<field name="satisfactory_yes"/> No<field name="satisfactory_no"/></p>
 						<group string="Recommendation">
-							<field name="recommendation"/>
+							<field name="recommendation" required="True"/>
 						</group>
 	                    <P><b>Note: </b>The period of suspension shall not extend beyond the date of expiry of the
 						Certificate of Accreditation</P>
@@ -2249,7 +2256,6 @@
               action="ninas_confidentiality_action"/>
     <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="contract_agreement_main_menu"
               action="ninas_code_of_conduct_action"/>
-              
     <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_contract_agreement_action"/>
                             
@@ -2276,11 +2282,21 @@
 	<menuitem name="Expense claims" id="expense_claim_menu" parent="expense_request_menuitem"
               action="ninas_expense_claim_action"/>
 
-   	<menuitem name="Assessor Forms" id="ninas_assessor_forms_main_menu" web_icon="ninasmain,static/icon/form.png"/>
-    <menuitem name="Assessor Forms" id="ninas_assessor_forms_menu" parent="ninas_assessor_forms_main_menu"/>
+   	<menuitem name="Assessor Forms" id="ninas_assessor_forms_main_menu" web_icon="ninasmain,static/icon/form.png" sequence="1"/>
+    <menuitem name="Assessor Forms" id="ninas_assessor_forms_menu" parent="ninas_assessor_forms_main_menu" sequence="2"/>
     
     <menuitem name="Forms" id="form_menu" parent="ninas_assessor_forms_main_menu"
-              action="ninas_assessor_form_attachment_action"/>
+              action="ninas_assessor_form_attachment_action" sequence="3"/>
+              
+    <menuitem name="Contract Agreement" id="contract_agreement_main_menu" parent="ninas_assessor_forms_main_menu" sequence="4"/>
+    <menuitem name="Conflict Of Interest" id="conflict_of_interest_menu" parent="contract_agreement_main_menu"
+              action="ninas_conflict_of_interest_action"/>
+    <menuitem name="Confidentiality" id="confidentiality_menu" parent="contract_agreement_main_menu"
+              action="ninas_confidentiality_action"/>
+    <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="contract_agreement_main_menu"
+              action="ninas_code_of_conduct_action"/>
+    <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
+              action="ninas_contract_agreement_action"/>
               
               
    	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png"/>

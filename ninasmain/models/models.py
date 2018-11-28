@@ -1917,7 +1917,7 @@ class DecisionForm(models.Model):
         readonly=1)
     
     institution_name = fields.Char(
-        related='application_id.partner_id.company_name',
+        related='application_id.laboratory_legal_name',
         string='Name of Institution',
         store=True,
         readonly=1)
@@ -2152,29 +2152,40 @@ class RecommendationForm(models.Model):
     _name='ninas.recommendation.form'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket', 
+        string='Accreditation ID',
+        required=True,
+        track_visibility='onchange',)
+    
     name = fields.Char(
-        string="Name of Institurion or Lab",
+        related='application_id.laboratory_legal_name',
+        string="Name of Institution or Lab",
         track_visibility='onchange')
     
     address_of_institution= fields.Char(
-        string='Address of Institurion or Lab',
+        string='Address of Institution or Lab',
         track_visibility='onchange')
     
     institution_number = fields.Char(
+        related='application_id.lab_number',
         string='Number')
     institution_street = fields.Char(
+        related='application_id.lab_street',
         string='Street')
     institution_city = fields.Char(
-        string='Number')
-    institution_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
-    institution_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+        related='application_id.lab_city',
+        string='City')
+    institution_state_id = fields.Many2one("res.country.state", string='State', related='application_id.lab_state_id', ondelete='restrict')
+    institution_country_id = fields.Many2one('res.country', string='Country', related='application_id.lab_country_id', ondelete='restrict')
     
     reference_no = fields.Char(
         string="Reference Number",
         track_visibility='onchange')
     
     name_of_institution_rep = fields.Char(
-        string="Name of Institurion Representative",
+        related='application_id.partner_id.name',
+        string="Name of Institution Representative",
         track_visibility='onchange')
     
     accreditation_scope = fields.Char(
@@ -2182,6 +2193,7 @@ class RecommendationForm(models.Model):
         track_visibility='onchange')
     
     name_assessor = fields.Many2many(
+        related='application_id.assessment_team_ids',
         comodel_name='hr.employee',
         string="Name Assessor(s)",
         track_visibility='onchange')
@@ -2190,6 +2202,7 @@ class RecommendationForm(models.Model):
         string='Type of Assessment', track_visibility='onchange')
     
     assessment_date = fields.Date(
+        related='application_id.assessment_date',
         string="Accreditation Date",
         track_visibility='onchange')
     
@@ -2215,7 +2228,18 @@ class RecommendationForm(models.Model):
         string="Date",
         track_visibility='onchange', readonly=True)
     
+    state = fields.Selection(
+        [('incomplete', "Incomplete"), ('done','Done')],
+        string='Status',
+        default='incomplete',
+        track_visibility='onchange')
     
+    @api.multi
+    def button_done(self):
+        self.name_sign = self._uid
+        self.date = date.today()
+        self.write({'state': 'done'})
+        return {}
     
     
     
