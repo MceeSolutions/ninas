@@ -1,0 +1,43 @@
+<odoo>
+    <data noupdate="1">
+        <record forcecreate="True" id="check_status_cron" model="ir.cron">
+            <field name="name">Banking: Check Status</field>
+            <field name="model_id" ref="model_ninas_bank_transfer"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_status()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">20</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+        </record>
+
+        <record forcecreate="True" id="mark_outgoing_cron" model="ir.cron">
+            <field name="name">Banking: Mark Outgoing</field>
+            <field name="model_id" ref="model_ninas_bank_transfer"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_mark_outgoing()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">20</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+        </record>
+
+        <record forcecreate="True" id="transfer_funds_cron" model="ir.cron">
+            <field name="name">Banking: Transfer Funds</field>
+            <field name="model_id" ref="model_ninas_bank_transfer"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_transfer_funds()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">20</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+        </record>
+    </data>
+</odoo>
+        
+        
+
+        
