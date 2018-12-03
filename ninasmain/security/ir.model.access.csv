@@ -51,3 +51,12 @@ access_ninas_vehicle_request,ninas.vehicle.request,model_ninas_vehicle_request,b
 access_ninas_hr_recruitment,ninas.hr.recruitment,model_ninas_hr_recruitment,base.group_user,1,1,1,0
 access_assessor_form_attachment,assessor.form.attachment,model_assessor_form_attachment,base.group_user,1,1,1,0
 access_ninas_recommendation_form,ninas.recommendation.form,model_ninas_recommendation_form,base.group_user,1,1,1,0
+
+access_assessor_form_attachment_assessor,assessor.form.attachment,model_assessor_form_attachment,ninasmain.group_assessor,1,0,0,0
+access_ninas_car_report_assessor_assessor,car.report,model_car_report,ninasmain.group_assessor,1,0,0,0
+access_car_report_attachment_assessor,car.report.attachment,model_car_report_attachment,ninasmain.group_assessor,1,0,0,0
+access_ninas_contract_agreement_items_assessor,ninas.contract.agreement.items,model_ninas_contract_agreement_items,ninasmain.group_assessor,1,0,0,0
+access_ninas_contract_agreement_assessor,ninas.contract.agreement,model_ninas_contract_agreement,ninasmain.group_assessor,1,0,0,0
+access_ninas_confidentiality_assessor,ninas.confidentiality,model_ninas_confidentiality,ninasmain.group_assessor,1,0,0,0
+access_ninas_conflict_interest_assessor,ninas.conflict.interest,model_ninas_conflict_interest,ninasmain.group_assessor,1,0,0,0
+access_ninas_code_conduct_assessor,ninas.code.conduct,model_ninas_code_conduct,ninasmain.group_assessor,1,0,0,0

@@ -142,12 +142,21 @@
                 	<button type="object" name="button_reset_app" string="Ready For Review" class="btn btn-primary" attrs="{'invisible':[('stage_id','!=',18)]}"/>
 			</xpath>
 			<xpath expr="//button[@name='toggle_active']" position="before">
-		    	<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
+		    	<!-- <button type="action" class="oe_stat_button" name="%(ninasmain.ninas_checklist_ticket_action)d" context="{'search_default_customer': active_id,'default_customer': active_id}" icon="fa-list">
                 	<field string="Checklist" name="checklist_count" widget="statinfo"/>
-               </button>
-               <button type="object" class="oe_stat_button" name="open_customer_invoices" icon="fa-pencil-square-o">
-                   <field string="Invoices" name="invoice_count" widget="statinfo"/>
-               </button>
+               </button>-->
+               <button class="oe_stat_button" type="object" name="open_checklist_ticket" context="{'default_partner_id': active_id}" icon="fa-list">
+                    <div class="o_stat_info">
+                        <field name="checklist_count" class="o_stat_value"/>
+                        <span class="o_stat_text"> Checklist</span>
+                    </div>
+                </button>
+               <button class="oe_stat_button" type="object" name="open_customer_invoices" context="{'default_partner_id': active_id}" icon="fa-pencil-square-o">
+                    <div class="o_stat_info">
+                        <field name="invoice_count" class="o_stat_value"/>
+                        <span class="o_stat_text"> Invoices</span>
+                    </div>
+                </button>
                <!--<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_action_invoice_tree1)d" icon="fa-pencil-square-o">
                    <field string="Invoices" name="invoice_count" widget="statinfo"/>
                </button>-->
@@ -349,7 +358,7 @@
             
             <xpath expr="//h2" position="before">
             	<div class="container">
-            	<h5 class="pull-right">Customer Helpline: +234 (0) 81 7976 4868</h5>
+            	<h5 class="pull-right"><b>If you have any issues filing this form, please contact: +234 (0) 81 7976 4868</b></h5>
             	<br/>
             	<!-- <ul class="wizard pull-middle hidden-xs">
 			            <li t-att-class="(step==10 and 'text-primary') or 'text-muted'" id="step10">
@@ -375,7 +384,7 @@
 					publish information that is already in the public domain.</h5>
 					<strong>
 						Part I. Applicant Information<br/>
-						Note: fields with asterisk are required
+						Note: fields with asterisk (*) are required
 					</strong>
 				</div>
 			</xpath>

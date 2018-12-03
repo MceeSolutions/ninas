@@ -370,16 +370,29 @@ class CreateInvoice(models.Model):
     '''
     @api.multi
     def open_customer_invoices(self):
-        
         return {
             'type': 'ir.actions.act_window',
             'name': ('Customer Invoices'),
             'res_model': 'account.invoice',
             'view_mode': 'tree,kanban,form,pivot,graph',
-            'domain':[('type','=','out_invoice')],
-            'context': {'search_default_partner_id': self.partner_id.id}
+            'domain':[('type','=','in_invoice')],
+            'target': 'current',
+            'context': {'search_default_is_open': True, 'search_default_partner_id': self.partner_id.id}
         }
+    
         
+    @api.multi
+    def open_checklist_ticket(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': ('Checklist'),
+            'res_model': 'checklist.ticket',
+            'view_mode': 'tree,kanban,form,pivot,graph',
+            'target': 'current',
+            'context': {'search_default_is_open': True, 'search_default_partner_id': self.partner_id.id}
+        }
+    
+    
     @api.multi
     def button_confirm_sponsor(self):
         self.write({'stage_id': 5})

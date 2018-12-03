@@ -9,7 +9,7 @@ class Accreditation(http.Controller):
     def index(self, **kw):
         default_values = {}
         assessment_type_id = http.request.env['assessment.type'].sudo().search([])
-        lab_state_id = http.request.env['res.country.state'].sudo().search([])
+        lab_state_id = http.request.env['res.country.state'].sudo().search([('country_id.name','=','Nigeria')])
         lab_country_id = http.request.env['res.country'].sudo().search([('name','=','Nigeria')])
         mail_state_id = http.request.env['res.country.state'].sudo().search([])
         mail_country_id = http.request.env['res.country'].sudo().search([])
