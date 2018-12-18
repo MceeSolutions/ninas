@@ -57,35 +57,20 @@
                                             <td class="text-right" t-if="line['code'] == 'BASICM'" style="padding:0;border:0;">
                                                 <span t-esc="'{0:,.2f}'.format(o.get_total('BASIC'))" />
                                             </td>
-                                            <td class="text-right" t-if="line['code'] == 'MLNG'" style="padding:0;border:0;">
-                                                <span t-esc="'{0:,.2f}'.format(o.get_total('YTDM'))" />
+                                            <td class="text-right" t-if="line['code'] == 'HALM'" style="padding:0;border:0;">
+                                                <span t-esc="'{0:,.2f}'.format(o.get_total('HAL'))" />
                                             </td>
-                                            <td class="text-right" t-if="line['code'] == 'ENNG'" style="padding:0;border:0;">
-                                                <span t-esc="'{0:,.2f}'.format(o.get_total('YTDE'))" />
+                                            <td class="text-right" t-if="line['code'] == 'TALM'" style="padding:0;border:0;">
+                                                <span t-esc="'{0:,.2f}'.format(o.get_total('TAL'))" />
                                             </td>
-                                            <td class="text-right" t-if="line['code'] == 'HRANG'" style="padding:0;border:0;">
-                                                <span t-esc="'{0:,.2f}'.format(o.get_total('YTDH'))" />
+                                            <td class="text-right" t-if="line['code'] == 'UALM'" style="padding:0;border:0;">
+                                                <span t-esc="'{0:,.2f}'.format(o.get_total('UAL'))" />
                                             </td>
-                                            <td class="text-right" t-if="line['code'] == 'TRNG'" style="padding:0;border:0;">
-                                                <span t-esc="'{0:,.2f}'.format(o.get_total('YTDT'))" />
+                                            <td class="text-right" t-if="line['code'] == 'MSLM'" style="padding:0;border:0;">
+                                                <span t-esc="'{0:,.2f}'.format(o.get_total('MSL'))" />
                                             </td>
-                                            <td class="text-right" t-if="line['code'] == 'LANG'" style="padding:0;border:0;">
-                                                <span t-esc="'{0:,.2f}'.format(o.get_total('YTDL'))" />
-                                            </td>
-                                            <td class="text-right" t-if="line['code'] == 'BONUSNG'" style="padding:0;border:0;">
-                                                <span>Set YTD for BONUSNG</span>
-                                            </td>
-                                            <td t-if="line['code'] == 'OT'" style="padding:0;border:0;">
-                                                <span>Set YTD rule OT</span>
-                                            </td>
-                                            <td class="text-right" t-if="line['code'] == 'UTING'" style="padding:0;border:0;">
-                                                <span t-esc="'{0:,.2f}'.format(o.get_total('YTDU'))" />
-                                            </td>
-                                            <td class="text-right" t-if="line['code'] == 'SALA'" style="padding:0;border:0;">
-                                                <span t-esc="'{0:,.2f}'.format(o.get_total('YTDSALA'))" />
-                                            </td>
-                                            <td class="text-right" t-if="line['code'] == 'TTEH'" style="padding:0;border:0;">
-                                                <span t-esc="'{0:,.2f}'.format(o.get_total('YTDTE'))" />
+                                            <td class="text-right" t-if="line['code'] == 'EALM'" style="padding:0;border:0;">
+                                                <span t-esc="'{0:,.2f}'.format(o.get_total('EAL'))" />
                                             </td>
                                         </tr>
                                     </t>
