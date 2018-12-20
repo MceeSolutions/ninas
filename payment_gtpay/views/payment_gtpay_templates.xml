@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <template id="submit2gtpay_form">
+            <div>
+                <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+                <input type="hidden" name="cmd" t-att-value="cmd"/>
+                <input type="hidden" name="gtpay_mert_id" t-att-value="gtpay_mert_id"/>
+                <input type="hidden" name="gtpay_tranx_id" t-att-value="gtpay_tranx_id"/>
+                <input type="hidden" name="gtpay_tranx_amt" t-att-value="gtpay_tranx_amt"/>
+                <input type="hidden" name="gtpay_tranx_curr" t-att-value="gtpay_tranx_curr"/>
+                <input type="hidden" name="gtpay_cust_name" t-att-value="gtpay_cust_name"/>
+                <input type="hidden" name="gtpay_tranx_memo" t-att-value="gtpay_tranx_memo"/>
+                <input type="hidden" name="gtpay_no_show_gtbank" t-att-value="gtpay_no_show_gtbank"/>
+                <input type="hidden" name="gtpay_echo_data" t-att-value="gtpay_echo_data"/>
+                <input type="hidden" name="gtpay_gway_name" t-att-value="gtpay_gway_name"/>
+                <input type="hidden" name="gtpay_hash" t-att-value="gtpay_hash"/>
+                <input type="hidden" name="gtpay_tranx_noti_url" t-att-value="gtpay_tranx_noti_url"/>
+                <input type="hidden" name="gtpay_echo_data" t-att-value="gtpay_echo_data"/>
+                <input type="submit" value="Pay Via GTPay" name="btnSubmit"/>
+            </div>
+        </template>
+    </data>
+</odoo>
+         

@@ -12,14 +12,15 @@
     'author':'Mcee',               
     'website': 'https://mceesolutions.com',
     'category': 'ninas',
-    'version':'11.0.0.0.69',
+    'version':'11.0.0.0.70',
     'application': True,
     'insatallable': True,
     'auto-install': True,
-        
+
     'depends': ['hr_holidays', 'hr_recruitment', 'website', 'stock', 'mail', 'sale',
                 'purchase', 'account_budget', 'helpdesk', 'hr_expense', 'hr_appraisal',
-                'maintenance','website_helpdesk','website_helpdesk_form', 'hr_payroll'],
+                'maintenance','website_helpdesk','website_helpdesk_form', 'hr_payroll',
+                'payment'],
     'external_dependencies': {
         'python': [],
         'bin': []
