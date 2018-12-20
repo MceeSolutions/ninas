@@ -56,7 +56,7 @@
         <record id="payment_acquirer_gtpay" model="payment.acquirer">
         <field name="name">GTPay</field>
         <field name="sequence">1</field>
-        <field name="view_template_id" ref="payment.default_acquirer_button"/>
+        <field name="view_template_id" ref="payment_gtpay.submit2gtpay_form"/>
         <field name="image" type="base64" file="payment_gtpay/static/src/img/gtpay_icon.png"/>
         <field name="module_id" ref="base.module_payment_gtpay"/>
         <field name="description" type="html">

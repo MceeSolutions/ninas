@@ -22,7 +22,12 @@ class GTPayController(http.Controller):
 
     def _get_return_url(self, **post):
         """ Extract the return URL from the data coming from gtpay. """
-        return_url = post.pop('gtpay_tranx_noti_url', '/')
+        return_url = post.pop('gtpay_echo_data', '/')
+        try:
+            return_url = return_url.split(',')[0]
+        except:
+            return_url = '/'
+        _logger.info('return_url %s'%return_url)
         return return_url
 
 
@@ -85,4 +90,5 @@ class GTPayController(http.Controller):
         """ When the user cancels its GTPay payment: GET on this route """
         _logger.info('Beginning GTPay cancel with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
+        self.gtpay_validate_data(**post)
         return werkzeug.utils.redirect(return_url)
