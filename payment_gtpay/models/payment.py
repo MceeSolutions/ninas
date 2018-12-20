@@ -96,37 +96,34 @@ class AcquirerGTPay(models.Model):
             currency = 566
         elif values['currency'] and values['currency'].name == 'USD':
             currency = 826
-        amount = 0 
-        if values['amount']:
-            amount = values['amount'] * 100
-            amount = '{0:.0f}'.format(amount)
+        amount = values['amount']
+        if amount:
+            amount = '{0:.0f}'.format(amount * 100)
 
-        gtpay_hash = '%s%s%s%s%s%s%s'%(self.gtpay_seller_account,
-                                    '%s: %s' % (self.company_id.name, values['reference']),
+        gtpay_hash = '%s%s%s%s%s%s%s'%(self.gtpay_seller_account,values['reference'],
                                     amount, currency, values.get('partner').code,
                                     urls.url_join(base_url, GTPayController._return_url),
                                     self.gtpay_hash_key)
-        
+                            
         hash = hashlib.sha512()
         hash.update(gtpay_hash.encode('utf-8'))
         gtpay_hash = hash.hexdigest().upper()
 
         gtpay_tx_values.update({
-            'cmd': '_xclick',
             'gtpay_mert_id': self.gtpay_seller_account,
             'gtpay_tranx_id': values['reference'],
-            'gtpay_tranx_amt': str(amount),
+            'gtpay_tranx_amt': amount,
             'gtpay_tranx_curr': str(currency),
             'gtpay_cust_id':values.get('partner').code,
             'gtpay_cust_name': values.get('partner_name'),
-            'gtpay_tranx_memo': self.env['account.invoice'].search([('number','=',values['reference'])],limit=1).name, 
+            'gtpay_tranx_memo': 'Payment via GTPay', 
             'gtpay_no_show_gtbank': 'yes',
-            'gtpay_echo_data': 'TEST',
+            'gtpay_echo_data': values.get('return_url'),
             'gtpay_gway_name': "",
             'gtpay_hash': gtpay_hash,
             'gtpay_tranx_noti_url': urls.url_join(base_url, GTPayController._return_url),
         })
-        #_logger.info(gtpay_tx_values)
+        _logger.info(gtpay_tx_values)
         return gtpay_tx_values
 
     @api.multi
@@ -172,8 +169,8 @@ class TxGTPay(models.Model):
 
         if self.acquirer_reference and data.get('gtpay_tranx_id') != self.reference:
             invalid_parameters.append(('gtpay_tranx_id', data.get('gtpay_tranx_id'), self.reference))
-        if float_compare(float(data.get('gtpay_tranx_amt', '0.0')), (self.amount + self.fees), 2) != 0:
-            invalid_parameters.append(('gtpay_tranx_amt', data.get('gtpay_tranx_amt'), '%.2f' % self.amount))
+        """if float_compare(float(data.get('gtpay_tranx_amt', '0.0')), (self.amount + self.fees), 2) != 0:
+            invalid_parameters.append(('gtpay_tranx_amt', data.get('gtpay_tranx_amt'), '%.2f' % self.amount))"""
         return invalid_parameters
 
     @api.multi
