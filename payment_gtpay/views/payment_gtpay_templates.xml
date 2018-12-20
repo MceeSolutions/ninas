@@ -9,6 +9,7 @@
                 <input type="hidden" name="gtpay_tranx_id" t-att-value="gtpay_tranx_id"/>
                 <input type="hidden" name="gtpay_tranx_amt" t-att-value="gtpay_tranx_amt"/>
                 <input type="hidden" name="gtpay_tranx_curr" t-att-value="gtpay_tranx_curr"/>
+                <input type="hidden" name="gtpay_cust_id" t-att-value="gtpay_cust_id"/>
                 <input type="hidden" name="gtpay_cust_name" t-att-value="gtpay_cust_name"/>
                 <input type="hidden" name="gtpay_tranx_memo" t-att-value="gtpay_tranx_memo"/>
                 <input type="hidden" name="gtpay_no_show_gtbank" t-att-value="gtpay_no_show_gtbank"/>
