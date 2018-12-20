@@ -38,6 +38,21 @@
         	<field name="padding">3</field>
         </record>
 
+        <record id="payment_icon_cc_verve" model="payment.icon">
+            <field name="name">Verve</field>
+            <field name="image" type="base64" file="payment_gtpay/static/src/img/verve.png"/>
+        </record>
+
+        <record id="payment_icon_cc_bank_transfer_gtb" model="payment.icon">
+            <field name="name">Bank Transfer GTPay</field>
+            <field name="image" type="base64" file="payment_gtpay/static/src/img/bank_transfer.png"/>
+        </record>
+
+        <record id="payment_icon_cc_ussd" model="payment.icon">
+            <field name="name">USSD</field>
+            <field name="image" type="base64" file="payment_gtpay/static/src/img/ussd.png"/>
+        </record>
+
         <record id="payment_acquirer_gtpay" model="payment.acquirer">
         <field name="name">GTPay</field>
         <field name="sequence">1</field>
@@ -54,9 +69,13 @@
             </ul>
         </field>
         <!-- https://www.gtbank.com/business-banking/sme-banking/e-commerce-solutions/gtpay -->
-        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
-                                                        ref("payment.payment_icon_cc_mastercard"),
-                                                        ref("payment.payment_icon_cc_visa")])]'/>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_mastercard"),
+                                                      ref("payment.payment_icon_cc_visa"),
+                                                      ref("payment_icon_cc_verve"),
+                                                      ref("payment_icon_cc_bank_transfer_gtb"),
+                                                      ref("payment_icon_cc_ussd"),])]'/>
     </record>
+    
+    
     </data>
 </odoo>
