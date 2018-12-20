@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="payment.payment_acquirer_gtpay" model="payment.acquirer">
+        <record id="ninasmain.payment_acquirer_gtpay" model="payment.acquirer">
             <field name="name">GTPay</field>
             <field name="image" type="base64" file="payment_gtpay/static/src/img/gtpay_icon.png"/>
             <field name="provider">gtpay</field>

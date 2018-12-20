@@ -11,7 +11,7 @@
         "Tosin Komolafe <tkomolafe@mceesolutions.com>, <komolafetosin@gmail.com>",
     ],
     'description': """GTPay Payment Acquirer""",
-    'depends': ['payment'],
+    'depends': ['ninasmain'],
     'data': [
         'views/payment_views.xml',
         'views/payment_gtpay_templates.xml',
