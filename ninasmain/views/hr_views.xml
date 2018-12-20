@@ -42,17 +42,17 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr_payroll.payroll_hr_employee_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='%(hr_contract.act_hr_employee_2_hr_contract)d']" position="replace">
+                <button name="%(hr_contract.act_hr_employee_2_hr_contract)d" position="replace">
                     <button name="%(hr_contract.act_hr_employee_2_hr_contract)d" class="oe_stat_button" icon="fa-book" type="action" groups="base.group_user">
                         <field name="contracts_count" widget="statinfo" string="Contracts"/>
                     </button>
-                </xpath>
+                </button>
 
-                <button name="'%(hr_payroll.act_hr_employee_payslip_list)d'" position="replace">
+                <!--button name="%(hr_payroll.act_hr_employee_payslip_list)d" position="replace">
                     <button name="%(hr_payroll.act_hr_employee_payslip_list)d" class="oe_stat_button" icon="fa-money" type="action" groups="base.group_user">
                         <field name="payslip_count" widget="statinfo" string="Payslips"/>
                     </button>
-                </button>
+                </button-->
 
                 <xpath expr="//page[@name='personal_information']" position="attributes">
                     <attribute name="groups">base.group_user</attribute>
