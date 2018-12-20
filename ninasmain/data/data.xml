@@ -43,8 +43,8 @@
             <field name="image" type="base64" file="payment_gtpay/static/src/img/verve.png"/>
         </record>
 
-        <record id="payment_icon_cc_bank_transfer_gtb" model="payment.icon">
-            <field name="name">Bank Transfer GTPay</field>
+        <record id="payment_icon_cc_bank_transfer" model="payment.icon">
+            <field name="name">Bank Transfer</field>
             <field name="image" type="base64" file="payment_gtpay/static/src/img/bank_transfer.png"/>
         </record>
 
@@ -72,8 +72,8 @@
         <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_mastercard"),
                                                       ref("payment.payment_icon_cc_visa"),
                                                       ref("payment_icon_cc_verve"),
-                                                      ref("payment_icon_cc_bank_transfer_gtb"),
-                                                      ref("payment_icon_cc_ussd"),])]'/>
+                                                      ref("payment_icon_cc_bank_transfer"),
+                                                      ref("payment_icon_cc_ussd")])]'/>
     </record>
     
     
