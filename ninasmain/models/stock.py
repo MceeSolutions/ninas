@@ -163,7 +163,24 @@ class AccountInvoice(models.Model):
         readonly=True, states={'draft': [('readonly', False)]}, index=True,
         help="Keep empty to use the current date", copy=False)
     
+    @api.model
+    def create(self, vals):
+        a = super(AccountInvoice, self).create(vals)
+        a.send_created_message()
+        return a
     
+    @api.multi
+    def send_created_message(self):
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "An invoice has been created and awaiting validation".format(self.number)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def _onchange_send_validated_message(self):
@@ -181,16 +198,16 @@ class AccountInvoice(models.Model):
     
     @api.multi
     def onchange_send_paid_message(self):
-            group_id = self.env['ir.model.data'].xmlid_to_object('account.group_account_invoice')
-            user_ids = []
-            partner_ids = []
-            for user in group_id.users:
-                user_ids.append(user.id)
-                partner_ids.append(user.partner_id.id)
-            self.message_subscribe_users(user_ids=user_ids)
-            subject = "Invoice {} has been paid".format(self.number)
-            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
-            return False
+        group_id = self.env['ir.model.data'].xmlid_to_object('account.group_account_invoice')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Invoice {} has been paid".format(self.number)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def invoice_validate(self):
