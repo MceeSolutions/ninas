@@ -40,17 +40,17 @@
 
         <record id="payment_icon_cc_verve" model="payment.icon">
             <field name="name">Verve</field>
-            <field name="image" type="base64" file="payment_gtpay/static/img/verve.png"/>
+            <field name="image" type="base64" file="payment_gtpay/static/src/img/verve.png"/>
         </record>
 
         <record id="payment_icon_cc_bank_transfer_gtb" model="payment.icon">
             <field name="name">Bank Transfer GTPay</field>
-            <field name="image" type="base64" file="payment_gtpay/static/img/bank_transfer.png"/>
+            <field name="image" type="base64" file="payment_gtpay/static/src/img/bank_transfer.png"/>
         </record>
-        
+
         <record id="payment_icon_cc_ussd" model="payment.icon">
             <field name="name">USSD</field>
-            <field name="image" type="base64" file="payment_gtpay/static/img/ussd.png"/>
+            <field name="image" type="base64" file="payment_gtpay/static/src/img/ussd.png"/>
         </record>
 
         <record id="payment_acquirer_gtpay" model="payment.acquirer">
