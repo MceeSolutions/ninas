@@ -48,11 +48,11 @@
                     </button>
                 </xpath>
 
-                <xpath expr="//button[@name='%(hr_payroll.act_hr_employee_payslip_list)d']" position="replace">
-                    <button name="'%(hr_payroll.act_hr_employee_payslip_list)d'" class="oe_stat_button" icon="fa-money" type="action" groups="base.group_user">
+                <button name="'%(hr_payroll.act_hr_employee_payslip_list)d'" position="replace">
+                    <button name="%(hr_payroll.act_hr_employee_payslip_list)d" class="oe_stat_button" icon="fa-money" type="action" groups="base.group_user">
                         <field name="payslip_count" widget="statinfo" string="Payslips"/>
                     </button>
-                </xpath>
+                </button>
 
                 <xpath expr="//page[@name='personal_information']" position="attributes">
                     <attribute name="groups">base.group_user</attribute>
