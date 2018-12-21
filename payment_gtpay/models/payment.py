@@ -101,7 +101,7 @@ class AcquirerGTPay(models.Model):
             amount = '{0:.0f}'.format(amount * 100)
 
         gtpay_hash = '%s%s%s%s%s%s%s'%(self.gtpay_seller_account,values['reference'],
-                                    amount, currency, values.get('partner').code,
+                                    amount, currency, values.get('partner').id,
                                     urls.url_join(base_url, GTPayController._return_url),
                                     self.gtpay_hash_key)
                             
@@ -114,7 +114,7 @@ class AcquirerGTPay(models.Model):
             'gtpay_tranx_id': values['reference'],
             'gtpay_tranx_amt': amount,
             'gtpay_tranx_curr': str(currency),
-            'gtpay_cust_id':values.get('partner').code,
+            'gtpay_cust_id':values.get('partner').id,
             'gtpay_cust_name': values.get('partner_name'),
             'gtpay_tranx_memo': 'Payment via GTPay', 
             'gtpay_no_show_gtbank': 'yes',
