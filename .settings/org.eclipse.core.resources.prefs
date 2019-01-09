@@ -18,3 +18,6 @@ encoding//ninasmain/models/stock.py=utf-8
 encoding//ninasmain/report/__init__.py=utf-8
 encoding//ninasmain/report/ninas_code_conduct_report.py=utf-8
 encoding//ninasmain/report/ninas_conflict_interest_report.py=utf-8
+encoding//payment_gtpay/controllers/main.py=utf-8
+encoding//payment_gtpay/models/payment.py=utf-8
+encoding//payment_gtpay/tests/test_paypal.py=utf-8
