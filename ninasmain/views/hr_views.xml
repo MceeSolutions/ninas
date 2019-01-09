@@ -151,7 +151,7 @@
             name="Employees"
             action="hr.open_view_employee_list_my"
             parent="hr.menu_open_view_employee_list_my"
-            sequence="3"
+            sequence="4"
             groups="hr.group_hr_manager"/> 
     </data>
 </odoo>
