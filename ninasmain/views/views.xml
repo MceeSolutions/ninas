@@ -59,6 +59,7 @@
 				</xpath>
  				
 			 <xpath expr="//page[@name='personal_information']" position="inside">
+
 	             <group string="Fullname" col="4" colspan="4">
 					<field name="name"/>
 					<field name="lname"/>
@@ -79,17 +80,16 @@
 				</group>
              </xpath>
       	
-       <xpath expr="//page[@name='public']" position="inside">
-	             <group col="4" colspan="4">
-					<field name="title"/>
-					<field name="levelof_exp" widget="priority"/>
-					<field name="employee"/>
-					<field name="start_date"/>
-					<field name="salary" widget="monetary"/>
-				</group>
-             </xpath>
-      
-           </field> 
+		       <xpath expr="//page[@name='public']" position="inside">
+			             <group col="4" colspan="4">
+							<field name="title"/>
+							<field name="levelof_exp" widget="priority"/>
+							<field name="employee"/>
+							<field name="start_date"/>
+							<field name="salary" widget="monetary"/>
+						</group>
+		       </xpath>
+          </field> 
 
     </record>    
 	
@@ -129,73 +129,92 @@
                 <field name="assigned_to"/>
             </field>
              <field name="name" position="before">
-                <field name="title"/>
-                <field name="agency"/>
                 <field name="planned_leave"/>
             </field>
         </field>
     </record>
     
-	<!-- template 
-	<template id="ninas_report_header_custom" inherit_id="website_hr_recruitment.apply">
-            <xpath expr="//div" position="after">
-                <div class="col-md-3 col-sm-4 text-right">
-                    <label class="control-label" for="name">First Name</label>
-                </div>
-            </xpath>
-        </template>
-	-->
-	
-	<!-- Job Application Form 
-	<template id="ninas_report_header_custom" inherit_id="website_hr_recruitment.apply">
-		<xpath expr="//h1" position="replace">
-            <h1 class="text-center">Recruitment Form</h1>
-        </xpath>
-		<xpath expr="//h1" position="after">
-			<h4 class="text-center">Please send your completed form to hr@ninas.ng</h4>
-			<h5 class="text-center">Please note CV will not be accepted</h5>
-			<div class="text-center">Job Reference/Vacancy ID: "job_id" </div>
-			<group col="4" colspan="2">
+    <!-- Leave Request -->
+	<record id="ninas_view_holiday_allocation_tree" model="ir.ui.view">
+        <field name="name">ninas.hr.allocation.tree</field>
+        <field name="model">hr.holidays</field>
+        <field name="priority" eval="7"/>
+        <field name="inherit_id" ref="hr_holidays.view_holiday_simple"/>
+        <field name="arch" type="xml">
+             <xpath expr="//tree" position="attributes">
+	                <attribute name="default_order">create_date</attribute>
+	            </xpath>
+        </field>
+    </record>
+    
+	<!-- job application form-->
+		<record id="ninas_hr_recruitment_form_view" model="ir.ui.view">
+		<field name="name">ninas.hr.recruitment.form</field>
+		<field name="model">ninas.hr.recruitment</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
+		<field name="arch" type="xml">
+			<field name="partner_id" position="before">
 				<field name="job_discovery"/>
-			</group>
-		</xpath>
-		<xpath expr="//div[@class='form-group form-field o_website_form_required_custom']" position="replace">
-			<div class="form-group form-field o_website_form_required_custom">
-				<div class="col-md-3 col-sm-4 text-right">
-					<label class="control-label" for="first_name">Name</label>
-				</div>
-				<div class="col-md-7 col-sm-8">
-					<input type="text" class="form-control o_website_form_input" name="first_name" required=""/>
-				</div>
-			</div>
-			<div class="form-group form-field o_website_form_required_custom">
-				<div class="col-md-3 col-sm-4 text-right">
-					<label class="control-label" for="address">Address</label>
-				</div>
-				<div class="col-md-7 col-sm-8">
-					<input type="text" class="form-control o_website_form_input" name="address" required=""/>
-				</div>
-			</div>
-		</xpath>
-		<xpath expr="//div[@class='form-group form-field o_website_form_custom']" position="after">
-			<div class="form-group form-field o_website_form_custom">
-				<div class="col-md-3 col-sm-4 text-right">
-					<label class="control-label" for="Resume">Other Attachments</label>
-				</div>
-				<div class="col-md-7 col-sm-8">
-					<input type="file" class="form-control o_website_form_input" name="other_attachments"/>
-				</div>
-			</div>
-		</xpath>
-		<xpath expr="//div[@class='form-group']" position="replace">
-			<div class="form-group">
-				<div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-					<span class="btn btn-primary btn-lg o_website_form_send">Next</span>
-					<span id="o_website_form_result"></span>
-				</div>
-			</div>
-		</xpath>
-    </template>-->
+			</field>
+			<field name="partner_id" position="replace">
+				<field name="partner_first_name"/>
+				<field name="partner_last_name"/>
+			</field>
+			<field name="partner_mobile" position="after">
+				<field name="partner_work"/>
+				<field name="mode_of_contact"/>
+			</field>
+			<field name="user_id" position="after">
+				<field name="partner_address"/>
+				<field name="partner_sub_address"/>
+			</field>
+			<sheet>
+				<notebook>
+					<page name="referees" string="Referees">
+						<separator string="Referee 1"/>
+						<group col="4" colspan="4">
+							<field name="referee1"/>
+							<field name="referee1_position"/>
+							<field name="referee1_email"/>
+							<field name="ref1_contact_before_interview"/>
+							<field name="ref1_contact_before_offer"/>
+						</group>
+						<separator string="Referee 2"/>
+						<group col="4" colspan="4">
+							<field name="referee2"/>
+							<field name="referee2_position"/>
+							<field name="referee2_email"/>
+							<field name="ref2_contact_before_interview"/>
+							<field name="ref2_contact_before_offer"/>
+						</group>
+					</page>
+					<page name="previous_employment" string="Previous Employment">
+						<separator string="Present or Last Post"/>
+						<group col="4" colspan="4">
+							<field name="last_position"/>
+							<field name="employer_name"/>
+							<field name="employed_from"/>
+							<field name="employed_to"/>
+							<field name="previous_work_address"/>
+							<field name="reason_for_leaving"/>
+							<field name="notice_period"/>
+							<field name="main_responsibilities"/>
+						</group>
+						<separator string="Previous employment or relevant voluntary work (put the most recent first)"/>
+						<field name="prev_employment_ids">
+							<tree editable="True">
+								<field name="job_title"/>
+								<field name="prev_emp_name"/>
+								<field name="emp_from"/>
+								<field name="emp_to"/>
+								<field name="leaving"/>
+							</tree>
+						</field>
+					</page>
+				</notebook>
+			</sheet>
+		</field>
+	</record>
 	
 	
     <!-- Loan Request action-->          
@@ -377,7 +396,7 @@
 	
 	<!-- chemimcal scope action -->
 	<record model="ir.actions.act_window" id="ninas_chemical_lab_action">
-            <field name="name">Chemical Testing Laboratory</field>
+            <field name="name">Testing Laboratory</field>
             <field name="res_model">ninas.chemical_lab</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -414,7 +433,37 @@
 	           <field name="domain">[]</field>
 	           <field name="context">{}</field>
 	</record>
-        
+	
+	<!-- vehicle form action -->
+	<record model="ir.actions.act_window" id="ninas_vehicle_request_action">
+	           <field name="name">Vehicle Request Form</field>
+	           <field name="res_model">ninas.vehicle.request</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">tree,form</field>
+	           <field name="domain">[]</field>
+	           <field name="context">{}</field>
+	</record>
+    
+    <!-- assessor form attachment action-->
+    <record model="ir.actions.act_window" id="ninas_assessor_form_attachment_action">
+		<field name="name">Assessor Form Attachment</field>
+		<field name="res_model">assessor.form.attachment</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+	
+	<!-- recommendation form action-->
+    <record model="ir.actions.act_window" id="ninas_recommendation_form_action">
+		<field name="name">Recommendation Form</field>
+		<field name="res_model">ninas.recommendation.form</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[]</field>
+		<field name="context">{}</field>
+	</record>
+    
     <!-- loan request  tree view-->
     <record id="loan_request_tree_view" model="ir.ui.view">
 		<field name="name">loan.request.tree</field>
@@ -660,8 +709,8 @@
 			<tree>
 				<field name="name"/>
 				<field name="provider"/>
-				<field name="training_date"/>
-				<field name="duration"/>
+				<field name="training_start_date"/>
+				<field name="training_date_end"/>
 			</tree>
 		</field>
 	</record>
@@ -672,13 +721,19 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Employee Training Tracker">
+				<header>
+	        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="new" groups="ninasmain.group_hr_line_manager"/>
+	        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="new" groups="ninasmain.group_hr_line_manager"/>
+	        		<button name="button_approve_lm" string="Approve" type="object" class="btn btn-primary" states="validate"/>
+	        		<field name="state" widget="statusbar" statusbar_visible="new,validate,approve,reject" readonly="1"/>
+	        	</header>
 				<sheet>
 					<group col="4" colspan="2">
 						<field name="name"/>
 						<field name="position"/>
 						<field name="provider"/>
-						<field name="training_date"/>
-						<field name="duration"/>
+						<field name="training_start_date"/>
+						<field name="training_date_end"/>
 						<field name="budget"/>
 						<field name="qualification"/>
 						<field name="capability"/>
@@ -725,6 +780,7 @@
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
         		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve" groups="ninasmain.group_admin_finance_officer"/>
         		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate" groups="ninasmain.group_ceo"/>
+        		<button name="button_confirm_payment" string="Confrim Payment" type="object" class="btn btn-primary" states="ceo" groups="base.group_user"/>
         		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 				<sheet>
@@ -754,6 +810,70 @@
 						<field name="employee_name"/>
 						<field name="approved_by"/>
 					</group>
+				</sheet>
+				<div class="oe_chatter">
+			             <field name="message_follower_ids" widget="mail_followers"/>
+			             <field name="activity_ids" widget="mail_activity"/>
+			             <field name="message_ids" widget="mail_thread"/>
+			        </div>
+			</form>
+		</field>
+	</record>
+	
+	<!-- ninas.vehicle.request -->
+	<record model="ir.ui.view" id="ninas_vehicle_request_tree_view">
+		<field name="name">ninas.vehicle.request.tree</field>
+		<field name="model">ninas.vehicle.request</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="time_requires"/>
+				<field name="date_request"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_advance_request_form_view">
+		<field name="name">ninas.vehicle.request.form</field>
+		<field name="model">ninas.vehicle.request</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Vehicle Request Form">
+				<header>
+        		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit" groups="ninasmain.group_logistics"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit" groups="ninasmain.group_logistics"/>
+        		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
+        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
+        	</header>
+				<sheet>
+					<group col="4" colspan="2">
+						<field name="name" required="1"/>
+						<field name="time_requires" required="1"/>
+						<field name="date_request" required="1"/>
+						</group>
+						<group>
+							<field name="purpose_requested" required="1"/>
+						</group>
+							<group col="4" colspan="2">
+								<field name="purpose_official" /> 
+								<field name="purpose_personal"/>
+						</group>
+						<group>
+						<field name="address" required="1"/>
+						</group>
+						
+						<notebook>
+							<page string="Authorizing Officer">
+								<group col="4" colspan="2">
+									<field name="vehicle_no"/>
+									<field name="drivers_name"/>
+									<field name="authorized_sign" readonly="1"/>
+									<field name="sign_date" readonly="1"/>
+								</group>
+							</page>
+						</notebook>
 				</sheet>
 				<div class="oe_chatter">
 			             <field name="message_follower_ids" widget="mail_followers"/>
@@ -945,6 +1065,7 @@
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
         		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve" groups="ninasmain.group_admin_finance_officer"/>
         		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate" groups="ninasmain.group_ceo"/>
+        		<button name="button_confirm_payment" string="Confirm Payment" type="object" class="btn btn-primary" states="ceo" groups="base.group_user"/>
         		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 				<sheet>
@@ -1756,7 +1877,7 @@
 			<field name="arch" type="xml">
 				<form string="Chemical Testing Laboratory">
 					<sheet>
-						<group string="Chemical Testing Form" col="4" colspan="4">
+						<group string="Testing Form" col="4" colspan="4">
                             <field name="schedule_number"/>
                             <field name="institution"/>
                             <field name="address"/>
@@ -1877,6 +1998,11 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Decision Form">
+				<header>
+	        		<button name="button_aac" string="Submit" type="object" class="btn btn-primary" states="la_recommendation" groups="base.group_user"/>
+	        		<button name="button_da" string="Submit" type="object" class="btn btn-primary" states="aac_recommendation" groups="base.group_user"/>
+	        		<field name="state" widget="statusbar" statusbar_visible="la_recommendation,aac_recommendation,da_recommendation" readonly="1"/>
+	        	</header>
 				<sheet>
 				<group><field name="application_id"/></group>
 					<group col="4" colspan="2">
@@ -1888,11 +2014,17 @@
 						<field name="assess_type"/>
 						<field name="assessment_date"/>
 					</group>
-					<group col="2" colspan="2">
-						<field name="la_recommendation"/>
-						<field name="aac_recommendation"/>
-						<field name="da_recommendation"/>
-					</group>
+					<notebook>
+						<page string="Lead Assessor's Recommendation">
+							<field name="la_recommendation" attrs="{'required': [('state','in',('la_recommendation'))]}"/>
+						</page>
+						<page string="AAC Recommendation">
+							<field name="aac_recommendation" widget="html" attrs="{'required': [('state','in',('aac_recommendation'))]}"/>
+						</page>
+						<page string="Director of Accreditation's Recommendation">
+							<field name="da_recommendation" widget="html" attrs="{'required': [('state','in',('da_recommendation'))]}"/>
+						</page>
+					</notebook>
 					<group col="4" colspan="2">
 						<field name="ceo"/>
 						<field name="note"/>
@@ -1981,6 +2113,112 @@
                 </form>    
             </field>
 		</record>
+		
+		
+	     <!-- assessor.form.attachment tree view-->
+	    <record id="assessor_form_attachment_tree_view" model="ir.ui.view">
+			<field name="name">assessor.form.attachment.tree</field>
+			<field name="model">assessor.form.attachment</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="name"/>
+	            <field name="description"/>
+			</field>
+		</record>
+	
+	    <record id="assessor_form_attachment_form_view" model="ir.ui.view">
+	    <field name="name">assessor.form.attachment.form</field>
+	    <field name="model">assessor.form.attachment</field>
+	    <field name="priority" eval="2"/>
+	    <field name="arch" type="xml">
+	        <form string="Assessor Form Attachment">
+				 <sheet>
+				    <group string="Attachments" col="4" colspan="4">
+				    	<field name="name"/>
+	                    <field name="description"/>
+	                    <field name="attachment_ids" widget="many2many_binary"/>
+				    </group>
+				 </sheet>
+	        </form>
+	    </field>
+	    </record>
+
+
+
+		<!-- ninas.recommendation.form tree view-->
+	    <record id="ninas_ninas_recommendation_form_tree_view" model="ir.ui.view">
+			<field name="name">ninas.recommendation.form</field>
+			<field name="model">ninas.recommendation.form</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<field name="application_id"/>
+				<field name="name"/>
+				<field name="type_assessment"/>
+	            <field name="reference_no"/>
+			</field>
+		</record>
+	
+	    <record id="ninas_recommendation_form_view" model="ir.ui.view">
+	    <field name="name">ninas.recommendation.form</field>
+	    <field name="model">ninas.recommendation.form</field>
+	    <field name="priority" eval="2"/>
+	    <field name="arch" type="xml">
+	        <form string="Recommendation Form">
+	        	<header>
+	        		<button name="button_done" string="Done" type="object" class="btn btn-primary" states="incomplete"/>
+	        		<field name="state" widget="statusbar" statusbar_visible="incomplete,done" readonly="1"/>
+	        	</header>
+				 <sheet>
+				 	<span>Accreditation Decision Recommendation Form F 773 A</span>
+				 	<p>This form is to be used by the AAC Members to review assessment reports and
+					make recommendation on accreditation decision-making</p>
+					<group col="4" colspan="4">
+						<field name="reference_no"/>
+					</group>
+					<group>
+						<field name="application_id"/>
+					</group>
+				    <group col="4" colspan="4">
+				    	<field name="name"/>
+				    	<label for="address_of_institution" string="Address of Institurion or Lab"/>
+	           	       	<div class="o_address_format">
+	                        <field name="institution_number" placeholder="Number..." class="o_address_street"/>
+	                        <field name="institution_street" placeholder="Street..." class="o_address_street"/>
+	                        <field name="institution_city" placeholder="City" class="o_address_city"/>
+	                        <field name="institution_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+	                        <field name="institution_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+	                    </div>
+	                    <field name="name_of_institution_rep"/>
+	                    <field name="accreditation_scope"/>
+	                    </group>
+	                    <group col="6" colspan="3">
+	                    	<field name="name_assessor" domain="[('category_ids.is_assessor','=',True)]" widget="many2many_tags"/>
+	                    	<field name="type_assessment"/>
+	                    	<field name="assessment_date"/>
+	                    </group>
+	                    <span>I confirm that these recommendations are based on the following documents
+						provided by NiNAS (Please tick the relevant box)</span>
+						<p>I am satisfied that the information is sufficient to decide that the requirements
+						for accreditation have been met. Yes<field name="satisfactory_yes"/> No<field name="satisfactory_no"/></p>
+						<group string="Recommendation">
+							<field name="recommendation" required="True"/>
+						</group>
+	                    <P><b>Note: </b>The period of suspension shall not extend beyond the date of expiry of the
+						Certificate of Accreditation</P>
+						<group>
+							<field name="further_comment"/>
+						</group>
+	                    <group col="4" colspan="4">
+	                    	<field name="name_sign"/>
+	                    	<field name="date"/>
+	                    </group>
+				 </sheet>
+	        </form>
+	    </field>
+	    </record>
+
+
+    
     
     
     <!-- MenuItems -->
@@ -1993,14 +2231,12 @@
               action="medical_action"/>
     <menuitem name="Calibration Lab Scope" id="calibration_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
               action="calibration_action"/>
-    <menuitem name="Chemical Lab Scope" id="chemical_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
+    <menuitem name="Testing Lab Scope" id="chemical_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
               action="ninas_chemical_lab_action"/>
-    <menuitem name="Activity Budget" id="activity_budget_menu" parent="ninas_lead_toolkit_tools_main_menu"
-              action="activity_budget_action"/>
     <menuitem name="Assessment Plan" id="ninas_assessment_plan_menuitem" parent="ninas_lead_toolkit_tools_main_menu" 
     		  action="ninas_assessment_plan_action"/>
-    <menuitem name="Decision Form" id="decision_form_menu" parent="ninas_lead_toolkit_tools_main_menu" 
-    		  action="decision_form_action"/>
+   	<menuitem name="Appraisal Form" id="ninas_appraisal_menu" parent="ninas_lead_toolkit_tools_main_menu" 
+   			  action="ninas_appraisal_action"/>
     		  
               
 	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
@@ -2010,6 +2246,8 @@
               action="TravelRequest_action_window"/>
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
+    <menuitem name="Vehicle Request" id="ninas_vehicle_request_menuitem" parent="request_main_menu" 
+    		  action="ninas_vehicle_request_action"/>
     
     <menuitem name="Contract Agreement" id="contract_agreement_main_menu" parent="helpdesk.menu_helpdesk_root"/>
     <menuitem name="Conflict Of Interest" id="conflict_of_interest_menu" parent="contract_agreement_main_menu"
@@ -2018,7 +2256,6 @@
               action="ninas_confidentiality_action"/>
     <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="contract_agreement_main_menu"
               action="ninas_code_of_conduct_action"/>
-              
     <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_contract_agreement_action"/>
                             
@@ -2027,10 +2264,15 @@
               action="ninas_bank_voucher_action"/>
     <menuitem name="Petty Cash voucher" id="petty_cash_voucher_menu" parent="bank_vouchert_main_menu"
               action="petty_cash_action"/>
+    <menuitem name="Activity Budget" id="activity_budget_menu" parent="account.menu_finance_receivables"
+              action="activity_budget_action"/>
               
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
+    <menuitem name="Mission Report" id="mission_request_menu" parent="hr.menu_hr_root"
+              action="ninas_mission_report_action"/>
     
     <menuitem name="Diesel Consumption" id="ninas_diesel_consumption_menuitem" parent="maintenance.menu_maintenance_title" action="ninas_diesel_consumption_action"/>
+
               
    	<menuitem name="Receipt Register" id="register_receipt_menu" parent="stock.menu_stock_root" groups="base.group_system"/>
     <menuitem name="Monthly Consumable Receipt" id="tests_request_menu" parent="register_receipt_menu"
@@ -2039,11 +2281,31 @@
 	<menuitem name="Expense Request" id="expense_request_menuitem" parent="hr_expense.menu_hr_expense_root"/>
 	<menuitem name="Expense claims" id="expense_claim_menu" parent="expense_request_menuitem"
               action="ninas_expense_claim_action"/>
-	<menuitem name="Mission Report" id="mission_request_menu" parent="expense_request_menuitem"
-              action="ninas_mission_report_action"/>
+
+   	<menuitem name="Assessor Forms" id="ninas_assessor_forms_main_menu" web_icon="ninasmain,static/icon/form.png" sequence="1"/>
+    <menuitem name="Assessor Forms" id="ninas_assessor_forms_menu" parent="ninas_assessor_forms_main_menu" sequence="2"/>
+    
+    <menuitem name="Forms" id="form_menu" parent="ninas_assessor_forms_main_menu"
+              action="ninas_assessor_form_attachment_action" sequence="3"/>
               
-    <menuitem name="Appraisal Form" id="ninas_appraisal_menu" parent="hr_appraisal.menu_hr_appraisal_root" 
-   			  action="ninas_appraisal_action"/>
-   			  
+    <menuitem name="Contract Agreement" id="contract_agreement_main_menu" parent="ninas_assessor_forms_main_menu" sequence="4"/>
+    <menuitem name="Conflict Of Interest" id="conflict_of_interest_menu" parent="contract_agreement_main_menu"
+              action="ninas_conflict_of_interest_action"/>
+    <menuitem name="Confidentiality" id="confidentiality_menu" parent="contract_agreement_main_menu"
+              action="ninas_confidentiality_action"/>
+    <menuitem name="Code Of Conduct" id="code_of_conduct_menu" parent="contract_agreement_main_menu"
+              action="ninas_code_of_conduct_action"/>
+    <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
+              action="ninas_contract_agreement_action"/>
+              
+              
+   	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png"/>
+    <menuitem name="AAC" id="ninas_aac_tools_main_menu" parent="ninas_aac_main_menu"/>
+    
+    <menuitem name="Recommendaion Form" id="recommendation_form_menu" parent="ninas_aac_main_menu"
+              action="ninas_recommendation_form_action" sequence="1"/>
+   	<menuitem name="Decision Form" id="decision_form_menu" parent="ninas_aac_main_menu" 
+    		  action="decision_form_action" sequence="2"/>
+    
   </data>
 </odoo>

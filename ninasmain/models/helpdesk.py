@@ -7,12 +7,17 @@ import datetime
 
 from datetime import date, timedelta
 from odoo import api, fields, models
+from datetime import *
+from dateutil.relativedelta import *
 #from gevent._ssl3 import name
 #from plainbox.impl.unit import file
 from ast import literal_eval
+from odoo.exceptions import ValidationError, Warning
 
 class Accreditation(models.Model):
     _inherit = 'helpdesk.ticket'
+    
+    current_date = date.today() + relativedelta(years=2)
     
     attachment_ids = fields.Many2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'helpdesk.ticket')], string='Attachments')
 
@@ -24,11 +29,30 @@ class Accreditation(models.Model):
         string='Assesment Type',
         track_visibility='onchange')
     
+    assessment_plan_id = fields.Many2one(
+        comodel_name='ninas.assessment_plan',
+        string='Assesment Plan',
+        track_visibility='onchange')
+
+    
     funding = fields.Selection(
         [('not_funded','Not Funded'),('partly_funded', 'Partly Funded'),('fully_funded', 'Fully Funded')],
         string='Funding',
         default='not_funded',
         track_visibility='onchange')
+    
+    funding_company_name = fields.Char(
+        string='Company Name',
+        track_visibility='onchange')
+    
+    funding_company_rep = fields.Char(
+        string='Company Representative Name',
+        track_visibility='onchange')
+    
+    funding_company_rep_num = fields.Char(
+        string='Company Representative Number',
+        track_visibility='onchange')
+    
     
     lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor', track_visibility='onchange',)
     tech_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor', track_visibility='onchange',)
@@ -38,14 +62,18 @@ class Accreditation(models.Model):
     
     re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
     
+    creation_date = fields.Date(default = date.today() , string='Application Date')
+    
     resources_available = fields.Boolean(string='Resources Available?', track_visibility='onchange')
     checklist_sent = fields.Boolean(string='Review Checklist Filled?', track_visibility='onchange')
+    checklist_id = fields.Many2one(comodel_name='checklist.ticket', string='Review Checklist Filled?', track_visibility='onchange')
     conflict_agreement = fields.Boolean(string='contract Agreement?', readonly=True, track_visibility='onchange')
     confidentiality_agreement = fields.Boolean(string='confidentiality Agreemnt?', readonly=True, track_visibility='onchange')
     preassessment_needed = fields.Boolean(string='pre-assessment Needed?', track_visibility='onchange')
     document_review = fields.Selection([('yes', 'Yes.')],
                                        string='Document(s) Reviewed?', track_visibility='onchange')
-    assessment_date = fields.Date(string='Assessment Date', track_visibility='onchange')
+    assessment_date = fields.Date(string='Assessment Date', related='assessment_plan_id.assessment_date', track_visibility='onchange', readonly=True)
+    
     
     #Application Form Sheet
     name_applicant = fields.Char(
@@ -54,7 +82,7 @@ class Accreditation(models.Model):
     applicant_rep_title = fields.Selection([('mr','Mr.'),('ms', 'Ms.'), ('mrs','Mrs.'), ('dr','DR.'), ('engr','Engr.'), ('prof','Prof.')],
         string='Authorized Representative’s Title',
         track_visibility='onchange')
-    laboratory_legal_name = fields.Text(
+    laboratory_legal_name = fields.Char(
         string="Laboratory’s Legal Name",
         track_visibility='onchange')
     
@@ -122,6 +150,12 @@ class Accreditation(models.Model):
         string='Primary level lab (1-10)',
         track_visibility='onchange')
     
+    number_of_scopes = fields.Selection(
+        [('above_20','(>20)'),('11_to_20', '11-20'),('1_to_10', '(1-10)')],
+        string='Number of Scopes',
+        track_visibility='onchange')
+    
+    
     test = fields.One2many(
         comodel_name='test.method',
         inverse_name='test_name',
@@ -162,6 +196,13 @@ class Accreditation(models.Model):
     email = fields.Char(
         string='Email',
         track_visibility='onchange')
+    
+    mobile_app_attachment_ids = fields.One2many(
+        comodel_name = 'mobile.app.attachment',
+        inverse_name = 'ticket_id',
+        string='Mobile App Attachment',
+        track_visibility='onchange',
+        help='Attachments from the NiNAS Mobile app will be seen and accessible from here')
     
 class Accounts(models.Model):
     _name = 'application.account'
@@ -211,7 +252,7 @@ class CreateInvoice(models.Model):
         track_visibility='always')
     
     invoice_count = fields.Integer(compute="_invoice_count", string="Invoices", store=False)
-    checklist_count = fields.Integer(compute="_checklist_count",string="Checklist")
+    checklist_count = fields.Integer(compute="_checklist_count",string="Checklist", store=False)
     car_count = fields.Integer(compute="_car_count",string="C.A.R")
     
     @api.multi
@@ -230,7 +271,7 @@ class CreateInvoice(models.Model):
     def _checklist_count(self):
         oe_checklist = self.env['checklist.ticket']
         for pa in self:
-            domain = [('ticket_id', '=', pa.id)]
+            domain = [('partner_id', '=', pa.partner_id.id)]
             pres_ids = oe_checklist.search(domain)
             pres = oe_checklist.browse(pres_ids)
             checklist_count = 0
@@ -238,6 +279,7 @@ class CreateInvoice(models.Model):
                 checklist_count+=1
             pa.checklist_count = checklist_count
         return True
+    
     
     @api.multi
     def _car_count(self):
@@ -302,6 +344,19 @@ class CreateInvoice(models.Model):
      
        return res
     
+    @api.multi
+    def invoice_prompt(self):
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_admin_finance_officer')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "An invoice is required for {}".format(self.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
+    
     '''
     @api.multi
     def open_customer_invoices(self):
@@ -315,27 +370,43 @@ class CreateInvoice(models.Model):
     '''
     @api.multi
     def open_customer_invoices(self):
-        
         return {
             'type': 'ir.actions.act_window',
             'name': ('Customer Invoices'),
             'res_model': 'account.invoice',
             'view_mode': 'tree,kanban,form,pivot,graph',
-            'domain':[('type','=','out_invoice')],
-            'context': {'search_default_partner_id': self.partner_id.id}
+            'domain':[('type','=','in_invoice')],
+            'target': 'current',
+            'context': {'search_default_is_open': True, 'search_default_partner_id': self.partner_id.id}
         }
     
-
         
     @api.multi
+    def open_checklist_ticket(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': ('Checklist'),
+            'res_model': 'checklist.ticket',
+            'view_mode': 'tree,kanban,form,pivot,graph',
+            'target': 'current',
+            'context': {'search_default_is_open': True, 'search_default_partner_id': self.partner_id.id}
+        }
+    
+    
+    @api.multi
     def button_confirm_sponsor(self):
-        self.write({'stage_id': 3})
+        self.write({'stage_id': 5})
         return {}
     
     @api.multi
-    def button_complete_approve(self):
-        self.write({'stage_id': 5})
-        return {}
+    def button_complete_approved(self):
+        if self.resources_available == False:
+            raise Warning('Resources are not available')
+        else:
+            self.invoice_prompt()
+            self.write({'stage_id': 3})
+        return True
+    
     @api.multi
     def button_complete_reject(self):
         self.write({'stage_id': 1})
@@ -347,15 +418,34 @@ class CreateInvoice(models.Model):
         return {}
     
     @api.multi
-    def action_resources_available(self):
-        self.write({'resources_available': True})
+    def confirm_funding(self):
+        if self.funding not in ['fully_funded'] and self.invoice_count == 0:
+            raise Warning('No invoice has been generated for this Application')
+        else:
+            self.write({'stage_id': 9})
+        return {}
+    
+    @api.multi
+    def confirmed_funding(self):
         self.write({'stage_id': 9})
         return {}
     
     @api.multi
+    def action_resources_available(self):
+        if self.resources_available == False:
+            raise Warning('You must set Assessment Team And Lead Assessor!')
+        else:
+            self.write({'resources_available': True})
+            self.write({'stage_id': 10})
+        return {}
+    
+    @api.multi
     def action_checklist_sent(self):
-        self.write({'checklist_sent': True})
-        self.write({'stage_id': 10})
+        if self.checklist_count == 0:
+            raise Warning('You must review the CheckList First!')
+        else:
+            self.write({'checklist_sent': True})
+            self.write({'stage_id': 9})
         return {}
     
     
@@ -405,6 +495,8 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_approved_app(self):
+        current_date = date.today() + relativedelta(years=2)
+        self.re_assessment_date = current_date
         self.write({'stage_id': 21})
         return {}
     
@@ -438,7 +530,7 @@ class Checklist(models.Model):
         string='Application ID',
         track_visibility='onchange')
     
-    partner_id = fields.Many2one('res.partner', string='Applicant')
+    partner_id = fields.Many2one(comodel_name='res.partner', related='ticket_id.partner_id', string='Applicant')
     
     quality_manual = fields.Boolean(
         string='A copy of current version of Quality Manual',
@@ -478,7 +570,7 @@ class CarReport(models.Model):
     ref_no = fields.Integer(string='Reference No:')
     faculty_rep = fields.Char(string='Name/Signature of Facility Representative:')
     scope_assessed = fields.Char(string='Scope Assessed:')
-    rel_equip = fields.Char(string='Relevant Standard Requirement')
+    rel_equip = fields.Text(string='Relevant Standard Requirement')
     name_lead =fields.Char(string='Name/Signature of Lead Assessor / Date')
     name_rep = fields.Char(string='Name /Signature of Representative/ Date')
     root_cause = fields.Text(string='(Root Cause Analysis)')
@@ -513,6 +605,16 @@ class CarReportAttachment(models.Model):
     attachment_description = fields.Char(string='Attachment Description')
     attachment_ids = fields.Many2many(
         comodel_name='ir.attachment',
+        string='Attachment')
+    
+class MobileAppAttachment(models.Model):
+    _name = 'mobile.app.attachment'
+    
+    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
+    name = fields.Char(string='Attachment Name')
+    attachment_description = fields.Char(string='Attachment Description')
+    attachment_image = fields.Binary(
+        attachment=True, store=True,
         string='Attachment')
     
     

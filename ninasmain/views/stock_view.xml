@@ -91,6 +91,21 @@
     </record>
     
     
+    <record id="ninas_invoice_form_view" model="ir.ui.view">
+        <field name="name">account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//button[@name='action_invoice_open']" position="replace">
+				<button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight o_invoice_validate" groups="ninasmain.group_ceo"/>
+			</xpath>
+			<!-- <xpath expr="//button[@name='action_invoice_open']" position="after">
+				<button name="send_validated_message" type="object" states="open" string="Notification" class="oe_highlight o_invoice_validate" groups="ninasmain.group_ceo"/>
+			</xpath> -->
+           </field>
+    </record>
+    
     <record id="ninas_hr_job_form_view" model="ir.ui.view">
         <field name="name">hr.job.form</field>
         <field name="model">hr.job</field>
@@ -108,7 +123,7 @@
 
     <record id="ninas_hr_recruitment_crm_case_form_view_job" model="ir.ui.view">
         <field name="name">hr.applicant.form</field>
-        <field name="model">hr.applicant</field>
+        <field name="model">ninas.hr.recruitment</field>
         <field name="priority" eval="7" />
         <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
         <field name="arch" type="xml">
@@ -336,6 +351,9 @@
     
 	<menuitem name="Store Request" id="store_request" parent="stock.menu_stock_root"
               action="store_req_action1_window"/>
-
+	
+	<!-- changed transfers to Allocation -->
+	<menuitem id="stock.all_picking" name="Allocations" parent="stock.menu_stock_warehouse_mgmt" sequence="5" action="stock.action_picking_tree_all" groups="stock.group_stock_manager,stock.group_stock_user"/>
+	
   </data>
 </odoo>
