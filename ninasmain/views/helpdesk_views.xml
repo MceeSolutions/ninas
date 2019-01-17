@@ -481,7 +481,7 @@
            	       	</group>
            	       	
            	       	<group string="Part I. Application Information" col="4" colspan="4">
-           	       		<field name="name_applicant" readonly="True"/>
+           	       		<field name="partner_name" readonly="True"/>
            	       		<field name="applicant_rep_title" readonly="True"/>
            	       	</group>
            	       	<group col="4" colspan="4">

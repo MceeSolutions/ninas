@@ -48,16 +48,23 @@
 				</div>
 			</xpath>
 			
-			<xpath expr="//label[@for='partner_name']" position="replace">
-            	<label class="control-label" for="partner_name">Applicant’s Authorized Representative’s Name</label>                  
+			<xpath expr="//div[hasclass('form-group', 'form-field', 'o_website_form_required')]" position="replace">
+				<div class="container">
+            		<div class="form-group form-field o_website_form_required">
+		                &#160;&#160;<label class="control-label" for="partner_name">&#160;&#160;Applicant’s Authorized Representative’s Name</label>
+		                <div class="col-md-12 col-sm-8">
+		                    <input type="text" class="form-control o_website_form_input" name="partner_name" t-att-value="default_values.get('name', '')" required="1"/>
+		                </div>
+		            </div>
+            	</div>                   
        		</xpath>
        		
+       		
        		<xpath expr="//div[hasclass('form-group', 'form-field', 'o_website_form_required')]" position="after">
+       			<div class="container">
        			<div class="form-group form-field o_website_form_required">
-		              <div class="col-md-3 col-sm-4 text-right">
-		                  <label class="control-label" for="applicant_rep_title">Authorized Representative’s Title</label>
-		              </div>
-		              <div class="col-md-7 col-sm-8">
+		              <div class="col-md-12 col-sm-8">
+		              <label class="control-label" for="applicant_rep_title">Authorized Representative’s Title</label>
 		              	<select class="form-control o_website_form_input" name="applicant_rep_title">
 							  <option value="mr">Mr.</option>
 							  <option value="ms">Ms.</option>
@@ -69,6 +76,7 @@
 						
 		              </div>
 		          </div>
+		          </div>
 		          
 		          <p class='container'>
 		          	Laboratory’s Legal Name (as it should appear on your Certificate and on the NiNAS web site) and the Legal Status of
@@ -76,36 +84,35 @@
 					Trustees etc.) If the lab is part of a larger legal entity, include that name and the division to which the lab belongs.
 		          </p>
 		          
-		          <div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="laboratory_legal_name">Laboratory’s Legal Name</label>
-                     </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="laboratory_legal_name" required="1"/>
-                     </div>
+		          <div class="container">
+			          <div class="form-group form-field o_website_form_required">
+	                     <div class="col-md-12 col-sm-8">
+	                   		<label class="control-label" for="laboratory_legal_name">Laboratory’s Legal Name</label><br/>
+	                        <input type="text" class="form-control o_website_form_input" name="laboratory_legal_name" required="1"/>
+	                     </div>
+	                 </div>
                  </div>
                  
+                 <div class="container">
                  <div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="laboratory_address">Laboratory Address (Number and Street, City, State and Country)</label>
-                     </div>
-                     <div class="col-md-1 col-sm-4">
+                 	 &#160;&#160;<label class="control-label" for="laboratory_address">&#160;&#160;Laboratory Address (Number and Street, City, State and Country)</label><br/>
+                     <div class="col-md-2 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="lab_number" required="1" placeholder="Number"/>
                      </div>
-                     <div class="col-md-3 col-sm-4">
+                     <div class="col-md-5 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="lab_street" required="1" placeholder="Street"/>
                      </div>
-                     <div class="col-md-3 col-sm-4">
+                     <div class="col-md-5 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="lab_city" required="1" placeholder="City"/>
                      </div><br/><br/>
-                     <div class="col-md-3 col-sm-4">
+                     <div class="col-md-6 col-sm-4">
                          <select class="form-control" name="lab_state_id">
 						     <t t-foreach="lab_state_id" t-as="lab_state_id">
 						          <option t-attf-value="#{lab_state_id.id}"><t t-esc="lab_state_id.name"/></option>
 						     </t>
 						 </select>
                      </div>
-                     <div class="col-md-4 col-sm-4">
+                     <div class="col-md-6 col-sm-4">
                          <select class="form-control" name="lab_country_id">
 						     <t t-foreach="lab_country_id" t-as="lab_country_id">
 						          <option t-attf-value="#{lab_country_id.id}"><t t-esc="lab_country_id.name"/></option>
@@ -113,46 +120,46 @@
 						 </select>
                      </div>
                  </div>
-                 
-                 <div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="telephone_number">Telephone Numbers</label>
-                     </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="telephone_number" required="1"/>
-                     </div>
                  </div>
                  
-                 <div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="email_address">Email Address(es) official for laboratory and alternate contact</label>
-                     </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="email_address" t-att-value="default_values.get('email', '')" required="1" multiple=""/>
-                     </div>
+                 <div class="container">
+	                 <div class="form-group form-field o_website_form_required">
+	                     <div class="col-md-12 col-sm-8">
+	                     	<label class="control-label" for="telephone_number">Telephone Number(s)</label><br/>
+	                        <input type="text" class="form-control o_website_form_input" name="telephone_number" required="1"/>
+	                     </div>
+	                 </div>
                  </div>
                  
+                 <div class="container">
+	                 <div class="form-group form-field o_website_form_required">
+	                     <div class="col-md-12 col-sm-8">
+	                     	<label class="control-label" for="email_address">Email Address(es) official for laboratory and alternate contact</label><br/>
+	                        <input type="text" class="form-control o_website_form_input" name="email_address" t-att-value="default_values.get('email', '')" required="1" multiple=""/>
+	                     </div>
+	                 </div>
+                 </div>
+                 
+                 <div class="container">
                  <div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="mailing_address">Mailing Address (if different from the laboratory location – Number, Street, City, State, Country)</label>
-                     </div>
-                	 <div class="col-md-1 col-sm-4">
+                 	 &#160;&#160;<label class="control-label" for="mailing_address">&#160;&#160;Mailing Address (if different from the laboratory location – Number, Street, City, State, Country)</label><br/>
+                	 <div class="col-md-2 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="mail_number" placeholder="Number"/>
                      </div>
-                     <div class="col-md-3 col-sm-4">
+                     <div class="col-md-5 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="mail_street" placeholder="Street"/>
                      </div>
-                     <div class="col-md-3 col-sm-4">
+                     <div class="col-md-5 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="mail_city" placeholder="City"/>
                      </div><br/><br/>
-                     <div class="col-md-3 col-sm-4">
+                     <div class="col-md-6 col-sm-4">
                          <select class="form-control" name="mail_state_id">
 						     <t t-foreach="mail_state_id" t-as="mail_state_id">
 						          <option t-attf-value="#{mail_state_id.id}"><t t-esc="mail_state_id.name"/></option>
 						     </t>
 						 </select>
                      </div>
-                     <div class="col-md-4 col-sm-4">
+                     <div class="col-md-6 col-sm-4">
                          <select class="form-control" name="mail_country_id">
                          	<option value="">Country...</option>
 						     <t t-foreach="mail_country_id" t-as="mail_country_id">
@@ -160,6 +167,7 @@
 						     </t>
 						 </select>
                      </div>
+                 </div>
                  </div>
                  
                   <!-- <div class="form-group form-field o_website_form_custom">
@@ -173,75 +181,70 @@
 	               </div>
 	         	</div>  -->
                  
-                 <div class="form-group form-field">
-	                   <div class="col-md-3 col-sm-4 text-right">
-	                       <label class="control-label" for="name_address_of_owners">Name and Address of Owners (applicable in the case of private ownership)</label>
-	                   </div>
-	                   <div class="col-md-7 col-sm-8">
-	                       <textarea class="form-control o_website_form_input" name="name_address_of_owners"/>
-	                   </div>
-	               </div>
+                 <div class="container">
+	                 <div class="form-group form-field">
+		                   <div class="col-md-12 col-sm-8">
+		                   		<label class="control-label" for="name_address_of_owners">Name and Address of Owners (applicable in the case of private ownership)</label><br/>
+		                       	<textarea class="form-control o_website_form_input" name="name_address_of_owners"/>
+		                   </div>
+		              </div>
+	              </div>
 		          
-		          <div class="form-group form-field">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="testing_lab">ISO/IEC 17025 Testing Laboratory</label>
-                     </div>
-                     <div class="col-md-1 col-sm-1">
-                         <input type="checkbox" class="form-control o_website_form_input" name="testing_lab"/>
-                     </div>
-                 </div>
-                 
-                 <div class="form-group form-field">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="calibration_lab">ISO/IEC 17025 Calibration Laboratory</label>
-                     </div>
-                     <div class="col-md-1 col-sm-1">
-                         <input type="checkbox" class="form-control o_website_form_input" name="calibration_lab"/>
-                     </div>
-                 </div>
-                 
-                
-                 <div class="form-group form-field">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="med_lab">ISO 15189: Medical Laboratory</label>
-                     </div>
-                     <div class="col-md-1 col-sm-1">
-                         <input type="checkbox" class="form-control o_website_form_input" name="med_lab"/>
-                     </div>
-                 </div>
-                 
-                  
-                 <div class="form-group form-field">
-	                 	<strong>
-	                 		<p class='container'>
-	                 		Scope of Accreditation Requested
+		          <div class="container">
+		          		<strong>
+	                 		<p>
+	                 		<u>Type of Accreditation Requested</u>
 	                 		</p>
 	                 	</strong>
-	                 <div class="form-group form-field">
-	                     <div class="col-md-3 col-sm-4 text-right">
-	                         <label class="control-label" for="number_of_scopes">( &gt; 20)</label>
-	                     </div>
-	                     <div class="col-md-1 col-sm-1">
-			              	<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="above_20" checked=""/>
-						</div>
-	                 </div>
-	                 <div class="form-group form-field">
-	                     <div class="col-md-3 col-sm-4 text-right">
-	                         <label class="control-label" for="number_of_scopes">(11-20 Tests)</label>
-	                     </div>
-	                     <div class="col-md-1 col-sm-1">
-			              	<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="11_to_20"/>
-						</div>
-	                 </div>
-	                 <div class="form-group form-field">
-	                     <div class="col-md-3 col-sm-4 text-right">
-	                         <label class="control-label" for="number_of_scopes">(1-10)</label>
-	                     </div>
-	                     <div class="col-md-1 col-sm-1">
-			              	<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="1_to_10" />
-						</div>
-	                 </div>
-                 </div>
+	               	  <div class="form-group form-field">
+		                   <div class="col-md-3 col-sm-1">
+		                   		<label class="control-label" for="testing_lab">ISO/IEC 17025 Testing Laboratory</label>
+		                   </div>
+		                   <div class="col-md-1 col-sm-1 pull-left align-left">
+		                   		<input type="checkbox" class="form-control o_website_form_input" name="testing_lab"/>
+		                   </div>
+		                   <div class="col-md-3 col-sm-1">
+		                   		<label class="control-label" for="calibration_lab">ISO/IEC 17025 Calibration Laboratory</label>
+		                   </div>
+		                   <div class="col-md-1 col-sm-1 pull-left align-left">
+		                   		<input type="checkbox" class="form-control o_website_form_input" name="calibration_lab"/>
+		                   </div>
+		                   <div class="col-md-3 col-sm-1">
+		                   		<label class="control-label" for="med_lab">ISO 15189: Medical Laboratory</label>
+		                   </div>
+		                   <div class="col-md-1 col-sm-1 pull-left align-left">
+		                   		<input type="checkbox" class="form-control o_website_form_input" name="med_lab"/>
+		                   </div>
+		              </div>
+		          </div>
+                  
+		            <div class="container">
+	            		 <strong>
+	                 		<p>
+	                 		<u>Scope of Accreditation Requested</u>
+	                 		</p>
+	                 	</strong>
+		               	  <div class="form-group form-field">
+			                   <div class="col-md-3 col-sm-1">
+			                   		<label class="control-label" for="number_of_scopes">( &gt; 20)</label>
+			                   </div>
+			                   <div class="col-md-1 col-sm-1 pull-left align-left">
+			                   		<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="above_20" checked=""/>
+			                   </div>
+			                   <div class="col-md-3 col-sm-1">
+			                   		<label class="control-label" for="number_of_scopes">(11-20 Tests)</label>
+			                   </div>
+			                   <div class="col-md-1 col-sm-1 pull-left align-left">
+			                   		<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="11_to_20"/>
+			                   </div>
+			                   <div class="col-md-3 col-sm-1">
+			                   		<label class="control-label" for="number_of_scopes">(1-10)</label>
+			                   </div>
+			                   <div class="col-md-1 col-sm-1 pull-left align-left">
+			                   		<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="1_to_10" />
+			                   </div>
+			              </div>
+			          </div>     	
                  
                 <!-- <div class="form-group form-field">
                 		<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="11_to_20"/> (11-20 Tests)<br/>
@@ -268,19 +271,19 @@
     					accreditation. (For more tests add additional lines)
     				</p>
     				
-			        <table class="container">
-					<thead><tr class="tableizer-firstrow"><th>Example:</th><th>&#160;</th></tr></thead><tbody>
-					 <tr><td><u>FOOD MICROBIOLOGY - Bacteriology</u></td><td>&#160;</td></tr>
+			        <table>
+					<thead><tr class="tableizer-firstrow"><th>Example:</th><th>&#160;&#160;</th></tr></thead><tbody>
+					 <tr><td><u>FOOD MICROBIOLOGY - Bacteriology</u></td><td>&#160;&#160;</td></tr>
 					 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
 					 <tr><td>Aerobic Plate Count Method</td><td>AOAC 990.12; AFNOR 3M</td></tr>
 					 <tr><td>Brine Testing for Coliform</td><td>AOAC 991.14</td></tr>
-					 <tr><td>Environmental, Brine, and Food Contact Testing for Listeria Genus</td><td>AOAC RI 020401</td></tr>
-					 <tr><td>&#160;</td><td>&#160;</td></tr>
-					 <tr><td>FOOD MICROBIOLOGY - Mycology</td><td>&#160;</td></tr>
+					 <tr><td>Environmental, Brine, and Food Contact Testing for Listeria Genus&#160;&#160;&#160;&#160;&#160;</td><td>AOAC RI 020401</td></tr>
+					 <tr><td>&#160;&#160;</td><td>&#160;&#160;</td></tr>
+					 <tr><td>FOOD MICROBIOLOGY - Mycology</td><td>&#160;&#160;</td></tr>
 					 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
 					 <tr><td>Yeast and Mold</td><td>BAM Ch. 18; APHA Compendium Ch. 21, 52</td></tr>
-					 <tr><td>&#160;</td><td>&#160;</td></tr>
-					 <tr><td>FOOD CHEMISTRY</td><td>&#160;</td></tr>
+					 <tr><td>&#160;&#160;</td><td>&#160;&#160;</td></tr>
+					 <tr><td>FOOD CHEMISTRY</td><td>&#160;&#160;</td></tr>
 					 <tr><td><u>Test Name</u></td><td><u>Test Method Number</u></td></tr>
 					 <tr><td>Fat</td><td>AOCS Am 5-04</td></tr>
 					 <tr><td>Moisture</td><td>AOCS Am 5-04</td></tr>
@@ -327,21 +330,17 @@
 	         	</div> -->
 		        
 		        <div class="form-group form-field o_website_form_required">
-	                   <div class="col-md-3 col-sm-4 text-right">
-	                       <label class="control-label" for="lab_capabilities">Laboratory Capabilities: Please enter a brief description of the types of other tests or calibrations that the laboratory
-							currently conducts which you do not plan to include on your scope of accreditation at this time</label>
-	                   </div>
-	                   <div class="col-md-7 col-sm-8">
+	                   <div class="col-md-12 col-sm-8">
+	                   		<label class="text-left" for="lab_capabilities">Laboratory Capabilities: Please enter a brief description of the types of other tests or calibrations that the laboratory
+							currently conducts which you do not plan to include on your scope of accreditation at this time</label><br/>
 	                       <textarea class="form-control o_website_form_input" name="lab_capabilities" required="1"/>
 	                   </div>
 	               </div>  
 	               
 	               <div class="form-group form-field o_website_form_required">
-	                   <div class="col-md-3 col-sm-4 text-right">
-	                       <label class="control-label" for="num_of_lab_staff">Number of Laboratory Staff: Please enter the total number of laboratory personnel, including those who may
-							conduct testing work off-site.</label>
-	                   </div>
-	                   <div class="col-md-7 col-sm-8">
+	                   <div class="col-md-12 col-sm-8">
+	                   		<label class="control-label" for="num_of_lab_staff">Number of Laboratory Staff: Please enter the total number of laboratory personnel, including those who may
+							conduct testing work off-site.</label><br/>
 	                       <textarea class="form-control o_website_form_input" name="num_of_lab_staff" required="1"/>
 	                   </div>
 	               </div>  
@@ -353,58 +352,43 @@
 		       		</p>
 		       		
 		       		<div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="email_address">Signed by Authorized Representative:</label>
-                     </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="signed_by_authorized_rep" t-att-value="default_values.get('name', '')" required="1"/>
+                     <div class="col-md-12 col-sm-8">
+                     	<label class="control-label" for="email_address">Signed by Authorized Representative:</label><br/>
+                        <input type="text" class="form-control o_website_form_input" name="signed_by_authorized_rep" t-att-value="default_values.get('name', '')" required="1"/>
                      </div>
                  </div>
                  
                  <div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="email_address">Place and date:</label>
-                     </div>
-                     <div class="col-md-4 col-sm-4">
+                 	 &#160;&#160;<label class="control-label" for="email_address">&#160;&#160;Place and date:</label><br/>
+                     <div class="col-md-7 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="place_sign" required="1"/>
                      </div>
-                     <div class="col-md-3 col-sm-4">
+                     <div class="col-md-5 col-sm-4">
                          <input type="date" class="form-control o_website_form_input" name="place_date" required="1"/>
                      </div>
                  </div> 
                  
-                 <div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="telephone">Telephone</label>
-                     </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="telephone" required="1"/>
-                     </div>
-                 </div>
-                 
                  <div class="form-group form-field">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="fax">Fax</label>
+                     <div class="col-md-7 col-sm-8 o_website_form_required">
+                   		<label class="control-label" for="telephone">Telephone</label><br/>
+                       	<input type="text" class="form-control o_website_form_input" name="telephone" required="1"/>
                      </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="fax"/>
-                     </div>
-                 </div>
-                 
-                 <div class="form-group form-field o_website_form_required">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="email">Email</label>
-                     </div>
-                     <div class="col-md-7 col-sm-8">
-                         <input type="email" class="form-control o_website_form_input" name="email" t-att-value="default_values.get('email', '')" required="1"/>
+                     <div class="col-md-5 col-sm-8">
+                     	<label class="control-label" for="fax">Fax</label><br/>
+                        <input type="text" class="form-control o_website_form_input" name="fax"/>
                      </div>
                  </div>
                  
                  <div class="form-group form-field o_website_form_required">
-		              <div class="col-md-3 col-sm-4 text-right">
-		                  <label class="control-label" for="funding">Funding</label>
-		              </div>
-		              <div class="col-md-7 col-sm-8">
+                     <div class="col-md-12 col-sm-8">
+                     		<label class="control-label" for="email">Email</label><br/>
+                         	<input type="email" class="form-control o_website_form_input" name="email" t-att-value="default_values.get('email', '')" required="1"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+		              <div class="col-md-12 col-sm-8">
+		              	<label class="control-label" for="funding">Funding</label><br/>
 		              	<select class="form-control o_website_form_input" name="funding">
 							  <option value="not_funded">Not Funded</option>
 							  <option value="partly_funded">Partly Funded</option>
@@ -414,16 +398,14 @@
 		          </div>
 		          
 		          <div class="form-group form-field o_website_form">
-                     <div class="col-md-3 col-sm-4 text-right">
-                         <label class="control-label" for="laboratory_address">Funding Company Details</label>
-                     </div>
-                     <div class="col-md-2 col-sm-4">
+		          	 &#160;&#160;<label class="control-label" for="laboratory_address">&#160;&#160;Funding Company Details</label><br/>
+                     <div class="col-md-3 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="funding_company_name" placeholder="Company"/>
                      </div>
-                     <div class="col-md-3 col-sm-4">
+                     <div class="col-md-6 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="funding_company_rep" placeholder="Company Representative"/>
                      </div>
-                     <div class="col-md-2 col-sm-4">
+                     <div class="col-md-3 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="funding_company_rep_num" placeholder="Representative Number"/>
                      </div>
                  </div>
