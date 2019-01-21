@@ -270,11 +270,7 @@
                     </div>
                 </div>
             </xpath>
-            
-            <xpath expr="//label[@for='description']" position="replace">
-            	<label class="control-label" for="description">Short Introduction</label>
-            </xpath>
-            
+           
             <xpath expr="//label[@for='Resume']" position="replace">
             	<label class="control-label" for="Resume">Upload Resume and Other Credentials (select multiple files at once)*</label>
             </xpath>
