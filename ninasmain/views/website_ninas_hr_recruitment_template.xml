@@ -271,8 +271,12 @@
                 </div>
             </xpath>
             
+            <xpath expr="//label[@for='Resume']" position="replace">
+            	<label class="control-label" for="Resume">Upload Resume and Other Credential</label>
+            </xpath>
+            
             <xpath expr="//input[@name='Resume']" position="replace">
-            	<input type="file" class="form-control o_website_form_input" name="Resume" multiple=""/>
+            	<input type="file" class="form-control o_website_form_input" name="Resume" multiple="" required=""/>
             </xpath>
             
         </template>
