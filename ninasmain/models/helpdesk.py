@@ -357,6 +357,16 @@ class CreateInvoice(models.Model):
         self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return False
     
+    @api.multi
+    def send_invoice_prompt_mail(self):
+        config = self.env['mail.template'].sudo().search([('name','=','Invoice Prompt for Accreditation')], limit=1)
+        mail_obj = self.env['mail.mail']
+        if config:
+            values = config.generate_email(self.id)
+            mail = mail_obj.create(values)
+            if mail:
+                mail.send()
+    
     '''
     @api.multi
     def open_customer_invoices(self):
@@ -404,6 +414,7 @@ class CreateInvoice(models.Model):
             raise Warning('Resources are not available')
         else:
             self.invoice_prompt()
+            self.send_invoice_prompt_mail()
             self.write({'stage_id': 3})
         return True
     
@@ -561,6 +572,18 @@ class Checklist(models.Model):
          string="Additional Requirement: Evidence of payment or funding support"
     )
     
+    @api.multi
+    def button_select_all(self):
+        self.write({'quality_manual': True})
+        self.write({'procedures': True})
+        self.write({'work_inst': True})
+        self.write({'org_charts': True})
+        self.write({'report_rela': True})
+        self.write({'prof_testing': True})
+        self.write({'list_equip': True})
+        self.write({'cali_cert': True})
+        self.write({'evi_pay': True})
+        return {}
     
 class CarReport(models.Model):
     _name = 'car.report'
@@ -617,6 +640,31 @@ class MobileAppAttachment(models.Model):
         attachment=True, store=True,
         string='Attachment')
     
+class account_payment(models.Model):
+    _inherit = "account.payment"
     
+    @api.multi
+    def send_register_payment_mail(self):
+        config = self.env['mail.template'].sudo().search([('name','=','Register Payment Notification')], limit=1)
+        mail_obj = self.env['mail.mail']
+        if config:
+            values = config.generate_email(self.id)
+            mail = mail_obj.create(values)
+            if mail:
+                mail.send()
+    
+    def action_validate_invoice_payment(self):
+        """ Posts a payment used to pay an invoice. This function only posts the
+        payment by default but can be overridden to apply specific post or pre-processing.
+        It is called by the "validate" button of the popup window
+        triggered on invoice form by the "Register Payment" button.
+        """
+        if any(len(record.invoice_ids) != 1 for record in self):
+            # For multiple invoices, there is account.register.payments wizard
+            raise UserError(_("This method should only be called to process a single invoice's payment."))
+        self.send_register_payment_mail()
+        return self.post()
+    
+
     
     

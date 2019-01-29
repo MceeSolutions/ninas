@@ -245,6 +245,9 @@
     <field name="priority" eval="2"/>
     <field name="arch" type="xml">
         <form string="Check List">
+        	<header>
+        		<button name="button_select_all" string="Select All" type="object" class="btn btn-primary" groups="base.group_user" confirm="Please make documents are complete otherwise Cancel"/>
+        	</header>
 			 <sheet>
 			 		<group colspan="2">
 			 			<field name="ticket_id" required="1"/>
