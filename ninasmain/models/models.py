@@ -15,7 +15,10 @@ class Partner(models.Model):
 
     vendor_tin = fields.Char('TIN')
     vendor_code = fields.Char('Code/Vendor No.')
-
+    
+    ticket_id = fields.Many2one(
+        comodel_name="helpdesk.ticket")
+    
 class Employee(models.Model):
     _inherit = 'hr.employee'
     

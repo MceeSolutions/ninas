@@ -147,6 +147,23 @@
         </field>
     </record>
     
+    <!-- application deadline -->
+    <record id="ninas_view_hr_job_form" model="ir.ui.view">
+        <field name="name">ninas.view_hr_job_form</field>
+        <field name="model">hr.job</field>
+        <field name="priority" eval="7"/>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+       		<xpath expr="//button[@name='set_open']" position="after">
+        		<button name="check_deadline" type="object" states='recruit' string="test" class="oe_highlight" />
+        	</xpath>
+             <field name="no_of_recruitment" position="after">
+				<field name="appliaction_deadline"/>
+				<field name="todays_date" invisible="1"/>
+			</field>
+        </field>
+    </record>
+    
 	<!-- job application form-->
 		<record id="ninas_hr_recruitment_form_view" model="ir.ui.view">
 		<field name="name">ninas.hr.recruitment.form</field>
