@@ -12,12 +12,16 @@ from odoo.exceptions import ValidationError
 class Partner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
-
-    vendor_tin = fields.Char('TIN')
+    
+    @api.multi
+    def _get_default_country(self):
+        default_country = self.env['res.country'].sudo().search([('name','=','Nigeria')], limit=1).id
+        return default_country
+    
+    vendor_tin = fields.Char('TINs')
     vendor_code = fields.Char('Code/Vendor No.')
     
-    ticket_id = fields.Many2one(
-        comodel_name="helpdesk.ticket")
+    country_id = fields.Many2one('res.country', string='Countryu', ondelete='restrict', required=True, readonly=True,  default =_get_default_country)
     
 class Employee(models.Model):
     _inherit = 'hr.employee'

@@ -57,7 +57,7 @@ class Accreditation(models.Model):
     lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor', track_visibility='onchange',)
     tech_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor', track_visibility='onchange',)
     
-    ac_members= fields.Many2many(comodel_name='hr.employee',
+    ac_members= fields.Many2many(comodel_name='res.users',
                                  string='AC Members')
     
     re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
@@ -95,7 +95,7 @@ class Accreditation(models.Model):
     lab_street = fields.Char(
         string='Street')
     lab_city = fields.Char(
-        string='Number')
+        string='City')
     lab_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
     lab_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
     
@@ -113,7 +113,7 @@ class Accreditation(models.Model):
     mail_street = fields.Char(
         string='Street')
     mail_city = fields.Char(
-        string='Number')
+        string='City')
     mail_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
     mail_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
     
@@ -430,7 +430,7 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def confirm_funding(self):
-        if self.funding not in ['fully_funded'] and self.invoice_count == 0:
+        if self.funding not in ['fully_funded'] or self.invoice_count == 0:
             raise Warning('No invoice has been generated for this Application')
         else:
             self.write({'stage_id': 9})
