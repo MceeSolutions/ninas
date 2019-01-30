@@ -281,6 +281,15 @@
 				    <field name="evi_pay"/><span>
 								Additional Requirement: Evidence of payment or funding support
 								</span><br/><br/>
+					<notebook>
+					<page string="Additional Information">
+						<group col="4" colspan="4">
+							<field name="pre_assessment_needed"/>
+							<field name="no_of_assessor"/>
+							<field name="assessment_days"/>
+						</group>
+					</page>
+					</notebook>
 			 </sheet>
 			 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
