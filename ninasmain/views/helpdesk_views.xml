@@ -246,7 +246,7 @@
     <field name="arch" type="xml">
         <form string="Check List">
         	<header>
-        		<button name="button_select_all" string="Select All" type="object" class="btn btn-primary" groups="base.group_user" confirm="Please make documents are complete otherwise Cancel"/>
+        		<button name="button_select_all" string="Select All" type="object" class="btn btn-primary" groups="base.group_user" confirm="Please make sure documents are complete otherwise Cancel"/>
         	</header>
 			 <sheet>
 			 		<group colspan="2">
@@ -438,7 +438,7 @@
             </field>
             <field name="user_id" position="after">
                 <field name="lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',9)], 'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>
-           		<field name="tech_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'readonly':[('resources_available','=',False)]}"/>
+           		<field name="tech_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>
             	<field name="ac_members" widget="many2many_tags" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}"/>
             </field>
             <field name="deadline" position="after">

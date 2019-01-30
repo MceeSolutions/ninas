@@ -46,7 +46,8 @@ class JobRec(models.Model):
     
     @api.multi
     def check_deadline(self):
-        if self.appliaction_deadline == self.todays_date:
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+        if self.appliaction_deadline == today:
             self.set_open()
     
     '''
