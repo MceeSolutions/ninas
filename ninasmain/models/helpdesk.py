@@ -75,6 +75,10 @@ class Accreditation(models.Model):
     assessment_date = fields.Date(string='Assessment Date', related='assessment_plan_id.assessment_date', track_visibility='onchange', readonly=True)
     
     
+    est_pre_assessment_needed = fields.Boolean(string="Pre-assessment Needed?")
+    est_no_of_assessor = fields.Integer(string="Estimated Number of Assessors")
+    est_assessment_days = fields.Integer(string="Estimated Number of Days")
+    
     #Application Form Sheet
     name_applicant = fields.Char(
         string='Applicant’s Authorized Representative’s Name',
@@ -430,7 +434,7 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def confirm_funding(self):
-        if self.funding not in ['fully_funded'] or self.invoice_count == 0:
+        if self.funding not in ['fully_funded'] and self.invoice_count == 0:
             raise Warning('No invoice has been generated for this Application')
         else:
             self.write({'stage_id': 9})

@@ -282,11 +282,11 @@
 								Additional Requirement: Evidence of payment or funding support
 								</span><br/><br/>
 					<notebook>
-					<page string="Additional Information">
+					<page string="Additional Information for Finance">
 						<group col="4" colspan="4">
-							<field name="pre_assessment_needed"/>
-							<field name="no_of_assessor"/>
-							<field name="assessment_days"/>
+							<field name="pre_assessment_needed" required="1"/>
+							<field name="no_of_assessor" required="1"/>
+							<field name="assessment_days" required="1"/>
 						</group>
 					</page>
 					</notebook>
@@ -462,6 +462,13 @@
             </field>
             <field name="description" position="after">
             	<notebook>
+	            	<page string="Additional Information">
+            			<group>
+            				<field name="est_pre_assessment_needed" required="1"/>
+	            			<field name="est_no_of_assessor" required="1"/>
+	            			<field name="est_assessment_days" required="1"/>
+            			</group>
+	            	</page>
 	            	<page string="Mobile App Attachments">
 	            		<field name="mobile_app_attachment_ids">
 		            		<tree editable="True">
