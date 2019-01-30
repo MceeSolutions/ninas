@@ -585,6 +585,12 @@ class Checklist(models.Model):
         self.write({'evi_pay': True})
         return {}
     
+    pre_assessment_needed = fields.Boolean(
+        string="pre-assessment Needed?"
+    )
+    no_of_assessor = fields.Char(string="Estimated Number of Assessors")
+    assessment_days = fields.Integer(string="Estimated Number of Days")
+    
 class CarReport(models.Model):
     _name = 'car.report'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
