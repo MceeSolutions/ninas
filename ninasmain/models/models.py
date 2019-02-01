@@ -1233,7 +1233,7 @@ class CodeofConduct(models.Model):
         track_visibility='onchange')
     
     application_id = fields.Many2one(
-        comodel_name='elpdesk.ticket',
+        comodel_name='helpdesk.ticket',
         string='Application ID',
         readonly=False)
     
@@ -1278,7 +1278,7 @@ class ConflictofInterest(models.Model):
         track_visibility='onchange')
     
     application_id = fields.Many2one(
-        comodel_name='elpdesk.ticket',
+        comodel_name='helpdesk.ticket',
         string='Application ID',
         readonly=False)
     
@@ -1340,7 +1340,7 @@ class Confidentiality(models.Model):
         track_visibility='onchange')
     
     application_id = fields.Many2one(
-        comodel_name='elpdesk.ticket',
+        comodel_name='helpdesk.ticket',
         string='Application ID',
         readonly=False)
     
