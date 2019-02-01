@@ -157,7 +157,9 @@ class Inventory(models.Model):
         return super(Inventory, self).create(vals)
     
 class AccountInvoice(models.Model):
-    _inherit = "account.invoice"
+    _name = "account.invoice"
+    _inherit = ['account.invoice','mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
+    
     
     date_invoice = fields.Date(string='Invoice Date', default = date.today(),
         readonly=True, states={'draft': [('readonly', False)]}, index=True,

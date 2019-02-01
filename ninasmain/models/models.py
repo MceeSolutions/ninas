@@ -8,6 +8,7 @@ from datetime import date, timedelta
 from odoo import api, fields, models
 from docutils.nodes import organization
 from odoo.exceptions import ValidationError
+from pbr.tests.testpackage.pbr_testpackage.wsgi import application
 
 class Partner(models.Model):
     _name = 'res.partner'
@@ -1231,6 +1232,11 @@ class CodeofConduct(models.Model):
         default='new',
         track_visibility='onchange')
     
+    application_id = fields.Many2one(
+        comodel_name='elpdesk.ticket',
+        string='Application ID',
+        readonly=False)
+    
     agreement = fields.Boolean(
         string='I have read and concur with NiNAS’s Code of Conduct (Sections 1-7).',
         required=True
@@ -1242,7 +1248,7 @@ class CodeofConduct(models.Model):
     description = fields.Text(
         )
     name = fields.Many2one(
-        comodel_name='hr.employee',
+        comodel_name='res.users',
         string='Employee Printed name:',
         readonly=False)
     date_signed = fields.Char(
@@ -1270,6 +1276,20 @@ class ConflictofInterest(models.Model):
         string='Status',
         default='new',
         track_visibility='onchange')
+    
+    application_id = fields.Many2one(
+        comodel_name='elpdesk.ticket',
+        string='Application ID',
+        readonly=False)
+    
+    lab_number = fields.Char(
+        string='Number', realted="application_id.lab_number")
+    lab_street = fields.Char(
+        string='Street', realted="application_id.lab_street")
+    lab_city = fields.Char(
+        string='City', realted="application_id.lab_city")
+    lab_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', realted="application_id.lab_state_id")
+    lab_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', realted="application_id.lab_country_id")
     
     agreement = fields.Boolean(
         string='I have read and concur with NiNAS’s Code of Conduct (Sections 2-7).',
@@ -1318,6 +1338,20 @@ class Confidentiality(models.Model):
         string='Status',
         default='new',
         track_visibility='onchange')
+    
+    application_id = fields.Many2one(
+        comodel_name='elpdesk.ticket',
+        string='Application ID',
+        readonly=False)
+    
+    lab_number = fields.Char(
+        string='Number', realted="application_id.lab_number")
+    lab_street = fields.Char(
+        string='Street', realted="application_id.lab_street")
+    lab_city = fields.Char(
+        string='City', realted="application_id.lab_city")
+    lab_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', realted="application_id.lab_state_id")
+    lab_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', realted="application_id.lab_country_id")
     
     name = fields.Char(
         string='Name of Institution or Person:',required=True)

@@ -1269,11 +1269,14 @@
 			<field name="arch" type="xml">
 				<form string="Code Of Conduct">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
 		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
 		        	</header>
 					<sheet>
+						<group col="2" colspan="1">
+							<field name="application_id"/>
+						</group>
 						<strong>
 							NiNAS CODE OF CONDUCT-SECTION 8: EMPLOYEE AGREEMENT
 						</strong><br/><br/>
@@ -1343,11 +1346,14 @@
 			<field name="arch" type="xml">
 				<form string="Conflict of Interest">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
 		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,accept,approve" readonly="1"/>
 		        	</header>
 					<sheet>
+					<group col="2" colspan="1">
+						<field name="application_id"/>
+					</group>
 						<strong>
 							CONFLICT OF INTEREST:  F 444
 						</strong><br/><br/>
@@ -1357,7 +1363,14 @@
 							</span>
 							<group>
 								<field name="name"/>
-								<field name="location"/>
+								<label for="location" string="Laboratory Address"/>
+			           	       	<div class="o_address_format">
+			                        <field name="lab_number" placeholder="Number..." class="o_address_street" readonly="True"/>
+			                        <field name="lab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="lab_city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                    </div>
 							</group>
 							<strong>SECTION 9 –ASSESSOR AGREEMENT</strong><br/><br/><br/>
 							<field name="agreement"/>
@@ -1427,11 +1440,14 @@
 			<field name="arch" type="xml">
 				<form string="Confidentiality">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
 		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
 		        	</header>
 					<sheet>
+						<group col="2" colspan="1">
+							<field name="application_id"/>
+						</group>
 						<strong>
 							CONFIDENTIALITY, IMPARTIALITY AND NON-DISCLOSURE AGREEMENT: F 443
 						</strong><br/><br/>
@@ -1441,7 +1457,14 @@
 							</span>
 							<group>
 								<field name="name"/>
-								<field name="location"/>
+								<label for="location" string="Laboratory Address"/>
+			           	       	<div class="o_address_format">
+			                        <field name="lab_number" placeholder="Number..." class="o_address_street" readonly="True"/>
+			                        <field name="lab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="lab_city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                    </div>
 							</group>
 							
 							<field name="name_rep"/>

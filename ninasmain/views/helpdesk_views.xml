@@ -148,13 +148,13 @@
                <button class="oe_stat_button" type="object" name="open_checklist_ticket" context="{'default_partner_id': active_id}" icon="fa-list">
                     <div class="o_stat_info">
                         <field name="checklist_count" class="o_stat_value"/>
-                        <span class="o_stat_text"> Checklist</span>
+                        <span class="o_stat_text">Checklist</span>
                     </div>
                 </button>
                <button class="oe_stat_button" type="object" name="open_customer_invoices" context="{'default_partner_id': active_id}" icon="fa-pencil-square-o">
                     <div class="o_stat_info">
                         <field name="invoice_count" class="o_stat_value"/>
-                        <span class="o_stat_text"> Invoices</span>
+                        <span class="o_stat_text">Invoices</span>
                     </div>
                 </button>
                <!--<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_action_invoice_tree1)d" icon="fa-pencil-square-o">

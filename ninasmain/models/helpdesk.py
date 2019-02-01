@@ -303,27 +303,6 @@ class CreateInvoice(models.Model):
         self.update({'kanban_state':'normal'})
         return {} 
     
-    
-    '''
-    @api.multi
-    def action_create_new(self):
-        ctx = self._context.copy()
-        model = 'account.invoice'
-        ctx.update({'journal_type': self.type, 'default_type': 'out_invoice', 'type': 'out_invoice', 'default_journal_id': self.id})
-        if ctx.get('refund'):
-            ctx.update({'default_type':'out_refund', 'type':'out_refund'})
-        view_id = self.env.ref('account.invoice_form').id
-        return {
-            'name': _('Create invoice/bill'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': model,
-            'view_id': view_id,
-            'context': ctx,
-        }
-    '''
-    
     @api.multi
     def action_create_new_invoice(self):
        """
@@ -371,30 +350,22 @@ class CreateInvoice(models.Model):
             if mail:
                 mail.send()
     
-    '''
     @api.multi
     def open_customer_invoices(self):
         self.ensure_one()
         action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
         action['domain'] = literal_eval(action['domain'])
-        action['domain'].append(('partner_id', 'child_of', self.id))
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
         return action
     
-    
-    '''
     @api.multi
-    def open_customer_invoices(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': ('Customer Invoices'),
-            'res_model': 'account.invoice',
-            'view_mode': 'tree,kanban,form,pivot,graph',
-            'domain':[('type','=','in_invoice')],
-            'target': 'current',
-            'context': {'search_default_is_open': True, 'search_default_partner_id': self.partner_id.id}
-        }
-    
-        
+    def open_checklist_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_checklist_ticket_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    '''
     @api.multi
     def open_checklist_ticket(self):
         return {
@@ -405,11 +376,14 @@ class CreateInvoice(models.Model):
             'target': 'current',
             'context': {'search_default_is_open': True, 'search_default_partner_id': self.partner_id.id}
         }
-    
+    '''
     
     @api.multi
     def button_confirm_sponsor(self):
-        self.write({'stage_id': 5})
+        if self.checklist_count == 0:
+            raise Warning('No Checklist has been generated for this Application')
+        else:
+            self.write({'stage_id': 5})
         return {}
     
     @api.multi
