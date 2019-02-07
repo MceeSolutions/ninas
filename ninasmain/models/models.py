@@ -8,7 +8,7 @@ from datetime import date, timedelta
 from odoo import api, fields, models
 from docutils.nodes import organization
 from odoo.exceptions import ValidationError
-from pbr.tests.testpackage.pbr_testpackage.wsgi import application
+#from pbr.tests.testpackage.pbr_testpackage.wsgi import application
 
 class Partner(models.Model):
     _name = 'res.partner'
