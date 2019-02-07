@@ -1276,7 +1276,7 @@
 		        	</header>
 					<sheet>
 						<group col="2" colspan="1">
-							<field name="application_id"/>
+							<field name="application_id" widget="selection" required="1"/>
 						</group>
 						<strong>
 							NiNAS CODE OF CONDUCT-SECTION 8: EMPLOYEE AGREEMENT
@@ -1354,7 +1354,7 @@
 		        	</header>
 					<sheet>
 					<group col="2" colspan="1">
-						<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection"/>
+						<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection" required="1"/>
 					</group>
 						<strong>
 							CONFLICT OF INTEREST:  F 444
@@ -1450,7 +1450,7 @@
 		        	</header>
 					<sheet>
 						<group col="2" colspan="1">
-							<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection"/>
+							<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection" required="1"/>
 						</group>
 						<strong>
 							CONFIDENTIALITY, IMPARTIALITY AND NON-DISCLOSURE AGREEMENT: F 443

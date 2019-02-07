@@ -703,7 +703,7 @@ class CarReport(models.Model):
     
     application_id = fields.Many2one(
         comodel_name='helpdesk.ticket',
-        string='Application ID',readonly=False, required=True,
+        string='Application ID',readonly=False,
         track_visibility='onchange', default=_get_default_partner)
 
     
@@ -779,7 +779,7 @@ class CarReportAttachment(models.Model):
 
     application_id = fields.Many2one(
         comodel_name='helpdesk.ticket',
-        string='Application ID',readonly=False, required=True,
+        string='Application ID',readonly=False,
         track_visibility='onchange')
     
     car_report_id = fields.Many2one(comodel_name='car.report')

@@ -1283,7 +1283,7 @@ class ConflictofInterest(models.Model):
     application_id = fields.Many2one(
         comodel_name='helpdesk.ticket',
         string='Application ID',
-        readonly=False, required=True)
+        readonly=False)
     
     partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
     
@@ -1357,7 +1357,7 @@ class Confidentiality(models.Model):
     application_id = fields.Many2one(
         comodel_name='helpdesk.ticket',
         string='Application ID',
-        readonly=False, required=True)
+        readonly=False)
     
     partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
     
