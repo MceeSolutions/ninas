@@ -8,7 +8,7 @@ from datetime import date, timedelta
 from odoo import api, fields, models
 from docutils.nodes import organization
 from odoo.exceptions import ValidationError
-#from pbr.tests.testpackage.pbr_testpackage.wsgi import application
+from pbr.tests.testpackage.pbr_testpackage.wsgi import application
 
 class Partner(models.Model):
     _name = 'res.partner'
@@ -23,6 +23,9 @@ class Partner(models.Model):
     vendor_code = fields.Char('Code/Vendor No.')
     
     country_id = fields.Many2one('res.country', string='Countryu', ondelete='restrict', required=True, readonly=True,  default =_get_default_country)
+    
+    partner_confidentiality = fields.Many2one(comodel_name="ninas.confidentiality")
+    partner_conflict = fields.Many2one(comodel_name="ninas.conflict.interest")
     
 class Employee(models.Model):
     _inherit = 'hr.employee'
@@ -1280,31 +1283,33 @@ class ConflictofInterest(models.Model):
     application_id = fields.Many2one(
         comodel_name='helpdesk.ticket',
         string='Application ID',
-        readonly=False)
+        readonly=False, required=True)
     
-    lab_number = fields.Char(
-        string='Number', realted="application_id.lab_number")
-    lab_street = fields.Char(
-        string='Street', realted="application_id.lab_street")
-    lab_city = fields.Char(
-        string='City', realted="application_id.lab_city")
-    lab_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', realted="application_id.lab_state_id")
-    lab_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', realted="application_id.lab_country_id")
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+    
+    number = fields.Char(
+        string='Number', related="application_id.lab_number")
+    street = fields.Char(
+        string='Street', related="application_id.lab_street")
+    city = fields.Char(
+        string='City', related="application_id.lab_city")
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', related="application_id.lab_state_id")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', related="application_id.lab_country_id")
     
     agreement = fields.Boolean(
         string='I have read and concur with NiNAS’s Code of Conduct (Sections 2-7).',
         required=True
         )
-    date = fields.Date(
+    date = fields.Date(default=date.today()
         )
     date_today = fields.Date(
         )
     description = fields.Text(
         )
-    name = fields.Char(
-        string='Name of Institution or Person:')
+    name = fields.Many2one('res.users',
+        string='Name of Institution or Person:', default=lambda self: self.env.user, readonly=True)
     
-    printed_name = fields.Char(related='name',readonly=True,
+    printed_name = fields.Many2one('res.users',readonly=True,
         string='Printed Name')
     
     location = fields.Char(
@@ -1316,8 +1321,18 @@ class ConflictofInterest(models.Model):
     @api.multi
     def button_accept(self):
         self.write({'state': 'accept'})
+        self.printed_name = self._uid
         self.date_signed = date.today()
-        return {}
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_director_accreditation')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Assessor {} has signed Conflict of Interest Form and is awaiting approval".format(self.name.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def button_approve(self):
@@ -1342,30 +1357,33 @@ class Confidentiality(models.Model):
     application_id = fields.Many2one(
         comodel_name='helpdesk.ticket',
         string='Application ID',
-        readonly=False)
+        readonly=False, required=True)
     
-    lab_number = fields.Char(
-        string='Number', realted="application_id.lab_number")
-    lab_street = fields.Char(
-        string='Street', realted="application_id.lab_street")
-    lab_city = fields.Char(
-        string='City', realted="application_id.lab_city")
-    lab_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', realted="application_id.lab_state_id")
-    lab_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', realted="application_id.lab_country_id")
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
     
-    name = fields.Char(
-        string='Name of Institution or Person:',required=True)
+    number = fields.Char(
+        string='Number', related="application_id.lab_number")
+    street = fields.Char(
+        string='Street', related="application_id.lab_street")
+    city = fields.Char(
+        string='City', related="application_id.lab_city")
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', related="application_id.lab_state_id")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', related="application_id.lab_country_id")
+    
+    
+    name = fields.Many2one('res.users',
+        string='Name of Institution or Person:', default=lambda self: self.env.user, readonly=True)
     location = fields.Char(
-        string='Location',required=True)
-    name_rep = fields.Char(
-        string='Name of Person:',required=True)
+        string='Location',required=False)
+    name_rep = fields.Many2one('res.users',
+        string='Name of Person:',required=True, default=lambda self: self.env.user, readonly=True)
     
     date = fields.Date(
         )
     description = fields.Text(
         )
     
-    signed = fields.Char(related='name_rep',readonly=True,
+    signed = fields.Many2one('res.users',readonly=True,
         string='Signed')
 
     date_signed = fields.Date(
@@ -1375,8 +1393,18 @@ class Confidentiality(models.Model):
     @api.multi
     def button_accept(self):
         self.write({'state': 'accept'})
+        self.signed = self._uid
         self.date_signed = date.today()
-        return {}
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_director_accreditation')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Assessor {} has signed Confidentiality Form and is awaiting approval".format(self.name.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def button_approve(self):
@@ -1604,7 +1632,7 @@ class OpenClose(models.Model):
     today = fields.Date(
         string = 'Date',
         default= date.today(),
-        readonly=1
+        readonly=0
         )
     oc = fields.One2many(
         comodel_name = 'open.close',
@@ -1877,15 +1905,26 @@ class AssessmentPlan(models.Model):
         track_visibility='onchange',)
     
     reference_number = fields.Char(string='Reference Number', readonly=True, required=True, index=True, copy=False, default='New') #auto-sgenerated?
-    organisation = fields.Char(related='application_id.partner_id.parent_id.name', string='Organisation', readonly=1)
-    contact_person = fields.Char(related='application_id.partner_id.child_ids.name', string='Contact Person', required=1)
-    address = fields.Char(related='application_id.partner_id.street', string='Address')
-    telephone = fields.Char(related='application_id.partner_id.phone', string='Telephone')
+    organisation = fields.Char(related='application_id.laboratory_legal_name', string='Organisation', readonly=1)
+    contact_person = fields.Char(related='application_id.partner_name', string='Contact Person', required=1)
+    address = fields.Char(string='Address')
+    
+    lab_number = fields.Char(related='application_id.lab_number', string='Number')
+    lab_street = fields.Char(related='application_id.lab_street', string='Street')
+    lab_city = fields.Char(related='application_id.lab_city', string='City')
+    lab_state_id = fields.Many2one(related='application_id.lab_state_id',comodel_name="res.country.state", string='State')
+    lab_country_id = fields.Many2one(related='application_id.lab_country_id',comodel_name='res.country', string='Country')
+    
+    telephone = fields.Char(related='application_id.telephone_number', string='Telephone')
     company_rep = fields.Char(related='application_id.partner_id.name', string='Company Representative', required=1)
     
-    assessment_date = fields.Date(string='Assessment Date', required=1)
+    assessment_date = fields.Date(string='Assessment Date', required=0)
     lead_assessor = fields.Many2one(related='application_id.lead_assessor_id', comodel_name='hr.employee', string='Lead Assessor')
-    technical_assessor = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor')
+    technical_assessor = fields.Many2one(related='application_id.tech_assessor_id',comodel_name='hr.employee', string='Technical Assessor')
+    
+    assessment_date_from = fields.Date(related='application_id.assessment_date_from',track_visibility='onchange')
+    assessment_date_to = fields.Date(related='application_id.assessment_date_to',track_visibility='onchange')
+    assessment_number_of_days = fields.Integer(related='application_id.assessment_number_of_days')
     
     day1_ids = fields.One2many(
         comodel_name='ninas.assessment.plan.activity',
@@ -2229,7 +2268,8 @@ class RecommendationForm(models.Model):
         string="Name of Institution Representative",
         track_visibility='onchange')
     
-    accreditation_scope = fields.Char(
+    accreditation_scope = fields.Selection(
+        related='application_id.number_of_scopes',
         string="Accreditation Scope",
         track_visibility='onchange')
     
@@ -2246,6 +2286,10 @@ class RecommendationForm(models.Model):
         related='application_id.assessment_date',
         string="Accreditation Date",
         track_visibility='onchange')
+    
+    assessment_date_from = fields.Date(related='application_id.assessment_date_from',track_visibility='onchange')
+    assessment_date_to = fields.Date(related='application_id.assessment_date_to',track_visibility='onchange')
+    assessment_number_of_days = fields.Integer(related='application_id.assessment_number_of_days', string='Number of Days', store=True, track_visibility='onchange')
     
     satisfactory_yes = fields.Boolean(string='Yes')
     

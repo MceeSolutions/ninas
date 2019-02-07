@@ -1257,6 +1257,7 @@
 			<field name="model">ninas.code.conduct</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
+				<field name="application_id"/>
 				<field name="name"/>
 				<field name="date"/>
 			</field>	
@@ -1270,7 +1271,7 @@
 				<form string="Code Of Conduct">
 					<header>
 		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
-		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_director_accreditation"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
 		        	</header>
 					<sheet>
@@ -1334,6 +1335,7 @@
 			<field name="model">ninas.conflict.interest</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
+				<field name="application_id"/>
 				<field name="name"/>
 				<field name="date"/>
 			</field>	
@@ -1346,13 +1348,13 @@
 			<field name="arch" type="xml">
 				<form string="Conflict of Interest">
 					<header>
-		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
-		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_director_accreditation"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,accept,approve" readonly="1"/>
 		        	</header>
 					<sheet>
 					<group col="2" colspan="1">
-						<field name="application_id"/>
+						<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection"/>
 					</group>
 						<strong>
 							CONFLICT OF INTEREST:  F 444
@@ -1365,13 +1367,15 @@
 								<field name="name"/>
 								<label for="location" string="Laboratory Address"/>
 			           	       	<div class="o_address_format">
-			                        <field name="lab_number" placeholder="Number..." class="o_address_street" readonly="True"/>
-			                        <field name="lab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
-			                        <field name="lab_city" placeholder="City" class="o_address_city" readonly="True"/>
-			                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
-			                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                        <field name="number" placeholder="Number..." class="o_address_street" readonly="True"/>
+			                        <field name="street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
 			                    </div>
+			                    <field name="partner_id"/>
 							</group>
+							
 							<strong>SECTION 9 –ASSESSOR AGREEMENT</strong><br/><br/><br/>
 							<field name="agreement"/>
 								<span>
@@ -1440,13 +1444,13 @@
 			<field name="arch" type="xml">
 				<form string="Confidentiality">
 					<header>
-		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
-		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_director_accreditation"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
 		        	</header>
 					<sheet>
 						<group col="2" colspan="1">
-							<field name="application_id"/>
+							<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection"/>
 						</group>
 						<strong>
 							CONFIDENTIALITY, IMPARTIALITY AND NON-DISCLOSURE AGREEMENT: F 443
@@ -1457,14 +1461,15 @@
 							</span>
 							<group>
 								<field name="name"/>
-								<label for="location" string="Laboratory Address"/>
+								<label for="location" string="Laboratory Location"/>
 			           	       	<div class="o_address_format">
-			                        <field name="lab_number" placeholder="Number..." class="o_address_street" readonly="True"/>
-			                        <field name="lab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
-			                        <field name="lab_city" placeholder="City" class="o_address_city" readonly="True"/>
-			                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
-			                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                        <field name="number" placeholder="Number..." class="o_address_street" readonly="True"/>
+			                        <field name="street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
 			                    </div>
+			                    <field name="partner_id"/>
 							</group>
 							
 							<field name="name_rep"/>
@@ -1962,17 +1967,34 @@
 			<form string="Assessment Form">
 				<sheet>
 					<separator string="Initial / Re-Assessment Plan"/>
-					<group><field name="application_id"/></group>
+					<group><field name="application_id" domain="[('stage_id','=',12)]" widget="selection"/></group>
 					<group col="4" colspan="2">
 						<field name="reference_number"/>
-						<field name="organisation"/>
-						<field name="contact_person"/>
-						<field name="address"/>
-						<field name="telephone"/>
-						<field name="company_rep"/>
-						<field name="assessment_date"/>
-						<field name="lead_assessor" domain="[('category_ids.is_assessor','=',True)]"/>
-						<field name="technical_assessor" domain="[('category_ids.is_assessor','=',True)]"/>
+						<field name="organisation" readonly="1"/>
+						<field name="contact_person" readonly="1"/>
+						<label for="address" string="Laboratory Address"/>
+	           	       	<div class="o_address_format">
+	                        <field name="lab_number" placeholder="Number..." class="o_address_street" readonly="True"/>
+	                        <field name="lab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+	                        <field name="lab_city" placeholder="City" class="o_address_city" readonly="True"/>
+	                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+	                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+	                    </div>
+						<field name="telephone" readonly="1"/>
+						<field name="company_rep" readonly="1"/>
+						<label for="assessment_date" string="Assessment Date" readonly="1"/>
+	                   <div>
+		                   <div>
+		                       <field name="assessment_date_from" class="oe_inline" readonly="1"/>
+		                       <label string=" -" class="oe_inline"/>
+		                       <field name="assessment_date_to" class="oe_inline" readonly="1"/>
+		                   </div>
+		                   <div>
+		                       <field name="assessment_number_of_days" class="oe_inline" readonly="1"/> days
+		                   </div>
+	                   </div>
+						<field name="lead_assessor" domain="[('category_ids.is_assessor','=',True)]" readonly="1"/>
+						<field name="technical_assessor" domain="[('category_ids.is_assessor','=',True)]" readonly="1"/>
 					</group>
 					<notebook>
 						<page name="day_1" string="Day 1 - LA observed by TTA">
@@ -2046,13 +2068,13 @@
 				<sheet>
 				<group><field name="application_id"/></group>
 					<group col="4" colspan="2">
-						<field name="institution_name"/>
+						<field name="institution_name" readonly="1"/>
 						<field name="ref"/>
-						<field name="representative"/>
-						<field name="scope"/>
-						<field name="assessor_id"/>
-						<field name="assess_type"/>
-						<field name="assessment_date"/>
+						<field name="representative" readonly="1"/>
+						<field name="scope" readonly="1"/>
+						<field name="assessor_id" readonly="1"/>
+						<field name="assess_type" readonly="1"/>
+						<field name="assessment_date" readonly="1"/>
 					</group>
 					<notebook>
 						<page string="Lead Assessor's Recommendation">
@@ -2216,25 +2238,35 @@
 						<field name="reference_no"/>
 					</group>
 					<group>
-						<field name="application_id"/>
+						<field name="application_id" widget="selection" domain="[('stage_id','=',16)]"/>
 					</group>
 				    <group col="4" colspan="4">
-				    	<field name="name"/>
-				    	<label for="address_of_institution" string="Address of Institurion or Lab"/>
+				    	<field name="name" readonly="1"/>
+				    	<label for="address_of_institution" string="Address of Institurion or Lab" readonly="1"/>
 	           	       	<div class="o_address_format">
-	                        <field name="institution_number" placeholder="Number..." class="o_address_street"/>
-	                        <field name="institution_street" placeholder="Street..." class="o_address_street"/>
-	                        <field name="institution_city" placeholder="City" class="o_address_city"/>
-	                        <field name="institution_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
-	                        <field name="institution_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+	                        <field name="institution_number" placeholder="Number..." class="o_address_street" readonly="1"/>
+	                        <field name="institution_street" placeholder="Street..." class="o_address_street" readonly="1"/>
+	                        <field name="institution_city" placeholder="City" class="o_address_city" readonly="1"/>
+	                        <field name="institution_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="1"/>
+	                        <field name="institution_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="1"/>
 	                    </div>
-	                    <field name="name_of_institution_rep"/>
-	                    <field name="accreditation_scope"/>
+	                    <field name="name_of_institution_rep" readonly="1"/>
+	                    <field name="accreditation_scope" readonly="1"/>
 	                    </group>
 	                    <group col="6" colspan="3">
-	                    	<field name="name_assessor" domain="[('category_ids.is_assessor','=',True)]" widget="many2many_tags"/>
-	                    	<field name="type_assessment"/>
-	                    	<field name="assessment_date"/>
+	                    	<field name="name_assessor" domain="[('category_ids.is_assessor','=',True)]" widget="many2many_tags" readonly="1"/>
+	                    	<field name="type_assessment" readonly="1"/>
+	                    	<label for="assessment_date" string="Assessment Date"/>
+		                   <div>
+			                   <div>
+			                       <field name="assessment_date_from" class="oe_inline" readonly="1"/>
+			                       <label string=" -" class="oe_inline"/>
+			                       <field name="assessment_date_to" class="oe_inline" readonly="1"/>
+			                   </div>
+			                   <div>
+			                       <field name="assessment_number_of_days" class="oe_inline" readonly="1"/> days
+			                   </div>
+		                   </div>
 	                    </group>
 	                    <span>I confirm that these recommendations are based on the following documents
 						provided by NiNAS (Please tick the relevant box)</span>
@@ -2256,10 +2288,6 @@
 	        </form>
 	    </field>
 	    </record>
-
-
-    
-    
     
     <!-- MenuItems -->
     <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_main_menu"/>
@@ -2337,6 +2365,8 @@
               action="ninas_code_of_conduct_action"/>
     <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_contract_agreement_action"/>
+    <menuitem name="Corrective Action Report" id="car_agreement_menu" parent="contract_agreement_main_menu"
+              action="ninas_car_report_action"/>
               
               
    	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png"/>
