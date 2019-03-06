@@ -102,6 +102,7 @@ class Accreditation(models.Model):
     assessment_date_to = fields.Date(track_visibility='onchange')
     assessment_number_of_days = fields.Integer('Number of Days', store=True, track_visibility='onchange')
     
+    
     est_pre_assessment_needed = fields.Boolean(string="Pre-assessment Needed?", related='checklist_id.pre_assessment_needed')
     est_no_of_assessor = fields.Char(string="Estimated Number of Assessors", related='checklist_id.no_of_assessor')
     est_assessment_days = fields.Char(string="Estimated Number of Days", related='checklist_id.assessment_days')

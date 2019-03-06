@@ -499,9 +499,9 @@
             <field name="deadline" position="after">
                 <field name="re_assessment_date" attrs="{'required':[('stage_id','=',20)], 'readonly':[('stage_id','!=',20)]}"/>
                 <field name="decision_making_number" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}"/>
-                <field name="est_pre_assessment_needed"/>
+                <!-- <field name="est_pre_assessment_needed"/>
                 <field name="est_no_of_assessor"/>
-                <field name="est_assessment_days"/>
+                <field name="est_assessment_days"/> -->
             </field>
             <field name="priority" position="after">
             	<field name="document_review" attrs="{'required':[('stage_id','=',17)], 'readonly':[('stage_id','!=',17)]}"/>
@@ -522,13 +522,13 @@
             </field>
             <field name="description" position="after">
             	<notebook>
-	            	<page string="Additional Information">
+	            	<!-- <page string="Additional Information">
             			<group>
             				<field name="est_pre_assessment_needed" required="1"/>
 	            			<field name="est_no_of_assessor" required="1"/>
 	            			<field name="est_assessment_days" required="1"/>
             			</group>
-	            	</page>
+	            	</page>-->
 	            	<page string="Mobile App Attachments">
 	            		<field name="mobile_app_attachment_ids">
 		            		<tree editable="True">
