@@ -88,6 +88,38 @@
             </t>
     </template>
     
+    <template id="portal_car_ticket" name="Corrective Action Report">
+        <t t-call="portal.portal_layout">
+            <h3>Corrective Action Reports
+                <t t-call="portal.portal_searchbar"/>
+            </h3>
+            <t t-if="not car">
+                <p>There are currently no CAR's for your account.</p>
+            </t>
+            <div t-if="car" class="panel panel-default">
+                <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
+                    <thead>
+                        <tr class="active">
+                        	<th>C.A.R</th><th/>
+                            <th>Application</th><th/>
+                            <th>Application Status</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="car" t-as="cars">
+                        <tr>
+                        	<td><span t-field="cars.name"/></td><td/>
+                            <td><span t-field="cars.application_id.name"/></td><td/>
+                            <td><span t-field="cars.application_id.stage_id.name"/></td>
+                        </tr>
+                    </t>
+                </table></div>
+                <div t-if="pager" class="o_portal_pager text-center">
+                    <t t-call="portal.pager"/>
+                </div>
+            </div>
+        </t>
+    </template>
+    
     <function model="ir.model.fields" name="formbuilder_whitelist">
         <value>ninas.code.conduct</value>
         <value eval="[

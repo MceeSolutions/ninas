@@ -26,11 +26,18 @@ class Accreditation(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('helpdesk.ticket') or '/'
         return super(Accreditation, self).create(vals)
     
+    @api.multi
+    def name_get(self):
+        result = []
+        for ticket in self:
+            result.append((ticket.id, "%s %s (#%d)" % (ticket.laboratory_legal_name, ticket.name, ticket.id)))
+        return result
+    
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         return {}
     
-    @api.onchange('assessment_date_from', 'assessment_date_to','assessment_number_of_days')
+    @api.depends('assessment_date_from', 'assessment_date_to')
     def _compute_number_of_days(self):
         if self.assessment_date_from and self.assessment_date_to:
             d1=datetime.datetime.strptime(str(self.assessment_date_from),'%Y-%m-%d') 
@@ -56,7 +63,7 @@ class Accreditation(models.Model):
         track_visibility='onchange')
 
     decision_making_number = fields.Char(
-        string='Decision Number',
+        string='Accreditation Number',
         track_visibility='onchange')
     
     funding = fields.Selection(
@@ -100,7 +107,7 @@ class Accreditation(models.Model):
     
     assessment_date_from = fields.Date(track_visibility='onchange')
     assessment_date_to = fields.Date(track_visibility='onchange')
-    assessment_number_of_days = fields.Integer('Number of Days', store=True, track_visibility='onchange')
+    assessment_number_of_days = fields.Integer('Number of Days', store=False, track_visibility='onchange', compute="_compute_number_of_days")
     
     
     est_pre_assessment_needed = fields.Boolean(string="Pre-assessment Needed?", related='checklist_id.pre_assessment_needed')
@@ -290,6 +297,7 @@ class CreateInvoice(models.Model):
     
     confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
     conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
+    recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
     
     @api.multi
     def _invoice_count(self):
@@ -346,6 +354,19 @@ class CreateInvoice(models.Model):
     @api.multi
     def _car_count(self):
         car_rep = self.env['car.report']
+        for car in self:
+            domain = [('partner_id', '=', car.partner_id.id)]
+            car_ids = car_rep.search(domain)
+            cars = car_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.car_count = car_count
+        return True
+    
+    @api.multi
+    def _recommendation_count(self):
+        car_rep = self.env['ninas.recommendation.form']
         for car in self:
             domain = [('partner_id', '=', car.partner_id.id)]
             car_ids = car_rep.search(domain)
@@ -447,6 +468,14 @@ class CreateInvoice(models.Model):
         action['domain'] = literal_eval(action['domain'])
         action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
         return action
+    
+    @api.multi
+    def open_recommendation_form(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_recommendation_form_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
     '''
     @api.multi
     def open_checklist_ticket(self):
@@ -526,6 +555,7 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_assessor_agreement(self):
+        sub = self.env['checklist.ticket'].search([('ticket_id','=',self.id), ('partner_id', '=', self.partner_id.id)], limit=1)
         if self.confidentiality_count == 0:
             raise Warning('Confidentiality Form has not been Filled!')
         for line in self.partner_id.partner_confidentiality:
@@ -537,9 +567,14 @@ class CreateInvoice(models.Model):
             if line.state not in ['approve']:
                 raise Warning('Conflict of Interest Form has not been Approved!')
         else:
-            self.write({'conflict_agreement': True})
-            self.write({'confidentiality_agreement': True})
-            self.write({'stage_id': 17})
+            if sub.pre_assessment_needed == True:
+                self.write({'conflict_agreement': True})
+                self.write({'confidentiality_agreement': True})
+                self.write({'stage_id': 17})
+            else:
+                self.write({'conflict_agreement': True})
+                self.write({'confidentiality_agreement': True})
+                self.write({'stage_id': 19})
         return {}
     
    
@@ -711,7 +746,7 @@ class CarReport(models.Model):
     partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
     
     name = fields.Char(string='Organization Name', related='application_id.laboratory_legal_name')
-    ref_no = fields.Char(string='Reference No:')
+    ref_no = fields.Char(string='Reference No:', related='application_id.name')
     faculty_rep = fields.Char(string='Name/Signature of Facility Representative:', related='application_id.partner_id.name')
     scope_assessed = fields.Selection(related='application_id.number_of_scopes',string = 'Scope Assessed:')
     detailed_observation = fields.Char()

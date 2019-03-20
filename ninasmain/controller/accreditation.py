@@ -3,6 +3,7 @@
 from odoo import http
 from odoo.http import request
 from odoo.addons.website_form.controllers.main import WebsiteForm
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 
 class Accreditation(http.Controller):
     @http.route('''/accreditation/<model("helpdesk.team", "[('use_website_helpdesk_form','=',True)]"):team>/submit''', type='http', auth="user", website=True)
@@ -42,7 +43,7 @@ class WebsiteHelpdesk(http.Controller):
         result['teams'] = teams
         return request.render("website_helpdesk.team", result)
 
-'''  
+  
 class WebForms(http.Controller):
     @http.route('/ninas/codeofconduct', auth="public", website=True)
     def index(self, **kw):
@@ -50,7 +51,57 @@ class WebForms(http.Controller):
         Sections = http.request.env['ninas.code.conduct']
         return http.request.render("ninasmain.index", {
             'sections':Sections.search([])})
+        
+class CustomerPortal(http.Controller):
+    @http.route(['/my/car', '/my/car/page/<int:page>'], type='http', auth="user", website=True)
+    def index(self, **kw):
+        Car = http.request.env['car.report']
+        return http.request.render("ninasmain.portal_car_ticket", {
+            'car':Car.search([])})
+'''         
+class CustomerPortal(CustomerPortal):
+
+    def _prepare_portal_layout_values(self):
+        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+        user = request.env.user
+        domain = [('partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]
+        values['car_count'] = request.env['car.report'].sudo().search_count(domain)
+        return values
     
+    @http.route(['/my/car', '/my/car/page/<int:page>'], type='http', auth="user", website=True)
+    def my_car_tickets(self, **kw):
+        values = self._prepare_portal_layout_values()
+        user = request.env.user
+        domain = ['|', ('user_id', '=', user.id), ('partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]
+
+        # pager
+        tickets_count = request.env['car.report'].search_count(domain)
+        pager = portal_pager(
+            url="/my/car",
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            total=tickets_count,
+            page=page,
+            step=self._items_per_page
+        )
+
+        tickets = request.env['car.report'].sudo().search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_tickets_history'] = tickets.ids[:100]
+
+        values.update({
+            'date': date_begin,
+            'tickets': tickets,
+            'page_name': 'ticket',
+            'default_url': '/my/tickets',
+            'pager': pager,
+            'archive_groups': archive_groups,
+            'searchbar_sortings': searchbar_sortings,
+            'searchbar_inputs': searchbar_inputs,
+            'sortby': sortby,
+            'search_in': search_in,
+            'search': search,
+        })
+        return request.render("ninasmain.portal_car_ticket", values)
+   
     @http.route('/test/path', type='http', methods=['POST'], auth="public", website=True, csrf=False)
     def test_path(self, **kw):
         #here in kw you can get the inputted value

@@ -175,6 +175,12 @@
                         <span class="o_stat_text">C.A.R</span>
                     </div>
                 </button>
+                <button class="oe_stat_button" type="object" name="open_recommendation_form" context="{'default_partner_id': active_id}" icon="fa fa-group">
+                    <div class="o_stat_info">
+                        <field name="recommendation_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Recommendation Form</span>
+                    </div>
+                </button>
                <!--<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_action_invoice_tree1)d" icon="fa-pencil-square-o">
                    <field string="Invoices" name="invoice_count" widget="statinfo"/>
                </button>
@@ -355,7 +361,7 @@
                		</button>
                 </div>
                 <group>
-                	<field name="application_id" widget="selection" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}" required="1"/>
+                	<field name="application_id" widget="selection" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"  domain="[('lead_assessor_id.user_id','=',uid)]" required="1"/>
                 </group>
 			 	<group col="4" colspan="4">
 			 		<field name="name" readonly="1"/>
@@ -467,7 +473,7 @@
                 <field name="team_id" invisible="1"/>
             </field>
             <field name="team_id" position="after">
-            	<field name="preassessment_needed" attrs="{'invisible':[('stage_id','!=',17)]}"/>
+            	<!-- <field name="preassessment_needed" attrs="{'invisible':[('stage_id','!=',17)]}"/>  -->
             	<field name="resources_available" attrs="{'required':[('stage_id','=',5)], 'readonly':[('stage_id','!=',5)]}"/>
             	<field name="conflict_agreement" attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
                 <field name="assessment_team_ids" widget="many2many_tags" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',9)], 'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>

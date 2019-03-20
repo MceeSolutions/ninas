@@ -2238,6 +2238,8 @@ class RecommendationForm(models.Model):
         required=True,
         track_visibility='onchange',)
     
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+    
     name = fields.Char(
         related='application_id.laboratory_legal_name',
         string="Name of Institution or Lab",
@@ -2260,7 +2262,7 @@ class RecommendationForm(models.Model):
     institution_country_id = fields.Many2one('res.country', string='Country', related='application_id.lab_country_id', ondelete='restrict')
     
     reference_no = fields.Char(
-        string="Reference Number",
+        string="Reference Number",related='application_id.name',
         track_visibility='onchange')
     
     name_of_institution_rep = fields.Char(
