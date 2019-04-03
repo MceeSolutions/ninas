@@ -13,6 +13,7 @@ from dateutil.relativedelta import *
 #from plainbox.impl.unit import file
 from ast import literal_eval
 from odoo.exceptions import ValidationError, Warning
+from email.policy import default
 #from pbr.tests.testpackage.pbr_testpackage.wsgi import application
 
 class Accreditation(models.Model):
@@ -30,7 +31,7 @@ class Accreditation(models.Model):
     def name_get(self):
         result = []
         for ticket in self:
-            result.append((ticket.id, "%s %s (#%d)" % (ticket.laboratory_legal_name, ticket.name, ticket.id)))
+            result.append((ticket.id, "%s - %s (#%d)" % (ticket.laboratory_legal_name, ticket.name, ticket.id)))
         return result
     
     @api.onchange('partner_id')
@@ -112,7 +113,7 @@ class Accreditation(models.Model):
     
     est_pre_assessment_needed = fields.Boolean(string="Pre-assessment Needed?", related='checklist_id.pre_assessment_needed')
     est_no_of_assessor = fields.Char(string="Estimated Number of Assessors", related='checklist_id.no_of_assessor')
-    est_assessment_days = fields.Char(string="Estimated Number of Days", related='checklist_id.assessment_days')
+    est_assessment_days = fields.Char(string="Estimated Number of Days", related='checklist_id.assessment_days', default=1)
     
     #Application Form Sheet
     name_applicant = fields.Char(
@@ -597,7 +598,13 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_car(self):
-        self.write({'stage_id': 13})
+        today = str(date.today())
+        print(today)
+        print(self.assessment_date_to)
+        if today <= self.assessment_date_to:
+            raise Warning('Assessment period has not been elasped!')
+        else:
+            self.write({'stage_id': 13})
         return {}
     
     @api.multi
