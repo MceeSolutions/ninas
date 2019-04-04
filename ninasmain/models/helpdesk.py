@@ -38,6 +38,7 @@ class Accreditation(models.Model):
     def _onchange_partner_id(self):
         return {}
     
+    @api.one
     @api.depends('assessment_date_from', 'assessment_date_to')
     def _compute_number_of_days(self):
         if self.assessment_date_from and self.assessment_date_to:
