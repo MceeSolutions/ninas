@@ -58,6 +58,12 @@ class CustomerPortal(http.Controller):
         Car = http.request.env['car.report']
         return http.request.render("ninasmain.portal_car_ticket", {
             'car':Car.search([])})
+        
+class Account_invoice(http.Controller):
+    @http.route(['/verify/product'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
+    def verify(self, **kw):
+        return request.render('ninasmain.ninas_website_account_portal_invoice_page',{})
+        
 '''         
 class CustomerPortal(CustomerPortal):
 

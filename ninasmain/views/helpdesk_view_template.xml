@@ -581,5 +581,47 @@
         ]"/>
     </function>
     
+    
+    <template id="ninas_website_account_portal_invoice_page" inherit_id="account.portal_invoice_page">
+    
+    	<xpath expr="//div[hasclass('oe_structure', 'mb32')]" position="after">
+    	
+    		<div class="row mt32">
+                <div class="col-md-12">
+                    <h4><strong>Message and communication history</strong></h4>
+                </div>
+                <form action="/account/invoice" method="post" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data" data-model_name="account.invoice" data-success_page="/your-ticket-has-been-submitted" data-editable-form="false">
+                     <div class="form-group form-field o_website_form_required">
+		               	<div class="col-md-2 col-sm-3 text-right">
+		                	<label class="control-label" for="attachments">Attachment(s)</label>
+		               </div>
+		               <div class="col-md-7 col-sm-8">
+		                 <input type="file" class="form-control o_website_form_input" required="1" multiple="" data-show-upload="true" data-show-caption="true" lass="file" data-show-preview="true"/>
+		               </div>
+		               <div class="col-md-3 col-sm-2">
+	                         <button type="submit" class="btn btn-primary" name="button_submit">Upload</button>
+	                     </div>
+			         </div>
+			         
+			         <function model="ir.model.fields" name="formbuilder_whitelist">
+				        <value>account.invoices</value>
+				        <value eval="[
+				            'attachments',
+				        ]"/>
+				    </function>
+			         
+			    </form>
+                <div class="col-md-10 col-md-offset-1 mt16">
+                    <t t-call="portal.message_thread">
+                        <t t-set="object" t-value="invoice"/>
+                    </t>
+                </div>
+            </div>
+    		
+    	</xpath>
+    
+    </template>
+    
+    
 	</data>
 </odoo>
