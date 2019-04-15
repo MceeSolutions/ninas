@@ -730,7 +730,7 @@ class Checklist(models.Model):
     
 class CarReport(models.Model):
     _name = 'car.report'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
     
     state = fields.Selection(
         [('lead_assessor_observation','Lead Assessor Observations'),('assessed_lab_response', 'Assessed Lab'),
@@ -752,6 +752,7 @@ class CarReport(models.Model):
 
     
     partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+    user_id = fields.Many2one(comodel_name='res.users', string='User', readonly=True)
     
     name = fields.Char(string='Organization Name', related='application_id.laboratory_legal_name')
     ref_no = fields.Char(string='Reference No:', related='application_id.name')

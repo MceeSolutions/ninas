@@ -52,12 +52,60 @@ class WebForms(http.Controller):
         return http.request.render("ninasmain.index", {
             'sections':Sections.search([])})
         
-class CustomerPortal(http.Controller):
+class CustomerPortal(CustomerPortal):
+    
+    def _prepare_portal_layout_values(self):
+        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+        user = request.env.user
+        domain = ['|', ('user_id', '=', user.id), ('partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]
+        values['car_count'] = request.env['car.report'].sudo().search_count(domain)
+        return values
+    
     @http.route(['/my/car', '/my/car/page/<int:page>'], type='http', auth="user", website=True)
-    def index(self, **kw):
+    def index(self, page=1, **kw):
+        values = self._prepare_portal_layout_values()
+        user = request.env.user
+        domain = ['|', ('user_id', '=', user.id), ('partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]
+        
+        # pager
+        car_count = request.env['car.report'].search_count(domain)
+        pager = portal_pager(
+            url="/my/car",
+            url_args={},
+            total=car_count,
+            page=page,
+            step=self._items_per_page
+        )
+        
+        cars = request.env['car.report'].sudo().search(domain, limit=self._items_per_page, offset=pager['offset'])
+        
+        values.update({
+            'car': cars,
+            'page_name': 'car',
+            'default_url': '/my/car',
+            'pager': pager,
+        })
+        
         Car = http.request.env['car.report']
-        return http.request.render("ninasmain.portal_car_ticket", {
+        return http.request.render("ninasmain.portal_car_ticket", values,{
             'car':Car.search([])})
+        
+    @http.route([
+        "/my/car/<int:car_id>",
+        "/my/car/<int:car_id>/<token>"
+    ], type='http', auth="public", website=True)
+    def cars_followup(self, car_id, token=None):
+        CAR = False
+        if token:
+            CAR = request.env['car.report'].sudo().search([('id', '=', car_id), ('access_token', '=', token)])
+        else:
+            CAR = request.env['car.report'].browse(car_id)
+        if not CAR:
+            return request.redirect('/my')
+        values = {'car': CAR}
+        #history = request.session.get('my_tickets_history', [])
+        #values.update(get_records_pager(history, Ticket))
+        return request.render("ninasmain.cars_followup", values)
         
 class Account_invoice(http.Controller):
     @http.route(['/verify/product'], type='http', auth="public", methods=['POST'], website=True, csrf=False)

@@ -88,6 +88,86 @@
             </t>
     </template>
     
+    <template id="cars_followup" name="Corrective Action Report">
+            <t t-call="portal.portal_layout">
+            <div class="panel panel-default">
+            	<div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>
+                                <t t-call='portal.record_pager'/>
+                                #<span t-field="car.id"/> - <span t-field="car.name"/>
+                                <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=car.report&amp;id=%s&amp;view_type=form' % (car.id)" groups="helpdesk.group_helpdesk_user">Edit C.A.R</a>
+                       		</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+	                <div class="row">
+	                    <strong class="col-md-2">Accreditation ID</strong>
+	                    <span class="col-md-4" t-field="car.application_id.name"/>
+	                </div>
+	                <div class='row'>
+	                    <strong class="col-md-2">Organization Name</strong>
+	                    	<div class="col-md-10" t-field="car.name"/>
+	                    <strong class="col-md-2">Name/Signature of Facility</strong>
+                        	<div class="col-md-10" t-field="car.faculty_rep"/>
+                        <strong class="col-md-2">Reference No:</strong>
+                        	<div class="col-md-10" t-field="car.ref_no"/>
+                        <strong class="col-md-2">Scope Assessed:</strong>
+                        	<div class="col-md-10" t-field="car.scope_assessed"/>
+	                </div>
+	                <P><strong>PART 1: Detailed Observation and Evidence</strong></P>
+	                <div class="row">
+	                    <strong class="col-md-2">Detailed Observation and Evidence</strong>
+	                    <div class="col-md-10" t-field="car.detailed_observation" t-field-options="{'widget': 'html'}"/>
+	                    <strong class="col-md-2">Relevant Standard Requirement</strong>
+                        	<div class="col-md-10" t-field="car.rel_equip"/>
+                        <strong class="col-md-2">Name / Signature of Lead Assessor</strong>
+                        	<div class="col-md-10" t-field="car.name_lead"/>
+                        <strong class="col-md-2">Date</strong>
+                        	<div class="col-md-10" t-field="car.name_lead_date"/>
+                        <strong class="col-md-2">Name /Signature of Representative/ Date</strong>
+                        	<div class="col-md-10" t-field="car.name_rep"/>
+                        <strong class="col-md-2">Date</strong>
+                        	<div class="col-md-10" t-field="car.name_rep_date"/>
+	                </div>
+	                <P><strong>Part 2: Corrective Action Taken</strong></P>
+	                <div class="row">
+	                    <strong class="col-md-2">(Root Cause Analysis)</strong>
+	                    <div class="col-md-10" t-field="car.root_cause" t-field-options="{'widget': 'html'}"/>
+	                    <strong class="col-md-2">Clearly indicate what corrective action was taken and attach supporting evidence</strong>
+                        	<div class="col-md-10" t-field="car.corrective_action" t-field-options="{'widget': 'html'}"/>
+                        <strong class="col-md-2">Signature of Representative</strong>
+                        	<div class="col-md-10" t-field="car.rep_sign"/>
+                        <strong class="col-md-2">Date</strong>
+                        	<div class="col-md-10" t-field="car.rep_sign_date"/>
+	                </div>
+	                <P><strong>PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED</strong></P>
+	                <div class="row">
+	                    <strong class="col-md-2">Comment on the effectiveness of clearance of the NC</strong>
+	                    <div class="col-md-10" t-field="car.assessor_nc" t-field-options="{'widget': 'html'}"/>
+	                    <strong class="col-md-2">Signature of Assessor/ Date</strong>
+                        	<div class="col-md-10" t-field="car.assessor_sign"/>
+                        <strong class="col-md-2">Date</strong>
+                        	<div class="col-md-10" t-field="car.assessor_sign_date"/>
+	                </div>
+	            </div>
+            </div>
+            
+            <div class="row mt32">
+                <div class="col-md-12">
+                    <h4><strong>Message and communication history</strong></h4>
+                </div>
+                <div class="col-md-10 col-md-offset-1 mt16">
+                    <t t-call="portal.message_thread">
+                        <t t-set="object" t-value="car"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+    
     <template id="portal_car_ticket" name="Corrective Action Report">
         <t t-call="portal.portal_layout">
             <h3>Corrective Action Reports
@@ -100,14 +180,16 @@
                 <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
                     <thead>
                         <tr class="active">
-                        	<th>C.A.R</th><th/>
-                            <th>Application</th><th/>
+                        	<th>ID</th>
+                        	<th>Applicant</th><th/>
+                        	<th>Application ID</th><th/>
                             <th>Application Status</th>
                         </tr>
                     </thead>
                     <t t-foreach="car" t-as="cars">
                         <tr>
-                        	<td><span t-field="cars.name"/></td><td/>
+                        	<td><a t-attf-href="/my/car/#{cars.id}">#<t t-esc="cars.id"/></a></td>
+                        	<td><span t-field="cars.application_id.partner_id.name"/></td><td/>
                             <td><span t-field="cars.application_id.name"/></td><td/>
                             <td><span t-field="cars.application_id.stage_id.name"/></td>
                         </tr>

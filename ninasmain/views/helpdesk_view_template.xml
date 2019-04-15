@@ -603,13 +603,6 @@
 	                     </div>
 			         </div>
 			         
-			         <function model="ir.model.fields" name="formbuilder_whitelist">
-				        <value>account.invoices</value>
-				        <value eval="[
-				            'attachments',
-				        ]"/>
-				    </function>
-			         
 			    </form>
                 <div class="col-md-10 col-md-offset-1 mt16">
                     <t t-call="portal.message_thread">
