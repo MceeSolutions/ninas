@@ -28,7 +28,8 @@ class Partner(models.Model):
     partner_confidentiality = fields.Many2one(comodel_name="ninas.confidentiality")
     partner_conflict = fields.Many2one(comodel_name="ninas.conflict.interest")
     
-    attachment_count = fields.Integer(compute="_compute_attachment_count", string="Attachments", store=True)
+    '''
+    attachment_count = fields.Integer(compute="_compute_attachment_count", string="Attachments")
     
     def _compute_attachment_count(self):
         Attachment = self.env['ir.attachment']
@@ -42,19 +43,20 @@ class Partner(models.Model):
         action = self.env.ref('base.action_attachment').read()[0]
         action['domain'] = [('id', 'in', attachments.ids)]
         action['context'] = {'default_res_model': 'res.partner', 'default_res_id': self.id}
+    '''
     
 class DocumentType(models.Model):
     _name = "document.type"
     _description = "Document Type"
 
-    name = fields.Char('Document Name', required=True)
-    available = fields.Boolean('Available on Portal')
+    name = fields.Char(string='Document Name', required=True)
+    available = fields.Boolean(string='Available on Portal')
 
 
 class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
-    document_type = fields.Many2one('document.type', string='Document Type')
+    document_type = fields.Many2one(comodel_name='document.type', string='Document Type')
     document_available = fields.Boolean(related="document_type.available", store=True)
     
 class Employee(models.Model):
