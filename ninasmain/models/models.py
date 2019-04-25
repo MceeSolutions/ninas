@@ -28,7 +28,7 @@ class Partner(models.Model):
     partner_confidentiality = fields.Many2one(comodel_name="ninas.confidentiality")
     partner_conflict = fields.Many2one(comodel_name="ninas.conflict.interest")
     
-    attachment_count = fields.Integer(compute="_compute_attachment_count", string="Attachments")
+    attachment_count = fields.Integer(compute="_compute_attachment_count", string="Attachments", store=True)
     
     def _compute_attachment_count(self):
         Attachment = self.env['ir.attachment']
