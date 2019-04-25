@@ -1,9 +1,10 @@
-
+ # -*- coding: utf-8 -*-
 
 from odoo import http
 from odoo.http import request
 from odoo.addons.website_form.controllers.main import WebsiteForm
-from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
+from odoo.addons.portal.controllers.portal import get_records_pager, pager as portal_pager, CustomerPortal
+import base64
 
 class Accreditation(http.Controller):
     @http.route('''/accreditation/<model("helpdesk.team", "[('use_website_helpdesk_form','=',True)]"):team>/submit''', type='http', auth="user", website=True)
@@ -23,7 +24,30 @@ class Accreditation(http.Controller):
             'default_values': default_values, 'assessment_type_id':assessment_type_id, 'account':account, 'test':test
             , 'lab_state_id':lab_state_id, 'lab_country_id':lab_country_id, 'mail_state_id':mail_state_id, 'mail_country_id':mail_country_id})
         
-
+    
+    @http.route('/project/uploaded', type='http', auth="public", methods=['POST'], website=True)
+    def upload_files(self, **post):
+        values = {}
+        if post.get('attachment',False):
+            Attachments = request.env['ir.attachment']
+            name = post.get('attachment').filename      
+            file = post.get('attachment')
+            project_id = post.get('project_id')
+            attachment = file.read() 
+            attachment_id = Attachments.sudo().create({
+                'name':name,
+                'datas_fname': name,
+                'res_name': name,
+                'type': 'binary',   
+                'res_model': 'account.invoice',
+                'res_id': project_id,
+                'datas': attachment.encode('base64'),
+            })
+            value = {
+                'attachment' : attachment_id
+            }
+            return request.render("ninasmain.ninas_website_account_portal_invoice_page", value)
+    
 class WebsiteHelpdesk(http.Controller):
 
     def get_helpdesk_team_data(self, team, search=None):
@@ -66,7 +90,7 @@ class CustomerPortal(CustomerPortal):
         values = self._prepare_portal_layout_values()
         user = request.env.user
         domain = ['|', ('user_id', '=', user.id), ('partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]
-        
+         
         # pager
         car_count = request.env['car.report'].search_count(domain)
         pager = portal_pager(
@@ -78,6 +102,8 @@ class CustomerPortal(CustomerPortal):
         )
         
         cars = request.env['car.report'].sudo().search(domain, limit=self._items_per_page, offset=pager['offset'])
+        #assessed_lab_response_state = request.env['car.report'].sudo().search([('state', '=', cars.state)])
+        #lead_assessor_review_state = cars.state = 'lead_assessor_review'
         
         values.update({
             'car': cars,
@@ -103,9 +129,91 @@ class CustomerPortal(CustomerPortal):
         if not CAR:
             return request.redirect('/my')
         values = {'car': CAR}
-        #history = request.session.get('my_tickets_history', [])
-        #values.update(get_records_pager(history, Ticket))
+        history = request.session.get('my_cars_history', [])
+        values.update(get_records_pager(history, CAR))
         return request.render("ninasmain.cars_followup", values)
+
+    @http.route([
+        "/helpdesk/ticket/<int:ticket_id>",
+        "/helpdesk/ticket/<int:ticket_id>/<token>"
+    ], type='http', auth="public", website=True)
+    def tickets_followup(self, ticket_id, token=None):
+        
+        valuese = self._prepare_portal_layout_values()
+        user = request.env.user
+        #domain = [('partner_id', 'child_of', user.partner_id.commercial_partner_id.id), ('application_id','=',Ticket.id), ('partner_id', '=', Ticket.partner_id.id)]
+        
+        Ticket = False
+        if token:
+            Ticket = request.env['helpdesk.ticket'].sudo().search([('id', '=', ticket_id), ('access_token', '=', token)])
+        else:
+            Ticket = request.env['helpdesk.ticket'].browse(ticket_id)
+        if not Ticket:
+            return request.redirect('/my')
+        domain = [('partner_id', 'child_of', user.partner_id.commercial_partner_id.id), ('application_id','=',Ticket.id), ('partner_id', '=', Ticket.partner_id.id)]
+        # pager
+        car_count = request.env['car.report'].search_count(domain)
+        car_search = request.env['car.report'].search([('application_id','=',Ticket.id), ('partner_id', '=', Ticket.partner_id.id)], limit=1)
+        values = {'ticket': Ticket,
+                  'car_count': car_count,
+                  'car_search': car_search}
+        history = request.session.get('my_tickets_history', [])
+        values.update(get_records_pager(history, Ticket))
+        return request.render("helpdesk.tickets_followup", values)
+    
+    
+    @http.route('/upload_document_helpdesk', type='http', auth="user", website=True)
+    def upload_document_helpdesk(self, ticket_id, doc_type, doc_attachment, **post):
+        user = request.env.user
+        domain = ['|', ('user_id', '=', user.id), ('partner_id', 'child_of', user.partner_id.commercial_partner_id.id), ('id', '=', int(ticket_id))]
+        ticket = request.env['helpdesk.ticket'].sudo().search(domain, limit=1)
+        if ticket:
+            filename = doc_attachment.filename
+            attach = request.env['ir.attachment'].sudo().create({
+                            'name': filename,
+                            'type': 'binary',
+                            'datas_fname': filename,
+                            'datas': base64.b64encode(doc_attachment.read()),
+                            'document_available': True,
+                            'document_type': doc_type,
+                            'res_id': int(ticket_id) or False,
+                            'res_model': 'helpdesk.ticket',
+                        })
+            attach._compute_res_name()
+            request.env['mail.message'].create({
+                'attachment_ids': [(4, attach.id)],
+                'author_id': request.env.user.partner_id.id,
+                'model': 'helpdesk.ticket',
+                'res_id': int(ticket_id) or False,
+                'message_type': 'comment',
+                'subtype_id': 1,#id for discusions to show in portal mail thread
+                'website_published': True,
+                'create_uid': request.env.user.id,
+            })
+            return request.redirect('/helpdesk/ticket/%s' % ticket_id)
+        
+    @http.route(['/get_helpdesk_attachment_id'], type='json', auth="public",website=True)
+    def get_helpdesk_attachment_id(self, id=0, **kw):
+        if id:
+            attachment = request.env['ir.attachment'].browse([int(id)])
+            value = {}
+            if attachment.mimetype in ('image/png', 'application/pdf', 'image/jpeg'):
+                if attachment.mimetype == 'application/pdf':
+                    value['file_type'] = 'pdf'
+                    pdf_src = "/web/static/lib/pdfjs/web/viewer.html?file=/web/content/%s"%(attachment.id)
+                    value['src'] = pdf_src
+                else:
+                    value['file_type'] = 'img'
+                    img_src = "/web/image/%s?unique=1"%(attachment.id)
+                    value['src'] = img_src
+                
+            else:
+                value['file_type'] = 'other'
+                src = "/web/content/%s?download=true"%(attachment.id)
+                value['src'] = src      
+            return value
+        
+    
         
 class Account_invoice(http.Controller):
     @http.route(['/verify/product'], type='http', auth="public", methods=['POST'], website=True, csrf=False)

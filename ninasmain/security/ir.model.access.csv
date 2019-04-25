@@ -61,3 +61,10 @@ access_ninas_contract_agreement_assessor,ninas.contract.agreement,model_ninas_co
 access_ninas_confidentiality_assessor,ninas.confidentiality,model_ninas_confidentiality,ninasmain.group_assessor,1,0,0,0
 access_ninas_conflict_interest_assessor,ninas.conflict.interest,model_ninas_conflict_interest,ninasmain.group_assessor,1,0,0,0
 access_ninas_code_conduct_assessor,ninas.code.conduct,model_ninas_code_conduct,ninasmain.group_assessor,1,0,0,0
+
+access_document_type,document.type,model_document_type,base.group_portal,1,1,1,0
+access_res_partner,res.partner,model_res_partner,base.group_portal,1,1,1,0
+access_ir_attachment,ir.attachment,model_ir_attachment,base.group_portal,1,1,1,0
+access_mail_message,mail.message,mail.model_mail_message,base.group_portal,1,1,1,0
+
+
