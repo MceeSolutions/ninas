@@ -98,14 +98,14 @@
 	    <field name="model">res.partner</field>
 	    <field name="inherit_id" ref="base.view_partner_form"/>
 	    <field name="arch" type="xml">
-	    <!--<button name="toggle_active" position="before">
-                     <button name="view_attachments"
+	    <button name="toggle_active" position="before">
+                    <button name="view_attachments"
                         class="oe_stat_button"
                         icon="fa-book"
                         type="object">
                         <field name="attachment_count" widget="statinfo" string="Documents"/>
                     </button>
-                </button> -->
+                </button>
 	    <field name="vat" position="after">
     		<field name="vendor_tin"/>
 		</field>
@@ -149,7 +149,7 @@
         </field>
     </record>
 	
-	<!-- 
+	
 	<record id="ir_attachment_view_kanban_inherit" model="ir.ui.view">
         <field name="name">ir.attachment.kanban.inherit</field>
         <field name="model">ir.attachment</field>
@@ -208,8 +208,6 @@
             </xpath>
         </field>
     </record>
-    
-     -->
     
     <record id="ir_attachment_view_search_attachment" model="ir.ui.view">
         <field name="name">ir.attachment.search.attachment</field>
