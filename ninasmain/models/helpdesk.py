@@ -7,15 +7,45 @@ import datetime
 
 from datetime import date, timedelta
 from odoo import api, fields, models
-from datetime import *
+#from datetime import *
 from dateutil.relativedelta import *
 #from gevent._ssl3 import name
 #from plainbox.impl.unit import file
 from ast import literal_eval
 from odoo.exceptions import ValidationError, Warning
+from email.policy import default
+#from pbr.tests.testpackage.pbr_testpackage.wsgi import application
 
 class Accreditation(models.Model):
     _inherit = 'helpdesk.ticket'
+    
+    name = fields.Char(string='Subject', required=True, index=True, copy=False, default='New')
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('helpdesk.ticket') or '/'
+        return super(Accreditation, self).create(vals)
+    
+    @api.multi
+    def name_get(self):
+        result = []
+        for ticket in self:
+            result.append((ticket.id, "%s - %s (#%d)" % (ticket.laboratory_legal_name, ticket.name, ticket.id)))
+        return result
+    
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        return {}
+    
+    @api.one
+    @api.depends('assessment_date_from', 'assessment_date_to')
+    def _compute_number_of_days(self):
+        if self.assessment_date_from and self.assessment_date_to:
+            d1=datetime.datetime.strptime(str(self.assessment_date_from),'%Y-%m-%d') 
+            d2=datetime.datetime.strptime(str(self.assessment_date_to),'%Y-%m-%d')
+            d3=d2-d1
+            self.assessment_number_of_days=str(d3.days)
     
     current_date = date.today() + relativedelta(years=2)
     
@@ -34,6 +64,9 @@ class Accreditation(models.Model):
         string='Assesment Plan',
         track_visibility='onchange')
 
+    decision_making_number = fields.Char(
+        string='Accreditation Number',
+        track_visibility='onchange')
     
     funding = fields.Selection(
         [('not_funded','Not Funded'),('partly_funded', 'Partly Funded'),('fully_funded', 'Fully Funded')],
@@ -74,6 +107,14 @@ class Accreditation(models.Model):
                                        string='Document(s) Reviewed?', track_visibility='onchange')
     assessment_date = fields.Date(string='Assessment Date', related='assessment_plan_id.assessment_date', track_visibility='onchange', readonly=True)
     
+    assessment_date_from = fields.Date(track_visibility='onchange')
+    assessment_date_to = fields.Date(track_visibility='onchange')
+    assessment_number_of_days = fields.Integer('Number of Days', store=False, track_visibility='onchange', compute="_compute_number_of_days")
+    
+    
+    est_pre_assessment_needed = fields.Boolean(string="Pre-assessment Needed?", related='checklist_id.pre_assessment_needed')
+    est_no_of_assessor = fields.Char(string="Estimated Number of Assessors", related='checklist_id.no_of_assessor')
+    est_assessment_days = fields.Char(string="Estimated Number of Days", related='checklist_id.assessment_days', default=1)
     
     #Application Form Sheet
     name_applicant = fields.Char(
@@ -254,6 +295,11 @@ class CreateInvoice(models.Model):
     invoice_count = fields.Integer(compute="_invoice_count", string="Invoices", store=False)
     checklist_count = fields.Integer(compute="_checklist_count",string="Checklist", store=False)
     car_count = fields.Integer(compute="_car_count",string="C.A.R")
+    invoice_id = fields.Many2one(comodel_name='account.invoice', string='Invoice')
+    
+    confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
+    conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
+    recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
     
     @api.multi
     def _invoice_count(self):
@@ -280,12 +326,51 @@ class CreateInvoice(models.Model):
             pa.checklist_count = checklist_count
         return True
     
+    @api.multi
+    def _confidentiality_count(self):
+        oe_confidentiality = self.env['ninas.confidentiality']
+        for pa in self:
+            domain = [('partner_id', '=', pa.partner_id.id)]
+            pres_ids = oe_confidentiality.search(domain)
+            pres = oe_confidentiality.browse(pres_ids)
+            confidentiality_count = 0
+            for pr in pres:
+                confidentiality_count+=1
+            pa.confidentiality_count = confidentiality_count
+        return True
+    
+    @api.multi
+    def _conflict_count(self):
+        oe_conflict = self.env['ninas.conflict.interest']
+        for pa in self:
+            domain = [('partner_id', '=', pa.partner_id.id)]
+            pres_ids = oe_conflict.search(domain)
+            pres = oe_conflict.browse(pres_ids)
+            conflict_count = 0
+            for pr in pres:
+                conflict_count+=1
+            pa.conflict_count = conflict_count
+        return True
+    
     
     @api.multi
     def _car_count(self):
         car_rep = self.env['car.report']
         for car in self:
-            domain = [('ticket_id', '=', car.id)]
+            domain = [('partner_id', '=', car.partner_id.id)]
+            car_ids = car_rep.search(domain)
+            cars = car_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.car_count = car_count
+        return True
+    
+    @api.multi
+    def _recommendation_count(self):
+        car_rep = self.env['ninas.recommendation.form']
+        for car in self:
+            domain = [('partner_id', '=', car.partner_id.id)]
             car_ids = car_rep.search(domain)
             cars = car_rep.browse(car_ids)
             car_count = 0
@@ -298,27 +383,6 @@ class CreateInvoice(models.Model):
     def _onchange_kanban_state(self):
         self.update({'kanban_state':'normal'})
         return {} 
-    
-    
-    '''
-    @api.multi
-    def action_create_new(self):
-        ctx = self._context.copy()
-        model = 'account.invoice'
-        ctx.update({'journal_type': self.type, 'default_type': 'out_invoice', 'type': 'out_invoice', 'default_journal_id': self.id})
-        if ctx.get('refund'):
-            ctx.update({'default_type':'out_refund', 'type':'out_refund'})
-        view_id = self.env.ref('account.invoice_form').id
-        return {
-            'name': _('Create invoice/bill'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': model,
-            'view_id': view_id,
-            'context': ctx,
-        }
-    '''
     
     @api.multi
     def action_create_new_invoice(self):
@@ -367,30 +431,54 @@ class CreateInvoice(models.Model):
             if mail:
                 mail.send()
     
-    '''
     @api.multi
     def open_customer_invoices(self):
         self.ensure_one()
         action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
         action['domain'] = literal_eval(action['domain'])
-        action['domain'].append(('partner_id', 'child_of', self.id))
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
         return action
     
-    
-    '''
     @api.multi
-    def open_customer_invoices(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': ('Customer Invoices'),
-            'res_model': 'account.invoice',
-            'view_mode': 'tree,kanban,form,pivot,graph',
-            'domain':[('type','=','in_invoice')],
-            'target': 'current',
-            'context': {'search_default_is_open': True, 'search_default_partner_id': self.partner_id.id}
-        }
+    def open_checklist_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_checklist_ticket_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
     
-        
+    @api.multi
+    def open_confidentiality_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_confidentiality_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_conflict_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_conflict_of_interest_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_car(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_car_report_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_recommendation_form(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_recommendation_form_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    '''
     @api.multi
     def open_checklist_ticket(self):
         return {
@@ -401,11 +489,14 @@ class CreateInvoice(models.Model):
             'target': 'current',
             'context': {'search_default_is_open': True, 'search_default_partner_id': self.partner_id.id}
         }
-    
+    '''
     
     @api.multi
     def button_confirm_sponsor(self):
-        self.write({'stage_id': 5})
+        if self.checklist_count == 0:
+            raise Warning('No Checklist has been generated for this Application')
+        else:
+            self.write({'stage_id': 5})
         return {}
     
     @api.multi
@@ -430,8 +521,12 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def confirm_funding(self):
-        if self.funding not in ['fully_funded'] or self.invoice_count == 0:
+        if self.funding not in ['fully_funded'] and self.invoice_count == 0:
             raise Warning('No invoice has been generated for this Application')
+        for line in self.partner_id.invoice_ids:
+            if line.accreditation_id:
+                if line.state not in ['paid']:
+                    raise Warning('invoice has not been paid for this Application')
         else:
             self.write({'stage_id': 9})
         return {}
@@ -462,9 +557,26 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_assessor_agreement(self):
-        self.write({'conflict_agreement': True})
-        self.write({'confidentiality_agreement': True})
-        self.write({'stage_id': 17})
+        sub = self.env['checklist.ticket'].search([('ticket_id','=',self.id), ('partner_id', '=', self.partner_id.id)], limit=1)
+        if self.confidentiality_count == 0:
+            raise Warning('Confidentiality Form has not been Filled!')
+        for line in self.partner_id.partner_confidentiality:
+            if line.state not in ['approve']:
+                raise Warning('Confidentiality Form has not been Approved!')
+        if self.conflict_count == 0:
+            raise Warning('Conflict of Interest Form has not been Filled!')
+        for line in self.partner_id.partner_conflict:
+            if line.state not in ['approve']:
+                raise Warning('Conflict of Interest Form has not been Approved!')
+        else:
+            if sub.pre_assessment_needed == True:
+                self.write({'conflict_agreement': True})
+                self.write({'confidentiality_agreement': True})
+                self.write({'stage_id': 17})
+            else:
+                self.write({'conflict_agreement': True})
+                self.write({'confidentiality_agreement': True})
+                self.write({'stage_id': 19})
         return {}
     
    
@@ -487,7 +599,13 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_car(self):
-        self.write({'stage_id': 13})
+        today = str(date.today())
+        print(today)
+        print(self.assessment_date_to)
+        if today <= self.assessment_date_to:
+            raise Warning('Assessment period has not been elasped!')
+        else:
+            self.write({'stage_id': 13})
         return {}
     
     @api.multi
@@ -497,6 +615,8 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_awaiting_approval(self):
+        print(self.assessment_team_ids)
+        print(self.assessment_team_ids.name)
         self.write({'stage_id': 20})
         return {}
     
@@ -536,12 +656,31 @@ class Checklist(models.Model):
     _name = "checklist.ticket"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
-    ticket_id = assessment_type_id = fields.Many2one(
+    '''
+    @api.multi
+    def name_get(self):
+        result = []
+        for ticket in self:
+            result.append((ticket.id, "%s (#%d)" % (ticket.ticket_id.name, ticket.id)))
+        return result
+    '''
+    
+    @api.model
+    def _default_tax_group(self):
+        return self.env['helpdesk.ticket'].search([], limit=1)
+    
+    @api.model
+    def _get_default_partner(self):
+        ctx = self._context
+        if ctx.get('active_model') == 'helpdesk.ticket':
+            return self.env['helpdesk.ticket'].browse(ctx.get('active_ids')[0]).id
+    
+    ticket_id = fields.Many2one(
         comodel_name='helpdesk.ticket',
         string='Application ID',
-        track_visibility='onchange')
+        track_visibility='onchange', default=_get_default_partner)
     
-    partner_id = fields.Many2one(comodel_name='res.partner', related='ticket_id.partner_id', string='Applicant')
+    partner_id = fields.Many2one(comodel_name='res.partner', related='ticket_id.partner_id', string='Applicant', readonly=True)
     
     quality_manual = fields.Boolean(
         string='A copy of current version of Quality Manual',
@@ -585,39 +724,93 @@ class Checklist(models.Model):
         self.write({'evi_pay': True})
         return {}
     
-    pre_assessment_needed = fields.Boolean(
-        string="pre-assessment Needed?"
-    )
+    pre_assessment_needed = fields.Boolean(string="pre-assessment Needed?")
     no_of_assessor = fields.Char(string="Estimated Number of Assessors")
-    assessment_days = fields.Integer(string="Estimated Number of Days")
+    assessment_days = fields.Char(string="Estimated Number of Days")
     
 class CarReport(models.Model):
     _name = 'car.report'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
     
-    name = fields.Char(string='Organization Name')
-    ref_no = fields.Integer(string='Reference No:')
-    faculty_rep = fields.Char(string='Name/Signature of Facility Representative:')
-    scope_assessed = fields.Char(string='Scope Assessed:')
-    rel_equip = fields.Text(string='Relevant Standard Requirement')
-    name_lead =fields.Char(string='Name/Signature of Lead Assessor / Date')
-    name_rep = fields.Char(string='Name /Signature of Representative/ Date')
+    state = fields.Selection(
+        [('lead_assessor_observation','Lead Assessor Observations'),('assessed_lab_response', 'Assessed Lab'),
+         ('lead_assessor_review','Lead Assessor Observations'), ('next_assessment','Next Assessment')],
+        string='Status',
+        default='lead_assessor_observation',
+        track_visibility='onchange')
+    
+    @api.model
+    def _get_default_partner(self):
+        ctx = self._context
+        if ctx.get('active_model') == 'helpdesk.ticket':
+            return self.env['helpdesk.ticket'].browse(ctx.get('active_ids')[0]).id
+    
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket',
+        string='Application ID',readonly=False,
+        track_visibility='onchange', default=_get_default_partner)
+
+    
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+    user_id = fields.Many2one(comodel_name='res.users', string='User', readonly=True)
+    
+    name = fields.Char(string='Organization Name', related='application_id.laboratory_legal_name')
+    ref_no = fields.Char(string='Reference No:', related='application_id.name')
+    faculty_rep = fields.Char(string='Name/Signature of Facility Representative:', related='application_id.partner_id.name')
+    scope_assessed = fields.Selection(related='application_id.number_of_scopes',string = 'Scope Assessed:')
+    detailed_observation = fields.Char()
+    rel_equip = fields.Char(string='Relevant Standard Requirement')
+    
+    name_lead = fields.Many2one(comodel_name="hr.employee", string='Name / Signature of Lead Assessor', related='application_id.lead_assessor_id')
+    name_lead_date = fields.Date(string='Date', default=date.today())
+    
+    name_rep = fields.Char(string='Name /Signature of Representative/ Date', related='application_id.partner_name')
+    name_rep_date = fields.Date(string='Date', default=date.today())
+    
     root_cause = fields.Text(string='(Root Cause Analysis)')
     corrective_action = fields.Text(string='Clearly indicate what corrective action was taken and attach supporting evidence')
-    rep_sign = fields.Date(string='Signature of Representative/ Date')
+    
+    rep_sign_date = fields.Date(string='Date')
+    rep_sign = fields.Char(string='Signature of Representative')
+    
     assessor_nc = fields.Text(string='Comment on the effectiveness of clearance of the NC')
+    
     assessor_sign = fields.Date(string='Signature of Assessor/ Date')
+    assessor_sign_date = fields.Date(string='Date')
+    
     implemantation = fields.Text(string='Comment on the implementation of the corrective actions')
-    sign_assessor = fields.Date(string='Signature of Assessor/ Date')
+    
+    sign_assessor = fields.Date(string='Signature of Assessor')
+    sign_assessor_date = fields.Date(string='Date')
+    
     ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
     
-    attachment_count = fields.Integer(compute="_car_count",string="C.A.R")
+    attachment_count = fields.Integer(compute="_car_count",string="C.A.R", store=False)
+    
+    @api.multi
+    def button_assessed_lab_response(self):
+        self.write({'state': 'assessed_lab_response'})
+        return {}
+    
+    @api.multi
+    def button_lead_assessor_review(self):
+        self.write({'state': 'lead_assessor_review'})
+        self.rep_sign = self.application_id.partner_name
+        self.rep_sign_date = date.today()
+        return {}
+    
+    @api.multi
+    def button_next_assessment(self):
+        self.write({'state': 'next_assessment'})
+        self.assessor_sign = self.application_id.lead_assessor_id
+        self.assessor_sign_date = date.today()
+        return {}
     
     @api.multi
     def _car_count(self):
         car_rep = self.env['car.report.attachment']
         for car in self:
-            domain = [('ticket_id', '=', car.id)]
+            domain = [('partner_id', '=', car.partner_id.id)]
             car_ids = car_rep.search(domain)
             cars = car_rep.browse(car_ids)
             car_count = 0
@@ -628,8 +821,15 @@ class CarReport(models.Model):
     
 class CarReportAttachment(models.Model):
     _name = 'car.report.attachment'
+
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket',
+        string='Application ID',readonly=False,
+        track_visibility='onchange')
     
-    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
+    car_report_id = fields.Many2one(comodel_name='car.report')
+    
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
     name = fields.Char(string='Attachment Name')
     attachment_description = fields.Char(string='Attachment Description')
     attachment_ids = fields.Many2many(

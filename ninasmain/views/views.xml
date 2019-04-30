@@ -98,11 +98,132 @@
 	    <field name="model">res.partner</field>
 	    <field name="inherit_id" ref="base.view_partner_form"/>
 	    <field name="arch" type="xml">
+	    <button name="toggle_active" position="before">
+                    <button name="view_attachments"
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        type="object">
+                        <field name="attachment_count" widget="statinfo" string="Documents"/>
+                    </button>
+                </button>
 	    <field name="vat" position="after">
     		<field name="vendor_tin"/>
 		</field>
 	    </field>
 	</record>
+	
+  	<record id="view_document_type_tree" model="ir.ui.view">
+        <field name="name">document.type.tree</field>
+        <field name="model">document.type</field>
+        <field name="arch" type="xml">
+            <tree string="Document Type" editable="bottom">
+                <field name="name"/>
+                <field name="available"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_document_type" model="ir.actions.act_window">
+        <field name="name">Document Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_document_type"
+        name="Document Types"
+        parent="helpdesk.helpdesk_menu_config"
+        action="action_document_type"
+        sequence="9"/>
+
+    <record id="view_ir_attachment_form_inherit" model="ir.ui.view">
+        <field name="name">ir.attachment.form.inherit</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="document_type"/>
+                <field name="document_available" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+	
+	
+	<record id="ir_attachment_view_kanban_inherit" model="ir.ui.view">
+        <field name="name">ir.attachment.kanban.inherit</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="mail.view_document_file_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="replace">
+                <kanban>
+                    <field name="id"/>
+                    <field name="mimetype"/>
+                    <field name="type"/>
+                    <field name="datas_fname"/>
+                    <field name="name"/>
+                    <field name="create_uid"/>
+                    <field name="document_available"/>
+                    <field name="document_type"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_vignette">
+                                    <div class="oe_attachment">
+                                        <div class="oe_name">
+                                            <field name="name"/>
+                                        </div>
+                                        <div t-if="record.type.raw_value == 'binary'">
+                                            <a t-attf-href="/web/content/#{record.id.raw_value}?download=1">
+                                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                                <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                                                <div t-if="webimage" class="o_attachment_image">
+                                                    <img t-attf-src="/web/image/#{record.id.raw_value}?download=1"/>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-3">
+                                                <div class="o_checkbox">
+                                                    <input type="checkbox" disabled="disabled"  t-att-checked="record.document_available.raw_value ? 'checked' : undefined"/><span/>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <span t-if="record.document_type.value">
+                                                    <t t-esc="record.document_type.value"/>
+                                                </span>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <div class="oe_kanban_bottom_right">
+                                                    <img t-att-src="kanban_image('res.users', 'image_small', record.create_uid.raw_value)" t-att-title="record.create_uid.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="ir_attachment_view_search_attachment" model="ir.ui.view">
+        <field name="name">ir.attachment.search.attachment</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter name="group_document_type" string="Document Type"  context="{'group_by':'document_type'}"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="base.action_attachment" model="ir.actions.act_window">
+        <field name="context">{'search_default_group_document_type': 1}</field>
+    </record>
+	
 	
 	<!-- hr appraisal Request 
 	<record id="ninas_hr_appraisal" model="ir.ui.view">
@@ -1257,6 +1378,7 @@
 			<field name="model">ninas.code.conduct</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
+				<field name="application_id"/>
 				<field name="name"/>
 				<field name="date"/>
 			</field>	
@@ -1269,11 +1391,14 @@
 			<field name="arch" type="xml">
 				<form string="Code Of Conduct">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
-		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_director_accreditation"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
 		        	</header>
 					<sheet>
+						<group col="2" colspan="1">
+							<field name="application_id" widget="selection" required="1"/>
+						</group>
 						<strong>
 							NiNAS CODE OF CONDUCT-SECTION 8: EMPLOYEE AGREEMENT
 						</strong><br/><br/>
@@ -1331,6 +1456,7 @@
 			<field name="model">ninas.conflict.interest</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
+				<field name="application_id"/>
 				<field name="name"/>
 				<field name="date"/>
 			</field>	
@@ -1343,11 +1469,14 @@
 			<field name="arch" type="xml">
 				<form string="Conflict of Interest">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
-		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_director_accreditation"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,accept,approve" readonly="1"/>
 		        	</header>
 					<sheet>
+					<group col="2" colspan="1">
+						<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection" required="1"/>
+					</group>
 						<strong>
 							CONFLICT OF INTEREST:  F 444
 						</strong><br/><br/>
@@ -1357,8 +1486,17 @@
 							</span>
 							<group>
 								<field name="name"/>
-								<field name="location"/>
+								<label for="location" string="Laboratory Address"/>
+			           	       	<div class="o_address_format">
+			                        <field name="number" placeholder="Number..." class="o_address_street" readonly="True"/>
+			                        <field name="street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                    </div>
+			                    <field name="partner_id"/>
 							</group>
+							
 							<strong>SECTION 9 –ASSESSOR AGREEMENT</strong><br/><br/><br/>
 							<field name="agreement"/>
 								<span>
@@ -1427,11 +1565,14 @@
 			<field name="arch" type="xml">
 				<form string="Confidentiality">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
-		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_director_accreditation"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
 		        	</header>
 					<sheet>
+						<group col="2" colspan="1">
+							<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection" required="1"/>
+						</group>
 						<strong>
 							CONFIDENTIALITY, IMPARTIALITY AND NON-DISCLOSURE AGREEMENT: F 443
 						</strong><br/><br/>
@@ -1441,7 +1582,15 @@
 							</span>
 							<group>
 								<field name="name"/>
-								<field name="location"/>
+								<label for="location" string="Laboratory Location"/>
+			           	       	<div class="o_address_format">
+			                        <field name="number" placeholder="Number..." class="o_address_street" readonly="True"/>
+			                        <field name="street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                    </div>
+			                    <field name="partner_id"/>
 							</group>
 							
 							<field name="name_rep"/>
@@ -1939,17 +2088,34 @@
 			<form string="Assessment Form">
 				<sheet>
 					<separator string="Initial / Re-Assessment Plan"/>
-					<group><field name="application_id"/></group>
+					<group><field name="application_id" domain="[('stage_id','=',12)]" widget="selection"/></group>
 					<group col="4" colspan="2">
 						<field name="reference_number"/>
-						<field name="organisation"/>
-						<field name="contact_person"/>
-						<field name="address"/>
-						<field name="telephone"/>
-						<field name="company_rep"/>
-						<field name="assessment_date"/>
-						<field name="lead_assessor" domain="[('category_ids.is_assessor','=',True)]"/>
-						<field name="technical_assessor" domain="[('category_ids.is_assessor','=',True)]"/>
+						<field name="organisation" readonly="1"/>
+						<field name="contact_person" readonly="1"/>
+						<label for="address" string="Laboratory Address"/>
+	           	       	<div class="o_address_format">
+	                        <field name="lab_number" placeholder="Number..." class="o_address_street" readonly="True"/>
+	                        <field name="lab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+	                        <field name="lab_city" placeholder="City" class="o_address_city" readonly="True"/>
+	                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+	                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+	                    </div>
+						<field name="telephone" readonly="1"/>
+						<field name="company_rep" readonly="1"/>
+						<label for="assessment_date" string="Assessment Date" readonly="1"/>
+	                   <div>
+		                   <div>
+		                       <field name="assessment_date_from" class="oe_inline" readonly="1"/>
+		                       <label string=" -" class="oe_inline"/>
+		                       <field name="assessment_date_to" class="oe_inline" readonly="1"/>
+		                   </div>
+		                   <div>
+		                       <field name="assessment_number_of_days" class="oe_inline" readonly="1"/> days
+		                   </div>
+	                   </div>
+						<field name="lead_assessor" domain="[('category_ids.is_assessor','=',True)]" readonly="1"/>
+						<field name="technical_assessor" domain="[('category_ids.is_assessor','=',True)]" readonly="1"/>
 					</group>
 					<notebook>
 						<page name="day_1" string="Day 1 - LA observed by TTA">
@@ -2021,15 +2187,63 @@
 	        		<field name="state" widget="statusbar" statusbar_visible="la_recommendation,aac_recommendation,da_recommendation" readonly="1"/>
 	        	</header>
 				<sheet>
-				<group><field name="application_id"/></group>
+					<div class="oe_button_box" name="button_box">
+                       	<button class="oe_stat_button" type="object" name="open_customer_invoices" context="{'default_partner_id': active_id}" icon="fa-pencil-square-o">
+		                    <div class="o_stat_info">
+		                        <field name="invoice_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Invoices</span>
+		                    </div>
+		                </button>
+                       	<button class="oe_stat_button" type="object" name="open_checklist_ticket" context="{'default_partner_id': active_id}" icon="fa-list">
+		                    <div class="o_stat_info">
+		                        <field name="checklist_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Checklist</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_confidentiality_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+		                    <div class="o_stat_info">
+		                        <field name="confidentiality_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Confidentiality</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_conflict_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+		                    <div class="o_stat_info">
+		                        <field name="conflict_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Conflict of Interest</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_car" context="{'default_partner_id': active_id}" icon="fa-folder">
+		                    <div class="o_stat_info">
+		                        <field name="car_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">C.A.R</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_recommendation_form" context="{'default_partner_id': active_id}" icon="fa fa-group">
+		                    <div class="o_stat_info">
+		                        <field name="recommendation_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Recommendation Form</span>
+		                    </div>
+		                </button>
+                    </div>
+				<group><field name="application_id" widget="selection" domain="[('stage_id','=',20)]"/></group>
 					<group col="4" colspan="2">
-						<field name="institution_name"/>
+						<field name="institution_name" readonly="1"/>
 						<field name="ref"/>
-						<field name="representative"/>
-						<field name="scope"/>
-						<field name="assessor_id"/>
-						<field name="assess_type"/>
-						<field name="assessment_date"/>
+						<field name="representative" readonly="1"/>
+						<field name="scope" readonly="1"/>
+						<field name="assessor_id" readonly="1"/>
+						<field name="assess_type" readonly="1"/>
+						<label for="assessment_date" string="Assessment Date"/>
+		                   <div>
+			                   <div>
+			                       <field name="assessment_date_from" class="oe_inline" readonly="1"/>
+			                       <label string=" -" class="oe_inline"/>
+			                       <field name="assessment_date_to" class="oe_inline" readonly="1"/>
+			                   </div>
+			                   <div>
+			                       <field name="assessment_number_of_days" class="oe_inline" readonly="1"/> days
+			                   </div>
+		                   </div>
 					</group>
 					<notebook>
 						<page string="Lead Assessor's Recommendation">
@@ -2186,6 +2400,32 @@
 	        		<field name="state" widget="statusbar" statusbar_visible="incomplete,done" readonly="1"/>
 	        	</header>
 				 <sheet>
+				 	<div class="oe_button_box" name="button_box">
+                       	<button class="oe_stat_button" type="object" name="open_checklist_ticket" context="{'default_partner_id': active_id}" icon="fa-list">
+		                    <div class="o_stat_info">
+		                        <field name="checklist_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Checklist</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_confidentiality_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+		                    <div class="o_stat_info">
+		                        <field name="confidentiality_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Confidentiality</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_conflict_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+		                    <div class="o_stat_info">
+		                        <field name="conflict_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Conflict of Interest</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_car" context="{'default_partner_id': active_id}" icon="fa-folder">
+		                    <div class="o_stat_info">
+		                        <field name="car_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">C.A.R</span>
+		                    </div>
+		                </button>
+                    </div>
 				 	<span>Accreditation Decision Recommendation Form F 773 A</span>
 				 	<p>This form is to be used by the AAC Members to review assessment reports and
 					make recommendation on accreditation decision-making</p>
@@ -2193,25 +2433,35 @@
 						<field name="reference_no"/>
 					</group>
 					<group>
-						<field name="application_id"/>
+						<field name="application_id" widget="selection" domain="[('stage_id','=',16)]"/>
 					</group>
 				    <group col="4" colspan="4">
-				    	<field name="name"/>
-				    	<label for="address_of_institution" string="Address of Institurion or Lab"/>
+				    	<field name="name" readonly="1"/>
+				    	<label for="address_of_institution" string="Address of Institurion or Lab" readonly="1"/>
 	           	       	<div class="o_address_format">
-	                        <field name="institution_number" placeholder="Number..." class="o_address_street"/>
-	                        <field name="institution_street" placeholder="Street..." class="o_address_street"/>
-	                        <field name="institution_city" placeholder="City" class="o_address_city"/>
-	                        <field name="institution_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
-	                        <field name="institution_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+	                        <field name="institution_number" placeholder="Number..." class="o_address_street" readonly="1"/>
+	                        <field name="institution_street" placeholder="Street..." class="o_address_street" readonly="1"/>
+	                        <field name="institution_city" placeholder="City" class="o_address_city" readonly="1"/>
+	                        <field name="institution_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="1"/>
+	                        <field name="institution_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="1"/>
 	                    </div>
-	                    <field name="name_of_institution_rep"/>
-	                    <field name="accreditation_scope"/>
+	                    <field name="name_of_institution_rep" readonly="1"/>
+	                    <field name="accreditation_scope" readonly="1"/>
 	                    </group>
 	                    <group col="6" colspan="3">
-	                    	<field name="name_assessor" domain="[('category_ids.is_assessor','=',True)]" widget="many2many_tags"/>
-	                    	<field name="type_assessment"/>
-	                    	<field name="assessment_date"/>
+	                    	<field name="name_assessor" domain="[('category_ids.is_assessor','=',True)]" widget="many2many_tags" readonly="1"/>
+	                    	<field name="type_assessment" readonly="1"/>
+	                    	<label for="assessment_date" string="Assessment Date"/>
+		                   <div>
+			                   <div>
+			                       <field name="assessment_date_from" class="oe_inline" readonly="1"/>
+			                       <label string=" -" class="oe_inline"/>
+			                       <field name="assessment_date_to" class="oe_inline" readonly="1"/>
+			                   </div>
+			                   <div>
+			                       <field name="assessment_number_of_days" class="oe_inline" readonly="1"/> days
+			                   </div>
+		                   </div>
 	                    </group>
 	                    <span>I confirm that these recommendations are based on the following documents
 						provided by NiNAS (Please tick the relevant box)</span>
@@ -2233,10 +2483,6 @@
 	        </form>
 	    </field>
 	    </record>
-
-
-    
-    
     
     <!-- MenuItems -->
     <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_main_menu"/>
@@ -2252,8 +2498,6 @@
               action="ninas_chemical_lab_action"/>
     <menuitem name="Assessment Plan" id="ninas_assessment_plan_menuitem" parent="ninas_lead_toolkit_tools_main_menu" 
     		  action="ninas_assessment_plan_action"/>
-   	<menuitem name="Appraisal Form" id="ninas_appraisal_menu" parent="ninas_lead_toolkit_tools_main_menu" 
-   			  action="ninas_appraisal_action"/>
     		  
               
 	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
@@ -2287,6 +2531,8 @@
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
     <menuitem name="Mission Report" id="mission_request_menu" parent="hr.menu_hr_root"
               action="ninas_mission_report_action"/>
+   	<menuitem name="Appraisal Form" id="ninas_appraisal_menu" parent="hr.menu_hr_root" 
+   			  action="ninas_appraisal_action"/>
     
     <menuitem name="Diesel Consumption" id="ninas_diesel_consumption_menuitem" parent="maintenance.menu_maintenance_title" action="ninas_diesel_consumption_action"/>
 
@@ -2314,12 +2560,14 @@
               action="ninas_code_of_conduct_action"/>
     <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_contract_agreement_action"/>
+    <menuitem name="Corrective Action Report" id="car_agreement_menu" parent="contract_agreement_main_menu"
+              action="ninas_car_report_action"/>
               
               
    	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png"/>
     <menuitem name="AAC" id="ninas_aac_tools_main_menu" parent="ninas_aac_main_menu"/>
     
-    <menuitem name="Recommendaion Form" id="recommendation_form_menu" parent="ninas_aac_main_menu"
+    <menuitem name="Recommendation Form" id="recommendation_form_menu" parent="ninas_aac_main_menu"
               action="ninas_recommendation_form_action" sequence="1"/>
    	<menuitem name="Decision Form" id="decision_form_menu" parent="ninas_aac_main_menu" 
     		  action="decision_form_action" sequence="2"/>

@@ -17,6 +17,7 @@ access_expense_claim_emp,expense.claim,model_expense_claim,base.group_user,1,1,1
 access_ninas_loan_req_emp,loan.req,model_loan_req,base.group_user,1,1,1,0
 access_ninas_checklist_ticket_emp,checklist.ticket,model_checklist_ticket,base.group_user,1,1,1,0
 access_ninas_car_report_assessor,car.report,model_car_report,base.group_user,1,1,1,0
+access_ninas_car_report_portal,car.report,model_car_report,base.group_portal,1,1,0,0
 access_ninas_application_form_emp,ninas.application.form,model_ninas_application_form,base.group_user,1,1,1,0
 access_ninas_application_account_emp,application.account,model_application_account,base.group_user,1,1,1,0
 access_ninas_test_method_emp,test.method,model_test_method,base.group_user,1,1,1,0
@@ -60,3 +61,8 @@ access_ninas_contract_agreement_assessor,ninas.contract.agreement,model_ninas_co
 access_ninas_confidentiality_assessor,ninas.confidentiality,model_ninas_confidentiality,ninasmain.group_assessor,1,0,0,0
 access_ninas_conflict_interest_assessor,ninas.conflict.interest,model_ninas_conflict_interest,ninasmain.group_assessor,1,0,0,0
 access_ninas_code_conduct_assessor,ninas.code.conduct,model_ninas_code_conduct,ninasmain.group_assessor,1,0,0,0
+
+access_document_type,document.type,model_document_type,base.group_portal,1,1,1,0
+access_res_partner,res.partner,model_res_partner,base.group_portal,1,1,1,0
+access_ir_attachment,ir.attachment,model_ir_attachment,base.group_portal,1,1,1,0
+access_mail_message,mail.message,mail.model_mail_message,base.group_portal,1,1,1,0

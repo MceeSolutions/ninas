@@ -114,14 +114,14 @@
                 	<button type="object" name="confirmed_funding" string="Confirm Sponsorship" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|', ('stage_id','!=',3), ('funding','!=','fully_funded')]}" confirm="Application Fully Funded?"/>
                 	<!-- <button type="object" name="action_create_new_invoice" string="Create Invoice" class="btn btn-primary btn-sm o_invoice_new" />
                 	 -->
-                	 <button type="object" name="invoice_prompt" string="Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|','|', ('stage_id','!=',17), ('funding','=','fully_funded'), ('preassessment_needed','=',True),]}" />
+                	 <!-- <button type="object" name="invoice_prompt" string="Invoice" class="btn btn-primary btn-sm o_invoice_new" attrs="{'invisible':['|','|', ('stage_id','!=',17), ('funding','=','fully_funded'), ('preassessment_needed','=',True),]}" /> -->
 			</xpath>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="replace">
            			<button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" invisible="1"/>
 			</xpath>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="after">
                 	<button type="object" name="button_confirm_sponsor" string="Proceed" attrs="{'invisible':[('stage_id','!=',1)]}" confirm="Are you sure all uploaded documents are completed?"/>
-                	<button type="object" name="button_complete_approved" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary"/>
+                	<button type="object" name="button_complete_approved" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary" confirm="Confirm Document Review Checklist has been sent"/>
                 	<!-- <button type="object" name="button_complete_reject" string="Reject" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-danger"/>-->
                 	<button type="object" name="action_resources_available" string="PROCEED" attrs="{'invisible':[('stage_id','!=',9)]}" class="btn btn-primary"/>
                 	<button type="object" name="action_checklist_sent" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary" invisible="1"/>
@@ -148,21 +148,45 @@
                <button class="oe_stat_button" type="object" name="open_checklist_ticket" context="{'default_partner_id': active_id}" icon="fa-list">
                     <div class="o_stat_info">
                         <field name="checklist_count" class="o_stat_value"/>
-                        <span class="o_stat_text"> Checklist</span>
+                        <span class="o_stat_text">Checklist</span>
                     </div>
                 </button>
                <button class="oe_stat_button" type="object" name="open_customer_invoices" context="{'default_partner_id': active_id}" icon="fa-pencil-square-o">
                     <div class="o_stat_info">
                         <field name="invoice_count" class="o_stat_value"/>
-                        <span class="o_stat_text"> Invoices</span>
+                        <span class="o_stat_text">Invoices</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" type="object" name="open_confidentiality_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+                    <div class="o_stat_info">
+                        <field name="confidentiality_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Confidentiality</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" type="object" name="open_conflict_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+                    <div class="o_stat_info">
+                        <field name="conflict_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Conflict of Interest</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" type="object" name="open_car" context="{'default_partner_id': active_id}" icon="fa-folder">
+                    <div class="o_stat_info">
+                        <field name="car_count" class="o_stat_value"/>
+                        <span class="o_stat_text">C.A.R</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" type="object" name="open_recommendation_form" context="{'default_partner_id': active_id}" icon="fa fa-group">
+                    <div class="o_stat_info">
+                        <field name="recommendation_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Recommendation Form</span>
                     </div>
                 </button>
                <!--<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_action_invoice_tree1)d" icon="fa-pencil-square-o">
                    <field string="Invoices" name="invoice_count" widget="statinfo"/>
-               </button>-->
+               </button>
                <button type="action" class="oe_stat_button" name="%(ninasmain.ninas_car_report_action)d" icon="fa-folder">
                    <field string="C.A.R Report" name="car_count" widget="statinfo"/>
-               </button>
+               </button>-->
 			</xpath>
 			<!--  <xpath expr="//button[@name='toggle_active']" position="before">
 		    	
@@ -206,6 +230,7 @@
 		<field name="model">car.report.attachment</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
+			<field name="application_id"/>
 			<field name="name"/>
             <field name="attachment_description"/>
 		</field>
@@ -218,6 +243,10 @@
     <field name="arch" type="xml">
         <form string="Car Report Attachment">
 			 <sheet>
+				 <group>
+				 	<field name="application_id" required="1"/>
+				 	<field name="partner_id"/>
+				 </group>
 			    <group string="Attachments" col="4" colspan="4">
 			    	<field name="name"/>
                     <field name="attachment_description"/>
@@ -246,12 +275,12 @@
     <field name="arch" type="xml">
         <form string="Check List">
         	<header>
-        		<button name="button_select_all" string="Select All" type="object" class="btn btn-primary" groups="base.group_user" confirm="Please make sure documents are complete otherwise Cancel"/>
+        		<button name="button_select_all" string="Select All" type="object" class="btn btn-primary" groups="base.group_user" confirm="Please make sure ALL documents are complete otherwise Cancel"/>
         	</header>
 			 <sheet>
 			 		<group colspan="2">
-			 			<field name="ticket_id" required="1"/>
-			 			<field name="partner_id" readonly="1"/>
+			 			<field name="ticket_id" required="1" readonly="1"/>
+			 			<field name="partner_id"/>
 			 		</group>
 			    	
                     <field name="quality_manual"/><span>
@@ -282,11 +311,11 @@
 								Additional Requirement: Evidence of payment or funding support
 								</span><br/><br/>
 					<notebook>
-					<page string="Additional Information">
+					<page string="Additional Information for Finance">
 						<group col="4" colspan="4">
-							<field name="pre_assessment_needed"/>
-							<field name="no_of_assessor"/>
-							<field name="assessment_days"/>
+							<field name="pre_assessment_needed" required="1"/>
+							<field name="no_of_assessor" required="1"/>
+							<field name="assessment_days" required="1"/>
 						</group>
 					</page>
 					</notebook>
@@ -319,37 +348,60 @@
     <field name="priority" eval="2"/>
     <field name="arch" type="xml">
         <form string="Car Report">
+        	<header>
+        		<button name="button_assessed_lab_response" string="Sign and Submit" states="lead_assessor_observation" type="object" class="btn btn-primary" groups="base.group_user"/>
+        		<button name="button_lead_assessor_review" string="Sign and Submit" states="assessed_lab_response" type="object" class="btn btn-primary" groups="base.group_user"/>
+        		<button name="button_next_assessment" string="Sign and Submit" states="lead_assessor_review" type="object" class="btn btn-primary" groups="base.group_user"/>
+        		<field name="state" widget="statusbar" statusbar_visible="lead_assessor_observation,assessed_lab_response,lead_assessor_review" readonly="1"/>
+        	</header>
 			 <sheet>
                	<div class="oe_button_box" name="button_box">
                     <button type="action" class="oe_stat_button" name="%(ninasmain.ninas_car_report_attachment_action)d" icon="fa-folder">
                    		<field string="Attachments" name="attachment_count" widget="statinfo"/>
                		</button>
                 </div>
+                <group>
+                	<field name="application_id" widget="selection" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"  domain="[('lead_assessor_id.user_id','=',uid)]" required="1"/>
+                </group>
 			 	<group col="4" colspan="4">
-			 		<field name="name"/>
-					<field name="ref_no"/>
-					<field name="faculty_rep"/>
-					<field name="scope_assessed"/>
+			 		<field name="name" readonly="1"/>
+					<field name="ref_no" required="1" attrs="{'readonly':[('state','!=','lead_assessor_observation')]}"/>
+					<field name="faculty_rep" readonly="1"/>
+					<field name="scope_assessed" readonly="1"/>
 			 	</group>
-				 <group string="PART 1: Detailed Observation and evidence" col="4" colspan="2">
-				 <field name="name_lead"/>
-				 <field name="name_rep"/>
+				 <group string="PART 1: Detailed Observation and Evidence"/>
+				 	<field name="detailed_observation" widget="html" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
+				 <group>
+				 	<field name="rel_equip" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
 				 </group>
 				 <group col="4" colspan="2">
-				 	<field name="rel_equip"/>
+					 <field name="name_lead" readonly="1"/>
+					 <field name="name_lead_date" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
+					 <field name="name_rep" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
+					 <field name="name_rep_date" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
 				 </group>
-				 <group string="Part 2: Corrective Action Taken">
-				 <field name="root_cause"/>
-				 <field name="corrective_action"/>
-				 <field name="rep_sign"/>
+				 <group string="Part 2: Corrective Action Taken"/>
+				 	<p><strong>(Root Cause Analysis)</strong></p>
+				 	<field name="root_cause" rows="4" widget="html" attrs="{'required':[('state','=','assessed_lab_response')], 'readonly':[('state','!=','assessed_lab_response')]}"/>
+				 	<p><strong>Clearly indicate what corrective action was taken and attach supporting evidence</strong></p>
+					<field name="corrective_action" widget="html" attrs="{'required':[('state','=','assessed_lab_response')], 'readonly':[('state','!=','assessed_lab_response')]}"/>
+				<group col="4" colspan="2">
+					 <field name="rep_sign" attrs="{'required':[('state','=','assessed_lab_response')], 'readonly':[('state','!=','assessed_lab_response')]}"/>
+					 <field name="rep_sign_date" attrs="{'required':[('state','=','assessed_lab_response')], 'readonly':[('state','!=','assessed_lab_response')]}"/>
 				 </group>
-				 <group string="PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED" col="4" colspan="4">
-				 <field name="assessor_nc"/>
-				 <field name="assessor_sign"/>
+				 <group string="PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED"/>
+				 	 <p><strong>Comment on the effectiveness of clearance of the NC</strong></p>
+			 		 <field name="assessor_nc" widget="html" attrs="{'required':[('state','=','lead_assessor_review')], 'readonly':[('state','!=','lead_assessor_review')]}"/>
+				 <group col="4" colspan="2">
+					 <field name="assessor_sign" attrs="{'required':[('state','=','lead_assessor_review')], 'readonly':[('state','!=','lead_assessor_review')]}"/>
+					 <field name="assessor_sign_date" attrs="{'required':[('state','=','lead_assessor_review')], 'readonly':[('state','!=','lead_assessor_review')]}"/>
 				 </group>
-				 <group string="PART 4: FOLLOW-UP AT NEXT ASSESSMENT" col="4" colspan="4">
-				 <field name="implemantation"/>
-				 <field name="sign_assessor"/>
+				 <group string="PART 4: FOLLOW-UP AT NEXT ASSESSMENT"/>
+				 	<p><strong>Comment on the implementation of the corrective actions</strong></p>
+				 	<field name="implemantation" attrs="{'required':[('state','=','next_assessment')], 'readonly':[('state','!=','next_assessment')]}"/>
+				 <group col="4" colspan="2">
+				 	<field name="sign_assessor" attrs="{'required':[('state','=','next_assessment')], 'readonly':[('state','!=','next_assessment')]}"/>
+				 	<field name="sign_assessor_date" attrs="{'required':[('state','=','next_assessment')], 'readonly':[('state','!=','next_assessment')]}"/>
 				 </group>
 			 </sheet>
 			 <div class="oe_chatter">
@@ -421,7 +473,7 @@
                 <field name="team_id" invisible="1"/>
             </field>
             <field name="team_id" position="after">
-            	<field name="preassessment_needed" attrs="{'invisible':[('stage_id','!=',17)]}"/>
+            	<!-- <field name="preassessment_needed" attrs="{'invisible':[('stage_id','!=',17)]}"/>  -->
             	<field name="resources_available" attrs="{'required':[('stage_id','=',5)], 'readonly':[('stage_id','!=',5)]}"/>
             	<field name="conflict_agreement" attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
                 <field name="assessment_team_ids" widget="many2many_tags" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',9)], 'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>
@@ -448,20 +500,41 @@
             <field name="user_id" position="after">
                 <field name="lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',9)], 'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>
            		<field name="tech_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>
-            	<field name="ac_members" widget="many2many_tags" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}"/>
+            	<field name="ac_members" widget="many2many_tags" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}" min="3"/>
             </field>
             <field name="deadline" position="after">
                 <field name="re_assessment_date" attrs="{'required':[('stage_id','=',20)], 'readonly':[('stage_id','!=',20)]}"/>
+                <field name="decision_making_number" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}"/>
+                <!-- <field name="est_pre_assessment_needed"/>
+                <field name="est_no_of_assessor"/>
+                <field name="est_assessment_days"/> -->
             </field>
             <field name="priority" position="after">
             	<field name="document_review" attrs="{'required':[('stage_id','=',17)], 'readonly':[('stage_id','!=',17)]}"/>
-                <field name="assessment_date"/>
+                <label for="assessment_date" string="Assessment Date"/>
+                   <div>
+	                   <div>
+	                       <field name="assessment_date_from" class="oe_inline" attrs="{'required':[('stage_id','=',12)], 'readonly':[('stage_id','!=',12)]}"/>
+	                       <label string=" -" class="oe_inline"/>
+	                       <field name="assessment_date_to" class="oe_inline" attrs="{'required':[('stage_id','=',12)], 'readonly':[('stage_id','!=',12)]}"/>
+	                   </div>
+	                   <div>
+	                       <field name="assessment_number_of_days" class="oe_inline" readonly="1"/> days
+	                   </div>
+                   </div>
             </field>
             <field name="tag_ids" position="after">
             	<field name="creation_date" readonly="1"/>            	
             </field>
             <field name="description" position="after">
             	<notebook>
+	            	<!-- <page string="Additional Information">
+            			<group>
+            				<field name="est_pre_assessment_needed" required="1"/>
+	            			<field name="est_no_of_assessor" required="1"/>
+	            			<field name="est_assessment_days" required="1"/>
+            			</group>
+	            	</page>-->
 	            	<page string="Mobile App Attachments">
 	            		<field name="mobile_app_attachment_ids">
 		            		<tree editable="True">

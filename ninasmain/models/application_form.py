@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
 
@@ -6,13 +7,13 @@ class ApplicationForm(models.Model):
     _inherit = ['mail.thread']
     
     name = fields.Char(
-        string='Applicant’s Authorized Representative’s Name',
+        string='Applicantâ€™s Authorized Representativeâ€™s Name',
         track_visibility='onchange')
     applicant_rep_title = fields.Selection([('mr','Mr.'),('ms', 'Ms.'), ('mrs','Mrs.'), ('dr','DR.'), ('engr','Engr.'), ('prof','Prof.')],
-        string='Authorized Representative’s Title',
+        string='Authorized Representativeâ€™s Title',
         track_visibility='onchange')
     laboratory_legal_name = fields.Text(
-        string="Laboratory’s Legal Name",
+        string="Laboratoryâ€™s Legal Name",
         track_visibility='onchange')
     laboratory_address= fields.Text(
         string='Laboratory Address (Number and Street, City, State and Country)',
@@ -24,7 +25,7 @@ class ApplicationForm(models.Model):
         string='Email Address(es) official for laboratory and alternate contact',
         track_visibility='onchange')
     mailing_address = fields.Char(
-        string='Mailing Address (if different from the laboratory location – Number, Street, City, State, Country)')
+        string='Mailing Address (if different from the laboratory location â€“ Number, Street, City, State, Country)')
     account = fields.One2many(
         comodel_name='application.account',
         inverse_name='contact_name',
