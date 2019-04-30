@@ -215,10 +215,35 @@ class CustomerPortal(CustomerPortal):
         
     
         
-class Account_invoice(http.Controller):
-    @http.route(['/verify/product'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
-    def verify(self, **kw):
-        return request.render('ninasmain.ninas_website_account_portal_invoice_page',{})
+    @http.route('/upload_document_invoice', type='http', auth="public", website=True)
+    def upload_document_invoice(self, invoice_id, doc_type, doc_attachment, **post):
+        user = request.env.user
+        domain = ['|', ('user_id', '=', user.id), ('partner_id', 'child_of', user.partner_id.commercial_partner_id.id), ('id', '=', int(invoice_id))]
+        invoice = request.env['account.invoice'].sudo().search(domain, limit=1)
+        if invoice:
+            filename = doc_attachment.filename
+            attach = request.env['ir.attachment'].sudo().create({
+                            'name': filename,
+                            'type': 'binary',
+                            'datas_fname': filename,
+                            'datas': base64.b64encode(doc_attachment.read()),
+                            'document_available': True,
+                            'document_type': doc_type,
+                            'res_id': int(invoice_id) or False,
+                            'res_model': 'account.invoice',
+                        })
+            attach._compute_res_name()
+            request.env['mail.message'].sudo().create({
+                'attachment_ids': [(4, attach.id)],
+                'author_id': request.env.user.partner_id.id,
+                'model': 'account.invoice',
+                'res_id': int(invoice_id) or False,
+                'message_type': 'comment',
+                'subtype_id': 1,#id for discusions to show in portal mail thread
+                'website_published': True,
+                'create_uid': request.env.user.id,
+            })
+            return request.redirect('/my/invoices/%s' % invoice_id)
         
 '''         
 class CustomerPortal(CustomerPortal):
