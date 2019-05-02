@@ -25,8 +25,8 @@ class Partner(models.Model):
     
     country_id = fields.Many2one('res.country', string='Countryu', ondelete='restrict', required=True, readonly=True,  default =_get_default_country)
     
-    partner_confidentiality = fields.Many2one(comodel_name="ninas.confidentiality")
-    partner_conflict = fields.Many2one(comodel_name="ninas.conflict.interest")
+    #partner_confidentiality = fields.Many2one(comodel_name="ninas.confidentiality")
+    #partner_conflict = fields.Many2one(comodel_name="ninas.conflict.interest")
     
     attachment_count = fields.Integer(compute="_compute_attachment_count", string="Attachments")
     

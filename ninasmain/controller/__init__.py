@@ -1,4 +1,4 @@
 
 
 from . import accreditation
-#from . import document_portal
+from . import document_portal

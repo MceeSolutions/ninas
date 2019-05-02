@@ -560,14 +560,14 @@ class CreateInvoice(models.Model):
         sub = self.env['checklist.ticket'].search([('ticket_id','=',self.id), ('partner_id', '=', self.partner_id.id)], limit=1)
         if self.confidentiality_count == 0:
             raise Warning('Confidentiality Form has not been Filled!')
-        for line in self.partner_id.partner_confidentiality:
-            if line.state not in ['approve']:
-                raise Warning('Confidentiality Form has not been Approved!')
+        #for line in self.partner_id.partner_confidentiality:
+         #   if line.state not in ['approve']:
+          #      raise Warning('Confidentiality Form has not been Approved!')
         if self.conflict_count == 0:
             raise Warning('Conflict of Interest Form has not been Filled!')
-        for line in self.partner_id.partner_conflict:
-            if line.state not in ['approve']:
-                raise Warning('Conflict of Interest Form has not been Approved!')
+        #for line in self.partner_id.partner_conflict:
+         #   if line.state not in ['approve']:
+          #      raise Warning('Conflict of Interest Form has not been Approved!')
         else:
             if sub.pre_assessment_needed == True:
                 self.write({'conflict_agreement': True})
