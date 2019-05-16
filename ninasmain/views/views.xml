@@ -2278,6 +2278,32 @@
 	        		<field name="state" widget="statusbar" statusbar_visible="incomplete,done" readonly="1"/>
 	        	</header>
 				 <sheet>
+				 	<div class="oe_button_box" name="button_box">
+                       	<button class="oe_stat_button" type="object" name="open_checklist_ticket" context="{'default_partner_id': active_id}" icon="fa-list">
+		                    <div class="o_stat_info">
+		                        <field name="checklist_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Checklist</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_confidentiality_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+		                    <div class="o_stat_info">
+		                        <field name="confidentiality_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Confidentiality</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_conflict_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+		                    <div class="o_stat_info">
+		                        <field name="conflict_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Conflict of Interest</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_car" context="{'default_partner_id': active_id}" icon="fa-folder">
+		                    <div class="o_stat_info">
+		                        <field name="car_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">C.A.R</span>
+		                    </div>
+		                </button>
+                    </div>
 				 	<span>Accreditation Decision Recommendation Form F 773 A</span>
 				 	<p>This form is to be used by the AAC Members to review assessment reports and
 					make recommendation on accreditation decision-making</p>
@@ -2285,25 +2311,35 @@
 						<field name="reference_no"/>
 					</group>
 					<group>
-						<field name="application_id"/>
+						<field name="application_id" widget="selection" domain="[('stage_id','=',16)]"/>
 					</group>
 				    <group col="4" colspan="4">
-				    	<field name="name"/>
-				    	<label for="address_of_institution" string="Address of Institurion or Lab"/>
+				    	<field name="name" readonly="1"/>
+				    	<label for="address_of_institution" string="Address of Institurion or Lab" readonly="1"/>
 	           	       	<div class="o_address_format">
-	                        <field name="institution_number" placeholder="Number..." class="o_address_street"/>
-	                        <field name="institution_street" placeholder="Street..." class="o_address_street"/>
-	                        <field name="institution_city" placeholder="City" class="o_address_city"/>
-	                        <field name="institution_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
-	                        <field name="institution_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+	                        <field name="institution_number" placeholder="Number..." class="o_address_street" readonly="1"/>
+	                        <field name="institution_street" placeholder="Street..." class="o_address_street" readonly="1"/>
+	                        <field name="institution_city" placeholder="City" class="o_address_city" readonly="1"/>
+	                        <field name="institution_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="1"/>
+	                        <field name="institution_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="1"/>
 	                    </div>
-	                    <field name="name_of_institution_rep"/>
-	                    <field name="accreditation_scope"/>
+	                    <field name="name_of_institution_rep" readonly="1"/>
+	                    <field name="accreditation_scope" readonly="1"/>
 	                    </group>
 	                    <group col="6" colspan="3">
-	                    	<field name="name_assessor" domain="[('category_ids.is_assessor','=',True)]" widget="many2many_tags"/>
-	                    	<field name="type_assessment"/>
-	                    	<field name="assessment_date"/>
+	                    	<field name="name_assessor" domain="[('category_ids.is_assessor','=',True)]" widget="many2many_tags" readonly="1"/>
+	                    	<field name="type_assessment" readonly="1"/>
+	                    	<label for="assessment_date" string="Assessment Date"/>
+		                   <div>
+			                   <div>
+			                       <field name="assessment_date_from" class="oe_inline" readonly="1"/>
+			                       <label string=" -" class="oe_inline"/>
+			                       <field name="assessment_date_to" class="oe_inline" readonly="1"/>
+			                   </div>
+			                   <div>
+			                       <field name="assessment_number_of_days" class="oe_inline" readonly="1"/> days
+			                   </div>
+		                   </div>
 	                    </group>
 	                    <span>I confirm that these recommendations are based on the following documents
 						provided by NiNAS (Please tick the relevant box)</span>
@@ -2405,6 +2441,8 @@
               action="ninas_code_of_conduct_action"/>
     <menuitem name="Contract Agreement" id="contract_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_contract_agreement_action"/>
+   	<menuitem name="Corrective Action Report" id="car_agreement_menu" parent="contract_agreement_main_menu"
+              action="ninas_car_report_action"/>
               
               
    	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png"/>
