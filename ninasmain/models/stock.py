@@ -27,14 +27,7 @@ class PurchaseOrder(models.Model):
                     self.need_override = True
                 else:
                     self.need_override = False
-
-
-    READONLY_STATES = {
-        'purchase': [('readonly', True)],
-        'done': [('readonly', True)],
-        'cancel': [('readonly', True)],
-    }    
-                
+          
     need_override = fields.Boolean ('Need Budget Override', compute= "_check_override", track_visibility="onchange")
     employee_id = fields.Many2one('hr.employee', 'Employee',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, default=_default_employee)
@@ -169,7 +162,7 @@ class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice','mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
     
-    partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
+    ninas_partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         track_visibility='always', related="accreditation_id.partner_id")
     
