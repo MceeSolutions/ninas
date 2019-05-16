@@ -17,6 +17,15 @@ from odoo.exceptions import ValidationError, Warning
 class Accreditation(models.Model):
     _inherit = 'helpdesk.ticket'
     
+    @api.one
+    @api.depends('assessment_date_from', 'assessment_date_to')
+    def _compute_number_of_days(self):
+        if self.assessment_date_from and self.assessment_date_to:
+            d1=datetime.datetime.strptime(str(self.assessment_date_from),'%Y-%m-%d') 
+            d2=datetime.datetime.strptime(str(self.assessment_date_to),'%Y-%m-%d')
+            d3=d2-d1
+            self.assessment_number_of_days=str(d3.days)
+    
     current_date = date.today() + relativedelta(years=2)
     
     attachment_ids = fields.Many2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'helpdesk.ticket')], string='Attachments')
