@@ -1966,17 +1966,34 @@
 			<form string="Assessment Form">
 				<sheet>
 					<separator string="Initial / Re-Assessment Plan"/>
-					<group><field name="application_id"/></group>
+					<group><field name="application_id" domain="[('stage_id','=',12)]" widget="selection"/></group>
 					<group col="4" colspan="2">
 						<field name="reference_number"/>
-						<field name="organisation"/>
-						<field name="contact_person"/>
-						<field name="address"/>
-						<field name="telephone"/>
-						<field name="company_rep"/>
-						<field name="assessment_date"/>
-						<field name="lead_assessor" domain="[('category_ids.is_assessor','=',True)]"/>
-						<field name="technical_assessor" domain="[('category_ids.is_assessor','=',True)]"/>
+						<field name="organisation" readonly="1"/>
+						<field name="contact_person" readonly="1"/>
+						<label for="address" string="Laboratory Address"/>
+	           	       	<div class="o_address_format">
+	                        <field name="lab_number" placeholder="Number..." class="o_address_street" readonly="True"/>
+	                        <field name="lab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+	                        <field name="lab_city" placeholder="City" class="o_address_city" readonly="True"/>
+	                        <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+	                        <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+	                    </div>
+						<field name="telephone" readonly="1"/>
+						<field name="company_rep" readonly="1"/>
+						<label for="assessment_date" string="Assessment Date" readonly="1"/>
+	                   <div>
+		                   <div>
+		                       <field name="assessment_date_from" class="oe_inline" readonly="1"/>
+		                       <label string=" -" class="oe_inline"/>
+		                       <field name="assessment_date_to" class="oe_inline" readonly="1"/>
+		                   </div>
+		                   <div>
+		                       <field name="assessment_number_of_days" class="oe_inline" readonly="1"/> days
+		                   </div>
+	                   </div>
+						<field name="lead_assessor" domain="[('category_ids.is_assessor','=',True)]" readonly="1"/>
+						<field name="technical_assessor" domain="[('category_ids.is_assessor','=',True)]" readonly="1"/>
 					</group>
 					<notebook>
 						<page name="day_1" string="Day 1 - LA observed by TTA">
