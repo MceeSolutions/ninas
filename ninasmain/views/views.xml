@@ -2065,15 +2065,63 @@
 	        		<field name="state" widget="statusbar" statusbar_visible="la_recommendation,aac_recommendation,da_recommendation" readonly="1"/>
 	        	</header>
 				<sheet>
-				<group><field name="application_id"/></group>
+				<div class="oe_button_box" name="button_box">
+                       	<button class="oe_stat_button" type="object" name="open_customer_invoices" context="{'default_partner_id': active_id}" icon="fa-pencil-square-o">
+		                    <div class="o_stat_info">
+		                        <field name="invoice_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Invoices</span>
+		                    </div>
+		                </button>
+                       	<button class="oe_stat_button" type="object" name="open_checklist_ticket" context="{'default_partner_id': active_id}" icon="fa-list">
+		                    <div class="o_stat_info">
+		                        <field name="checklist_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Checklist</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_confidentiality_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+		                    <div class="o_stat_info">
+		                        <field name="confidentiality_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Confidentiality</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_conflict_ticket" context="{'default_partner_id': active_id}" icon="fa fa-book">
+		                    <div class="o_stat_info">
+		                        <field name="conflict_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Conflict of Interest</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_car" context="{'default_partner_id': active_id}" icon="fa-folder">
+		                    <div class="o_stat_info">
+		                        <field name="car_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">C.A.R</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_recommendation_form" context="{'default_partner_id': active_id}" icon="fa fa-group">
+		                    <div class="o_stat_info">
+		                        <field name="recommendation_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Recommendation Form</span>
+		                    </div>
+		                </button>
+                    </div>
+				<group><field name="application_id" widget="selection" domain="[('stage_id','=',20)]"/></group>
 					<group col="4" colspan="2">
-						<field name="institution_name"/>
+						<field name="institution_name" readonly="1"/>
 						<field name="ref"/>
-						<field name="representative"/>
-						<field name="scope"/>
-						<field name="assessor_id"/>
-						<field name="assess_type"/>
-						<field name="assessment_date"/>
+						<field name="representative" readonly="1"/>
+						<field name="scope" readonly="1"/>
+						<field name="assessor_id" readonly="1"/>
+						<field name="assess_type" readonly="1"/>
+						<label for="assessment_date" string="Assessment Date"/>
+		                   <div>
+			                   <div>
+			                       <field name="assessment_date_from" class="oe_inline" readonly="1"/>
+			                       <label string=" -" class="oe_inline"/>
+			                       <field name="assessment_date_to" class="oe_inline" readonly="1"/>
+			                   </div>
+			                   <div>
+			                       <field name="assessment_number_of_days" class="oe_inline" readonly="1"/> days
+			                   </div>
+		                   </div>
 					</group>
 					<notebook>
 						<page string="Lead Assessor's Recommendation">
