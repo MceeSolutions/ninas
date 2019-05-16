@@ -8,6 +8,7 @@ from datetime import date, timedelta
 from odoo import api, fields, models
 from docutils.nodes import organization
 from odoo.exceptions import ValidationError
+from ast import literal_eval
 
 class Partner(models.Model):
     _name = 'res.partner'
@@ -1225,6 +1226,11 @@ class CodeofConduct(models.Model):
     _name = 'ninas.code.conduct'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket',
+        string='Application ID',
+        readonly=False)
+    
     state = fields.Selection(
         [('new','New'),('accept', 'Accepted'), ('approve','Approved')],
         string='Status',
@@ -1242,7 +1248,7 @@ class CodeofConduct(models.Model):
     description = fields.Text(
         )
     name = fields.Many2one(
-        comodel_name='hr.employee',
+        comodel_name='res.users',
         string='Employee Printed name:',
         readonly=False)
     date_signed = fields.Char(
@@ -1271,20 +1277,37 @@ class ConflictofInterest(models.Model):
         default='new',
         track_visibility='onchange')
     
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket',
+        string='Application ID',
+        readonly=False)
+
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+
+    number = fields.Char(
+        string='Number', related="application_id.lab_number")
+    street = fields.Char(
+        string='Street', related="application_id.lab_street")
+    city = fields.Char(
+        string='City', related="application_id.lab_city")
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', related="application_id.lab_state_id")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', related="application_id.lab_country_id")
+
+    
     agreement = fields.Boolean(
         string='I have read and concur with NiNAS’s Code of Conduct (Sections 2-7).',
         required=True
         )
-    date = fields.Date(
+    date = fields.Date(default=date.today()
         )
     date_today = fields.Date(
         )
     description = fields.Text(
         )
-    name = fields.Char(
-        string='Name of Institution or Person:')
+    name = fields.Many2one('res.users',
+        string='Name of Institution or Person:', default=lambda self: self.env.user, readonly=True)
     
-    printed_name = fields.Char(related='name',readonly=True,
+    printed_name = fields.Many2one('res.users',readonly=True,
         string='Printed Name')
     
     location = fields.Char(
@@ -1296,8 +1319,18 @@ class ConflictofInterest(models.Model):
     @api.multi
     def button_accept(self):
         self.write({'state': 'accept'})
+        self.printed_name = self._uid
         self.date_signed = date.today()
-        return {}
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_director_accreditation')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Assessor {} has signed Conflict of Interest Form and is awaiting approval".format(self.name.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def button_approve(self):
@@ -1319,19 +1352,37 @@ class Confidentiality(models.Model):
         default='new',
         track_visibility='onchange')
     
-    name = fields.Char(
-        string='Name of Institution or Person:',required=True)
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket',
+        string='Application ID',
+        readonly=False)
+
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+
+    number = fields.Char(
+        string='Number', related="application_id.lab_number")
+    street = fields.Char(
+        string='Street', related="application_id.lab_street")
+    city = fields.Char(
+        string='City', related="application_id.lab_city")
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', related="application_id.lab_state_id")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', related="application_id.lab_country_id")
+
+
+    name = fields.Many2one('res.users',
+        string='Name of Institution or Person:', default=lambda self: self.env.user, readonly=True)
+    
     location = fields.Char(
-        string='Location',required=True)
-    name_rep = fields.Char(
-        string='Name of Person:',required=True)
+        string='Location',required=False)
+    name_rep = fields.Many2one('res.users',
+        string='Name of Person:',required=True, default=lambda self: self.env.user, readonly=True)
     
     date = fields.Date(
         )
     description = fields.Text(
         )
     
-    signed = fields.Char(related='name_rep',readonly=True,
+    signed = fields.Many2one('res.users',readonly=True,
         string='Signed')
 
     date_signed = fields.Date(
@@ -1341,8 +1392,18 @@ class Confidentiality(models.Model):
     @api.multi
     def button_accept(self):
         self.write({'state': 'accept'})
+        self.signed = self._uid
         self.date_signed = date.today()
-        return {}
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_director_accreditation')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Assessor {} has signed Confidentiality Form and is awaiting approval".format(self.name.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def button_approve(self):
@@ -1570,7 +1631,7 @@ class OpenClose(models.Model):
     today = fields.Date(
         string = 'Date',
         default= date.today(),
-        readonly=1
+        readonly=0
         )
     oc = fields.One2many(
         comodel_name = 'open.close',

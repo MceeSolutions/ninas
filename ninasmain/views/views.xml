@@ -1257,6 +1257,7 @@
 			<field name="model">ninas.code.conduct</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
+				<field name="application_id"/>
 				<field name="name"/>
 				<field name="date"/>
 			</field>	
@@ -1269,11 +1270,14 @@
 			<field name="arch" type="xml">
 				<form string="Code Of Conduct">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
-		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_director_accreditation"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
 		        	</header>
 					<sheet>
+						<group col="2" colspan="1">
+							<field name="application_id" widget="selection" required="1"/>
+						</group>
 						<strong>
 							NiNAS CODE OF CONDUCT-SECTION 8: EMPLOYEE AGREEMENT
 						</strong><br/><br/>
@@ -1331,6 +1335,7 @@
 			<field name="model">ninas.conflict.interest</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
+				<field name="application_id"/>
 				<field name="name"/>
 				<field name="date"/>
 			</field>	
@@ -1343,11 +1348,14 @@
 			<field name="arch" type="xml">
 				<form string="Conflict of Interest">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
-		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_director_accreditation"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,accept,approve" readonly="1"/>
 		        	</header>
 					<sheet>
+						<group col="2" colspan="1">
+							<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection" required="1"/>
+						</group>
 						<strong>
 							CONFLICT OF INTEREST:  F 444
 						</strong><br/><br/>
@@ -1357,7 +1365,15 @@
 							</span>
 							<group>
 								<field name="name"/>
-								<field name="location"/>
+								<label for="location" string="Laboratory Address"/>
+			           	       	<div class="o_address_format">
+			                        <field name="number" placeholder="Number..." class="o_address_street" readonly="True"/>
+			                        <field name="street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                    </div>
+			                    <field name="partner_id"/>
 							</group>
 							<strong>SECTION 9 –ASSESSOR AGREEMENT</strong><br/><br/><br/>
 							<field name="agreement"/>
@@ -1427,11 +1443,14 @@
 			<field name="arch" type="xml">
 				<form string="Confidentiality">
 					<header>
-		        		<button name="button_accept" string="Accept" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
-		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_hr_line_manager"/>
+		        		<button name="button_accept" string="Sign and Submit" type="object" class="btn btn-primary" groups="base.group_user" attrs="{'invisible':['|', ('agreement','=',False), ('state','not in','new')]}"/>
+		        		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="accept" groups="ninasmain.group_director_accreditation"/>
 		        		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
 		        	</header>
 					<sheet>
+						<group col="2" colspan="1">
+							<field name="application_id" domain="[('assessment_team_ids.user_id','=',uid),('stage_id','=',10)]" widget="selection" required="1"/>
+						</group>
 						<strong>
 							CONFIDENTIALITY, IMPARTIALITY AND NON-DISCLOSURE AGREEMENT: F 443
 						</strong><br/><br/>
@@ -1441,7 +1460,15 @@
 							</span>
 							<group>
 								<field name="name"/>
-								<field name="location"/>
+								<label for="location" string="Laboratory Location"/>
+			           	       	<div class="o_address_format">
+			                        <field name="number" placeholder="Number..." class="o_address_street" readonly="True"/>
+			                        <field name="street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                    </div>
+			                    <field name="partner_id"/>
 							</group>
 							
 							<field name="name_rep"/>
@@ -2251,10 +2278,7 @@
     <menuitem name="Testing Lab Scope" id="chemical_scope_menu" parent="ninas_lead_toolkit_tools_main_menu"
               action="ninas_chemical_lab_action"/>
     <menuitem name="Assessment Plan" id="ninas_assessment_plan_menuitem" parent="ninas_lead_toolkit_tools_main_menu" 
-    		  action="ninas_assessment_plan_action"/>
-   	<menuitem name="Appraisal Form" id="ninas_appraisal_menu" parent="ninas_lead_toolkit_tools_main_menu" 
-   			  action="ninas_appraisal_action"/>
-    		  
+    		  action="ninas_assessment_plan_action"/>    		  
               
 	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
     <menuitem name="Loan Request" id="loan_request_menu" parent="request_main_menu"
@@ -2287,6 +2311,8 @@
     <menuitem name="Employee Training Tracker" id="ninas_training_tracker_menuitem" parent="hr.menu_hr_root" action="ninas_training_tracker_action"/>
     <menuitem name="Mission Report" id="mission_request_menu" parent="hr.menu_hr_root"
               action="ninas_mission_report_action"/>
+    <menuitem name="Appraisal Form" id="ninas_appraisal_menu" parent="hr.menu_hr_root" 
+   			  action="ninas_appraisal_action"/>
     
     <menuitem name="Diesel Consumption" id="ninas_diesel_consumption_menuitem" parent="maintenance.menu_maintenance_title" action="ninas_diesel_consumption_action"/>
 
@@ -2319,7 +2345,7 @@
    	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png"/>
     <menuitem name="AAC" id="ninas_aac_tools_main_menu" parent="ninas_aac_main_menu"/>
     
-    <menuitem name="Recommendaion Form" id="recommendation_form_menu" parent="ninas_aac_main_menu"
+    <menuitem name="Recommendation Form" id="recommendation_form_menu" parent="ninas_aac_main_menu"
               action="ninas_recommendation_form_action" sequence="1"/>
    	<menuitem name="Decision Form" id="decision_form_menu" parent="ninas_aac_main_menu" 
     		  action="decision_form_action" sequence="2"/>
