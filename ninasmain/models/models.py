@@ -1904,15 +1904,28 @@ class AssessmentPlan(models.Model):
         track_visibility='onchange',)
     
     reference_number = fields.Char(string='Reference Number', readonly=True, required=True, index=True, copy=False, default='New') #auto-sgenerated?
-    organisation = fields.Char(related='application_id.partner_id.parent_id.name', string='Organisation', readonly=1)
-    contact_person = fields.Char(related='application_id.partner_id.child_ids.name', string='Contact Person', required=1)
-    address = fields.Char(related='application_id.partner_id.street', string='Address')
-    telephone = fields.Char(related='application_id.partner_id.phone', string='Telephone')
+    
+    organisation = fields.Char(related='application_id.laboratory_legal_name', string='Organisation', readonly=1)
+    contact_person = fields.Char(related='application_id.partner_name', string='Contact Person', required=1)
+    address = fields.Char(string='Address')
+
+    lab_number = fields.Char(related='application_id.lab_number', string='Number')
+    lab_street = fields.Char(related='application_id.lab_street', string='Street')
+    lab_city = fields.Char(related='application_id.lab_city', string='City')
+    lab_state_id = fields.Many2one(related='application_id.lab_state_id',comodel_name="res.country.state", string='State')
+    lab_country_id = fields.Many2one(related='application_id.lab_country_id',comodel_name='res.country', string='Country')
+
+    telephone = fields.Char(related='application_id.telephone_number', string='Telephone')
+
     company_rep = fields.Char(related='application_id.partner_id.name', string='Company Representative', required=1)
     
-    assessment_date = fields.Date(string='Assessment Date', required=1)
+    assessment_date = fields.Date(string='Assessment Date', required=0)
     lead_assessor = fields.Many2one(related='application_id.lead_assessor_id', comodel_name='hr.employee', string='Lead Assessor')
-    technical_assessor = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor')
+    technical_assessor = fields.Many2one(related='application_id.tech_assessor_id',comodel_name='hr.employee', string='Technical Assessor')
+
+    assessment_date_from = fields.Date(related='application_id.assessment_date_from',track_visibility='onchange')
+    assessment_date_to = fields.Date(related='application_id.assessment_date_to',track_visibility='onchange')
+    assessment_number_of_days = fields.Integer(related='application_id.assessment_number_of_days')
     
     day1_ids = fields.One2many(
         comodel_name='ninas.assessment.plan.activity',

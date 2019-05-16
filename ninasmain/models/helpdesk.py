@@ -74,6 +74,10 @@ class Accreditation(models.Model):
                                        string='Document(s) Reviewed?', track_visibility='onchange')
     assessment_date = fields.Date(string='Assessment Date', related='assessment_plan_id.assessment_date', track_visibility='onchange', readonly=True)
     
+    assessment_date_from = fields.Date(track_visibility='onchange')
+    assessment_date_to = fields.Date(track_visibility='onchange')
+    assessment_number_of_days = fields.Integer('Number of Days', store=False, track_visibility='onchange', compute="_compute_number_of_days")
+
     
     #Application Form Sheet
     name_applicant = fields.Char(
