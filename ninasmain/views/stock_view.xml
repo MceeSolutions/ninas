@@ -97,6 +97,9 @@
         <field name="priority" eval="7" />
         <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml">
+        	<field name="partner_id" position="before">
+                <field name="accreditation_id" domain="[('stage_id','=',3)]" widget="selection"/>
+            </field>
            <xpath expr="//button[@name='action_invoice_open']" position="replace">
 				<button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight o_invoice_validate" groups="ninasmain.group_ceo"/>
 			</xpath>
