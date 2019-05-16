@@ -157,14 +157,7 @@ class Inventory(models.Model):
         return super(Inventory, self).create(vals)
     
 class AccountInvoice(models.Model):
-    _name = 'account.invoice'
-    _inherit = ['account.invoice','mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
-
-    partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
-        required=True, readonly=True, states={'draft': [('readonly', False)]},
-        track_visibility='always', related="accreditation_id.partner_id")
-
-    accreditation_id = fields.Many2one(comodel_name="helpdesk.ticket", string="Accreditation")
+    _inherit = "account.invoice"
     
     date_invoice = fields.Date(string='Invoice Date', default = date.today(),
         readonly=True, states={'draft': [('readonly', False)]}, index=True,
