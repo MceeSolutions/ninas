@@ -16,29 +16,29 @@
          </t>
     </template>-->
     
-    <!-- Main Menu  -->
+    <!-- Main Menu  
         <record id="menu_dharma_resources" model="website.menu">
             <field name="name">Dharma Resources</field>
             <field name="url">/dharma_resources</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">50</field>
-        </record>
+        </record> -->
 
-                        <!-- Sub Menus  -->
+                        <!-- Sub Menus  
                                 <record id="menu_prayerandsutra" model="website.menu">
                                     <field name="name">Prayer and Sutra</field>
                                     <field name="url">/serving_humanity</field>
                                     <field name="parent_id" ref="ninasmain.menu_dharma_resources"/>
                                     <field name="sequence" type="int">10</field>
-                                </record>
+                                </record> -->
 
-                                                <!-- Inner sub menus  -->
+                                                <!-- Inner sub menus  
                                                         <record id="menu_daily_prayers" model="website.menu">
                                                             <field name="name">Daily  Prayers</field>
                                                             <field name="url">/daily_prayers</field>
                                                             <field name="parent_id" ref="ninasmain.menu_prayerandsutra"/>
                                                             <field name="sequence" type="int">10</field>
-                                                        </record>
+                                                        </record> -->
     
     <template id="ninasmain.index" name="Code of Conduct">
             <t t-call="website.layout">
