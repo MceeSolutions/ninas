@@ -47,6 +47,8 @@ class Accreditation(models.Model):
             d3=d2-d1
             self.assessment_number_of_days=str(d3.days)
     
+    checked = fields.Integer(string="Checked", related='checklist_count')
+    
     current_date = date.today() + relativedelta(years=2)
     
     attachment_ids = fields.Many2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'helpdesk.ticket')], string='Attachments')
@@ -112,9 +114,9 @@ class Accreditation(models.Model):
     assessment_number_of_days = fields.Integer('Number of Days', store=False, track_visibility='onchange', compute="_compute_number_of_days")
     
     
-    est_pre_assessment_needed = fields.Boolean(string="Pre-assessment Needed?", related='checklist_id.pre_assessment_needed')
-    est_no_of_assessor = fields.Char(string="Estimated Number of Assessors", related='checklist_id.no_of_assessor')
-    est_assessment_days = fields.Char(string="Estimated Number of Days", related='checklist_id.assessment_days', default=1)
+    est_pre_assessment_needed = fields.Boolean(string="Pre-assessment Needed?")
+    est_no_of_assessor = fields.Char(string="Estimated Number of Assessors", default=1)
+    est_assessment_days = fields.Char(string="Estimated Number of Days", default=1)
     
     #Application Form Sheet
     name_applicant = fields.Char(
@@ -651,6 +653,14 @@ class CreateInvoice(models.Model):
         self.write({'stage_id': 4})
         return {}
     
+    @api.one
+    @api.depends('checklist_count')
+    def _compute_checklist(self):
+        checklist = self.env['checklist.ticket'].search([('ticket_id', '=', self.id), ('partner_id', '=', self.partner_id)], limit=1)
+        if checklist:
+            self.est_pre_assessment_needed = checklist.pre_assessment_needed
+            self.est_no_of_assessor = checklist.no_of_assessor
+            self.est_assessment_days = checklist.assessment_days
     
 class Checklist(models.Model):
     _name = "checklist.ticket"
@@ -724,9 +734,9 @@ class Checklist(models.Model):
         self.write({'evi_pay': True})
         return {}
     
-    pre_assessment_needed = fields.Boolean(string="pre-assessment Needed?")
-    no_of_assessor = fields.Char(string="Estimated Number of Assessors")
-    assessment_days = fields.Char(string="Estimated Number of Days")
+    pre_assessment_needed = fields.Boolean(string="pre-assessment Needed?", related='ticket_id.est_pre_assessment_needed')
+    no_of_assessor = fields.Char(string="Estimated Number of Assessors", related='ticket_id.est_no_of_assessor')
+    assessment_days = fields.Char(string="Estimated Number of Days", related='ticket_id.est_assessment_days')
     
 class CarReport(models.Model):
     _name = 'car.report'

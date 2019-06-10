@@ -161,9 +161,14 @@ class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice','mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
     
-    ninas_partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
-        required=True, readonly=True, states={'draft': [('readonly', False)]},
-        track_visibility='always', related="accreditation_id.partner_id")
+    @api.onchange('accreditation_id')
+    def _onchange_partner_id(self):
+        self.partner_id = self.accreditation_id.partner_id
+        return {}
+    
+    #ninas_partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
+        #required=True, readonly=True, states={'draft': [('readonly', False)]},
+        #track_visibility='always', related="accreditation_id.partner_id")
     
     accreditation_id = fields.Many2one(comodel_name="helpdesk.ticket", string="Accreditation")
     

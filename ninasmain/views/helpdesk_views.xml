@@ -135,7 +135,6 @@
                 	<button type="object" name="button_approved_app" string="CEO Approval" attrs="{'invisible':[('stage_id','!=',20)]}" class="btn btn-success"/>
                 	<button type="object" name="button_reject_app" string="CEO Reject" attrs="{'invisible':[('stage_id','!=',20)]}" class="btn btn-danger"/>
                 	
-                	
                 	<!-- <button type="object" name="button_pending_closure" string="Next Stage" attrs="{'invisible':[('stage_id','!=',21)]}"/>
                 	 -->
                 	<button type="object" name="button_closed" string="Close Application?" class="btn btn-warning" attrs="{'invisible':[('stage_id','!=',18)]}"/>
@@ -361,7 +360,7 @@
                		</button>
                 </div>
                 <group>
-                	<field name="application_id" widget="selection" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"  domain="[('lead_assessor_id.user_id','=',uid)]" required="1"/>
+                	<field name="application_id" widget="selection" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"  domain="[('lead_assessor_id.user_id','=',uid),('stage_id','=',13)]" required="1"/>
                 </group>
 			 	<group col="4" colspan="4">
 			 		<field name="name" readonly="1"/>
