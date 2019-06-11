@@ -499,7 +499,7 @@
             <field name="user_id" position="after">
                 <field name="lead_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',9)], 'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>
            		<field name="tech_assessor_id" domain="[('category_ids.is_assessor','=',True)]" attrs="{'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>
-            	<field name="ac_members" domain="[('groups_id','=',114)]" widget="many2many_tags" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}" min="3"/>
+            	<field name="ac_members" domain="[('groups_id','=',82)]" widget="many2many_tags" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}" min="3"/>
             </field>
             <field name="deadline" position="after">
                 <field name="re_assessment_date" attrs="{'required':[('stage_id','=',20)], 'readonly':[('stage_id','!=',20)]}"/>
