@@ -1457,7 +1457,7 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<field name="application_id"/>
-				<field name="name"/>
+				<field name="partner_id"/>
 				<field name="date"/>
 			</field>	
 		</record>
@@ -1553,7 +1553,7 @@
 			<field name="model">ninas.confidentiality</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<field name="name"/>
+				<field name="partner_id"/>
 				<field name="date"/>
 			</field>	
 		</record>
@@ -2485,7 +2485,7 @@
 	    </record>
     
     <!-- MenuItems -->
-    <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_main_menu"/>
+    <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_main_menu" groups="ninasmain.group_assessor"/>
     <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_tools_main_menu" parent="ninas_lead_toolkit_main_menu"/>
     
     <menuitem name="Open Close" id="open_close_menu" parent="ninas_lead_toolkit_tools_main_menu"
@@ -2545,7 +2545,7 @@
 	<menuitem name="Expense claims" id="expense_claim_menu" parent="expense_request_menuitem"
               action="ninas_expense_claim_action"/>
 
-   	<menuitem name="Assessor Forms" id="ninas_assessor_forms_main_menu" web_icon="ninasmain,static/icon/form.png" sequence="1"/>
+   	<menuitem name="Assessor Forms" id="ninas_assessor_forms_main_menu" web_icon="ninasmain,static/icon/form.png" sequence="1" groups="ninasmain.group_assessor"/>
     <menuitem name="Assessor Forms" id="ninas_assessor_forms_menu" parent="ninas_assessor_forms_main_menu" sequence="2"/>
     
     <menuitem name="Forms" id="form_menu" parent="ninas_assessor_forms_main_menu"
@@ -2564,7 +2564,7 @@
               action="ninas_car_report_action"/>
               
               
-   	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png"/>
+   	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png" groups="ninasmain.group_aac"/>
     <menuitem name="AAC" id="ninas_aac_tools_main_menu" parent="ninas_aac_main_menu"/>
     
     <menuitem name="Recommendation Form" id="recommendation_form_menu" parent="ninas_aac_main_menu"

@@ -503,7 +503,7 @@
             </field>
             <field name="deadline" position="after">
                 <field name="re_assessment_date" attrs="{'required':[('stage_id','=',20)], 'readonly':[('stage_id','!=',20)]}"/>
-                <field name="decision_making_number" attrs="{'required':[('stage_id','=',16)], 'readonly':[('stage_id','!=',16)]}"/>
+                <field name="decision_making_number" attrs="{'required':[('stage_id','=',21)], 'readonly':[('stage_id','!=',21)]}"/>
                 <!-- <field name="est_pre_assessment_needed"/>
                 <field name="est_no_of_assessor"/>
                 <field name="est_assessment_days"/> -->

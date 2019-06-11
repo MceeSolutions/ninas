@@ -127,6 +127,7 @@ class Accreditation(models.Model):
         track_visibility='onchange')
     laboratory_legal_name = fields.Char(
         string="Laboratory’s Legal Name",
+        #related="partner_id.commercial_company_name",
         track_visibility='onchange')
     
     laboratory_address= fields.Char(
@@ -602,23 +603,29 @@ class CreateInvoice(models.Model):
     @api.multi
     def button_car(self):
         today = str(date.today())
-        print(today)
-        print(self.assessment_date_to)
-        if today <= self.assessment_date_to:
-            raise Warning('Assessment period has not been elasped!')
+        #print(today)
+        #print(self.assessment_date_to)
+        if today <= self.assessment_date_from:
+            raise Warning('Assessment period has not began!')
         else:
             self.write({'stage_id': 13})
         return {}
     
     @api.multi
     def button_decision_making(self):
-        self.write({'stage_id': 16})
+        if self.car_count == 0:
+            raise Warning('No CAR has been generated for this Application')
+        for line in self.partner_id.car_ids:
+            if line.state not in ['next_assessment']:
+                raise Warning('CARs has not been Resolved for this Application')
+        else:
+            self.write({'stage_id': 16})
         return {}
     
     @api.multi
     def button_awaiting_approval(self):
-        print(self.assessment_team_ids)
-        print(self.assessment_team_ids.name)
+        #print(self.assessment_team_ids)
+        #print(self.assessment_team_ids.name)
         self.write({'stage_id': 20})
         return {}
     

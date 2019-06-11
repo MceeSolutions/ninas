@@ -44,6 +44,8 @@ class Partner(models.Model):
         action['context'] = {'default_res_model': 'res.partner', 'default_res_id': self.id}
         return action
     
+    car_ids = fields.One2many('car.report', 'partner_id', string='CARs', readonly=True, copy=False)
+    
 class DocumentType(models.Model):
     _name = "document.type"
     _description = "Document Type"
