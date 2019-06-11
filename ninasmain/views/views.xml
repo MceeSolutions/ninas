@@ -2184,7 +2184,7 @@
 				<header>
 	        		<button name="button_aac" string="Submit" type="object" class="btn btn-primary" states="la_recommendation" groups="base.group_user"/>
 	        		<button name="button_da" string="Submit" type="object" class="btn btn-primary" states="aac_recommendation" groups="base.group_user"/>
-	        		<field name="state" widget="statusbar" statusbar_visible="la_recommendation,aac_recommendation,da_recommendation" readonly="1"/>
+	        		<field name="state" widget="statusbar" statusbar_visible="da_recommendation" readonly="1"/>
 	        	</header>
 				<sheet>
 					<div class="oe_button_box" name="button_box">
@@ -2246,18 +2246,18 @@
 		                   </div>
 					</group>
 					<notebook>
-						<page string="Lead Assessor's Recommendation">
+						<!-- <page string="Lead Assessor's Recommendation">
 							<field name="la_recommendation" attrs="{'required': [('state','in',('la_recommendation'))]}"/>
 						</page>
 						<page string="AAC Recommendation">
 							<field name="aac_recommendation" widget="html" attrs="{'required': [('state','in',('aac_recommendation'))]}"/>
-						</page>
+						</page> -->
 						<page string="Director of Accreditation's Recommendation">
 							<field name="da_recommendation" widget="html" attrs="{'required': [('state','in',('da_recommendation'))]}"/>
 						</page>
 					</notebook>
 					<group col="4" colspan="2">
-						<field name="ceo"/>
+						<field name="ceo" groups="ninasmain.group_ceo"/>
 						<field name="note"/>
 						<field name="date"/>
 					</group>
@@ -2564,7 +2564,7 @@
               action="ninas_car_report_action"/>
               
               
-   	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png" groups="ninasmain.group_aac"/>
+   	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png" groups="ninasmain.group_aac,ninasmain.group_director_accreditation"/>
     <menuitem name="AAC" id="ninas_aac_tools_main_menu" parent="ninas_aac_main_menu"/>
     
     <menuitem name="Recommendation Form" id="recommendation_form_menu" parent="ninas_aac_main_menu"

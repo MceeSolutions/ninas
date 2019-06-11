@@ -2077,9 +2077,11 @@ class DecisionForm(models.Model):
         readonly=1)
     
     state = fields.Selection(
-        [('la_recommendation', "Lead Assessor's Recommendation"), ('aac_recommendation','AAC Recommendation'), ('da_recommendation',"Director of Accreditation's Recommendation")],
+        [
+            #('la_recommendation', "Lead Assessor's Recommendation"), ('aac_recommendation','AAC Recommendation'), 
+            ('da_recommendation',"Director of Accreditation's Recommendation")],
         string='Status',
-        default='la_recommendation',
+        default='da_recommendation',
         track_visibility='onchange')
     
     invoice_count = fields.Integer(compute="_invoice_count", string="Invoices", store=False)
