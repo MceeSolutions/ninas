@@ -11,6 +11,9 @@ class EmployeeCategory(models.Model):
     is_assessor = fields.Boolean(
         string='Assessor?'
         )
+    is_ac_member = fields.Boolean(
+        string='AC Member?'
+        )
     
 class JobRec(models.Model):
     _inherit = "hr.job"

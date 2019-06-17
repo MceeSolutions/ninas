@@ -333,7 +333,7 @@
 	                   <div class="col-md-12 col-sm-8">
 	                   		<label class="text-left" for="lab_capabilities">Laboratory Capabilities: Please enter a brief description of the types of other tests or calibrations that the laboratory
 							currently conducts which you do not plan to include on your scope of accreditation at this time</label><br/>
-	                       <textarea class="form-control o_website_form_input" name="lab_capabilities" required="1"/>
+	                       <textarea class="form-control o_website_form_input" name="lab_capabilities" required="1" widget="html"/>
 	                   </div>
 	               </div>  
 	               
@@ -581,6 +581,114 @@
         ]"/>
     </function>
     
+    <template id="attachment_upload" name="Attachment Uploaded">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container">
+                    <div clas="row">
+                        <h1 class="text-center"><i class="fa fa-check-circle fa-2x text-success" /></h1>
+                        <h1 class="text-center">Your Document has been Uploaded successfully!</h1>
+                    </div>
+                    <div class="btn-group btn-block mb16" style="margin-top: 2em">
+                       <a id="submit-ticket" t-attf-href="/my/invoices/">
+                        <button t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}">Go Back</button>
+                       </a>
+                   </div>
+                </div>
+            </div>
+         </t>
+    </template>
+
+    <record id="attachment_upload_page" model="website.page">
+        <field name="website_published">True</field>
+        <field name="url">/your-document-has-been-uploaded</field>
+        <field name="view_id" ref="attachment_upload" />
+    </record>
+    
+    
+    <template id="ninas_website_account_portal_invoice_page" inherit_id="account.portal_invoice_page">
+    
+    	<xpath expr="//div[hasclass('oe_structure', 'mb32')]" position="after">
+    		
+    			<div id="upload_doc_invoice_id" class="modal fade" role="dialog">
+					<div class="modal-dialog">
+						<!-- Modal content for download report -->
+						<div class="modal-content">
+							<form action="/upload_document_invoice" method="post"
+								enctype="multipart/form-data" data-success_page="/your-document-has-been-uploaded">
+								<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"></button>
+									<h4 class="modal-title" style="color: #337ab7;">Upload file here..</h4>
+								</div>
+								<div class="modal-body">
+									<div>
+										<label class="control-label" for="doc_type" style="color: #337ab7;">Document
+											Type
+										</label>
+										<select name="doc_type" id="doc_type" class="form-control"
+											style="float: right; width: 80%;" required="1">
+											<t t-if="snr_aspirants">
+												<option
+													t-att-value="attachment.document_type.id if attachment.document_type else &quot;&quot;">
+													<t
+														t-esc="attachment.document_type.name if attachment.document_type else &quot;&quot;" />
+												</option>
+											</t>
+											<option value="" />
+											<t t-foreach="request.env['document.type'].search([])"
+												t-as="doc_type" placeholder="Document Type">
+												<option t-att-value="doc_type.id">
+													<t t-esc="doc_type.name" />
+												</option>
+											</t>
+										</select>
+									</div>
+									<div style="margin-top: 20px; margin-left: 20%;">
+										<div id="dropContainer"
+											style="border: 2px dashed gray; color: gray; height:90px;padding: 6% 35%; font-size: x-large;">
+											Drop Here
+										</div>
+										<input style="margin-top: 5px; color: #337ab7;" type="file"
+											name="doc_attachment" id="doc_attachment" required="1" />
+									</div>
+								</div>
+								<div class="modal-footer">
+									<input type="hidden" t-att-id="invoice.id" name="invoice_id"
+										t-att-value="invoice.id" />
+									<input type="submit"
+										style="background-color: #1caa13cc; color: white; border: 1px solid black;"
+										class="btn btn-default upload_doc_btn" id="upload_doc_btn"
+										value="Submit" />
+									<button type="button" class="btn btn-default"
+										style="background-color: #F55555; color: white; border: 1px solid black;"
+										data-dismiss="modal">Close</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				    		
+    		<div class="row mt32">
+                <div class="col-md-12">
+                    <h4><strong>Message and communication history</strong></h4>
+                    <br/>
+                     <button type="button" class="btn" data-toggle="modal"
+						data-target="#upload_doc_invoice_id" style="float: left; color: green;">
+						<span>Upload Document</span>
+						<i class="fa fa-cloud-upload"></i>
+					</button>
+                </div>
+                <div class="col-md-10 col-md-offset-1 mt16">
+                    <t t-call="portal.message_thread">
+                        <t t-set="object" t-value="invoice"/>
+                    </t>
+                </div>
+            </div>
+    		
+    	</xpath>
+    
+    </template>
     
     
 	</data>

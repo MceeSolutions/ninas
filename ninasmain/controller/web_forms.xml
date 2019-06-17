@@ -16,6 +16,30 @@
          </t>
     </template>-->
     
+    <!-- Main Menu  
+        <record id="menu_dharma_resources" model="website.menu">
+            <field name="name">Dharma Resources</field>
+            <field name="url">/dharma_resources</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">50</field>
+        </record> -->
+
+                        <!-- Sub Menus  
+                                <record id="menu_prayerandsutra" model="website.menu">
+                                    <field name="name">Prayer and Sutra</field>
+                                    <field name="url">/serving_humanity</field>
+                                    <field name="parent_id" ref="ninasmain.menu_dharma_resources"/>
+                                    <field name="sequence" type="int">10</field>
+                                </record> -->
+
+                                                <!-- Inner sub menus  
+                                                        <record id="menu_daily_prayers" model="website.menu">
+                                                            <field name="name">Daily  Prayers</field>
+                                                            <field name="url">/daily_prayers</field>
+                                                            <field name="parent_id" ref="ninasmain.menu_prayerandsutra"/>
+                                                            <field name="sequence" type="int">10</field>
+                                                        </record> -->
+    
     <template id="ninasmain.index" name="Code of Conduct">
             <t t-call="website.layout">
                 <t t-set="additional_title">Code of Conduct</t>
@@ -86,6 +110,210 @@
                     </div>
                 </div>
             </t>
+    </template>
+    
+    <template id="cars_followup" name="Corrective Action Report">
+            <t t-call="portal.portal_layout">
+            <div class="panel panel-default">
+            	<div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>
+                                <t t-call='portal.record_pager'/>
+                                #<span t-field="car.id"/> - <span t-field="car.name"/>
+                                <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=car.report&amp;id=%s&amp;view_type=form' % (car.id)" groups="helpdesk.group_helpdesk_user">Edit C.A.R</a>
+                       			<span t-field="car.state" class="pull-right label label-info" title="Current stage of this ticket"/>
+                       		</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+	                <div class="row">
+	                    <strong class="col-md-2">Accreditation ID</strong>
+	                    <span class="col-md-4" t-field="car.application_id.name"/>
+	                </div>
+	                <div class='row'>
+	                    <strong class="col-md-2">Organization Name</strong>
+	                    	<div class="col-md-10" t-field="car.name"/>
+	                    <strong class="col-md-2">Name/Signature of Facility</strong>
+                        	<div class="col-md-10" t-field="car.faculty_rep"/>
+                        <strong class="col-md-2">Reference No:</strong>
+                        	<div class="col-md-10" t-field="car.ref_no"/>
+                        <strong class="col-md-2">Scope Assessed:</strong>
+                        	<div class="col-md-10" t-field="car.scope_assessed"/>
+	                </div>
+	                <P><strong>PART 1: Detailed Observation and Evidence</strong></P>
+	                <div class="row">
+	                    <strong class="col-md-2">Detailed Observation and Evidence</strong>
+	                    <div class="col-md-10" t-field="car.detailed_observation" t-field-options="{'widget': 'html'}"/>
+	                    <strong class="col-md-2">Relevant Standard Requirement</strong>
+                        	<div class="col-md-10" t-field="car.rel_equip"/>
+                        <strong class="col-md-2">Name / Signature of Lead Assessor</strong>
+                        	<div class="col-md-10" t-field="car.name_lead"/>
+                        <strong class="col-md-2">Date</strong>
+                        	<div class="col-md-10" t-field="car.name_lead_date"/>
+                        <strong class="col-md-2">Name /Signature of Representative/ Date</strong>
+                        	<div class="col-md-10" t-field="car.name_rep"/>
+                        <strong class="col-md-2">Date</strong>
+                        	<div class="col-md-10" t-field="car.name_rep_date"/>
+	                </div>
+	                <li t-if="car.state == 'assessed_lab_response' or car.state == 'lead_assessor_review'">
+		                <P><strong>Part 2: Corrective Action Taken</strong></P>
+		                <div class="row">
+		                    <strong class="col-md-2">(Root Cause Analysis)</strong>
+		                    <div class="col-md-10" t-field="car.root_cause" t-field-options="{'widget': 'html'}"/>
+		                    <strong class="col-md-2">Clearly indicate what corrective action was taken and attach supporting evidence</strong>
+	                        	<div class="col-md-10" t-field="car.corrective_action" t-field-options="{'widget': 'html'}"/>
+	                        <strong class="col-md-2">Signature of Representative</strong>
+	                        	<div class="col-md-10" t-field="car.rep_sign"/>
+	                        <strong class="col-md-2">Date</strong>
+	                        	<div class="col-md-10" t-field="car.rep_sign_date"/>
+		                </div>
+		            </li>
+		          	<li t-if="car.state == 'lead_assessor_review'">
+		                <P><strong>PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED</strong></P>
+		                <div class="row">
+		                    <strong class="col-md-2">Comment on the effectiveness of clearance of the NC</strong>
+		                    <div class="col-md-10" t-field="car.assessor_nc" t-field-options="{'widget': 'html'}"/>
+		                    <strong class="col-md-2">Signature of Assessor/ Date</strong>
+	                        	<div class="col-md-10" t-field="car.assessor_sign"/>
+	                        <strong class="col-md-2">Date</strong>
+	                        	<div class="col-md-10" t-field="car.assessor_sign_date"/>
+		                </div>
+		           </li> 
+	            </div>
+            </div>
+            
+            <div class="row mt32">
+                <div class="col-md-12">
+                    <h4><strong>Message and communication history</strong></h4>
+                </div>
+                <div class="col-md-10 col-md-offset-1 mt16">
+                    <t t-call="portal.message_thread">
+                        <t t-set="object" t-value="car"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <template id="portal_car_ticket" name="Corrective Action Report">
+        <t t-call="portal.portal_layout">
+            <h3>Corrective Action Reports
+                <t t-call="portal.portal_searchbar"/>
+            </h3>
+            <t t-if="not car">
+                <p>There are currently no CAR's for your account.</p>
+            </t>
+            <div t-if="car" class="panel panel-default">
+                <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
+                    <thead>
+                        <tr class="active">
+                        	<th>ID</th>
+                        	<th>Applicant</th><th/>
+                        	<th>Application ID</th><th/>
+                            <th>Application Status</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="car" t-as="cars">
+                        <tr>
+                        	<td><a t-attf-href="/my/car/#{cars.id}">#<t t-esc="cars.id"/></a></td>
+                        	<td><span t-field="cars.application_id.partner_id.name"/></td><td/>
+                            <td><span t-field="cars.application_id.name"/></td><td/>
+                            <td><span t-field="cars.application_id.stage_id.name"/></td>
+                        </tr>
+                    </t>
+                </table></div>
+                <div t-if="pager" class="o_portal_pager text-center">
+                    <t t-call="portal.pager"/>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    
+    <template id="ninas_website_helpdesk_tickets_followup" inherit_id="helpdesk.tickets_followup">
+    
+    <xpath expr="//div[hasclass('row', 'mt32')]" position="before">
+    
+    <div class="row mt32">
+                <div class="col-md-12">
+                    <h4><strong>Your Corrective Action Report</strong></h4>
+                    <li t-if="car_search">
+                        <li t-if="car_count" class="list-group-item">
+                            <span class="badge" t-esc="car_count"/>
+                            <a href="/my/car">Corrective Action Report(s)</a>
+                        </li>
+                    </li>    
+                </div>
+            </div>
+    
+    <div id="upload_doc_helpdesk_id" class="modal fade" role="dialog">
+					<div class="modal-dialog">
+						<!-- Modal content for download report -->
+						<div class="modal-content">
+							<form action="/upload_document_helpdesk" method="post"
+								enctype="multipart/form-data">
+								<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"></button>
+									<h4 class="modal-title" style="color: #337ab7;">Upload file here..</h4>
+								</div>
+								<div class="modal-body">
+									<div>
+										<label class="control-label" for="doc_type" style="color: #337ab7;">Document
+											Type
+										</label>
+										<select name="doc_type" id="doc_type" class="form-control"
+											style="float: right; width: 80%;" required="1">
+											<t t-if="snr_aspirants">
+												<option
+													t-att-value="attachment.document_type.id if attachment.document_type else &quot;&quot;">
+													<t
+														t-esc="attachment.document_type.name if attachment.document_type else &quot;&quot;" />
+												</option>
+											</t>
+											<option value="" />
+											<t t-foreach="request.env['document.type'].search([])"
+												t-as="doc_type" placeholder="Document Type">
+												<option t-att-value="doc_type.id">
+													<t t-esc="doc_type.name" />
+												</option>
+											</t>
+										</select>
+									</div>
+									<div style="margin-top: 20px; margin-left: 20%;">
+										<div id="dropContainer"
+											style="border: 2px dashed gray; color: gray; height:90px;padding: 6% 35%; font-size: x-large;">
+											Drop Here
+										</div>
+										<input style="margin-top: 5px; color: #337ab7;" type="file"
+											name="doc_attachment" id="doc_attachment" required="1" />
+									</div>
+								</div>
+								<div class="modal-footer">
+									<input type="hidden" t-att-id="ticket.id" name="ticket_id"
+										t-att-value="ticket.id" />
+									<input type="submit"
+										style="background-color: #1caa13cc; color: white; border: 1px solid black;"
+										class="btn btn-default upload_doc_btn" id="upload_doc_btn"
+										value="Submit" />
+									<button type="button" class="btn btn-default"
+										style="background-color: #F55555; color: white; border: 1px solid black;"
+										data-dismiss="modal">Close</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<button type="button" class="btn" data-toggle="modal"
+					data-target="#upload_doc_helpdesk_id" style="float: right; color: green;">
+					<span>Upload Document</span>
+					<i class="fa fa-cloud-upload"></i>
+				</button>
+				
+	</xpath>
+    
     </template>
     
     <function model="ir.model.fields" name="formbuilder_whitelist">

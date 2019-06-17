@@ -27,13 +27,14 @@ class PurchaseOrder(models.Model):
                     self.need_override = True
                 else:
                     self.need_override = False
-                    
+          
     need_override = fields.Boolean ('Need Budget Override', compute= "_check_override", track_visibility="onchange")
     employee_id = fields.Many2one('hr.employee', 'Employee',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, default=_default_employee)
     approval_date = fields.Date(string='Manager Approval Date', readonly=True, track_visibility='onchange')
     manager_approval = fields.Many2one('res.users','Manager Approval Name', readonly=True, track_visibility='onchange')
     
+
     state = fields.Selection([
         ('draft', 'RFQ'),
         ('sent', 'RFQ Sent'),
@@ -157,7 +158,19 @@ class Inventory(models.Model):
         return super(Inventory, self).create(vals)
     
 class AccountInvoice(models.Model):
-    _inherit = "account.invoice"
+    _name = 'account.invoice'
+    _inherit = ['account.invoice','mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
+    
+    @api.onchange('accreditation_id')
+    def _onchange_partner_id(self):
+        self.partner_id = self.accreditation_id.partner_id
+        return {}
+    
+    #ninas_partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
+        #required=True, readonly=True, states={'draft': [('readonly', False)]},
+        #track_visibility='always', related="accreditation_id.partner_id")
+    
+    accreditation_id = fields.Many2one(comodel_name="helpdesk.ticket", string="Accreditation")
     
     date_invoice = fields.Date(string='Invoice Date', default = date.today(),
         readonly=True, states={'draft': [('readonly', False)]}, index=True,

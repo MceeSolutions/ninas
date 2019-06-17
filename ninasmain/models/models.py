@@ -8,6 +8,8 @@ from datetime import date, timedelta
 from odoo import api, fields, models
 from docutils.nodes import organization
 from odoo.exceptions import ValidationError
+from ast import literal_eval
+#from pbr.tests.testpackage.pbr_testpackage.wsgi import application
 
 class Partner(models.Model):
     _name = 'res.partner'
@@ -22,6 +24,41 @@ class Partner(models.Model):
     vendor_code = fields.Char('Code/Vendor No.')
     
     country_id = fields.Many2one('res.country', string='Countryu', ondelete='restrict', required=True, readonly=True,  default =_get_default_country)
+    
+    #partner_confidentiality = fields.Many2one(comodel_name="ninas.confidentiality")
+    #partner_conflict = fields.Many2one(comodel_name="ninas.conflict.interest")
+    
+    attachment_count = fields.Integer(compute="_compute_attachment_count", string="Attachments")
+    
+    def _compute_attachment_count(self):
+        Attachment = self.env['ir.attachment']
+        for partner in self:
+            partner.attachment_count = Attachment.search_count([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
+            
+    @api.multi
+    def view_attachments(self):
+        self.ensure_one()
+        attachments = self.env['ir.attachment'].search([('res_model', '=', 'res.partner'), ('res_id', '=', self.id)])
+        action = self.env.ref('base.action_attachment').read()[0]
+        action['domain'] = [('id', 'in', attachments.ids)]
+        action['context'] = {'default_res_model': 'res.partner', 'default_res_id': self.id}
+        return action
+    
+    car_ids = fields.One2many('car.report', 'partner_id', string='CARs', readonly=True, copy=False)
+    
+class DocumentType(models.Model):
+    _name = "document.type"
+    _description = "Document Type"
+
+    name = fields.Char(string='Document Name', required=True)
+    available = fields.Boolean('Available on Portal')
+
+
+class IrAttachment(models.Model):
+    _inherit = "ir.attachment"
+
+    document_type = fields.Many2one(comodel_name='document.type', string='Document Type')
+    document_available = fields.Boolean(related="document_type.available", store=True)
     
 class Employee(models.Model):
     _inherit = 'hr.employee'
@@ -1231,6 +1268,11 @@ class CodeofConduct(models.Model):
         default='new',
         track_visibility='onchange')
     
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket',
+        string='Application ID',
+        readonly=False)
+    
     agreement = fields.Boolean(
         string='I have read and concur with NiNAS’s Code of Conduct (Sections 1-7).',
         required=True
@@ -1242,7 +1284,7 @@ class CodeofConduct(models.Model):
     description = fields.Text(
         )
     name = fields.Many2one(
-        comodel_name='hr.employee',
+        comodel_name='res.users',
         string='Employee Printed name:',
         readonly=False)
     date_signed = fields.Char(
@@ -1271,20 +1313,36 @@ class ConflictofInterest(models.Model):
         default='new',
         track_visibility='onchange')
     
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket',
+        string='Application ID',
+        readonly=False)
+    
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+    
+    number = fields.Char(
+        string='Number', related="application_id.lab_number")
+    street = fields.Char(
+        string='Street', related="application_id.lab_street")
+    city = fields.Char(
+        string='City', related="application_id.lab_city")
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', related="application_id.lab_state_id")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', related="application_id.lab_country_id")
+    
     agreement = fields.Boolean(
         string='I have read and concur with NiNAS’s Code of Conduct (Sections 2-7).',
         required=True
         )
-    date = fields.Date(
+    date = fields.Date(default=date.today()
         )
     date_today = fields.Date(
         )
     description = fields.Text(
         )
-    name = fields.Char(
-        string='Name of Institution or Person:')
+    name = fields.Many2one('res.users',
+        string='Name of Institution or Person:', default=lambda self: self.env.user, readonly=True)
     
-    printed_name = fields.Char(related='name',readonly=True,
+    printed_name = fields.Many2one('res.users',readonly=True,
         string='Printed Name')
     
     location = fields.Char(
@@ -1296,8 +1354,18 @@ class ConflictofInterest(models.Model):
     @api.multi
     def button_accept(self):
         self.write({'state': 'accept'})
+        self.printed_name = self._uid
         self.date_signed = date.today()
-        return {}
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_director_accreditation')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Assessor {} has signed Conflict of Interest Form and is awaiting approval".format(self.name.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def button_approve(self):
@@ -1319,19 +1387,36 @@ class Confidentiality(models.Model):
         default='new',
         track_visibility='onchange')
     
-    name = fields.Char(
-        string='Name of Institution or Person:',required=True)
+    application_id = fields.Many2one(
+        comodel_name='helpdesk.ticket',
+        string='Application ID',
+        readonly=False)
+    
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+    
+    number = fields.Char(
+        string='Number', related="application_id.lab_number")
+    street = fields.Char(
+        string='Street', related="application_id.lab_street")
+    city = fields.Char(
+        string='City', related="application_id.lab_city")
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', related="application_id.lab_state_id")
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', related="application_id.lab_country_id")
+    
+    
+    name = fields.Many2one('res.users',
+        string='Name of Institution or Person:', default=lambda self: self.env.user, readonly=True)
     location = fields.Char(
-        string='Location',required=True)
-    name_rep = fields.Char(
-        string='Name of Person:',required=True)
+        string='Location',required=False)
+    name_rep = fields.Many2one('res.users',
+        string='Name of Person:',required=True, default=lambda self: self.env.user, readonly=True)
     
     date = fields.Date(
         )
     description = fields.Text(
         )
     
-    signed = fields.Char(related='name_rep',readonly=True,
+    signed = fields.Many2one('res.users',readonly=True,
         string='Signed')
 
     date_signed = fields.Date(
@@ -1341,8 +1426,18 @@ class Confidentiality(models.Model):
     @api.multi
     def button_accept(self):
         self.write({'state': 'accept'})
+        self.signed = self._uid
         self.date_signed = date.today()
-        return {}
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_director_accreditation')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Assessor {} has signed Confidentiality Form and is awaiting approval".format(self.name.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def button_approve(self):
@@ -1570,7 +1665,7 @@ class OpenClose(models.Model):
     today = fields.Date(
         string = 'Date',
         default= date.today(),
-        readonly=1
+        readonly=0
         )
     oc = fields.One2many(
         comodel_name = 'open.close',
@@ -1843,15 +1938,26 @@ class AssessmentPlan(models.Model):
         track_visibility='onchange',)
     
     reference_number = fields.Char(string='Reference Number', readonly=True, required=True, index=True, copy=False, default='New') #auto-sgenerated?
-    organisation = fields.Char(related='application_id.partner_id.parent_id.name', string='Organisation', readonly=1)
-    contact_person = fields.Char(related='application_id.partner_id.child_ids.name', string='Contact Person', required=1)
-    address = fields.Char(related='application_id.partner_id.street', string='Address')
-    telephone = fields.Char(related='application_id.partner_id.phone', string='Telephone')
+    organisation = fields.Char(related='application_id.laboratory_legal_name', string='Organisation', readonly=1)
+    contact_person = fields.Char(related='application_id.partner_name', string='Contact Person', required=1)
+    address = fields.Char(string='Address')
+    
+    lab_number = fields.Char(related='application_id.lab_number', string='Number')
+    lab_street = fields.Char(related='application_id.lab_street', string='Street')
+    lab_city = fields.Char(related='application_id.lab_city', string='City')
+    lab_state_id = fields.Many2one(related='application_id.lab_state_id',comodel_name="res.country.state", string='State')
+    lab_country_id = fields.Many2one(related='application_id.lab_country_id',comodel_name='res.country', string='Country')
+    
+    telephone = fields.Char(related='application_id.telephone_number', string='Telephone')
     company_rep = fields.Char(related='application_id.partner_id.name', string='Company Representative', required=1)
     
-    assessment_date = fields.Date(string='Assessment Date', required=1)
+    assessment_date = fields.Date(string='Assessment Date', required=0)
     lead_assessor = fields.Many2one(related='application_id.lead_assessor_id', comodel_name='hr.employee', string='Lead Assessor')
-    technical_assessor = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor')
+    technical_assessor = fields.Many2one(related='application_id.tech_assessor_id',comodel_name='hr.employee', string='Technical Assessor')
+    
+    assessment_date_from = fields.Date(related='application_id.assessment_date_from',track_visibility='onchange')
+    assessment_date_to = fields.Date(related='application_id.assessment_date_to',track_visibility='onchange')
+    assessment_number_of_days = fields.Integer(related='application_id.assessment_number_of_days')
     
     day1_ids = fields.One2many(
         comodel_name='ninas.assessment.plan.activity',
@@ -1902,8 +2008,10 @@ class DecisionForm(models.Model):
         required=True,
         track_visibility='onchange',)
     
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+    
     ref = fields.Char(
-        string='Reference No.',
+        string='Reference No.',related='application_id.name',
         required=1)
     
     #link to actual employee_id
@@ -1935,8 +2043,12 @@ class DecisionForm(models.Model):
     
     assessment_date = fields.Date(
         related='application_id.assessment_date',
-        string = 'Assessment Date',
-        required=1, readonly=1)
+        string="Accreditation Date",
+        track_visibility='onchange')
+    
+    assessment_date_from = fields.Date(related='application_id.assessment_date_from',track_visibility='onchange')
+    assessment_date_to = fields.Date(related='application_id.assessment_date_to',track_visibility='onchange')
+    assessment_number_of_days = fields.Integer(related='application_id.assessment_number_of_days', string='Number of Days', store=True, track_visibility='onchange')
     
     la_recommendation = fields.Text(
         string="Lead Assessor's Recommendation",
@@ -1965,10 +2077,98 @@ class DecisionForm(models.Model):
         readonly=1)
     
     state = fields.Selection(
-        [('la_recommendation', "Lead Assessor's Recommendation"), ('aac_recommendation','AAC Recommendation'), ('da_recommendation',"Director of Accreditation's Recommendation")],
+        [
+            #('la_recommendation', "Lead Assessor's Recommendation"), ('aac_recommendation','AAC Recommendation'), 
+            ('da_recommendation',"Director of Accreditation's Recommendation")],
         string='Status',
-        default='la_recommendation',
+        default='da_recommendation',
         track_visibility='onchange')
+    
+    invoice_count = fields.Integer(compute="_invoice_count", string="Invoices", store=False)
+    checklist_count = fields.Integer(compute="_checklist_count",string="Checklist", store=False)
+    car_count = fields.Integer(compute="_car_count",string="C.A.R")
+    
+    confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
+    conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
+    recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
+    
+    @api.multi
+    def _invoice_count(self):
+        oe_invoice = self.env['account.invoice']
+        for inv in self:
+            invoice_ids = self.env['account.invoice'].search([('partner_id', '=', inv.partner_id.id)])
+            invoices = oe_invoice.browse(invoice_ids)
+            invoice_count = 0
+            for inv_id in invoices:
+                invoice_count+=1
+            inv.invoice_count = invoice_count
+        return True
+
+    @api.multi
+    def _checklist_count(self):
+        oe_checklist = self.env['checklist.ticket']
+        for pa in self:
+            domain = [('partner_id', '=', pa.partner_id.id)]
+            pres_ids = oe_checklist.search(domain)
+            pres = oe_checklist.browse(pres_ids)
+            checklist_count = 0
+            for pr in pres:
+                checklist_count+=1
+            pa.checklist_count = checklist_count
+        return True
+    
+    @api.multi
+    def _confidentiality_count(self):
+        oe_confidentiality = self.env['ninas.confidentiality']
+        for pa in self:
+            domain = [('partner_id', '=', pa.partner_id.id)]
+            pres_ids = oe_confidentiality.search(domain)
+            pres = oe_confidentiality.browse(pres_ids)
+            confidentiality_count = 0
+            for pr in pres:
+                confidentiality_count+=1
+            pa.confidentiality_count = confidentiality_count
+        return True
+    
+    @api.multi
+    def _conflict_count(self):
+        oe_conflict = self.env['ninas.conflict.interest']
+        for pa in self:
+            domain = [('partner_id', '=', pa.partner_id.id)]
+            pres_ids = oe_conflict.search(domain)
+            pres = oe_conflict.browse(pres_ids)
+            conflict_count = 0
+            for pr in pres:
+                conflict_count+=1
+            pa.conflict_count = conflict_count
+        return True
+    
+    
+    @api.multi
+    def _car_count(self):
+        car_rep = self.env['car.report']
+        for car in self:
+            domain = [('partner_id', '=', car.partner_id.id)]
+            car_ids = car_rep.search(domain)
+            cars = car_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.car_count = car_count
+        return True
+    
+    @api.multi
+    def _recommendation_count(self):
+        car_rep = self.env['ninas.recommendation.form']
+        for car in self:
+            domain = [('partner_id', '=', car.partner_id.id)]
+            car_ids = car_rep.search(domain)
+            cars = car_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.car_count = car_count
+        return True
     
     @api.multi
     def button_aac(self):
@@ -1979,6 +2179,54 @@ class DecisionForm(models.Model):
     def button_da(self):
         self.write({'state': 'da_recommendation'})
         return {}
+    
+    @api.multi
+    def open_customer_invoices(self):
+        self.ensure_one()
+        action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_checklist_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_checklist_ticket_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_confidentiality_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_confidentiality_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_conflict_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_conflict_of_interest_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_car(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_car_report_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_recommendation_form(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_recommendation_form_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
     
 class AppraisalForm(models.Model):
     _name='ninas.appraisal'
@@ -2165,6 +2413,8 @@ class RecommendationForm(models.Model):
         required=True,
         track_visibility='onchange',)
     
+    partner_id = fields.Many2one(comodel_name='res.partner', related='application_id.partner_id', string='Applicant', readonly=True)
+    
     name = fields.Char(
         related='application_id.laboratory_legal_name',
         string="Name of Institution or Lab",
@@ -2187,7 +2437,7 @@ class RecommendationForm(models.Model):
     institution_country_id = fields.Many2one('res.country', string='Country', related='application_id.lab_country_id', ondelete='restrict')
     
     reference_no = fields.Char(
-        string="Reference Number",
+        string="Reference Number",related='application_id.name',
         track_visibility='onchange')
     
     name_of_institution_rep = fields.Char(
@@ -2195,7 +2445,8 @@ class RecommendationForm(models.Model):
         string="Name of Institution Representative",
         track_visibility='onchange')
     
-    accreditation_scope = fields.Char(
+    accreditation_scope = fields.Selection(
+        related='application_id.number_of_scopes',
         string="Accreditation Scope",
         track_visibility='onchange')
     
@@ -2212,6 +2463,10 @@ class RecommendationForm(models.Model):
         related='application_id.assessment_date',
         string="Accreditation Date",
         track_visibility='onchange')
+    
+    assessment_date_from = fields.Date(related='application_id.assessment_date_from',track_visibility='onchange')
+    assessment_date_to = fields.Date(related='application_id.assessment_date_to',track_visibility='onchange')
+    assessment_number_of_days = fields.Integer(related='application_id.assessment_number_of_days', string='Number of Days', store=True, track_visibility='onchange')
     
     satisfactory_yes = fields.Boolean(string='Yes')
     
@@ -2240,6 +2495,96 @@ class RecommendationForm(models.Model):
         string='Status',
         default='incomplete',
         track_visibility='onchange')
+    
+    checklist_count = fields.Integer(compute="_checklist_count",string="Checklist", store=False)
+    car_count = fields.Integer(compute="_car_count",string="C.A.R")
+    confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
+    conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
+    
+    @api.multi
+    def _checklist_count(self):
+        oe_checklist = self.env['checklist.ticket']
+        for pa in self:
+            domain = [('partner_id', '=', pa.partner_id.id)]
+            pres_ids = oe_checklist.search(domain)
+            pres = oe_checklist.browse(pres_ids)
+            checklist_count = 0
+            for pr in pres:
+                checklist_count+=1
+            pa.checklist_count = checklist_count
+        return True
+    
+    @api.multi
+    def _confidentiality_count(self):
+        oe_confidentiality = self.env['ninas.confidentiality']
+        for pa in self:
+            domain = [('partner_id', '=', pa.partner_id.id)]
+            pres_ids = oe_confidentiality.search(domain)
+            pres = oe_confidentiality.browse(pres_ids)
+            confidentiality_count = 0
+            for pr in pres:
+                confidentiality_count+=1
+            pa.confidentiality_count = confidentiality_count
+        return True
+    
+    @api.multi
+    def _conflict_count(self):
+        oe_conflict = self.env['ninas.conflict.interest']
+        for pa in self:
+            domain = [('partner_id', '=', pa.partner_id.id)]
+            pres_ids = oe_conflict.search(domain)
+            pres = oe_conflict.browse(pres_ids)
+            conflict_count = 0
+            for pr in pres:
+                conflict_count+=1
+            pa.conflict_count = conflict_count
+        return True
+    
+    
+    @api.multi
+    def _car_count(self):
+        car_rep = self.env['car.report']
+        for car in self:
+            domain = [('partner_id', '=', car.partner_id.id)]
+            car_ids = car_rep.search(domain)
+            cars = car_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.car_count = car_count
+        return True
+    
+    @api.multi
+    def open_checklist_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_checklist_ticket_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_confidentiality_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_confidentiality_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_conflict_ticket(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_conflict_of_interest_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_car(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.ninas_car_report_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
     
     @api.multi
     def button_done(self):
