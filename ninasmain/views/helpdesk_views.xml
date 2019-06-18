@@ -4,7 +4,7 @@
   	<menuitem id="helpdesk.menu_helpdesk_root" name="Accreditation"
         sequence="25"
         web_icon="ninasmain,static/icon/ninas-logo.png"
-        groups="helpdesk.group_helpdesk_user"/>
+        groups="helpdesk.group_helpdesk_manager"/>
   	
   	<!-- Car Report action-->
     <record model="ir.actions.act_window" id="ninas_car_report_action">
@@ -125,7 +125,7 @@
                 	<!-- <button type="object" name="button_complete_reject" string="Reject" attrs="{'invisible':[('stage_id','!=',3)]}" class="btn btn-danger"/>-->
                 	<button type="object" name="action_resources_available" string="PROCEED" attrs="{'invisible':[('stage_id','!=',9)]}" class="btn btn-primary"/>
                 	<button type="object" name="action_checklist_sent" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary" invisible="1"/>
-                	<button type="object" name="button_assessor_agreement" string="PROCEED" attrs="{'invisible':[('stage_id','!=',10)]}" class="btn btn-primary" confirm="Please Make sure AL and LA has signed conflict of interest and confidentiality forms"/>
+                	<button type="object" name="button_assessor_agreement" string="PROCEED" attrs="{'invisible':[('stage_id','!=',10)]}" class="btn btn-primary" confirm="Please Make sure LA and Assessment Team has signed conflict of interest and confidentiality forms"/>
                 	<button type="object" name="button_ready_assessment" string="Proceed" attrs="{'invisible':[('stage_id','!=',17)]}" />
 					<button type="object" name="button_assessment_plan" string="Ready" attrs="{'invisible':[('stage_id','!=',19)]}" class="btn btn-primary" confirm="Please confirm that CAR's has been completely filled out"/>                	
                 	<button type="object" name="button_assessment" string="Submit" attrs="{'invisible':[('stage_id','!=',12)]}" class="btn btn-primary"/>
@@ -474,12 +474,12 @@
             <field name="team_id" position="after">
             	<!-- <field name="preassessment_needed" attrs="{'invisible':[('stage_id','!=',17)]}"/>  -->
             	<field name="resources_available" attrs="{'required':[('stage_id','=',5)], 'readonly':[('stage_id','!=',5)]}"/>
-            	<field name="conflict_agreement" attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
+            	<field name="conflict_agreement"  invisible="1" attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
                 <field name="assessment_team_ids" widget="many2many_tags" domain="[('category_ids.is_assessor','=',True)]" attrs="{'required':[('stage_id','=',9)], 'readonly':['|',('resources_available','=',False), ('stage_id','!=',9)]}"/>
             </field>
             <field name="partner_id" position="before">
-                <field name="checklist_sent" readonly="1"/>
-                <field name="confidentiality_agreement" attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
+                <field name="checklist_sent" readonly="1" invisible="1"/>
+                <field name="confidentiality_agreement" invisible="1"  attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
             </field>
              <field name="ticket_type_id" position="replace">
                 <field name="ticket_type_id" invisible="1"/>

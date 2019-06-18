@@ -556,32 +556,36 @@ class CreateInvoice(models.Model):
             self.write({'checklist_sent': True})
             self.write({'stage_id': 9})
         return {}
-    
-    
+      
     @api.multi
     def button_assessor_agreement(self):
         sub = self.env['checklist.ticket'].search([('ticket_id','=',self.id), ('partner_id', '=', self.partner_id.id)], limit=1)
         if self.confidentiality_count == 0:
             raise Warning('Confidentiality Form has not been Filled!')
+        else:
+            if self.confidentiality_count < len(self.assessment_team_ids.ids):
+                raise Warning('Confidentiality Form has not been completely Filled by assessment team!')
         #for line in self.partner_id.partner_confidentiality:
          #   if line.state not in ['approve']:
           #      raise Warning('Confidentiality Form has not been Approved!')
         if self.conflict_count == 0:
             raise Warning('Conflict of Interest Form has not been Filled!')
+        else:
+            if self.conflict_count < len(self.assessment_team_ids.ids):
+                raise Warning('Conflict of Interest Form has not been completely Filled by assessment team!')
         #for line in self.partner_id.partner_conflict:
          #   if line.state not in ['approve']:
           #      raise Warning('Conflict of Interest Form has not been Approved!')
-        else:
-            if sub.pre_assessment_needed == True:
-                self.write({'conflict_agreement': True})
-                self.write({'confidentiality_agreement': True})
-                self.write({'stage_id': 17})
             else:
-                self.write({'conflict_agreement': True})
-                self.write({'confidentiality_agreement': True})
-                self.write({'stage_id': 19})
-        return {}
-    
+                if sub.pre_assessment_needed == True:
+                    self.write({'conflict_agreement': True})
+                    self.write({'confidentiality_agreement': True})
+                    self.write({'stage_id': 17})
+                else:
+                    self.write({'conflict_agreement': True})
+                    self.write({'confidentiality_agreement': True})
+                    self.write({'stage_id': 19})
+            return {}
    
     @api.multi
     def button_ready_assessment(self):
