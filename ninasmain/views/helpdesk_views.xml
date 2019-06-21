@@ -373,10 +373,11 @@
 					<field name="scope_assessed" readonly="1"/>
 			 	</group>
 				 <group string="PART 1: Detailed Observation and Evidence"/>
-				 	<field name="brief_description" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
+				 	<group>
+				 		<field name="brief_description" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
+				 	</group>
 				 	<field name="detailed_observation" widget="html" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
 				 <group>
-				 	<field name="brief_description" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
 				 	<field name="rel_equip" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
 				 </group>
 				 <group col="4" colspan="2">
