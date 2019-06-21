@@ -385,22 +385,22 @@
 				 	<p><strong>Clearly indicate what corrective action was taken and attach supporting evidence</strong></p>
 					<field name="corrective_action" widget="html" attrs="{'required':[('state','=','assessed_lab_response')], 'readonly':[('state','!=','assessed_lab_response')]}"/>
 				<group col="4" colspan="2"><!-- , 'readonly':[('state','!=','assessed_lab_response')]} -->
-					 <field name="rep_sign" attrs="{'required':[('state','=','assessed_lab_response')]}" readonly="1"/>
-					 <field name="rep_sign_date" attrs="{'required':[('state','=','assessed_lab_response')]}" readonly="1"/>
+					 <field name="rep_sign" readonly="1"/>
+					 <field name="rep_sign_date" readonly="1"/>
 				 </group>
 				 <group string="PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED"/>
 				 	 <p><strong>Comment on the effectiveness of clearance of the NC</strong></p>
 			 		 <field name="assessor_nc" widget="html" attrs="{'required':[('state','=','lead_assessor_review')], 'readonly':[('state','!=','lead_assessor_review')]}"/>
 				 <group col="4" colspan="2">
-					 <field name="assessor_sign" attrs="{'required':[('state','=','lead_assessor_review')], 'readonly':[('state','!=','lead_assessor_review')]}"/>
-					 <field name="assessor_sign_date" attrs="{'required':[('state','=','lead_assessor_review')], 'readonly':[('state','!=','lead_assessor_review')]}"/>
+					 <field name="assessor_sign" attrs="{'readonly':[('state','!=','lead_assessor_review')]}"/>
+					 <field name="assessor_sign_date" attrs="{'readonly':[('state','!=','lead_assessor_review')]}"/>
 				 </group>
 				 <group string="PART 4: FOLLOW-UP AT NEXT ASSESSMENT"/>
 				 	<p><strong>Comment on the implementation of the corrective actions</strong></p>
 				 	<field name="implemantation" attrs="{'required':[('state','=','next_assessment')], 'readonly':[('state','!=','next_assessment')]}"/>
 				 <group col="4" colspan="2">
-				 	<field name="sign_assessor" attrs="{'required':[('state','=','next_assessment')], 'readonly':[('state','!=','next_assessment')]}"/>
-				 	<field name="sign_assessor_date" attrs="{'required':[('state','=','next_assessment')], 'readonly':[('state','!=','next_assessment')]}"/>
+				 	<field name="sign_assessor" attrs="{'readonly':[('state','!=','next_assessment')]}"/>
+				 	<field name="sign_assessor_date" attrs="{'readonly':[('state','!=','next_assessment')]}"/>
 				 </group>
 			 </sheet>
 			 <div class="oe_chatter">
