@@ -102,6 +102,7 @@ class CustomerPortal(CustomerPortal):
         )
         
         cars = request.env['car.report'].sudo().search(domain, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_cars_history'] = cars.ids[:100]
         #assessed_lab_response_state = request.env['car.report'].sudo().search([('state', '=', cars.state)])
         #lead_assessor_review_state = cars.state = 'lead_assessor_review'
         
@@ -113,8 +114,7 @@ class CustomerPortal(CustomerPortal):
         })
         
         Car = http.request.env['car.report']
-        return http.request.render("ninasmain.portal_car_ticket", values,{
-            'car':Car.search([])})
+        return http.request.render("ninasmain.portal_car_ticket", values)
         
     @http.route([
         "/my/car/<int:car_id>",

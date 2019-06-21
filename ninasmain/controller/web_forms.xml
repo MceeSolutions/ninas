@@ -121,8 +121,8 @@
                             <h4>
                                 <t t-call='portal.record_pager'/>
                                 #<span t-field="car.id"/> - <span t-field="car.name"/>
-                                <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=car.report&amp;id=%s&amp;view_type=form' % (car.id)" groups="helpdesk.group_helpdesk_user">Edit C.A.R</a>
-                       			<span t-field="car.state" class="pull-right label label-info" title="Current stage of this ticket"/>
+                                <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=car.report&amp;id=%s&amp;view_type=form' % (car.id)" t-if="car.state == 'assessed_lab_response' or assessed_lab_response" groups="base.group_portal">Edit C.A.R</a>
+                       			<span t-field="car.state" class="pull-right label label-info" title="Current stage of this c.a.r"/>
                        		</h4>
                         </div>
                     </div>
@@ -134,51 +134,92 @@
 	                </div>
 	                <div class='row'>
 	                    <strong class="col-md-2">Organization Name</strong>
-	                    	<div class="col-md-10" t-field="car.name"/>
+	                    	<div class="col-md-10" t-field="car.name"/><br/><br/>
 	                    <strong class="col-md-2">Name/Signature of Facility</strong>
-                        	<div class="col-md-10" t-field="car.faculty_rep"/>
+                        	<div class="col-md-10" t-field="car.faculty_rep"/><br/><br/>
                         <strong class="col-md-2">Reference No:</strong>
-                        	<div class="col-md-10" t-field="car.ref_no"/>
+                        	<div class="col-md-10" t-field="car.ref_no"/><br/>
                         <strong class="col-md-2">Scope Assessed:</strong>
-                        	<div class="col-md-10" t-field="car.scope_assessed"/>
+                        	<div class="col-md-10" t-field="car.scope_assessed"/><br/><br/>
 	                </div>
 	                <P><strong>PART 1: Detailed Observation and Evidence</strong></P>
 	                <div class="row">
-	                    <strong class="col-md-2">Detailed Observation and Evidence</strong>
-	                    <div class="col-md-10" t-field="car.detailed_observation" t-field-options="{'widget': 'html'}"/>
-	                    <strong class="col-md-2">Relevant Standard Requirement</strong>
-                        	<div class="col-md-10" t-field="car.rel_equip"/>
-                        <strong class="col-md-2">Name / Signature of Lead Assessor</strong>
-                        	<div class="col-md-10" t-field="car.name_lead"/>
+	                	<!-- <div class="col-xs-2" t-if="car.detailed_observation">
+			                <strong>Detailed Observation and Evidence:</strong>
+			                <p t-field="car.detailed_observation" t-field-options="{'widget': 'html'}"/>
+			            </div>
+			            <div class="col-xs-2" t-if="car.rel_equip">
+			                <strong>Relevant Standard Requirement:</strong>
+			                <p t-field="car.rel_equip"/>
+			            </div>-->
+	                    <strong class="col-md-5">Detailed Observation and Evidence</strong><br/>
+	                    	<div class="col-md-10" t-field="car.detailed_observation" t-field-options="{'widget': 'html'}"/><br/>
+	                    <strong class="col-md-4">Relevant Standard Requirement</strong>
+                        	<div class="col-md-10" t-field="car.rel_equip"/><br/>
+                        <div class="col-xs-4" t-if="car.name_lead">
+			                <strong>Name / Signature of Lead Assessor:</strong>
+			                <p t-field="car.name_lead"/>
+			            </div>
+			            <div class="col-xs-2" t-if="car.name_lead_date">
+			                <strong>Date:</strong>
+			                <p t-field="car.name_lead_date"/>
+			            </div>
+			            <div class="col-md-10"/><br/>
+			            <div class="col-xs-4" t-if="car.name_rep">
+			                <strong>Name / Signature of Representative</strong>
+			                <p t-field="car.name_rep"/>
+			            </div>
+			            <div class="col-xs-2" t-if="car.name_rep_date">
+			                <strong>Date:</strong>
+			                <p t-field="car.name_rep_date"/>
+			            </div>
+                        <!-- <strong class="col-md-2">Name / Signature of Lead Assessor</strong>
+                        	<div class="col-md-10" t-field="car.name_lead"/> 
                         <strong class="col-md-2">Date</strong>
                         	<div class="col-md-10" t-field="car.name_lead_date"/>
                         <strong class="col-md-2">Name /Signature of Representative/ Date</strong>
                         	<div class="col-md-10" t-field="car.name_rep"/>
                         <strong class="col-md-2">Date</strong>
-                        	<div class="col-md-10" t-field="car.name_rep_date"/>
+                        	<div class="col-md-10" t-field="car.name_rep_date"/>-->
 	                </div>
 	                <li t-if="car.state == 'assessed_lab_response' or car.state == 'lead_assessor_review'">
 		                <P><strong>Part 2: Corrective Action Taken</strong></P>
 		                <div class="row">
-		                    <strong class="col-md-2">(Root Cause Analysis)</strong>
-		                    <div class="col-md-10" t-field="car.root_cause" t-field-options="{'widget': 'html'}"/>
-		                    <strong class="col-md-2">Clearly indicate what corrective action was taken and attach supporting evidence</strong>
-	                        	<div class="col-md-10" t-field="car.corrective_action" t-field-options="{'widget': 'html'}"/>
-	                        <strong class="col-md-2">Signature of Representative</strong>
+		                    <strong class="col-md-5">(Root Cause Analysis)</strong><br/>
+		                    	<div class="col-md-10" t-field="car.root_cause" t-field-options="{'widget': 'html'}"/><br/>
+		                    <strong class="col-md-8">Clearly indicate what corrective action was taken and attach supporting evidence</strong><br/>
+	                        	<div class="col-md-10" t-field="car.corrective_action" t-field-options="{'widget': 'html'}"/><br/>
+	                        <div class="col-xs-4">
+				                <strong>Signature of Representative</strong>
+				                <p t-field="car.rep_sign"/>
+			            	</div>
+			            	<div class="col-xs-2" t-if="car.rep_sign_date">
+				                <strong>Date:</strong>
+				                <p t-field="car.rep_sign_date"/>
+				            </div>
+	                        <!-- <strong class="col-md-2">Signature of Representative</strong>
 	                        	<div class="col-md-10" t-field="car.rep_sign"/>
 	                        <strong class="col-md-2">Date</strong>
-	                        	<div class="col-md-10" t-field="car.rep_sign_date"/>
+	                        	<div class="col-md-10" t-field="car.rep_sign_date"/> -->
 		                </div>
 		            </li>
 		          	<li t-if="car.state == 'lead_assessor_review'">
 		                <P><strong>PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED</strong></P>
 		                <div class="row">
-		                    <strong class="col-md-2">Comment on the effectiveness of clearance of the NC</strong>
-		                    <div class="col-md-10" t-field="car.assessor_nc" t-field-options="{'widget': 'html'}"/>
-		                    <strong class="col-md-2">Signature of Assessor/ Date</strong>
+		                    <strong class="col-md-7">Comment on the effectiveness of clearance of the NC</strong><br/>
+		                    	<div class="col-md-10" t-field="car.assessor_nc" t-field-options="{'widget': 'html'}"/><br/>
+		                    <div class="col-xs-4">
+				                <strong>Signature of Assessor/ Date:</strong>
+				                <p t-field="car.assessor_sign"/>
+			            	</div>
+			            	<div class="col-xs-2">
+				                <strong>Date:</strong>
+				                <p t-field="car.assessor_sign_date"/>
+				            </div>
+		                    <!--  <strong class="col-md-2">Signature of Assessor/ Date</strong>
 	                        	<div class="col-md-10" t-field="car.assessor_sign"/>
 	                        <strong class="col-md-2">Date</strong>
-	                        	<div class="col-md-10" t-field="car.assessor_sign_date"/>
+	                        	<div class="col-md-10" t-field="car.assessor_sign_date"/> -->
 		                </div>
 		           </li> 
 	            </div>
@@ -212,7 +253,8 @@
                         	<th>ID</th>
                         	<th>Applicant</th><th/>
                         	<th>Application ID</th><th/>
-                            <th>Application Status</th>
+                            <th>Application Status</th><th/>
+                            <th>C.A.R Status</th>
                         </tr>
                     </thead>
                     <t t-foreach="car" t-as="cars">
@@ -220,7 +262,8 @@
                         	<td><a t-attf-href="/my/car/#{cars.id}">#<t t-esc="cars.id"/></a></td>
                         	<td><span t-field="cars.application_id.partner_id.name"/></td><td/>
                             <td><span t-field="cars.application_id.name"/></td><td/>
-                            <td><span t-field="cars.application_id.stage_id.name"/></td>
+                            <td><span t-field="cars.application_id.stage_id.name"/></td><td/>
+                            <td><span t-field="cars.state"/></td>
                         </tr>
                     </t>
                 </table></div>
@@ -231,6 +274,38 @@
         </t>
     </template>
     
+    <template id="helpdesk.portal_my_home_menu_helpdesk" name="Portal layout : helpdesk tickets menu entries" inherit_id="portal.portal_layout" priority="50">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'ticket' or ticket">
+                <a t-if="ticket" t-attf-href="/my/tickets?{{ keep_query() }}">Applications</a>
+                <t t-else="">Applications</t>
+            </li>
+            <li t-if="ticket">
+                #<span t-field="ticket.id"/>
+            </li>
+        </xpath>
+    </template>
+    
+    <!-- ><template id="portal_my_home_car_app_id" name="Portal My Home : Car report" inherit_id="portal.portal_my_home" priority="70">
+        <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
+	        <li t-if="car_count" class="list-group-item">
+	            <span class="badge" t-esc="car_count"/>
+	            <a href="/my/car">Corrective Action Report(s)11</a>
+	        </li>
+        </xpath>
+    </template>-->
+    
+    <template id="portal_my_home_menu_car" name="Portal layout : car menu entries" inherit_id="portal.portal_layout" priority="70">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'car'" class="active">
+                <a t-if="car" t-attf-href="/my/car?{{ keep_query() }}">C.A.R</a>
+                <t t-else="">C.A.R</t>
+            </li>
+            <!-- <li t-if="car">
+                <t t-esc="car.id"/>
+            </li>-->
+        </xpath>
+    </template>
     
     <template id="ninas_website_helpdesk_tickets_followup" inherit_id="helpdesk.tickets_followup">
     

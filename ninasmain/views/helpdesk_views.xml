@@ -349,7 +349,7 @@
         <form string="Car Report">
         	<header>
         		<button name="button_assessed_lab_response" string="Sign and Submit" states="lead_assessor_observation" type="object" class="btn btn-primary" groups="base.group_user"/>
-        		<button name="button_lead_assessor_review" string="Sign and Submit" states="assessed_lab_response" type="object" class="btn btn-primary" groups="base.group_user"/>
+        		<button name="button_lead_assessor_review" string="Sign and Submit" states="assessed_lab_response" type="object" class="btn btn-primary"/>
         		<button name="button_next_assessment" string="Sign and Submit" states="lead_assessor_review" type="object" class="btn btn-primary" groups="base.group_user"/>
         		<field name="state" widget="statusbar" statusbar_visible="lead_assessor_observation,assessed_lab_response,lead_assessor_review" readonly="1"/>
         	</header>

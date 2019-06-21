@@ -18,6 +18,7 @@ from email.policy import default
 
 class Accreditation(models.Model):
     _inherit = 'helpdesk.ticket'
+    _description = 'Application'
     
     name = fields.Char(string='Subject', required=True, index=True, copy=False, default='New')
     
@@ -45,7 +46,7 @@ class Accreditation(models.Model):
             d1=datetime.datetime.strptime(str(self.assessment_date_from),'%Y-%m-%d') 
             d2=datetime.datetime.strptime(str(self.assessment_date_to),'%Y-%m-%d')
             d3=d2-d1
-            self.assessment_number_of_days=str(d3.days)
+            self.assessment_number_of_days=str(d3.days+1)
     
     checked = fields.Integer(string="Checked", related='checklist_count')
     
@@ -285,6 +286,7 @@ class AssessmentType(models.Model):
 
 class CreateInvoice(models.Model):
     _inherit = "helpdesk.ticket"
+    _description = 'Application'
     
     type = fields.Selection([
             ('out_invoice','Customer Invoice'),
@@ -751,6 +753,7 @@ class Checklist(models.Model):
     
 class CarReport(models.Model):
     _name = 'car.report'
+    _description = 'Corrective Action Report'
     _inherit = ['mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
     
     state = fields.Selection(
@@ -791,8 +794,8 @@ class CarReport(models.Model):
     root_cause = fields.Text(string='(Root Cause Analysis)')
     corrective_action = fields.Text(string='Clearly indicate what corrective action was taken and attach supporting evidence')
     
-    rep_sign_date = fields.Date(string='Date')
-    rep_sign = fields.Char(string='Signature of Representative')
+    rep_sign_date = fields.Date(string='Date', default=date.today())
+    rep_sign = fields.Many2one(comodel_name="res.users", string='Signature of Representative', readonly=True)
     
     assessor_nc = fields.Text(string='Comment on the effectiveness of clearance of the NC')
     
@@ -816,9 +819,14 @@ class CarReport(models.Model):
     @api.multi
     def button_lead_assessor_review(self):
         self.write({'state': 'lead_assessor_review'})
-        self.rep_sign = self.application_id.partner_name
+        self.rep_sign = self._uid
         self.rep_sign_date = date.today()
-        return {}
+        return {
+                'type': 'ir.actions.act_url',
+                'url': '/my/car/%s' % (self.id),
+                'target': 'self',
+                'res_id': self.id,
+            }
     
     @api.multi
     def button_next_assessment(self):

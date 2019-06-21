@@ -228,6 +228,7 @@ class AccountInvoice(models.Model):
             invoice.message_subscribe([invoice.partner_id.id])
         self._check_duplicate_supplier_reference()
         self._onchange_send_validated_message()
+        self.action_invoice_sent()
         return self.write({'state': 'open'})
     
 
