@@ -756,6 +756,12 @@ class CarReport(models.Model):
     _description = 'Corrective Action Report'
     _inherit = ['mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
     
+    @api.model
+    def create(self, vals):
+        if vals.get('car_unique', 'New') == 'New':
+            vals['car_unique'] = self.env['ir.sequence'].next_by_code('car.report') or '/'
+        return super(CarReport, self).create(vals)
+    
     state = fields.Selection(
         [('lead_assessor_observation','Lead Assessor Observations'),('assessed_lab_response', 'Assessed Lab'),
          ('lead_assessor_review','Lead Assessor Observations'), ('next_assessment','Next Assessment')],
@@ -808,6 +814,10 @@ class CarReport(models.Model):
     sign_assessor_date = fields.Date(string='Date')
     
     ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
+    
+    brief_description = fields.Char(string='Brief Description')
+    
+    car_unique = fields.Char(string='Car', required=True, index=True, copy=False, default='New')
     
     attachment_count = fields.Integer(compute="_car_count",string="C.A.R", store=False)
     

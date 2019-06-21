@@ -334,8 +334,10 @@
 		<field name="model">car.report</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<field name="name"/>
-			<field name="ref_no"/>
+			<field name="id"/>
+			<field name="car_unique"/>
+			<!-- <field name="name"/>
+			<field name="ref_no"/> -->
 			<field name="faculty_rep"/>
 			<field name="scope_assessed"/>
 		</field>
@@ -372,6 +374,7 @@
 				 <group string="PART 1: Detailed Observation and Evidence"/>
 				 	<field name="detailed_observation" widget="html" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
 				 <group>
+				 	<field name="brief_description" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
 				 	<field name="rel_equip" attrs="{'required':[('state','=','lead_assessor_observation')], 'readonly':[('state','!=','lead_assessor_observation')]}"/>
 				 </group>
 				 <group col="4" colspan="2">

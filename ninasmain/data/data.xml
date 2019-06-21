@@ -45,6 +45,13 @@
         	<field name="padding">5</field>
         </record>
 
+		<record id="seq_car_unique" model="ir.sequence">
+        	<field name="name">Car Unique ID</field>
+        	<field name="code">car.report</field>
+        	<field name="prefix">CR</field>
+        	<field name="padding">4</field>
+        </record>
+
         <record id="payment_icon_cc_verve" model="payment.icon">
             <field name="name">Verve</field>
             <field name="image" type="base64" file="payment_gtpay/static/src/img/verve.png"/>
