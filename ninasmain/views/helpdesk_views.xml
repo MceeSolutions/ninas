@@ -350,7 +350,8 @@
         	<header>
         		<button name="button_assessed_lab_response" string="Sign and Submit" states="lead_assessor_observation" type="object" class="btn btn-primary" groups="base.group_user"/>
         		<button name="button_lead_assessor_review" string="Sign and Submit" states="assessed_lab_response" type="object" class="btn btn-primary"/>
-        		<button name="button_next_assessment" string="Sign and Submit" states="lead_assessor_review" type="object" class="btn btn-primary" groups="base.group_user"/>
+        		<button name="button_next_assessment" string="Accept,Sign and Submit" states="lead_assessor_review" type="object" class="btn btn-primary" groups="base.group_user"/>
+        		<button name="button_previous_assessment" string="Reject" states="lead_assessor_review" type="object" class="btn btn-primary" groups="base.group_user"/>
         		<field name="state" widget="statusbar" statusbar_visible="lead_assessor_observation,assessed_lab_response,lead_assessor_review" readonly="1"/>
         	</header>
 			 <sheet>
@@ -391,9 +392,9 @@
 				 <group string="PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED"/>
 				 	 <p><strong>Comment on the effectiveness of clearance of the NC</strong></p>
 			 		 <field name="assessor_nc" widget="html" attrs="{'required':[('state','=','lead_assessor_review')], 'readonly':[('state','!=','lead_assessor_review')]}"/>
-				 <group col="4" colspan="2">
-					 <field name="assessor_sign" attrs="{'readonly':[('state','!=','lead_assessor_review')]}"/>
-					 <field name="assessor_sign_date" attrs="{'readonly':[('state','!=','lead_assessor_review')]}"/>
+				 <group col="4" colspan="2"><!-- attrs="{'readonly':[('state','!=','lead_assessor_review')]}" -->
+					 <field name="assessor_sign" readonly="1"/>
+					 <field name="assessor_sign_date" readonly="1"/>
 				 </group>
 				 <group string="PART 4: FOLLOW-UP AT NEXT ASSESSMENT"/>
 				 	<p><strong>Comment on the implementation of the corrective actions</strong></p>

@@ -791,18 +791,18 @@ class CarReport(models.Model):
     name_rep = fields.Char(string='Name /Signature of Representative/ Date', related='application_id.partner_name')
     name_rep_date = fields.Date(string='Date', default=date.today())
     
-    root_cause = fields.Text(string='(Root Cause Analysis)')
-    corrective_action = fields.Text(string='Clearly indicate what corrective action was taken and attach supporting evidence')
+    root_cause = fields.Text(string='(Root Cause Analysis)', track_visibility='onchange')
+    corrective_action = fields.Text(string='Clearly indicate what corrective action was taken and attach supporting evidence', track_visibility='onchange')
     
     rep_sign_date = fields.Date(string='Date')
     rep_sign = fields.Many2one(comodel_name="res.users", string='Signature of Representative')
     
-    assessor_nc = fields.Text(string='Comment on the effectiveness of clearance of the NC')
+    assessor_nc = fields.Text(string='Comment on the effectiveness of clearance of the NC', track_visibility='onchange')
     
     assessor_sign = fields.Many2one(comodel_name="hr.employee", string='Signature of Assessor/ Date')
     assessor_sign_date = fields.Date(string='Date')
     
-    implemantation = fields.Text(string='Comment on the implementation of the corrective actions')
+    implemantation = fields.Text(string='Comment on the implementation of the corrective actions',track_visibility='onchange')
     
     sign_assessor = fields.Date(string='Signature of Assessor')
     sign_assessor_date = fields.Date(string='Date')
@@ -821,6 +821,7 @@ class CarReport(models.Model):
         self.write({'state': 'lead_assessor_review'})
         self.rep_sign = self._uid
         self.rep_sign_date = date.today()
+        self.assessor_nc = False
         return {
                 'type': 'ir.actions.act_url',
                 'url': '/my/car/%s' % (self.id),
@@ -833,6 +834,13 @@ class CarReport(models.Model):
         self.write({'state': 'next_assessment'})
         self.assessor_sign = self.application_id.lead_assessor_id
         self.assessor_sign_date = date.today()
+        return {}
+    
+    @api.multi
+    def button_previous_assessment(self):
+        self.write({'state': 'assessed_lab_response'})
+        #self.assessor_sign = self.application_id.lead_assessor_id
+        #self.assessor_sign_date = date.today()
         return {}
     
     @api.multi
