@@ -799,7 +799,7 @@ class CarReport(models.Model):
     
     assessor_nc = fields.Text(string='Comment on the effectiveness of clearance of the NC')
     
-    assessor_sign = fields.Many2one(comodel_name="hr.employee", string='Signature of Assessor/ Date', related='application_id.lead_assessor_id')
+    assessor_sign = fields.Many2one(comodel_name="hr.employee", string='Signature of Assessor/ Date')
     assessor_sign_date = fields.Date(string='Date')
     
     implemantation = fields.Text(string='Comment on the implementation of the corrective actions')
