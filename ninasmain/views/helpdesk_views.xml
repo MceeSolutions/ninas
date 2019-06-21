@@ -384,9 +384,9 @@
 				 	<field name="root_cause" rows="4" widget="html" attrs="{'required':[('state','=','assessed_lab_response')], 'readonly':[('state','!=','assessed_lab_response')]}"/>
 				 	<p><strong>Clearly indicate what corrective action was taken and attach supporting evidence</strong></p>
 					<field name="corrective_action" widget="html" attrs="{'required':[('state','=','assessed_lab_response')], 'readonly':[('state','!=','assessed_lab_response')]}"/>
-				<group col="4" colspan="2">
-					 <field name="rep_sign" attrs="{'required':[('state','=','assessed_lab_response')], 'readonly':[('state','!=','assessed_lab_response')]}"/>
-					 <field name="rep_sign_date" attrs="{'required':[('state','=','assessed_lab_response')], 'readonly':[('state','!=','assessed_lab_response')]}"/>
+				<group col="4" colspan="2"><!-- , 'readonly':[('state','!=','assessed_lab_response')]} -->
+					 <field name="rep_sign" attrs="{'required':[('state','=','assessed_lab_response')]" readonly="1"/>
+					 <field name="rep_sign_date" attrs="{'required':[('state','=','assessed_lab_response')]" readonly="1"/>
 				 </group>
 				 <group string="PART 3: CORRECTIVE ACTION VERIFIED AND CLEARED"/>
 				 	 <p><strong>Comment on the effectiveness of clearance of the NC</strong></p>

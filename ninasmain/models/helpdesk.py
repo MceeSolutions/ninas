@@ -794,12 +794,12 @@ class CarReport(models.Model):
     root_cause = fields.Text(string='(Root Cause Analysis)')
     corrective_action = fields.Text(string='Clearly indicate what corrective action was taken and attach supporting evidence')
     
-    rep_sign_date = fields.Date(string='Date', default=date.today())
-    rep_sign = fields.Many2one(comodel_name="res.users", string='Signature of Representative', readonly=True)
+    rep_sign_date = fields.Date(string='Date')
+    rep_sign = fields.Many2one(comodel_name="res.users", string='Signature of Representative')
     
     assessor_nc = fields.Text(string='Comment on the effectiveness of clearance of the NC')
     
-    assessor_sign = fields.Date(string='Signature of Assessor/ Date')
+    assessor_sign = fields.Many2one(comodel_name="hr.employee", string='Signature of Assessor/ Date', related='application_id.lead_assessor_id')
     assessor_sign_date = fields.Date(string='Date')
     
     implemantation = fields.Text(string='Comment on the implementation of the corrective actions')
