@@ -336,6 +336,7 @@
 		<field name="arch" type="xml">
 			<field name="id"/>
 			<field name="car_unique"/>
+			<field name="brief_description"/>
 			<!-- <field name="name"/>
 			<field name="ref_no"/> -->
 			<field name="faculty_rep"/>
