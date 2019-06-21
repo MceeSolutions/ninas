@@ -12,7 +12,7 @@
     'author':'Mcee',               
     'website': 'https://mceesolutions.com',
     'category': 'ninas',
-    'version':'11.0.0.0.112',
+    'version':'11.0.0.0.113',
     'application': True,
     'insatallable': True,
     'auto-install': True,

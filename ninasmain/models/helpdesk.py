@@ -815,9 +815,9 @@ class CarReport(models.Model):
     
     ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
     
-    brief_description = fields.Char(string='Brief Description')
+    brief_description = fields.Char(string='Brief C.A.R Description')
     
-    car_unique = fields.Char(string='Car', required=True, index=True, copy=False, default='New')
+    car_unique = fields.Char(string='C.A.R', required=True, index=True, copy=False, default='New')
     
     attachment_count = fields.Integer(compute="_car_count",string="C.A.R", store=False)
     
