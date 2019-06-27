@@ -2185,7 +2185,7 @@
 	        		<button name="button_aac" string="Submit" type="object" class="btn btn-primary" states="la_recommendation" groups="base.group_user"/>
 	        		<button name="button_da" string="Submit" type="object" class="btn btn-primary" states="aac_recommendation" groups="base.group_user"/>
 	        		<button type="object" name="button_awaiting_approval" string="Approve"/>
-	        		<button type="object" name="button_overule_approval" string="Overule" attrs="{'invisible':[('overule','!=',True)]}"/>
+	        		<button type="object" name="button_overule_approval" string="Overule" attrs="{'invisible':[('overule','=',True)]}"/>
 	        		<field name="state" widget="statusbar" statusbar_visible="da_recommendation" readonly="1"/>
 	        	</header>
 				<sheet>
@@ -2227,6 +2227,7 @@
 		                    </div>
 		                </button>
                     </div>
+                    <field name="overule" invisible="1"/>
 				<group><field name="application_id" widget="selection" domain="[('stage_id','=',20)]"/></group>
 					<group col="4" colspan="2">
 						<field name="institution_name" readonly="1"/>
