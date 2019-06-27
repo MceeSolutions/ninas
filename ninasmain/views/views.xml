@@ -2182,10 +2182,10 @@
 		<field name="arch" type="xml">
 			<form string="Decision Form">
 				<header>
-	        		<button name="button_aac" string="Submit" type="object" class="btn btn-primary" states="la_recommendation" groups="base.group_user"/>
-	        		<button name="button_da" string="Submit" type="object" class="btn btn-primary" states="aac_recommendation" groups="base.group_user"/>
-	        		<button type="object" name="button_awaiting_approval" string="Approve"/>
-	        		<button type="object" name="button_overule_approval" string="Overule" attrs="{'invisible':[('overule','=',True)]}"/>
+	        		<button name="button_aac" string="Submit" type="object" class="btn btn-primary" states="la_recommendation" invisible="1" groups="base.group_user"/>
+	        		<button name="button_da" string="Submit" type="object" class="btn btn-primary" states="aac_recommendation" invisible="1" groups="base.group_user"/>
+	        		<button type="object" name="button_awaiting_approval" string="Approve" groups="ninasmain.group_ceo"/>
+	        		<button type="object" name="button_overule_approval" string="Overule" attrs="{'invisible':[('overule','=',True)]}" groups="ninasmain.group_ceo"/>
 	        		<field name="state" widget="statusbar" statusbar_visible="da_recommendation" readonly="1"/>
 	        	</header>
 				<sheet>
