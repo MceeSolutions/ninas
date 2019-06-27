@@ -119,6 +119,9 @@
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="replace">
            			<button name="assign_ticket_to_self" string="Assign To Me" type="object" class="oe_highlight" groups="helpdesk.group_helpdesk_user" invisible="1"/>
 			</xpath>
+			<field name="partner_id" position="before">
+                <field name="package_sent" readonly="1" invisible="1"/>
+            </field>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="after">
                 	<button type="object" name="button_confirm_sponsor" string="Proceed" attrs="{'invisible':[('stage_id','!=',1)]}" confirm="Are you sure all uploaded documents are completed?"/>
                 	<button type="object" name="button_complete_approved" string="PROCEED" attrs="{'invisible':[('stage_id','!=',5)]}" class="btn btn-primary" confirm="Confirm Document Review Checklist has been sent"/>
@@ -131,7 +134,8 @@
                 	<button type="object" name="button_assessment" string="Submit" attrs="{'invisible':[('stage_id','!=',12)]}" class="btn btn-primary"/>
 					<button type="object" name="button_car" string="Assessment Done?" attrs="{'invisible':[('stage_id','!=',11)]}"/>
                 	<button type="object" name="button_decision_making" string="CAR Sent / Approved" attrs="{'invisible':[('stage_id','!=',13)]}"/>
-                	<button type="object" name="button_awaiting_approval" string="Send Decision Package" attrs="{'invisible':[('stage_id','!=',16)]}"/>
+                	<button type="object" name="check_ac_members" string="Send Decision Package" attrs="{'invisible':[('stage_id','!=',16)]}"/>
+                	<button type="object" name="button_awaiting_approval" string="Proceed" attrs="{'invisible':[('package_sent','!=',True)]}"/>
                 	<button type="object" name="button_approved_app" string="CEO Approval" attrs="{'invisible':[('stage_id','!=',20)]}" class="btn btn-success"/>
                 	<button type="object" name="button_reject_app" string="CEO Reject" attrs="{'invisible':[('stage_id','!=',20)]}" class="btn btn-danger"/>
                 	
@@ -311,6 +315,16 @@
 								</span><br/><br/>
 					<notebook>
 					<page string="Additional Information for Finance">
+						<group>
+							<field name="attachment_ids" readonly="1">
+								<tree>
+									<field name="datas_fname"/>
+									<field name="type"/>
+									<field name="create_uid"/>
+									<field name="create_date"/>
+								</tree>
+							</field>
+						</group>
 						<group col="4" colspan="4">
 							<field name="pre_assessment_needed" required="1"/>
 							<field name="no_of_assessor" required="1"/>
@@ -486,6 +500,7 @@
             </field>
             <field name="partner_id" position="before">
                 <field name="checklist_sent" readonly="1" invisible="1"/>
+                <field name="package_sent" readonly="1" invisible="1"/>
                 <field name="confidentiality_agreement" invisible="1"  attrs="{'required':[('stage_id','=',10)], 'readonly':[('stage_id','!=',10)], 'invisible':[('stage_id','!=',10)]}"/>
             </field>
              <field name="ticket_type_id" position="replace">

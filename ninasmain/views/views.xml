@@ -2184,6 +2184,8 @@
 				<header>
 	        		<button name="button_aac" string="Submit" type="object" class="btn btn-primary" states="la_recommendation" groups="base.group_user"/>
 	        		<button name="button_da" string="Submit" type="object" class="btn btn-primary" states="aac_recommendation" groups="base.group_user"/>
+	        		<button type="object" name="button_awaiting_approval" string="Approve"/>
+	        		<button type="object" name="button_overule_approval" string="Overule" attrs="{'invisible':[('overule','!=',True)]}"/>
 	        		<field name="state" widget="statusbar" statusbar_visible="da_recommendation" readonly="1"/>
 	        	</header>
 				<sheet>
@@ -2429,13 +2431,14 @@
 				 	<span>Accreditation Decision Recommendation Form F 773 A</span>
 				 	<p>This form is to be used by the AAC Members to review assessment reports and
 					make recommendation on accreditation decision-making</p>
+					<field name="update_record" invisible="1"/>
 					<group col="4" colspan="4">
 						<field name="reference_no"/>
 					</group>
-					<group>
-						<field name="application_id" widget="selection" domain="[('stage_id','=',16)]"/>
+					<group col="4" colspan="2">
+						<field name="application_id" widget="selection" domain="[('stage_id','=',16)]"/><button name="button_update_record" icon="fa-arrow-right" string="Update Records" type="object" class="btn btn-primary" states="incomplete"/>
 					</group>
-				    <group col="4" colspan="4">
+				    <group col="4" colspan="2">
 				    	<field name="name" readonly="1"/>
 				    	<label for="address_of_institution" string="Address of Institurion or Lab" readonly="1"/>
 	           	       	<div class="o_address_format">
@@ -2468,7 +2471,7 @@
 						<p>I am satisfied that the information is sufficient to decide that the requirements
 						for accreditation have been met. Yes<field name="satisfactory_yes"/> No<field name="satisfactory_no"/></p>
 						<group string="Recommendation">
-							<field name="recommendation" required="True"/>
+							<field name="recommendation"  attrs="{'required':[('update_record','=',True)]}"/>
 						</group>
 	                    <P><b>Note: </b>The period of suspension shall not extend beyond the date of expiry of the
 						Certificate of Accreditation</P>

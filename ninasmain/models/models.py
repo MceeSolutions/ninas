@@ -7,7 +7,7 @@ import datetime
 from datetime import date, timedelta
 from odoo import api, fields, models
 from docutils.nodes import organization
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, Warning
 from ast import literal_eval
 #from pbr.tests.testpackage.pbr_testpackage.wsgi import application
 
@@ -2070,7 +2070,7 @@ class DecisionForm(models.Model):
         ('2','Accreditation/renewal of accreditation to be deferred until all non-conformances have been cleared'),
         ('3','Accreditation/renewal of accreditation is not recommended'),
         ('4','For re-assessment only: Suspension of accreditation status or part thereof')],
-        string = 'CEO')
+        string = 'Reommendation')
     
     note = fields.Char(
         default='The period of suspension shall not extend beyond the date of expiry of the Certificate of Accreditation',
@@ -2091,6 +2091,34 @@ class DecisionForm(models.Model):
     confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
     conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
     recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
+    overule = fields.Boolean(string="overule")
+    
+    @api.multi
+    def button_awaiting_approval(self):
+        sub = self.env['ninas.recommendation.form'].search([('application_id','=',self.application_id.id), ('partner_id', '=', self.partner_id.id), ('state','=','done'),], limit=3)
+        print(sub)
+        if self.recommendation_count == 0:
+            raise Warning('Recommendation Forms has not been Filled!')
+        elif self.recommendation_count < 3:
+            raise Warning('Recommendation Forms has not been Completely Filled!')
+        else:
+            for line in sub:
+                mylist = len(sub)
+                print(mylist)
+                if mylist >= 3:
+                    if line.recommendation == '1' and self.recommendation == '1':
+                        self.application_id.button_approved_app()
+                    else:
+                        self.overule = True
+                        raise Warning('Recommendation has not been Approved for this Application')
+                else:
+                    raise Warning('Recommendation Form for this Application has being confirmed(Done)')
+            return {}
+    
+    @api.multi
+    def button_overule_approval(self):
+        if self.overule == True:
+            self.application_id.button_approved_app()
     
     @api.multi
     def _invoice_count(self):
@@ -2167,7 +2195,7 @@ class DecisionForm(models.Model):
             car_count = 0
             for ca in cars:
                 car_count+=1
-            car.car_count = car_count
+            car.recommendation_count = car_count
         return True
     
     @api.multi
@@ -2343,7 +2371,6 @@ class VehicleRequestForm(models.Model):
     sign_date = fields.Date(
         string='Date') 
     
-    
     @api.multi
     def button_reset(self):
         self.write({'state': 'new'})
@@ -2472,6 +2499,8 @@ class RecommendationForm(models.Model):
     
     satisfactory_no = fields.Boolean(string='No')
     
+    update_record = fields.Boolean(string='Update')
+    
     recommendation = fields.Selection(
         [('1','Unconditional accreditation/renewal of accreditation to be granted'),
         ('2','Accreditation/renewal of accreditation to be deferred until all non-conformances have been cleared'),
@@ -2500,6 +2529,11 @@ class RecommendationForm(models.Model):
     car_count = fields.Integer(compute="_car_count",string="C.A.R")
     confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
     conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
+    
+    @api.multi
+    def button_update_record(self):
+        self.update_record = True
+        return {}
     
     @api.multi
     def _checklist_count(self):

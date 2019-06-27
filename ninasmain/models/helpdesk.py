@@ -38,7 +38,7 @@ class Accreditation(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         return {}
-    
+            
     @api.one
     @api.depends('assessment_date_from', 'assessment_date_to')
     def _compute_number_of_days(self):
@@ -93,7 +93,7 @@ class Accreditation(models.Model):
     lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor', track_visibility='onchange',)
     tech_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor', track_visibility='onchange',)
     
-    ac_members= fields.Many2many(comodel_name='res.users',
+    ac_members = fields.Many2many(comodel_name='res.users',
                                  string='AC Members')
     
     re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
@@ -306,6 +306,8 @@ class CreateInvoice(models.Model):
     conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
     recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
     
+    package_sent = fields.Boolean(string="package sent?")
+    
     @api.multi
     def _invoice_count(self):
         oe_invoice = self.env['account.invoice']
@@ -381,7 +383,7 @@ class CreateInvoice(models.Model):
             car_count = 0
             for ca in cars:
                 car_count+=1
-            car.car_count = car_count
+            car.recommendation_count = car_count
         return True
     
     @api.onchange('stage_id')
@@ -630,14 +632,36 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_awaiting_approval(self):
-        #print(self.assessment_team_ids)
-        #print(self.assessment_team_ids.name)
-        self.write({'stage_id': 20})
-        return {}
+        sub = self.env['ninas.recommendation.form'].search([('application_id','=',self.id), ('partner_id', '=', self.partner_id.id), ('state','=','done'),], limit=3)
+        print(sub)
+        if self.recommendation_count == 0:
+            raise Warning('Recommendation Forms has not been Filled!')
+        elif self.recommendation_count < 3:
+            raise Warning('Recommendation Forms has not been Completely Filled!')
+        else:
+            for line in sub:
+                mylist = len(sub)
+                print(mylist)
+                if mylist >= 3:
+                    if line.recommendation == '1':
+                        self.write({'stage_id': 20})
+                    else:
+                        raise Warning('Recommendation has not been given for this Application')
+                else:
+                    raise Warning('Recommendation Form for this Application has being confirmed(Done)')
+            return {}
     
-    
-    
-    
+    @api.multi
+    def check_ac_members(self):
+        tested = self.ac_members.ids
+        mylist = len(tested)
+        print(tested)
+        print(mylist)
+        if not mylist >= 3:
+            raise Warning('AC Members must be a minimum of 3')
+        else:
+            self.package_sent = True
+        
     
     @api.multi
     def button_approved_app(self):
@@ -702,6 +726,8 @@ class Checklist(models.Model):
         comodel_name='helpdesk.ticket',
         string='Application ID',
         track_visibility='onchange', default=_get_default_partner)
+    
+    attachment_ids = fields.Many2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'checklist.ticket')], string='Uploaded Attachments', related='ticket_id.website_message_ids.attachment_ids')
     
     partner_id = fields.Many2one(comodel_name='res.partner', related='ticket_id.partner_id', string='Applicant', readonly=True)
     
