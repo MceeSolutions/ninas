@@ -2229,7 +2229,7 @@
                     </div>
                     <field name="update_record" invisible="1"/>
                     <field name="overule" invisible="1"/>
-					<group>
+					<group col="4" colspan="2">
 						<field name="application_id" widget="selection" domain="[('stage_id','=',20)]"/>
 						<button name="button_update_record" icon="fa-arrow-right" string="Update Records" type="object" class="btn btn-primary" states="da_recommendation"/>
 					</group>
