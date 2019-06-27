@@ -2092,7 +2092,7 @@ class DecisionForm(models.Model):
     conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
     recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
     update_record = fields.Boolean(string='Update')
-    overule = fields.Boolean(string="overule")
+    overule = fields.Boolean(string="overule", default=False)
     
     @api.multi
     def button_awaiting_approval(self):
