@@ -305,6 +305,7 @@ class CreateInvoice(models.Model):
     confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
     conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
     recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
+    decision_count = fields.Integer(compute="_decision_count",string="Recommendation", store=False)
     
     package_sent = fields.Boolean(string="package sent?")
     
@@ -384,6 +385,19 @@ class CreateInvoice(models.Model):
             for ca in cars:
                 car_count+=1
             car.recommendation_count = car_count
+        return True
+    
+    @api.multi
+    def _decision_count(self):
+        car_rep = self.env['ninas.decision_form']
+        for car in self:
+            domain = [('partner_id', '=', car.partner_id.id)]
+            car_ids = car_rep.search(domain)
+            cars = car_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.decision_count = car_count
         return True
     
     @api.onchange('stage_id')
@@ -485,6 +499,15 @@ class CreateInvoice(models.Model):
         action['domain'] = literal_eval(action['domain'])
         action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
         return action
+    
+    @api.multi
+    def open_decision_form(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.decision_form_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
     '''
     @api.multi
     def open_checklist_ticket(self):
@@ -662,6 +685,22 @@ class CreateInvoice(models.Model):
         else:
             self.package_sent = True
         
+    
+    @api.multi
+    def button_submit_decision(self):
+        if self.decision_count == 0:
+            raise Warning('Decision Form has not been Filled!')
+        else:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Decision Form has been created and awaiting Approval".format(self.number)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def button_approved_app(self):

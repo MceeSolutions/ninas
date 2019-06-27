@@ -135,8 +135,8 @@
 					<button type="object" name="button_car" string="Assessment Done?" attrs="{'invisible':[('stage_id','!=',11)]}"/>
                 	<button type="object" name="button_decision_making" string="CAR Sent / Approved" attrs="{'invisible':[('stage_id','!=',13)]}"/>
                 	<button type="object" name="check_ac_members" string="Send Decision Package" attrs="{'invisible':[('stage_id','!=',16), ('package_sent','=',True)]}"/>
-                	<button type="object" name="button_awaiting_approval" string="Proceed" attrs="{'invisible':[('package_sent','!=',True)]}"/>
-                	<button type="object" name="button_approved_app" string="CEO Approval" invisible="1" class="btn btn-success"/>
+                	<button type="object" name="button_awaiting_approval" string="Proceed" attrs="{'invisible':[('stage_id','!=',16),('package_sent','!=',True)]}"/>
+                	<button type="object" name="button_submit_decision" string="Submit Decision Form" attrs="{'invisible':[('stage_id','!=',13)]}" class="btn btn-success"/>
                 	<button type="object" name="button_reject_app" string="CEO Reject" invisible="1" class="btn btn-danger"/>
                 	
                 	<!-- <button type="object" name="button_pending_closure" string="Next Stage" attrs="{'invisible':[('stage_id','!=',21)]}"/>
@@ -154,7 +154,7 @@
                         <span class="o_stat_text">Checklist</span>
                     </div>
                 </button>
-               <button class="oe_stat_button" type="object" name="open_customer_invoices" context="{'default_partner_id': active_id}" icon="fa-pencil-square-o">
+               	<button class="oe_stat_button" type="object" name="open_customer_invoices" context="{'default_partner_id': active_id}" icon="fa-pencil-square-o">
                     <div class="o_stat_info">
                         <field name="invoice_count" class="o_stat_value"/>
                         <span class="o_stat_text">Invoices</span>
@@ -182,6 +182,12 @@
                     <div class="o_stat_info">
                         <field name="recommendation_count" class="o_stat_value"/>
                         <span class="o_stat_text">Recommendation Form</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" type="object" name="open_decision_form" context="{'default_partner_id': active_id}" icon="fa fa-group">
+                    <div class="o_stat_info">
+                        <field name="_decision_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Decision Form</span>
                     </div>
                 </button>
                <!--<button type="action" class="oe_stat_button" name="%(ninasmain.ninas_action_invoice_tree1)d" icon="fa-pencil-square-o">
