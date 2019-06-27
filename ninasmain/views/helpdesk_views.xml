@@ -186,7 +186,7 @@
                 </button>
                 <button class="oe_stat_button" type="object" name="open_decision_form" context="{'default_partner_id': active_id}" icon="fa fa-group">
                     <div class="o_stat_info">
-                        <field name="_decision_count" class="o_stat_value"/>
+                        <field name="decision_count" class="o_stat_value"/>
                         <span class="o_stat_text">Decision Form</span>
                     </div>
                 </button>
