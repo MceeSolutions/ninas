@@ -2091,6 +2091,7 @@ class DecisionForm(models.Model):
     confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
     conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
     recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
+    update_record = fields.Boolean(string='Update')
     overule = fields.Boolean(string="overule")
     
     @api.multi
@@ -2119,6 +2120,11 @@ class DecisionForm(models.Model):
     def button_overule_approval(self):
         if self.overule == True:
             self.application_id.button_approved_app()
+    
+    @api.multi
+    def button_update_record(self):
+        self.update_record = True
+        return {}
     
     @api.multi
     def _invoice_count(self):
@@ -2622,9 +2628,12 @@ class RecommendationForm(models.Model):
     
     @api.multi
     def button_done(self):
-        self.name_sign = self._uid
-        self.date = date.today()
-        self.write({'state': 'done'})
+        if self.recommendation == False:
+            raise Warning('Recommendation Form for this Application has being confirmed(Done)')
+        else:
+            self.name_sign = self._uid
+            self.date = date.today()
+            self.write({'state': 'done'})
         return {}
     
     
