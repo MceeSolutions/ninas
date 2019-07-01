@@ -18,6 +18,7 @@ from email.policy import default
 
 class Accreditation(models.Model):
     _inherit = 'helpdesk.ticket'
+    _description = 'Application'
     
     name = fields.Char(string='Subject', required=True, index=True, copy=False, default='New')
     
@@ -37,7 +38,7 @@ class Accreditation(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         return {}
-    
+            
     @api.one
     @api.depends('assessment_date_from', 'assessment_date_to')
     def _compute_number_of_days(self):
@@ -45,7 +46,7 @@ class Accreditation(models.Model):
             d1=datetime.datetime.strptime(str(self.assessment_date_from),'%Y-%m-%d') 
             d2=datetime.datetime.strptime(str(self.assessment_date_to),'%Y-%m-%d')
             d3=d2-d1
-            self.assessment_number_of_days=str(d3.days)
+            self.assessment_number_of_days=str(d3.days+1)
     
     checked = fields.Integer(string="Checked", related='checklist_count')
     
@@ -92,7 +93,7 @@ class Accreditation(models.Model):
     lead_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Lead Assessor', track_visibility='onchange',)
     tech_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor', track_visibility='onchange',)
     
-    ac_members= fields.Many2many(comodel_name='res.users',
+    ac_members = fields.Many2many(comodel_name='res.users',
                                  string='AC Members')
     
     re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
@@ -285,6 +286,7 @@ class AssessmentType(models.Model):
 
 class CreateInvoice(models.Model):
     _inherit = "helpdesk.ticket"
+    _description = 'Application'
     
     type = fields.Selection([
             ('out_invoice','Customer Invoice'),
@@ -303,6 +305,9 @@ class CreateInvoice(models.Model):
     confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
     conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
     recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
+    decision_count = fields.Integer(compute="_decision_count",string="Recommendation", store=False)
+    
+    package_sent = fields.Boolean(string="package sent?")
     
     @api.multi
     def _invoice_count(self):
@@ -379,7 +384,20 @@ class CreateInvoice(models.Model):
             car_count = 0
             for ca in cars:
                 car_count+=1
-            car.car_count = car_count
+            car.recommendation_count = car_count
+        return True
+    
+    @api.multi
+    def _decision_count(self):
+        car_rep = self.env['ninas.decision_form']
+        for car in self:
+            domain = [('partner_id', '=', car.partner_id.id)]
+            car_ids = car_rep.search(domain)
+            cars = car_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.decision_count = car_count
         return True
     
     @api.onchange('stage_id')
@@ -481,6 +499,15 @@ class CreateInvoice(models.Model):
         action['domain'] = literal_eval(action['domain'])
         action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
         return action
+    
+    @api.multi
+    def open_decision_form(self):
+        self.ensure_one()
+        action = self.env.ref('ninasmain.decision_form_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
     '''
     @api.multi
     def open_checklist_ticket(self):
@@ -556,32 +583,36 @@ class CreateInvoice(models.Model):
             self.write({'checklist_sent': True})
             self.write({'stage_id': 9})
         return {}
-    
-    
+      
     @api.multi
     def button_assessor_agreement(self):
         sub = self.env['checklist.ticket'].search([('ticket_id','=',self.id), ('partner_id', '=', self.partner_id.id)], limit=1)
         if self.confidentiality_count == 0:
             raise Warning('Confidentiality Form has not been Filled!')
+        else:
+            if self.confidentiality_count < len(self.assessment_team_ids.ids):
+                raise Warning('Confidentiality Form has not been completely Filled by assessment team!')
         #for line in self.partner_id.partner_confidentiality:
          #   if line.state not in ['approve']:
           #      raise Warning('Confidentiality Form has not been Approved!')
         if self.conflict_count == 0:
             raise Warning('Conflict of Interest Form has not been Filled!')
+        else:
+            if self.conflict_count < len(self.assessment_team_ids.ids):
+                raise Warning('Conflict of Interest Form has not been completely Filled by assessment team!')
         #for line in self.partner_id.partner_conflict:
          #   if line.state not in ['approve']:
           #      raise Warning('Conflict of Interest Form has not been Approved!')
-        else:
-            if sub.pre_assessment_needed == True:
-                self.write({'conflict_agreement': True})
-                self.write({'confidentiality_agreement': True})
-                self.write({'stage_id': 17})
             else:
-                self.write({'conflict_agreement': True})
-                self.write({'confidentiality_agreement': True})
-                self.write({'stage_id': 19})
-        return {}
-    
+                if sub.pre_assessment_needed == True:
+                    self.write({'conflict_agreement': True})
+                    self.write({'confidentiality_agreement': True})
+                    self.write({'stage_id': 17})
+                else:
+                    self.write({'conflict_agreement': True})
+                    self.write({'confidentiality_agreement': True})
+                    self.write({'stage_id': 19})
+            return {}
    
     @api.multi
     def button_ready_assessment(self):
@@ -624,14 +655,52 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_awaiting_approval(self):
-        #print(self.assessment_team_ids)
-        #print(self.assessment_team_ids.name)
-        self.write({'stage_id': 20})
-        return {}
+        sub = self.env['ninas.recommendation.form'].search([('application_id','=',self.id), ('partner_id', '=', self.partner_id.id), ('state','=','done'),], limit=3)
+        print(sub)
+        if self.recommendation_count == 0:
+            raise Warning('Recommendation Forms has not been Filled!')
+        elif self.recommendation_count < 3:
+            raise Warning('Recommendation Forms has not been Completely Filled!')
+        else:
+            for line in sub:
+                mylist = len(sub)
+                print(mylist)
+                if mylist >= 3:
+                    if line.recommendation == '1':
+                        self.write({'stage_id': 20})
+                    else:
+                        raise Warning('Recommendation has not been given for this Application')
+                else:
+                    raise Warning('Recommendation Form for this Application has being confirmed(Done)')
+            return {}
     
+    @api.multi
+    def check_ac_members(self):
+        tested = self.ac_members.ids
+        mylist = len(tested)
+        print(tested)
+        print(mylist)
+        if not mylist >= 3:
+            raise Warning('AC Members must be a minimum of 3')
+        else:
+            self.package_sent = True
+        
     
-    
-    
+    @api.multi
+    def button_submit_decision(self):
+        if self.decision_count == 0:
+            raise Warning('Decision Form has not been Filled!')
+        else:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Decision Form has been created and awaiting Approval".format(self.number)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def button_approved_app(self):
@@ -697,6 +766,8 @@ class Checklist(models.Model):
         string='Application ID',
         track_visibility='onchange', default=_get_default_partner)
     
+    attachment_ids = fields.Many2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'checklist.ticket')], string='Uploaded Attachments', related='ticket_id.website_message_ids.attachment_ids')
+    
     partner_id = fields.Many2one(comodel_name='res.partner', related='ticket_id.partner_id', string='Applicant', readonly=True)
     
     quality_manual = fields.Boolean(
@@ -747,7 +818,14 @@ class Checklist(models.Model):
     
 class CarReport(models.Model):
     _name = 'car.report'
+    _description = 'Corrective Action Report'
     _inherit = ['mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('car_unique', 'New') == 'New':
+            vals['car_unique'] = self.env['ir.sequence'].next_by_code('car.report') or '/'
+        return super(CarReport, self).create(vals)
     
     state = fields.Selection(
         [('lead_assessor_observation','Lead Assessor Observations'),('assessed_lab_response', 'Assessed Lab'),
@@ -784,23 +862,27 @@ class CarReport(models.Model):
     name_rep = fields.Char(string='Name /Signature of Representative/ Date', related='application_id.partner_name')
     name_rep_date = fields.Date(string='Date', default=date.today())
     
-    root_cause = fields.Text(string='(Root Cause Analysis)')
-    corrective_action = fields.Text(string='Clearly indicate what corrective action was taken and attach supporting evidence')
+    root_cause = fields.Text(string='(Root Cause Analysis)', track_visibility='onchange')
+    corrective_action = fields.Text(string='Clearly indicate what corrective action was taken and attach supporting evidence', track_visibility='onchange')
     
     rep_sign_date = fields.Date(string='Date')
-    rep_sign = fields.Char(string='Signature of Representative')
+    rep_sign = fields.Many2one(comodel_name="res.users", string='Signature of Representative')
     
-    assessor_nc = fields.Text(string='Comment on the effectiveness of clearance of the NC')
+    assessor_nc = fields.Text(string='Comment on the effectiveness of clearance of the NC', track_visibility='onchange')
     
-    assessor_sign = fields.Date(string='Signature of Assessor/ Date')
+    assessor_sign = fields.Many2one(comodel_name="hr.employee", string='Signature of Assessor/ Date')
     assessor_sign_date = fields.Date(string='Date')
     
-    implemantation = fields.Text(string='Comment on the implementation of the corrective actions')
+    implemantation = fields.Text(string='Comment on the implementation of the corrective actions',track_visibility='onchange')
     
     sign_assessor = fields.Date(string='Signature of Assessor')
     sign_assessor_date = fields.Date(string='Date')
     
     ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
+    
+    brief_description = fields.Char(string='Brief C.A.R Description')
+    
+    car_unique = fields.Char(string='C.A.R', required=True, index=True, copy=False, default='New')
     
     attachment_count = fields.Integer(compute="_car_count",string="C.A.R", store=False)
     
@@ -812,15 +894,28 @@ class CarReport(models.Model):
     @api.multi
     def button_lead_assessor_review(self):
         self.write({'state': 'lead_assessor_review'})
-        self.rep_sign = self.application_id.partner_name
+        self.rep_sign = self._uid
         self.rep_sign_date = date.today()
-        return {}
+        self.assessor_nc = False
+        return {
+                'type': 'ir.actions.act_url',
+                'url': '/my/car/%s' % (self.id),
+                'target': 'self',
+                'res_id': self.id,
+            }
     
     @api.multi
     def button_next_assessment(self):
         self.write({'state': 'next_assessment'})
         self.assessor_sign = self.application_id.lead_assessor_id
         self.assessor_sign_date = date.today()
+        return {}
+    
+    @api.multi
+    def button_previous_assessment(self):
+        self.write({'state': 'assessed_lab_response'})
+        #self.assessor_sign = self.application_id.lead_assessor_id
+        #self.assessor_sign_date = date.today()
         return {}
     
     @api.multi
