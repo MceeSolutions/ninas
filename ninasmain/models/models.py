@@ -64,7 +64,7 @@ class Employee(models.Model):
     _inherit = 'hr.employee'
     
     employee = fields.Char(
-        string='Employee ID', readonly=True, index=True, copy=False, default='New')
+        string='Employee ID', readonly=False, index=True, copy=False, default='New')
     
     fname = fields.Char(string='First Name')
     lname = fields.Char(string='Last Name')
