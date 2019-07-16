@@ -2515,7 +2515,8 @@
               action="TravelRequest_action_window"/>
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
-    <menuitem name="Vehicle Request" id="ninas_vehicle_request_menuitem" parent="request_main_menu" 
+                       
+    <menuitem name="Vehicle Request" id="ninas_vehicle_request_menuitem" parent="fleet.fleet_vehicles" 
     		  action="ninas_vehicle_request_action"/>
     
     <menuitem name="Contract Agreement" id="contract_agreement_main_menu" parent="helpdesk.menu_helpdesk_root"/>
