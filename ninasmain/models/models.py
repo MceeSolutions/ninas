@@ -106,13 +106,13 @@ class Employee(models.Model):
         if vals.get('employee', 'New') == 'New':
             vals['employee'] = self.env['ir.sequence'].next_by_code('hr.employee') or '/'
         return super(Employee, self).create(vals)
-    
+    '''
     @api.constrains('employee')
     def check_code(self):
         if self.employee:
             if self.search([('employee','=',self.employee),('id','!=',self.id)]):
                 return Warning('Employee ID must be unique!')
-    
+    '''
 class HrAppraisals(models.Model):
     _inherit = "hr.appraisal"
     
