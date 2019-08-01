@@ -87,7 +87,7 @@ class Employee(models.Model):
     title = fields.Char(string='Title')
 #    employee = fields.Char(string='Employee ID')
     start_date = fields.Date(string='Start Date')
-    salary = fields.Char(string='Salary')
+    salary = fields.Float(string='Salary')
     
     
     Training_date = fields.Date(string='Next Training Date')
