@@ -87,7 +87,7 @@ class Employee(models.Model):
     title = fields.Char(string='Title')
 #    employee = fields.Char(string='Employee ID')
     start_date = fields.Date(string='Start Date')
-    salary = fields.Char(string='Salary')
+    salary = fields.Float(string='Salary')
     
     
     Training_date = fields.Date(string='Next Training Date')
@@ -106,13 +106,13 @@ class Employee(models.Model):
         if vals.get('employee', 'New') == 'New':
             vals['employee'] = self.env['ir.sequence'].next_by_code('hr.employee') or '/'
         return super(Employee, self).create(vals)
-    '''
+    
     @api.constrains('employee')
     def check_code(self):
         if self.employee:
             if self.search([('employee','=',self.employee),('id','!=',self.id)]):
                 return Warning('Employee ID must be unique!')
-    '''
+    
 class HrAppraisals(models.Model):
     _inherit = "hr.appraisal"
     
