@@ -32,22 +32,22 @@
 					
 					<page name="emergencyinfo" string="Emergency Contact Information">
 						<group string="Full Name" col="4" colspan="4">
-							<field name="fname"/>
-							<field name="lname"/>
+							<field name="emergency_fname"/>
+							<field name="emergency_lname"/>
 						</group>
 						<group string="Address" col="4" colspan="4">
-							<field name="address"/>
-							<field name="unit"/>
-							<field name="city"/>
-							<field name="state_id"/>
-							<field name="zip_code"/>
+							<field name="emergency_address"/>
+							<field name="emergency_unit"/>
+							<field name="emergency_city"/>
+							<field name="emergency_state_id"/>
+							<field name="emergency_zip_code"/>
 						</group>
 						<group>
-							<field name="telphone"/>
-							<field name="phone_id"/>
+							<field name="emergency_telphone"/>
+							<field name="emergency_phone_id"/>
 						</group>
 						<group>
-							<field name="relationship"/>
+							<field name="emergency_relationship"/>
 						</group>
 					</page>
 					<page name="training_plan" string="Training Plan" groups="hr.group_hr_manager">
