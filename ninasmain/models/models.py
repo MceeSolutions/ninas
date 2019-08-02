@@ -101,6 +101,20 @@ class Employee(models.Model):
     
     employee_tin = fields.Char(string='Employee Tin Number')
     
+    emergency_fname = fields.Char(string='First Name')
+    emergency_lname = fields.Char(string='Last Name')
+    emergency_address = fields.Char(string='street address')
+    emergency_unit = fields.Char(string='Apartment Unit')
+    emergency_relationship = fields.Char(string='Relationship')
+    emergency_telphone = fields.Char(string='Primary Phone')
+    emergency_phone_id = fields.Char(string='Alternate Phone')
+    emergency_city = fields.Char(
+        string='City')
+    emergency_state_id = fields.Many2one(
+        string='State',
+        comodel_name='res.country.state')
+    emergency_zip_code = fields.Char(string='Zip Code')
+    
     @api.model
     def create(self, vals):
         if vals.get('employee', 'New') == 'New':
