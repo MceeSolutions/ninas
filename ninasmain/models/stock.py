@@ -282,6 +282,11 @@ class HrPayslipRun(models.Model):
     @api.multi
     def close_payslip_run(self):
         self.slip_ids.action_payslip_done()
+        subject = "Payslip Batch {} has been approved".format(self.name)
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return self.write({'state': 'close'})
     
     
