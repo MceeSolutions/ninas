@@ -1,6 +1,13 @@
 <odoo>
   <data>
-
+	
+	<!-- Append css to assets_backend [Use assets_frontend if website] -->
+	<template id="assets_backend" name="my custom theme" inherit_id="web.assets_backend">    
+	     <xpath expr="." position="inside">
+	           <link rel="stylesheet" href="/ninasmain/static/css/backend_assets.css"/> 
+	     </xpath>
+	</template>
+	
   	<record id="ninas_employee_form_view" model="ir.ui.view">
         <field name="name">hr.employee.form</field>
         <field name="model">hr.employee</field>
@@ -352,6 +359,17 @@
 				</notebook>
 			</sheet>
 		</field>
+	</record>
+	
+	<!-- todo list action -->
+	<record model="ir.actions.act_window" id="todo_list_action">
+	           <field name="name">Todo List</field>
+	           <field name="res_model">mail.activity</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">tree,form</field>
+	           <field name="domain">[]</field>
+	           <field name="src_model">calendar.event</field>
+	           <field name="context">{'default_res_model_id': 133 , 'default_res_name':'Calendar'}</field>
 	</record>
 	
 	
@@ -2493,6 +2511,10 @@
 	    </record>
     
     <!-- MenuItems -->
+    
+    <menuitem name="To Do" id="todo_list_menuitem" parent="calendar.mail_menu_calendar" 
+    		  action="todo_list_action"/>
+    
     <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_main_menu" groups="ninasmain.group_assessor"/>
     <menuitem name="Lead Assessor Toolkit" id="ninas_lead_toolkit_tools_main_menu" parent="ninas_lead_toolkit_main_menu"/>
     
