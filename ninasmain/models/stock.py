@@ -231,10 +231,63 @@ class AccountInvoice(models.Model):
         self.action_invoice_sent()
         return self.write({'state': 'open'})
     
-
+class ResourceCalendarLeaves(models.Model):
+    _name = "resource.calendar.leaves"
+    _inherit = ['resource.calendar.leaves','mail.thread', 'rating.mixin', 'mail.activity.mixin']
+    
+    @api.model
+    def create(self, vals):
+        a = super(ResourceCalendarLeaves, self).create(vals)
+        a.send_created_message()
+        return a
+    
+    @api.multi
+    def send_created_message(self):
+        employees = self.env['hr.employee'].search([])
+        config = self.env['mail.template'].sudo().search([('name','=','Public Holiday')], limit=1)
+        mail_obj = self.env['mail.mail']
+        if config:
+            values = config.generate_email(self.id)
+            mail = mail_obj.create(values)
+            if mail:
+                for self in employees:
+                    if self.active == True:
+                        mail.send()
     
     
+class HrPayslipRun(models.Model):
+    _name = 'hr.payslip.run'
+    _inherit = ['hr.payslip.run','mail.thread', 'rating.mixin', 'mail.activity.mixin']
+    _description = 'Payslip Batches'
     
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('submit', 'Submitted'),
+        ('close', 'Close'),
+    ], string='Status', index=True, readonly=True, copy=False, default='draft')
+    
+    @api.multi
+    def send_payslip_created_message(self):
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo','ninasmain.group_admin_finance_officer')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Payslip Batch {} has been created and needs approval".format(self.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return self.write({'state': 'submit'})
+    
+    @api.multi
+    def close_payslip_run(self):
+        self.slip_ids.action_payslip_done()
+        subject = "Payslip Batch {} has been approved".format(self.name)
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return self.write({'state': 'close'})
     
     
             
