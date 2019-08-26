@@ -842,10 +842,8 @@ class NinasBankVoucher(models.Model):
         string='Reference',
         required=0
         )
-    voucher_number = fields.Integer(
-        string='Voucher Number',
-        required=1
-        )
+    voucher_number = fields.Char(
+        string='Voucher Number', readonly=False, required=True, index=True, copy=False, default='New')
     item_date = fields.Date(
         string = 'Date', default=date.today(),
         required=1
@@ -958,6 +956,12 @@ class NinasBankVoucher(models.Model):
         self.authorised = self._uid
         return {}
     
+    @api.model
+    def create(self, vals):
+        if vals.get('voucher_number', 'New') == 'New':
+            vals['voucher_number'] = self.env['ir.sequence'].next_by_code('ninas.bank_voucher') or '/'
+        return super(NinasBankVoucher, self).create(vals)
+    
 class BankVoucher(models.Model):
     _name = 'bank.voucher'
     
@@ -981,7 +985,7 @@ class BankVoucher(models.Model):
         string='Item (Description)',
         required=1
         )
-    ref_number = fields.Integer(
+    ref_number = fields.Char(
         string='Ref. No.',
         )
     unit_code = fields.Char(
