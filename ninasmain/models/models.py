@@ -878,7 +878,7 @@ class NinasBankVoucher(models.Model):
         )
     
     total = fields.Monetary(
-        string='Total Amount',
+        string='Total Amount',compute='_total_unit',
         store=True, readonly=True
         )
     
@@ -962,6 +962,12 @@ class NinasBankVoucher(models.Model):
             vals['voucher_number'] = self.env['ir.sequence'].next_by_code('ninas.bank_voucher') or '/'
         return super(NinasBankVoucher, self).create(vals)
     
+    @api.depends('bank_voucher.amount')
+    def _total_unit(self):
+        total_unit_price = 0.0
+        for line in self.bank_voucher:
+            self.total += line.amount
+    
 class BankVoucher(models.Model):
     _name = 'bank.voucher'
     
@@ -1002,7 +1008,7 @@ class BankVoucher(models.Model):
         comodel_name = 'account.account',
         string= 'Account Code'
         ) 
-    amount = fields.Integer(
+    amount = fields.Float(
         string = 'Amount (NGN)',
         required=1
         )
