@@ -994,7 +994,8 @@ class BankVoucher(models.Model):
     budget_line = fields.Char(
         string = 'Activity/Budget Line Code'
         )
-    account_code = fields.Char(
+    account_code = fields.Many2one(
+        comodel_name = 'account.account',
         string= 'Account Code'
         ) 
     amount = fields.Integer(
