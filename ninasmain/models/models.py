@@ -838,8 +838,8 @@ class NinasBankVoucher(models.Model):
         string='Payment Method',
         required=1
         )
-    chq_number = fields.Integer(
-        string='Cheque Number',
+    chq_number = fields.Char(
+        string='Reference',
         required=0
         )
     voucher_number = fields.Integer(
@@ -867,7 +867,8 @@ class NinasBankVoucher(models.Model):
     budget_line = fields.Char(
         string = 'Activity/Budget Line Code'
         )
-    account_code = fields.Char(
+    account_code = fields.Many2one(
+        comodel_name = 'account.account',
         string= 'Account Code'
         ) 
     
@@ -885,7 +886,7 @@ class NinasBankVoucher(models.Model):
     
     prepared = fields.Many2one(comodel_name='hr.employee',
         string='Prepared by', default=_default_employee, 
-        required=1
+        required=0
         )
     reviewed = fields.Many2one(comodel_name='res.users',
         string ='Reviewed by'
