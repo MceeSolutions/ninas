@@ -885,7 +885,7 @@ class NinasBankVoucher(models.Model):
     
     prepared = fields.Many2one(comodel_name='hr.employee',
         string='Prepared by', default=_default_employee, 
-        required=1
+        required=0
         )
     reviewed = fields.Many2one(comodel_name='res.users',
         string ='Reviewed by'
