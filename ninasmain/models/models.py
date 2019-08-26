@@ -816,33 +816,38 @@ class NinasBankVoucher(models.Model):
     _name = 'ninas.bank_voucher'
     _description = 'Bank Payment Voucher'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
-
+    
+    def _default_employee(self):
+        self.env['hr.employee'].search([('user_id','=',self.env.uid)])
+        return self.env['hr.employee'].search([('user_id','=',self.env.uid)])
+    
     state = fields.Selection(
         [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
         string='Status',
         default='new',
         track_visibility='onchange')
+    
     #link to actual employee_id
     employee_id = fields.Many2one(
-        comodel_name = 'hr.employee',
+        comodel_name = 'res.partner',
         string ='Name of Payee',
-        required=1
-        )
+        required=0)
+    
     method = fields.Selection(
-        [('cash','Cash'),('chq','Cheque')],
+        [('cash','Cash'),('chq','Cheque'),('O_T','Online Transfer'),('other','Other'),],
         string='Payment Method',
         required=1
         )
     chq_number = fields.Integer(
         string='Cheque Number',
-        required=1
+        required=0
         )
     voucher_number = fields.Integer(
         string='Voucher Number',
         required=1
         )
     item_date = fields.Date(
-        string = 'Date',
+        string = 'Date', default=date.today(),
         required=1
         )
     item = fields.Char(
@@ -854,7 +859,7 @@ class NinasBankVoucher(models.Model):
         )
     unit_code = fields.Char(
         string='Unit Code',
-        required=1
+        required=0
         )
     fund_code = fields.Char(
         string ='Fund Code'
@@ -878,21 +883,21 @@ class NinasBankVoucher(models.Model):
         store=True, readonly=True
         )
     
-    prepared = fields.Char(
-        string='Prepared by',
+    prepared = fields.Many2one(comodel_name='hr.employee',
+        string='Prepared by', default=_default_employee, 
         required=1
         )
-    reviewed = fields.Char(
+    reviewed = fields.Many2one(comodel_name='res.users',
         string ='Reviewed by'
         )
-    authorised = fields.Char(
+    authorised = fields.Many2one(comodel_name='res.users',
         string = 'Authorised Manager/Signatory'
         )
     account_number = fields.Char(
-        string= 'Account Number'
+        string= 'Account Number',
         ) 
-    tin = fields.Integer(
-        string = 'TIN'
+    tin = fields.Char(
+        string = 'TIN', related="employee_id.vendor_tin"
         )
     bank = fields.Char(
         string ='Bank Name'
@@ -900,12 +905,21 @@ class NinasBankVoucher(models.Model):
     signature = fields.Char(
         string = 'Signature'
         )
-    date = fields.Date(
+    date_prepared = fields.Date(
+        string= 'Date', default=date.today()
+        )
+    date_reviewed = fields.Date(
+        string= 'Date'
+        )
+    date_authorised = fields.Date(
+        string= 'Date'
+        )
+    date_sign = fields.Date(
         string= 'Date'
         )
     bank_voucher = fields.One2many(
         comodel_name='bank.voucher',
-        inverse_name='employee_id',
+        inverse_name='bank_voucher_id',
         string='Bank Voucher'
         )
     
@@ -932,27 +946,39 @@ class NinasBankVoucher(models.Model):
     @api.multi
     def button_validate(self):
         self.write({'state': 'validate'})
+        self.date_reviewed = date.today()
+        self.reviewed = self._uid
         return {}
     
     @api.multi
     def button_ceo(self):
         self.write({'state': 'ceo'})
+        self.date_authorised = date.today()
+        self.authorised = self._uid
         return {}
     
 class BankVoucher(models.Model):
     _name = 'bank.voucher'
     
+    def _default_employee(self):
+        self.env['hr.employee'].search([('user_id','=',self.env.uid)])
+        return self.env['hr.employee'].search([('user_id','=',self.env.uid)])
+    
+    bank_voucher_id = fields.Many2one(
+        comodel_name = 'ninas.bank_voucher',
+        string ='Bank Voucher')
+    
     employee_id = fields.Many2one(
         comodel_name = 'hr.employee',
-        string ='Name of Payee'
-        )
+        string ='Name of Payee', default=_default_employee)
+    
     item_date = fields.Date(
-        string = 'Date',
+        string = 'Date', default=date.today(),
         required=1
         )
     item = fields.Char(
         string='Item (Description)',
-        required=0
+        required=1
         )
     ref_number = fields.Integer(
         string='Ref. No.',
@@ -971,11 +997,12 @@ class BankVoucher(models.Model):
         string= 'Account Code'
         ) 
     amount = fields.Integer(
-        string = 'Amount (NGN)'
+        string = 'Amount (NGN)',
+        required=1
         )
-    total = fields.Integer(
-        string='Total Amount',
-        )
+    #total = fields.Integer(
+     #   string='Total Amount',
+      #  )
     
     
 class NinasExpenseClaim(models.Model):
