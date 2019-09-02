@@ -267,6 +267,11 @@ class HrPayslipRun(models.Model):
     ], string='Status', index=True, readonly=True, copy=False, default='draft')
     
     @api.multi
+    def compute_all_sheets(self):
+        self.slip_ids.compute_sheet()
+        return True
+    
+    @api.multi
     def send_payslip_created_message(self):
         group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo','ninasmain.group_admin_finance_officer')
         user_ids = []
