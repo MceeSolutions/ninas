@@ -332,6 +332,7 @@
         	</xpath>
         	<xpath expr="//button[@name='close_payslip_run']" position="before">
         		<button name="send_payslip_created_message" string="Submit to Manager" type="object" states="draft,close" groups="ninasmain.group_admin_finance_officer"/>
+        		<button name="compute_all_sheets" string="Compute All Sheets" type="object" states="draft" groups="ninasmain.group_admin_finance_officer"/>
         	</xpath>
         	<xpath expr="//sheet" position="after">
         		<div class="oe_chatter">
