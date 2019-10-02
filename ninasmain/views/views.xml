@@ -1023,8 +1023,8 @@
 						<notebook>
 							<page string="Authorizing Officer">
 								<group col="4" colspan="2">
-									<field name="vehicle_no"/>
-									<field name="drivers_name"/>
+									<field name="vehicle_no" attrs="{'required':[('state','=', 'submit')]}"/>
+									<field name="drivers_name" attrs="{'required':[('state','=', 'submit')]}"/>
 									<field name="authorized_sign" readonly="1"/>
 									<field name="sign_date" readonly="1"/>
 								</group>

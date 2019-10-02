@@ -362,6 +362,17 @@ class TravelRequest(models.Model):
         self.today_date = date.today()
         self.traveler_date = date.today()
         self.traveler_sign = self._uid
+        if self.state in ['submit']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_admin_finance_officer')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Travel request from {} has been made".format(self.name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
         return {}
     
     @api.multi
@@ -369,6 +380,19 @@ class TravelRequest(models.Model):
         self.write({'state': 'approve'})
         self.linemanager_sign = self._uid
         self.linemanager_date = date.today()
+        self.send_vehicle_request_done_message()
+        return {}
+    
+    @api.multi
+    def send_vehicle_request_done_message(self):
+        if self.state in ['approve']:
+            config = self.env['mail.template'].sudo().search([('name','=','travel request approved')], limit=1)
+            mail_obj = self.env['mail.mail']
+            if config:
+                values = config.generate_email(self.id)
+                mail = mail_obj.create(values)
+                if mail:
+                    mail.send()
         return {}
     
     @api.multi
@@ -2463,8 +2487,21 @@ class VehicleRequestForm(models.Model):
         self.write({'state': 'approve'})
         self.authorized_sign = self._uid
         self.sign_date = date.today()
+        self.send_vehicle_request_done_message()
         if self.state in ['approve']:
             config = self.env['mail.template'].sudo().search([('name','=','vehicle request approved')], limit=1)
+            mail_obj = self.env['mail.mail']
+            if config:
+                values = config.generate_email(self.id)
+                mail = mail_obj.create(values)
+                if mail:
+                    mail.send()
+        return {}
+    
+    @api.multi
+    def send_vehicle_request_done_message(self):
+        if self.state in ['approve']:
+            config = self.env['mail.template'].sudo().search([('name','=','vehicle assigned')], limit=1)
             mail_obj = self.env['mail.mail']
             if config:
                 values = config.generate_email(self.id)
