@@ -2500,14 +2500,13 @@ class VehicleRequestForm(models.Model):
     
     @api.multi
     def send_vehicle_request_done_message(self):
-        if self.state in ['approve']:
-            config = self.env['mail.template'].sudo().search([('name','=','vehicle assigned')], limit=1)
-            mail_obj = self.env['mail.mail']
-            if config:
-                values = config.generate_email(self.id)
-                mail = mail_obj.create(values)
-                if mail:
-                    mail.send()
+        config = self.env['mail.template'].sudo().search([('name','=','vehicle assigned')], limit=1)
+        mail_obj = self.env['mail.mail']
+        if config:
+            values = config.generate_email(self.id)
+            mail = mail_obj.create(values)
+            if mail:
+                mail.send()
         return {}
     
     @api.multi
