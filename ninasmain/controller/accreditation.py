@@ -183,6 +183,7 @@ class CustomerPortal(CustomerPortal):
             request.env['mail.message'].create({
                 'attachment_ids': [(4, attach.id)],
                 'author_id': request.env.user.partner_id.id,
+                'email_from': request.env.user.partner_id.email,
                 'model': 'helpdesk.ticket',
                 'res_id': int(ticket_id) or False,
                 'message_type': 'comment',
@@ -236,6 +237,7 @@ class CustomerPortal(CustomerPortal):
             request.env['mail.message'].sudo().create({
                 'attachment_ids': [(4, attach.id)],
                 'author_id': request.env.user.partner_id.id,
+                'email_from': request.env.user.partner_id.email,
                 'model': 'account.invoice',
                 'res_id': int(invoice_id) or False,
                 'message_type': 'comment',

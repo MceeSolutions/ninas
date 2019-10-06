@@ -619,6 +619,16 @@
 		<field name="domain">[]</field>
 		<field name="context">{}</field>
 	</record>
+	
+	<!-- ninas archive action -->
+	<record model="ir.actions.act_window" id="ninas_documents_archive_action">
+	           <field name="name">Ninas Document</field>
+	           <field name="res_model">ninas.documents.archive</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">kanban,tree,form</field>
+	           <field name="domain">[]</field>
+	           <field name="context">{}</field>
+	</record>
     
     <!-- loan request  tree view-->
     <record id="loan_request_tree_view" model="ir.ui.view">
@@ -2511,6 +2521,81 @@
 	        </form>
 	    </field>
 	    </record>
+	    
+	<!-- ninas documents archive tree view-->
+    <record id="ninas_documents_archive_tree_view" model="ir.ui.view">
+		<field name="name">ninas.documents.archive.tree</field>
+		<field name="model">ninas.documents.archive</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<field name="name"/>
+			<field name="document_type_id"/>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="ninas_documents_archive_form_view">
+		<field name="name">ninas.documents.archive.form</field>
+		<field name="model">ninas.documents.archive</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Ninas Documents">
+				<sheet>
+					<h1>
+	                    <field name="name" placeholder="Document Name"/> 
+	                </h1>
+					<group col="4" colspan="2">
+						<field name="employee_id"/>
+						<field name="department_id" readonly="1"/>
+						<field name="document_type_id"/>
+					</group>
+					<group>
+						<field name="file" filename="datas_fname"/>
+						<field name="datas_fname" invisible="1" class="oe_inline oe_right"/>
+					</group>
+					<separator string="Notes"/>
+                    <field name="description" placeholder="e.g. Description of the attached document..."/>
+				</sheet>
+				<div class="oe_chatter">
+		        	<field name="message_follower_ids" widget="mail_followers"/>
+		            <field name="activity_ids" widget="mail_activity"/>
+			        <field name="message_ids" widget="mail_thread"/>
+			    </div>
+			</form>
+		</field>
+	</record>
+	
+	<record id="ninas_documents_kanban_view" model="ir.ui.view">
+        <field name="name">ninas.documents.archive.kanban</field>
+        <field name="model">ninas.documents.archive</field>
+        <field name="arch" type="xml">
+            <kanban class="o_ninas_documents_kanban">
+                <field name="id"/>
+                <field name="name"/>
+     			<field name="department_id"/>
+                <field name="datas_fname"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click ">
+                            <div class="o_kanban_image">
+                                <img alt="Avatar" src='ninasmain/static/icon/docs.png' style="max-height: 55px;"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                <field name="name"/>
+                                </strong>
+                            <div t-if="record.department_id.value">
+                                    Department: <t t-esc="record.department_id.value"/>
+                            </div>
+                                <div t-if="record.datas_fname.value">
+                                    File: <t t-esc="record.datas_fname.value"/>
+                            </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
     
     <!-- MenuItems -->
     
@@ -2604,6 +2689,11 @@
               action="ninas_recommendation_form_action" sequence="1"/>
    	<menuitem name="Decision Form" id="decision_form_menu" parent="ninas_aac_main_menu" 
     		  action="decision_form_action" sequence="2"/>
+    
+    <menuitem name="Documents" id="ninas_documents_archive_main_menu" web_icon="ninasmain,static/icon/ninas-doc.png"/>
+    <menuitem name="Files" id="ninas_documents_archive_tools_main_menu" parent="ninas_documents_archive_main_menu"/>
+    <menuitem id="menu_ninas_documents_archive" name="Files" parent="ninas_documents_archive_main_menu" action="ninas_documents_archive_action"/>
+		
     
   </data>
 </odoo>

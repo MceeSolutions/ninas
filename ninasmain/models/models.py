@@ -2500,13 +2500,14 @@ class VehicleRequestForm(models.Model):
     
     @api.multi
     def send_vehicle_request_done_message(self):
-        config = self.env['mail.template'].sudo().search([('name','=','vehicle assigned')], limit=1)
-        mail_obj = self.env['mail.mail']
-        if config:
-            values = config.generate_email(self.id)
-            mail = mail_obj.create(values)
-            if mail:
-                mail.send()
+        if self.state in ['approve']:
+            config = self.env['mail.template'].sudo().search([('name','=','vehicle assigned')], limit=1)
+            mail_obj = self.env['mail.mail']
+            if config:
+                values = config.generate_email(self.id)
+                mail = mail_obj.create(values)
+                if mail:
+                    mail.send()
         return {}
     
     @api.multi
@@ -2731,7 +2732,17 @@ class RecommendationForm(models.Model):
             self.write({'state': 'done'})
         return {}
     
+class DocumentsArchive(models.Model):
+    _name='ninas.documents.archive'
+    _description='Ninas Documents'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     
-    
+    name = fields.Char(string="Name of Document", track_visibility='onchange', required=True)
+    datas_fname = fields.Char('File Name')
+    employee_id = fields.Many2one(comodel_name="hr.employee", string='Employee', default=lambda self: self.employee_id.user_id.env.uid)
+    department_id = fields.Many2one(comodel_name="hr.department", string='Department', related='employee_id.department_id')
+    document_type_id = fields.Many2one(comodel_name="document.type", string='Document Type')
+    file = fields.Binary(string='Document', required=True)
+    description = fields.Text(string='Note(s)')
     
     
