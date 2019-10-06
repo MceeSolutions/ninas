@@ -754,7 +754,7 @@
         	<header>
         		<button name="button_submit" string="Submit" type="object" class="btn btn-primary" states="new" groups="base.group_user"/>
         		<button name="button_approve" string="Approve" type="object" class="btn btn-primary" states="submit" groups="ninasmain.group_hr_line_manager"/>
-        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit" groups="ninasmain.group_hr_line_manager"/>
+        		<button name="button_reject" string="Reject" type="object" class="btn btn-danger" states="submit,approve" groups="ninasmain.group_hr_line_manager,ninasmain.group_ceo"/>
         		<button name="button_reset" string="Reset" type="object" class="btn btn-primary" states="reject"/>
         		<button name="button_validate" string="Validate" type="object" class="btn btn-primary" states="approve" groups="ninasmain.group_admin_finance_officer"/>
         		<button name="button_ceo" string="CEO Validation" type="object" class="btn btn-primary" states="validate" groups="ninasmain.group_ceo"/>
@@ -2636,14 +2636,10 @@
 	<menuitem name="Requests" id="request_main_menu" parent="hr.menu_hr_root"/>
     <menuitem name="Loan Request" id="loan_request_menu" parent="request_main_menu"
               action="LoanRequest_action_window"/>
-   	<menuitem name="Travel Request" id="travel_request_menu" parent="request_main_menu"
-              action="TravelRequest_action_window"/>
+   	
     <menuitem name="Advance Request" id="advance_request_menu" parent="request_main_menu"
               action="ninas_advance_request_action"/>
-                       
-    <menuitem name="Vehicle Request" id="ninas_vehicle_request_menuitem" parent="fleet.fleet_vehicles" 
-    		  action="ninas_vehicle_request_action"/>
-    
+                           
     <menuitem name="Contract Agreement" id="contract_agreement_main_menu" parent="helpdesk.menu_helpdesk_root"/>
     <menuitem name="Conflict Of Interest" id="conflict_of_interest_menu" parent="contract_agreement_main_menu"
               action="ninas_conflict_of_interest_action"/>
@@ -2705,6 +2701,12 @@
               action="ninas_recommendation_form_action" sequence="1"/>
    	<menuitem name="Decision Form" id="decision_form_menu" parent="ninas_aac_main_menu" 
     		  action="decision_form_action" sequence="2"/>
+    
+    <menuitem name="Logistics" id="fleet.menu_root" sequence="115" groups="fleet.fleet_group_user" web_icon="fleet,static/description/icon.png"/>
+    <menuitem name="Vehicle Request" id="ninas_vehicle_request_menuitem" parent="fleet.menu_root" 
+    		  action="ninas_vehicle_request_action"/>
+   	<menuitem name="Travel Request" id="travel_request_menu" parent="fleet.menu_root"
+              action="TravelRequest_action_window"/>
     
     <menuitem name="Documents" id="ninas_documents_archive_main_menu" web_icon="ninasmain,static/icon/ninas-doc.png"/>
     <menuitem name="Files" id="ninas_documents_archive_tools_main_menu" parent="ninas_documents_archive_main_menu"/>
