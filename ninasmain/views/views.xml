@@ -620,14 +620,30 @@
 		<field name="context">{}</field>
 	</record>
 	
-	<!-- ninas archive action -->
+	<record id="view_ninas_documents_archive_filter" model="ir.ui.view">
+        <field name="name">ninas.documents.archive.search</field>
+        <field name="model">ninas.documents.archive</field>
+        <field name="arch" type="xml">
+            <search string="Ninas Documents">
+                <field name="department_id"/>
+                <filter name="my_department" string="My Department" domain="[('department_id.member_ids.user_id', 'in', [uid])]"/>
+                <separator/>
+                <group expand="1" string="Group By">
+                    <filter string="Department" name="group_department" context="{'group_by':'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+	
+	<!-- ninas documents archive action -->
 	<record model="ir.actions.act_window" id="ninas_documents_archive_action">
 	           <field name="name">Ninas Document</field>
 	           <field name="res_model">ninas.documents.archive</field>
 	           <field name="view_type">form</field>
 	           <field name="view_mode">kanban,tree,form</field>
+	           <field name="search_view_id" ref="view_ninas_documents_archive_filter"/>
 	           <field name="domain">[]</field>
-	           <field name="context">{}</field>
+	           <field name="context">{'search_default_group_department':1, 'search_default_my_department':0}</field>
 	</record>
     
     <!-- loan request  tree view-->

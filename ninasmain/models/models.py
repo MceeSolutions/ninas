@@ -2740,9 +2740,9 @@ class DocumentsArchive(models.Model):
     name = fields.Char(string="Name of Document", track_visibility='onchange', required=True)
     datas_fname = fields.Char('File Name')
     employee_id = fields.Many2one(comodel_name="hr.employee", string='Employee', default=lambda self: self.employee_id.user_id.env.uid)
-    department_id = fields.Many2one(comodel_name="hr.department", string='Department', related='employee_id.department_id')
+    department_id = fields.Many2one(comodel_name="hr.department", string='Department', related="employee_id.department_id", store=True)
     document_type_id = fields.Many2one(comodel_name="document.type", string='Document Type')
-    file = fields.Binary(string='Document', required=True)
+    file = fields.Binary(string='Document', required=True, store=True)
     description = fields.Text(string='Note(s)')
-    
+
     
