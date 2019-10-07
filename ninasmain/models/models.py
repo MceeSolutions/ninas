@@ -135,16 +135,18 @@ class HrAppraisals(models.Model):
 class Holidays(models.Model):
     _name = "hr.holidays"
     _inherit = 'hr.holidays'
-    
 
     assigned_to = fields.Many2one(
         comodel_name="hr.employee",
         string='Duties Assigned To', required=False)
+    
     title = fields.Char(string='Title Name')
+    
     agency = fields.Selection(
         [('unido','UNIDO'),('other', 'Others')],
         string='Agency',
         default='unido')
+    
     planned_leave = fields.Selection(
         [('yes','Yes'),('no', 'No')],
         string='Planned Leave')
@@ -363,7 +365,7 @@ class TravelRequest(models.Model):
         self.traveler_date = date.today()
         self.traveler_sign = self._uid
         if self.state in ['submit']:
-            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_admin_finance_officer')
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_hr_line_manager')
             user_ids = []
             partner_ids = []
             for user in group_id.users:
@@ -380,12 +382,22 @@ class TravelRequest(models.Model):
         self.write({'state': 'approve'})
         self.linemanager_sign = self._uid
         self.linemanager_date = date.today()
-        self.send_vehicle_request_done_message()
+        if self.state in ['approve']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_admin_finance_officer')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Travel request from {} has been approved by line manager".format(self.name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
         return {}
     
     @api.multi
     def send_vehicle_request_done_message(self):
-        if self.state in ['approve']:
+        if self.state in ['validate']:
             config = self.env['mail.template'].sudo().search([('name','=','travel request approved')], limit=1)
             mail_obj = self.env['mail.mail']
             if config:
@@ -405,6 +417,18 @@ class TravelRequest(models.Model):
         self.write({'state': 'validate'})
         self.admin_sign = self._uid
         self.admin_date = date.today()
+        self.send_vehicle_request_done_message()
+        if self.state in ['validate']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Travel request from {} has been Validated by Finance".format(self.name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
         return {}
     
     @api.multi
@@ -2732,7 +2756,22 @@ class RecommendationForm(models.Model):
             self.write({'state': 'done'})
         return {}
     
+class DocumentsArchive(models.Model):
+    _name='ninas.documents.archive'
+    _description='Ninas Documents'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     
+    def _get_employee_id(self):
+        employee_rec = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return employee_rec.id
+    
+    name = fields.Char(string="Name of Document", track_visibility='onchange', required=True)
+    datas_fname = fields.Char('File Name')
+    employee_id = fields.Many2one(comodel_name="hr.employee", string='Employee', default=_get_employee_id)
+    department_id = fields.Many2one(comodel_name="hr.department", string='Department', related="employee_id.department_id", store=True)
+    document_type_id = fields.Many2one(comodel_name="document.type", string='Document Type')
+    file = fields.Binary(string='Document', required=True, store=True)
+    description = fields.Text(string='Note(s)')
     
     
     

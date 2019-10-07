@@ -5,6 +5,7 @@ from odoo.http import request
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.addons.portal.controllers.portal import get_records_pager, pager as portal_pager, CustomerPortal
 import base64
+from email.utils import formataddr
 
 class Accreditation(http.Controller):
     @http.route('''/accreditation/<model("helpdesk.team", "[('use_website_helpdesk_form','=',True)]"):team>/submit''', type='http', auth="user", website=True)
@@ -183,6 +184,7 @@ class CustomerPortal(CustomerPortal):
             request.env['mail.message'].create({
                 'attachment_ids': [(4, attach.id)],
                 'author_id': request.env.user.partner_id.id,
+                'email_from': formataddr((request.env.user.name, request.env.user.email)),
                 'model': 'helpdesk.ticket',
                 'res_id': int(ticket_id) or False,
                 'message_type': 'comment',
@@ -236,6 +238,7 @@ class CustomerPortal(CustomerPortal):
             request.env['mail.message'].sudo().create({
                 'attachment_ids': [(4, attach.id)],
                 'author_id': request.env.user.partner_id.id,
+                'email_from': formataddr((request.env.user.name, request.env.user.email)),
                 'model': 'account.invoice',
                 'res_id': int(invoice_id) or False,
                 'message_type': 'comment',
