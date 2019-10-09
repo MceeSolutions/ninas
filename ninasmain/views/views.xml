@@ -259,6 +259,9 @@
              <field name="name" position="before">
                 <field name="planned_leave"/>
             </field>
+             <xpath expr="//header" position="inside">
+	                <button name="button_ceo" type="object" states='validate' string="Ceo Validation" class="oe_highlight" groups="ninasmain.group_ceo"/>
+        	 </xpath>
         </field>
     </record>
     

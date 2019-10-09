@@ -135,7 +135,21 @@ class HrAppraisals(models.Model):
 class Holidays(models.Model):
     _name = "hr.holidays"
     _inherit = 'hr.holidays'
-
+    
+    state = fields.Selection([
+        ('draft', 'To Submit'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'To Approve'),
+        ('refuse', 'Refused'),
+        ('validate1', 'Second Approval'),
+        ('validate', 'Approved'),
+        ('ceo','CEO Validation')
+        ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
+            help="The status is set to 'To Submit', when a leave request is created." +
+            "\nThe status is 'To Approve', when leave request is confirmed by user." +
+            "\nThe status is 'Refused', when leave request is refused by manager." +
+            "\nThe status is 'Approved', when leave request is approved by manager.")
+    
     assigned_to = fields.Many2one(
         comodel_name="hr.employee",
         string='Duties Assigned To', required=False)
@@ -155,6 +169,11 @@ class Holidays(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     date_to = fields.Date('End Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+    
+    @api.multi
+    def button_ceo(self):
+        self.write({'state': 'ceo'})
+        return {}
     
     
 class LoanRequest(models.Model):
