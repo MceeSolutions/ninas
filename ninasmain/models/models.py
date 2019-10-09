@@ -436,7 +436,6 @@ class TravelRequest(models.Model):
         self.write({'state': 'validate'})
         self.admin_sign = self._uid
         self.admin_date = date.today()
-        self.send_vehicle_request_done_message()
         if self.state in ['validate']:
             group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
             user_ids = []
@@ -455,6 +454,7 @@ class TravelRequest(models.Model):
         self.write({'state': 'ceo'})
         self.ceo_sign = self._uid
         self.ceo_date = date.today()
+        self.send_vehicle_request_done_message()
         return {}
     
     @api.model
