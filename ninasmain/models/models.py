@@ -3060,7 +3060,9 @@ class DocumentsArchiveCategory(models.Model):
     _description='Ninas Folders'
     
     name = fields.Char(string="Folder Name", track_visibility='onchange', required=True)
-    
+
+
+'''    
 class ResourceCalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
 
@@ -3080,4 +3082,5 @@ class ResourceCalendarLeaves(models.Model):
             if mail:
                 mail.send()
         return {}
+'''
     
