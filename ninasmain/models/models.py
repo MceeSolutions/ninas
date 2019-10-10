@@ -3069,7 +3069,7 @@ class ResourceCalendarLeaves(models.Model):
     @api.model
     def create(self, vals):
         result = super(ResourceCalendarLeaves, self).create(vals)
-        result.send_mail()
+        #result.send_mail()
         return result
     
     @api.multi
