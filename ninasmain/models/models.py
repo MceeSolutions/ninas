@@ -9,6 +9,7 @@ from odoo import api, fields, models
 from docutils.nodes import organization
 from odoo.exceptions import ValidationError, Warning
 from ast import literal_eval
+from odoo.exceptions import UserError, RedirectWarning
 #from pbr.tests.testpackage.pbr_testpackage.wsgi import application
 
 class Partner(models.Model):
@@ -2599,11 +2600,118 @@ class AppraisalForm(models.Model):
     
     date=fields.Date(
         string='Date')
+
+class VehicleFuelRequestForm(models.Model):
+    _name='ninas.vehicle.fuel.request'
+    _description='Vehicle Fuel Request'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    state = fields.Selection(
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected')],
+        string='Status',
+        default='new',
+        track_visibility='onchange')
+    
+    def _get_employee_id(self):
+        employee_rec = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return employee_rec.id
+    
+    name = fields.Many2one(comodel_name="hr.employee",string='Driver', default=_get_employee_id, required=True)
+    vehicle_id = fields.Many2one(comodel_name="fleet.vehicle", string='Vehicle')
+    vehicle_no = fields.Char(string='Vehicle No')
+    date_request=fields.Date(
+        string='Date Requested')
+    price_per_litre = fields.Float(string='Price per litre')
+    no_of_litre = fields.Float(string='No. of litre')
+    
+    price_subtotal = fields.Float(string='Estimated Amount', compute='_total_unit', readonly=True)
+    
+    authorized_sign = fields.Many2one(
+        comodel_name="res.users",
+        string='Signature')
+    
+    sign_date = fields.Date(
+        string='Date')
+    
+    @api.depends('price_per_litre','no_of_litre')
+    def _total_unit(self):
+        self.price_subtotal = self.price_per_litre * self.no_of_litre
+    
+    @api.multi
+    def button_submit(self):
+        self.write({'state': 'submit'})
+        if self.state in ['submit']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_logistics','ninasmain.group_admin_finance_officer')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Vehicle request from {} has been made".format(self.name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
+        return {}
+    
+    @api.multi
+    def button_approve(self):
+        self._check_line_manager()
+        self.write({'state': 'approve'})
+        self.authorized_sign = self._uid
+        self.sign_date = date.today()
+        self.send_vehicle_request_done_message()
+        if self.state in ['approve']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_drivers')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Vehicle request from {} has been approved".format(self.name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
+        return {}
+    
+    @api.multi
+    def send_vehicle_request_done_message(self):
+        if self.state in ['approve']:
+            config = self.env['mail.template'].sudo().search([('name','=','vehicle assigned')], limit=1)
+            mail_obj = self.env['mail.mail']
+            if config:
+                values = config.generate_email(self.id)
+                mail = mail_obj.create(values)
+                if mail:
+                    mail.send()
+        return {}
+    
+    @api.multi
+    def button_reject(self):
+        self.write({'state': 'reject'})
+        if self.state in ['reject']:
+            config = self.env['mail.template'].sudo().search([('name','=','vehicle request rejected')], limit=1)
+            mail_obj = self.env['mail.mail']
+            if config:
+                values = config.generate_email(self.id)
+                mail = mail_obj.create(values)
+                if mail:
+                    mail.send()
+        return {}
+    
+    @api.multi
+    def _check_line_manager(self):
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if current_employee == self.name:
+            raise UserError(_('Only your line manager can approve your leave request.'))
     
 class VehicleRequestForm(models.Model):
     _name='ninas.vehicle.request'
-    _description='vehicle request Form'
+    _description='Vehicle Request'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    
+    def _get_employee_id(self):
+        employee_rec = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return employee_rec.id
     
     state = fields.Selection(
         [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected')],
@@ -2613,7 +2721,7 @@ class VehicleRequestForm(models.Model):
     
     name=fields.Many2one(
         comodel_name="hr.employee",
-        string='Name')
+        string='Name', default=_get_employee_id)
     
     time_requires=fields.Datetime(
         string='Time Required')
@@ -2633,6 +2741,7 @@ class VehicleRequestForm(models.Model):
     address = fields.Text(
         string='Address')
     
+    vehicle_id = fields.Many2one(comodel_name="fleet.vehicle", string='Vehicle')
     vehicle_no = fields.Char(
         string='Assigned Vehicle No')
     
