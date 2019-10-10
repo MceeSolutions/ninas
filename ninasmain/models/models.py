@@ -3062,8 +3062,8 @@ class DocumentsArchiveCategory(models.Model):
     name = fields.Char(string="Folder Name", track_visibility='onchange', required=True)
     
 class ResourceCalendarLeavesHR(models.Model):
-    _inherit = "resource.calendar.leaves"
-
+    _inherit = ['resource.calendar.leaves', 'mail.thread', 'mail.activity.mixin']
+    
     @api.model
     def create(self, vals):
         result = super(ResourceCalendarLeavesHR, self).create(vals)
