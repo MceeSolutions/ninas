@@ -3061,12 +3061,12 @@ class DocumentsArchiveCategory(models.Model):
     
     name = fields.Char(string="Folder Name", track_visibility='onchange', required=True)
     
-class ResourceCalendarLeavesHR(models.Model):
+class ResourceCalendarLeaveHR(models.Model):
     _inherit = 'resource.calendar.leaves'
     
     @api.model
     def create(self, vals):
-        result = super(ResourceCalendarLeavesHR, self).create(vals)
+        result = super(ResourceCalendarLeaveHR, self).create(vals)
         return result
     
     @api.multi
