@@ -127,6 +127,76 @@ class Employee(models.Model):
             if self.search([('employee','=',self.employee),('id','!=',self.id)]):
                 return Warning('Employee ID must be unique!')
     
+    @api.multi
+    def send_birthday_mail(self):
+        test = False
+        employees = self.env['hr.employee'].search([])
+        
+        for self in employees:
+            if self.active == True:
+                if self.birthday:
+                    test = datetime.datetime.strptime(self.birthday, "%Y-%m-%d")
+                    
+                    birthday_day = test.day
+                    birthday_month = test.month
+                    
+                    today = datetime.datetime.now().strftime("%Y-%m-%d")
+                    
+                    test_today = datetime.datetime.today().strptime(today, "%Y-%m-%d")
+                    birthday_day_today = test_today.day
+                    birthday_month_today = test_today.month
+                    
+                    if birthday_month == birthday_month_today:
+                        if birthday_day == birthday_day_today:
+                            config = self.env['mail.template'].sudo().search([('name','=','Birthday Reminder')], limit=1)
+                            mail_obj = self.env['mail.mail']
+                            if config:
+                                values = config.generate_email(self.id)
+                                mail = mail_obj.create(values)
+                                if mail:
+                                    mail.send()
+                                return True
+        return
+    
+    
+    @api.multi
+    def send_birthday_reminder_mail(self):
+
+        employees = self.env['hr.employee'].search([])
+        
+        current_dates = False
+        
+        for self in employees:
+            if self.birthday:
+                
+                current_dates = datetime.datetime.strptime(self.birthday, "%Y-%m-%d")
+                current_datesz = current_dates - relativedelta(days=3)
+                print(current_datesz)
+                
+                date_start_day = current_datesz.day
+                date_start_month = current_datesz.month
+                date_start_year = current_datesz.year
+                
+                today = datetime.datetime.now().strftime("%Y-%m-%d")
+                
+                test_today = datetime.datetime.today().strptime(today, "%Y-%m-%d")
+                date_start_day_today = test_today.day
+                date_start_month_today = test_today.month
+                date_start_year_today = test_today.year
+                
+                
+                if date_start_month == date_start_month_today:
+                    if date_start_day == date_start_day_today:
+                        config = self.env['mail.template'].sudo().search([('name','=','Birthday Reminder HR')], limit=1)
+                        mail_obj = self.env['mail.mail']
+                        if config:
+                            values = config.generate_email(self.id)
+                            mail = mail_obj.create(values)
+                            if mail:
+                                mail.send()
+                            return True
+        return
+    
 class HrAppraisals(models.Model):
     _inherit = "hr.appraisal"
     
@@ -142,8 +212,8 @@ class Holidays(models.Model):
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
-        ('validate', 'Approved'),
-        ('ceo','CEO Validation')
+        ('validate', 'Validated'),
+        ('ceo','CEO Approval')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
             help="The status is set to 'To Submit', when a leave request is created." +
             "\nThe status is 'To Approve', when leave request is confirmed by user." +
@@ -174,6 +244,25 @@ class Holidays(models.Model):
     def button_ceo(self):
         self.write({'state': 'ceo'})
         return {}
+    
+    @api.multi
+    def action_approve(self):
+        # if double_validation: this method is the first approval approval
+        # if not double_validation: this method calls action_validate() below
+        self._check_security_action_approve()
+        self._check_line_manager()
+
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state != 'confirm':
+                raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
+
+            if holiday.double_validation:
+                holiday.send_manager_approved_mail()
+                holiday.send_hr_notification()
+                return holiday.write({'state': 'validate1', 'first_approver_id': current_employee.id})
+            else:
+                holiday.action_validate()
     
     
 class LoanRequest(models.Model):
@@ -373,6 +462,12 @@ class TravelRequest(models.Model):
     total_amount = fields.Char(string='Total Amount')
     
     @api.multi
+    def _check_line_manager(self):
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if current_employee == self.name:
+            raise UserError(_('Only your line manager can approve your leave request.'))
+    
+    @api.multi
     def button_reset(self):
         self.write({'state': 'new'})
         return {}
@@ -398,6 +493,7 @@ class TravelRequest(models.Model):
     
     @api.multi
     def button_approve(self):
+        self._check_line_manager()
         self.write({'state': 'approve'})
         self.linemanager_sign = self._uid
         self.linemanager_date = date.today()
@@ -798,16 +894,14 @@ class MissionReport(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
 
     state = fields.Selection(
-        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Approval')],
         string='Status',
         default='new',
         track_visibility='onchange')
     #link to actual employee_id
-    employee_name = fields.Char(
-        #comodel_name = 'hr.employee',
-        string ='Name',
-        required=1
-        )
+    employee_name = fields.Many2one(
+        comodel_name="hr.employee",
+        string='Name', required=True)
     #pull this from employee records and set required to true
     position = fields.Char(
         string='Position',
@@ -824,7 +918,7 @@ class MissionReport(models.Model):
     participants = fields.Char(
         string='Participants',
         )
-    purpose = fields.Char(
+    purpose = fields.Text(
         string='Purpose',
         required=1
         )
@@ -840,14 +934,14 @@ class MissionReport(models.Model):
     matters = fields.Char(
         string = 'Matters To Be Brought To The Notice Of The Programme Manager'
         )
-    signature = fields.Char(
-        string = 'Signature',
-        required=1
-        )
+    signature = fields.Many2one(comodel_name = 'res.users', string='Signature', readonly=True)
+    
     date = fields.Date(
         string= 'Date',
         readonly=1
         )
+    
+    travel_request_id = fields.Many2one(comodel_name="travel.request", string='Travel Request', required=False)
     
     @api.multi
     def button_reset(self):
@@ -857,11 +951,36 @@ class MissionReport(models.Model):
     @api.multi
     def button_submit(self):
         self.write({'state': 'submit'})
+        self.signature = self._uid
+        self.date = date.today()
+        if self.state in ['submit']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_hr_line_manager')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Travel request from {} has been made".format(self.employee_name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
         return {}
     
     @api.multi
     def button_approve(self):
+        self._check_line_manager()
         self.write({'state': 'approve'})
+        if self.state in ['approve']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_admin_finance_officer')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Mission Report from {} has been approved by line manager".format(self.employee_name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
         return {}
     
     @api.multi
@@ -872,12 +991,37 @@ class MissionReport(models.Model):
     @api.multi
     def button_validate(self):
         self.write({'state': 'validate'})
+        if self.state in ['validate']:
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Mission Report from {} has been Validated by Finance".format(self.employee_name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
         return {}
     
     @api.multi
     def button_ceo(self):
         self.write({'state': 'ceo'})
         return {}
+    
+    @api.onchange('travel_request_id')
+    def _onchange_partner_id(self):
+        self.employee_name = self.travel_request_id.name
+        self.position = self.travel_request_id.name.job_id.name
+        self.places = self.travel_request_id.destination_place
+        self.purpose = self.travel_request_id.purpose
+        return {}
+    
+    @api.multi
+    def _check_line_manager(self):
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if current_employee == self.employee_name:
+            raise UserError(_('Only your line manager can approve your leave request.'))
     
 class NinasBankVoucher(models.Model):
     _name = 'ninas.bank_voucher'
@@ -2522,23 +2666,26 @@ class VehicleRequestForm(models.Model):
             subject = "Vehicle request from {} has been made".format(self.name.name)
             self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
             return False
-        return True
         return {}
     
     @api.multi
     def button_approve(self):
+        self._check_line_manager()
         self.write({'state': 'approve'})
         self.authorized_sign = self._uid
         self.sign_date = date.today()
         self.send_vehicle_request_done_message()
         if self.state in ['approve']:
-            config = self.env['mail.template'].sudo().search([('name','=','vehicle request approved')], limit=1)
-            mail_obj = self.env['mail.mail']
-            if config:
-                values = config.generate_email(self.id)
-                mail = mail_obj.create(values)
-                if mail:
-                    mail.send()
+            group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_drivers')
+            user_ids = []
+            partner_ids = []
+            for user in group_id.users:
+                user_ids.append(user.id)
+                partner_ids.append(user.partner_id.id)
+            self.message_subscribe_users(user_ids=user_ids)
+            subject = "Vehicle request from {} has been approved".format(self.name.name)
+            self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+            return False
         return {}
     
     @api.multi
@@ -2566,6 +2713,12 @@ class VehicleRequestForm(models.Model):
                     mail.send()
         return {}
     
+    @api.multi
+    def _check_line_manager(self):
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if current_employee == self.name:
+            raise UserError(_('Only your line manager can approve your leave request.'))
+        
 class AssessorFormAttachment(models.Model):
     _name = 'assessor.form.attachment'
     
@@ -2787,10 +2940,35 @@ class DocumentsArchive(models.Model):
     name = fields.Char(string="Name of Document", track_visibility='onchange', required=True)
     datas_fname = fields.Char('File Name')
     employee_id = fields.Many2one(comodel_name="hr.employee", string='Employee', default=_get_employee_id)
+    folder_id = fields.Many2one(comodel_name="ninas.documents.archive.category", string='Folder')
     department_id = fields.Many2one(comodel_name="hr.department", string='Department', related="employee_id.department_id", store=True)
     document_type_id = fields.Many2one(comodel_name="document.type", string='Document Type')
     file = fields.Binary(string='Document', required=True, store=True)
     description = fields.Text(string='Note(s)')
     
+class DocumentsArchiveCategory(models.Model):
+    _name='ninas.documents.archive.category'
+    _description='Ninas Folders'
     
+    name = fields.Char(string="Folder Name", track_visibility='onchange', required=True)
+    
+class ResourceCalendarLeaves(models.Model):
+    _inherit = "resource.calendar.leaves"
+
+    @api.model
+    def create(self, vals):
+        result = super(ResourceCalendarLeaves, self).create(vals)
+        result.send_mail()
+        return result
+    
+    @api.multi
+    def send_mail(self):
+        config = self.env['mail.template'].sudo().search([('name','=','Public Holiday')], limit=1)
+        mail_obj = self.env['mail.mail']
+        if config:
+            values = config.generate_email(self.id)
+            mail = mail_obj.create(values)
+            if mail:
+                mail.send()
+        return {}
     

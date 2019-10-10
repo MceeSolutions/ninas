@@ -68,3 +68,4 @@ access_ir_attachment,ir.attachment,model_ir_attachment,base.group_portal,1,1,1,0
 access_mail_message,mail.message,mail.model_mail_message,base.group_portal,1,1,1,0
 
 access_ninas_documents_archive,ninas.documents.archive,model_ninas_documents_archive,base.group_user,1,1,1,0
+access_ninas_documents_archive_category,ninas.documents.archive.category,model_ninas_documents_archive_category,ninasmain.group_admin_finance_officer,1,1,1,0
