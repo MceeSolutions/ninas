@@ -623,6 +623,21 @@
 		<field name="context">{}</field>
 	</record>
 	
+	<record id="hr_holidays.open_department_holidays_approve" model="ir.actions.act_window">
+       <field name="name">Department Leaves</field>
+       <field name="res_model">hr.holidays</field>
+       <field name="view_type">form</field>
+       <field name="view_mode">tree,form,calendar</field>
+       <field name="context">{'search_default_department':0, 'search_default_group_employee':1, 'search_default_approve':1}</field>
+       <field name="help" type="html">
+           <p class="oe_view_nocontent_create">
+               Click here to create a new leave request.
+           </p>
+       </field>
+       <field name="domain">[('type','=','remove')]</field>
+       <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+   </record>
+	
 	<record id="view_ninas_documents_archive_filter" model="ir.ui.view">
         <field name="name">ninas.documents.archive.search</field>
         <field name="model">ninas.documents.archive</field>
@@ -633,6 +648,7 @@
                 <separator/>
                 <group expand="1" string="Group By">
                     <filter string="Department" name="group_department" context="{'group_by':'department_id'}"/>
+                    <filter string="Folder" name="group_folder" context="{'group_by':'folder_id'}"/>
                 </group>
             </search>
         </field>
@@ -646,7 +662,7 @@
 	           <field name="view_mode">kanban,tree,form</field>
 	           <field name="search_view_id" ref="view_ninas_documents_archive_filter"/>
 	           <field name="domain">[]</field>
-	           <field name="context">{'search_default_group_department':1, 'search_default_my_department':0}</field>
+	           <field name="context">{'search_default_group_folder':1, 'search_default_group_department':0, 'search_default_my_department':0}</field>
 	</record>
     
     <!-- loan request  tree view-->
@@ -745,6 +761,7 @@
 			<field name="purpose"/>
 			<field name="departure_date"/>
 			<field name="return_date"/>
+			<field name="state"/>
 		</field>
 	</record>
     
@@ -1015,6 +1032,7 @@
 				<field name="name"/>
 				<field name="time_requires"/>
 				<field name="date_request"/>
+				<field name="state"/>
 			</tree>
 		</field>
 	</record>
@@ -1080,6 +1098,7 @@
 				<field name="position"/>
 				<field name="purpose" string="Purpose"/>
 				<field name="mission_date"/>
+				<field name="state"/>
 			</tree>
 		</field>
 	</record>
@@ -1100,6 +1119,9 @@
         		<field name="state" widget="statusbar" statusbar_visible="new,submit,approve,validate,ceo" readonly="1"/>
         	</header>
 				<sheet>
+					<group>
+						<field name="travel_request_id"/>
+					</group>
 					<group col="4" colspan="2">
 						<field name="employee_name"/>
 						<field name="position"/>
@@ -2566,6 +2588,7 @@
 						<field name="employee_id"/>
 						<field name="department_id" readonly="1"/>
 						<field name="document_type_id"/>
+						<field name="folder_id"/>
 					</group>
 					<group>
 						<field name="file" filename="datas_fname"/>
@@ -2695,8 +2718,7 @@
               action="ninas_contract_agreement_action"/>
     <menuitem name="Corrective Action Report" id="car_agreement_menu" parent="contract_agreement_main_menu"
               action="ninas_car_report_action"/>
-              
-              
+                            
    	<menuitem name="AAC Module" id="ninas_aac_main_menu" web_icon="ninasmain,static/icon/team.png" groups="ninasmain.group_aac,ninasmain.group_director_accreditation"/>
     <menuitem name="AAC" id="ninas_aac_tools_main_menu" parent="ninas_aac_main_menu"/>
     
@@ -2710,6 +2732,9 @@
     		  action="ninas_vehicle_request_action"/>
    	<menuitem name="Travel Request" id="travel_request_menu" parent="fleet.menu_root"
               action="TravelRequest_action_window"/>
+    <menuitem name="Mission Report" id="mission_request_menu" parent="fleet.menu_root"
+              action="ninas_mission_report_action"/>
+              
     
     <menuitem name="Documents" id="ninas_documents_archive_main_menu" web_icon="ninasmain,static/icon/ninas-doc.png"/>
     <menuitem name="Files" id="ninas_documents_archive_tools_main_menu" parent="ninas_documents_archive_main_menu"/>
