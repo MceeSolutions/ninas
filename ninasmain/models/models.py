@@ -236,10 +236,12 @@ class Holidays(models.Model):
         [('yes','Yes'),('no', 'No')],
         string='Planned Leave')
     
+    '''
     date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     date_to = fields.Date('End Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+    '''
     
     @api.multi
     def button_ceo(self):
@@ -3067,6 +3069,7 @@ class ResourceCalendarLeaveHR(models.Model):
     @api.model
     def create(self, vals):
         result = super(ResourceCalendarLeaveHR, self).create(vals)
+        result.send_mail()
         return result
     
     @api.multi
