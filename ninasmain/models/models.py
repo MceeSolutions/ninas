@@ -3092,25 +3092,4 @@ class DocumentsArchiveCategory(models.Model):
     
     name = fields.Char(string="Folder Name", track_visibility='onchange', required=True)
 
-'''   
-class ResourceCalendarLeaveHR(models.Model):
-    _inherit = 'resource.calendar.leaves'
-    
-    @api.model
-    def create(self, vals):
-        result = super(ResourceCalendarLeaveHR, self).create(vals)
-        result.send_mail()
-        return result
-    
-    @api.multi
-    def send_mail(self):
-        config = self.env['mail.template'].sudo().search([('name','=','Public Holiday')], limit=1)
-        mail_obj = self.env['mail.mail']
-        if config:
-            values = config.generate_email(self.id)
-            mail = mail_obj.create(values)
-            if mail:
-                mail.send()
-        return {}
-'''
     
