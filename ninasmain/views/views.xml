@@ -63,6 +63,11 @@
 							<field name="notes" placeholder="Notes from HR"/>
 						</group>
 					</page>
+					<page name="employee_resignation" string="Employee Resignation" groups="hr.group_hr_manager" invisible="1">
+						<group>
+							
+						</group>
+					</page>
 				</xpath>
  				
 			 <xpath expr="//page[@name='personal_information']" position="inside">
@@ -259,8 +264,15 @@
              <field name="name" position="before">
                 <field name="planned_leave"/>
             </field>
+            <field name="report_note" position="before">
+                <field name="compute_field" invisible="1"/>
+                <field name="ceo_approval" invisible="1"/>
+            </field>
+            <field name="report_note" position="replace">
+                <field name="report_note" placeholder="e.g. Report to the next month..." attrs="{'readonly': [('compute_field', '=', True)]}"/>
+            </field>
              <xpath expr="//header" position="inside">
-	                <button name="button_ceo" type="object" states='validate' string="Ceo Validation" class="oe_highlight" groups="ninasmain.group_ceo"/>
+	                <button name="button_ceo" type="object" string="Ceo Approval" class="oe_highlight" groups="ninasmain.group_ceo" attrs="{'invisible': ['|', ('ceo_approval', '=', True), ('state', '!=', 'validate')]}"/>
         	 </xpath>
         </field>
     </record>
@@ -708,8 +720,45 @@
 	           <field name="view_type">form</field>
 	           <field name="view_mode">kanban,tree,form</field>
 	           <field name="search_view_id" ref="view_ninas_documents_archive_filter"/>
-	           <field name="domain">[]</field>
-	           <field name="context">{'search_default_group_folder':1, 'search_default_group_department':0, 'search_default_my_department':0}</field>
+	           <field name="domain">[('general','=',True)]</field>
+	           <field name="context">{'default_general':1, 'search_default_group_folder':1, 'search_default_group_department':0, 'search_default_my_department':0}</field>
+	</record>
+    
+    <record model="ir.actions.act_window" id="ninas_finance_documents_archive_action">
+	           <field name="name">Ninas Finance Document(s)</field>
+	           <field name="res_model">ninas.documents.archive</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">kanban,tree,form</field>
+	           <field name="search_view_id" ref="view_ninas_documents_archive_filter"/>
+	           <field name="domain">[('finance','=',True)]</field>
+	           <field name="context">{'default_finance':1, 'search_default_group_folder':1, 'search_default_group_department':0, 'search_default_my_department':0}</field>
+	</record>
+	<record model="ir.actions.act_window" id="ninas_hr_documents_archive_action">
+	           <field name="name">Ninas HR Document(s)</field>
+	           <field name="res_model">ninas.documents.archive</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">kanban,tree,form</field>
+	           <field name="search_view_id" ref="view_ninas_documents_archive_filter"/>
+	           <field name="domain">[('hr','=',True)]</field>
+	           <field name="context">{'default_hr':1, 'search_default_group_folder':1, 'search_default_group_department':0, 'search_default_my_department':0}</field>
+	</record>
+	<record model="ir.actions.act_window" id="ninas_accreditation_documents_archive_action">
+	           <field name="name">Ninas Accreditation Document(s)</field>
+	           <field name="res_model">ninas.documents.archive</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">kanban,tree,form</field>
+	           <field name="search_view_id" ref="view_ninas_documents_archive_filter"/>
+	           <field name="domain">[('accreditation','=',True)]</field>
+	           <field name="context">{'default_accreditation':1, 'search_default_group_folder':1, 'search_default_group_department':0, 'search_default_my_department':0}</field>
+	</record>
+	<record model="ir.actions.act_window" id="ninas_logistics_documents_archive_action">
+	           <field name="name">Ninas Logistics Document(s)</field>
+	           <field name="res_model">ninas.documents.archive</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">kanban,tree,form</field>
+	           <field name="search_view_id" ref="view_ninas_documents_archive_filter"/>
+	           <field name="domain">[('logistics','=',True)]</field>
+	           <field name="context">{'default_logistics':1, 'search_default_group_folder':1, 'search_default_group_department':0, 'search_default_my_department':0}</field>
 	</record>
     
     <!-- loan request  tree view-->
@@ -2847,6 +2896,16 @@
     <menuitem name="Files" id="ninas_documents_archive_tools_main_menu" parent="ninas_documents_archive_main_menu"/>
     <menuitem id="menu_ninas_documents_archive" name="Files" parent="ninas_documents_archive_main_menu" action="ninas_documents_archive_action"/>
 		
+    
+    <menuitem name="Finance Documents" id="finance_document_menu" parent="account.menu_finance_configuration"
+              action="ninas_finance_documents_archive_action"/>
+    <menuitem name="HR Documents" id="hr_documents_menu" parent="hr.menu_human_resources_configuration"
+              action="ninas_hr_documents_archive_action"/>
+    <menuitem name="Accreditation Documents" id="accreditation_document_menu" parent="helpdesk.helpdesk_menu_config"
+              action="ninas_accreditation_documents_archive_action"/>
+    <menuitem name="Logistics Documents" id="logistics_document_menu" parent="fleet.fleet_configuration"
+              action="ninas_logistics_documents_archive_action"/>
+    
     
   </data>
 </odoo>
