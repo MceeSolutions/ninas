@@ -5,7 +5,7 @@
 import datetime
 
 from datetime import date, timedelta
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from docutils.nodes import organization
 from odoo.exceptions import ValidationError, Warning
 from ast import literal_eval
@@ -214,7 +214,7 @@ class Holidays(models.Model):
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
         ('validate', 'Validated'),
-        ('ceo','CEO Approval')
+        #('ceo','CEO Approval')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
             help="The status is set to 'To Submit', when a leave request is created." +
             "\nThe status is 'To Approve', when leave request is confirmed by user." +
@@ -236,6 +236,23 @@ class Holidays(models.Model):
         [('yes','Yes'),('no', 'No')],
         string='Planned Leave')
     
+    compute_field = fields.Boolean(string="check field", compute='get_user', default=True)
+    ceo_approval = fields.Boolean(string="Ceo Approved", track_visibility='onchange')
+
+    @api.onchange('employee_id')
+    def get_user(self):
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if current_employee == self.employee_id.parent_id:
+            self.compute_field = False
+        else:
+            self.compute_field = True
+    
+    @api.multi
+    def _check_line_manager(self):
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if current_employee == self.employee_id:
+            raise UserError(_('Only your line manager can approve your leave request.'))
+    
     '''
     date_from = fields.Date('Start Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
@@ -245,7 +262,12 @@ class Holidays(models.Model):
     
     @api.multi
     def button_ceo(self):
-        self.write({'state': 'ceo'})
+        self.ceo_approval = True
+        subject = "CEO has Approved leave for {} ".format(self.display_name)
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
     @api.multi
@@ -3056,6 +3078,13 @@ class DocumentsArchive(models.Model):
     document_type_id = fields.Many2one(comodel_name="document.type", string='Document Type')
     file = fields.Binary(string='Document', required=True, store=True)
     description = fields.Text(string='Note(s)')
+    
+    general = fields.Boolean(string="general")
+    finance = fields.Boolean(string="Finance")
+    hr = fields.Boolean(string="HR")
+    accreditation = fields.Boolean(string="Accreditation")
+    logistics = fields.Boolean(string="Logistics")
+    
     
 class DocumentsArchiveCategory(models.Model):
     _name='ninas.documents.archive.category'
