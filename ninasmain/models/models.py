@@ -291,7 +291,7 @@ class Holidays(models.Model):
     
     @api.multi
     def send_hr_notification(self):
-        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_hr_leave_manager')
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_admin_finance_officer')
         user_ids = []
         partner_ids = []
         for user in group_id.users:
