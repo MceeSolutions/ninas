@@ -280,7 +280,7 @@ class Holidays(models.Model):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
         self._check_security_action_approve()
-        self._check_line_manager()
+        #self._check_line_manager()
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
@@ -288,8 +288,8 @@ class Holidays(models.Model):
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
 
             if holiday.double_validation:
-                holiday.send_manager_approved_mail()
-                holiday.send_hr_notification()
+                #holiday.send_manager_approved_mail()
+                #holiday.send_hr_notification()
                 return holiday.write({'state': 'validate1', 'first_approver_id': current_employee.id})
             else:
                 holiday.action_validate()
