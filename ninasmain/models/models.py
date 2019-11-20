@@ -336,7 +336,7 @@ class Holidays(models.Model):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
         self._check_security_action_approve()
-        self._check_line_manager()
+        #self._check_line_manager()
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
