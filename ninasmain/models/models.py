@@ -350,7 +350,74 @@ class Holidays(models.Model):
             else:
                 holiday.action_validate()
     
+    @api.multi
+    def action_validate(self):
+        self._check_security_action_validate()
+
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        for holiday in self:
+            if holiday.state not in ['confirm', 'validate1']:
+                raise UserError(_('Leave request must be confirmed in order to approve it.'))
+            if holiday.state == 'validate1' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+                raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
+
+            holiday.write({'state': 'validate'})
+            holiday.send_hr_approved_mail()
+            if holiday.double_validation:
+                holiday.write({'second_approver_id': current_employee.id})
+            else:
+                holiday.write({'first_approver_id': current_employee.id})
+            if holiday.holiday_type == 'employee' and holiday.type == 'remove':
+                holiday._validate_leave_request()
+            elif holiday.holiday_type == 'category':
+                leaves = self.env['hr.holidays']
+                for employee in holiday.category_id.employee_ids:
+                    values = holiday._prepare_create_by_category(employee)
+                    leaves += self.with_context(mail_notify_force_send=False).create(values)
+                # TODO is it necessary to interleave the calls?
+                leaves.action_approve()
+                if leaves and leaves[0].double_validation:
+                    leaves.action_validate()
+        return True
     
+    @api.multi
+    def send_leave_notification_mail(self):
+
+        employees = self.env['hr.holidays'].search([])
+        
+        current_dates = False
+        
+        for self in employees:
+            if self.date_from:
+                
+                current_dates = datetime.datetime.strptime(self.date_from, "%Y-%m-%d")
+                current_datesz = current_dates - relativedelta(days=3)
+                
+                date_start_day = current_datesz.day
+                date_start_month = current_datesz.month
+                date_start_year = current_datesz.year
+                
+                today = datetime.datetime.now().strftime("%Y-%m-%d")
+                
+                test_today = datetime.datetime.today().strptime(today, "%Y-%m-%d")
+                date_start_day_today = test_today.day
+                date_start_month_today = test_today.month
+                date_start_year_today = test_today.year
+                
+                
+                if date_start_month == date_start_month_today:
+                    if date_start_day == date_start_day_today:
+                        if date_start_year == date_start_year_today:
+                            config = self.env['mail.template'].sudo().search([('name','=','Leave Reminder')], limit=1)
+                            mail_obj = self.env['mail.mail']
+                            if config:
+                                values = config.generate_email(self.id)
+                                mail = mail_obj.create(values)
+                                if mail:
+                                    mail.send()
+                                return True
+        return
+
 class LoanRequest(models.Model):
     _name = 'loan.request'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
