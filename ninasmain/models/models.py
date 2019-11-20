@@ -2402,7 +2402,7 @@ class DecisionForm(models.Model):
                 mylist = len(sub)
                 print(mylist)
                 if mylist >= 3:
-                    if line.recommendation == '1' and self.recommendation == '1':
+                    if line.recommendation == '1' and self.ceo == '1':
                         self.application_id.button_approved_app()
                     else:
                         self.overule = True
