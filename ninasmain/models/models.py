@@ -116,6 +116,11 @@ class Employee(models.Model):
         comodel_name='res.country.state')
     emergency_zip_code = fields.Char(string='Zip Code')
     
+    employee_resignation_date = fields.Date(string='Date Of Resignation')
+    comments_on_resignation = fields.Text(string='Comments On Resignation')
+    duties_temporarily_assigned = fields.Many2one(comodel_name='hr.employee', string='Duties Temporarily Assigned to')
+    notice_period = fields.Char(string='Notice Period', help='notice period given by employee before leaving/resignation')
+    
     @api.model
     def create(self, vals):
         if vals.get('employee', 'New') == 'New':
