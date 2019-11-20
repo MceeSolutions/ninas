@@ -63,10 +63,14 @@
 							<field name="notes" placeholder="Notes from HR"/>
 						</group>
 					</page>
-					<page name="employee_resignation" string="Employee Resignation" groups="hr.group_hr_manager" invisible="1">
-						<group>
-							
+					<page name="employee_resignation" string="Employee Resignation" groups="hr.group_hr_manager" invisible="0">
+						<group col="4" colspan="4">
+							<field name="employee_resignation_date" attrs="{'readonly': [('active', '=', False)]}"/>
+							<field name="notice_period" attrs="{'readonly': [('active', '=', False)]}"/>
+							<field name="duties_temporarily_assigned" attrs="{'readonly': [('active', '=', False)]}"/>
 						</group>
+						<separator string="Comments on Resignation"/>
+						<field name="comments_on_resignation" attrs="{'readonly': [('active', '=', False)]}"/>
 					</page>
 				</xpath>
  				
@@ -2355,9 +2359,9 @@
 						<page name="day_2" string="Day 2 - TTA under supervision of LA">
 							<field name="day2_ids">
 								<tree editable="True">
+									<field name="activity"/>
 									<field name="start_time"/>
 									<field name="end_time"/>
-									<field name="activity"/>
 								</tree>
 							</field>
 						</page>

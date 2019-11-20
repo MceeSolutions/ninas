@@ -116,6 +116,11 @@ class Employee(models.Model):
         comodel_name='res.country.state')
     emergency_zip_code = fields.Char(string='Zip Code')
     
+    employee_resignation_date = fields.Date(string='Date Of Resignation')
+    comments_on_resignation = fields.Text(string='Comments On Resignation')
+    duties_temporarily_assigned = fields.Many2one(comodel_name='hr.employee', string='Duties Temporarily Assigned to')
+    notice_period = fields.Char(string='Notice Period', help='notice period given by employee before leaving/resignation')
+    
     @api.model
     def create(self, vals):
         if vals.get('employee', 'New') == 'New':
@@ -2402,7 +2407,7 @@ class DecisionForm(models.Model):
                 mylist = len(sub)
                 print(mylist)
                 if mylist >= 3:
-                    if line.recommendation == '1' and self.recommendation == '1':
+                    if line.recommendation == '1' and self.ceo == '1':
                         self.application_id.button_approved_app()
                     else:
                         self.overule = True
@@ -3091,26 +3096,3 @@ class DocumentsArchiveCategory(models.Model):
     _description='Ninas Folders'
     
     name = fields.Char(string="Folder Name", track_visibility='onchange', required=True)
-
-'''   
-class ResourceCalendarLeaveHR(models.Model):
-    _inherit = 'resource.calendar.leaves'
-    
-    @api.model
-    def create(self, vals):
-        result = super(ResourceCalendarLeaveHR, self).create(vals)
-        result.send_mail()
-        return result
-    
-    @api.multi
-    def send_mail(self):
-        config = self.env['mail.template'].sudo().search([('name','=','Public Holiday')], limit=1)
-        mail_obj = self.env['mail.mail']
-        if config:
-            values = config.generate_email(self.id)
-            mail = mail_obj.create(values)
-            if mail:
-                mail.send()
-        return {}
-'''
-    
