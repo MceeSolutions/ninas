@@ -344,9 +344,9 @@ class Holidays(models.Model):
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
 
             if holiday.double_validation:
-                #holiday.send_manager_approved_mail()
-                #holiday.send_hr_notification()
-                return holiday.write({'state': 'validate1', 'first_approver_id': current_employee.id})
+                holiday.send_manager_approved_mail()
+                holiday.send_hr_notification()
+                holiday.write({'state': 'validate1', 'first_approver_id': current_employee.id})
             else:
                 holiday.action_validate()
     
