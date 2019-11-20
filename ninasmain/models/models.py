@@ -243,7 +243,24 @@ class Holidays(models.Model):
     
     compute_field = fields.Boolean(string="check field", compute='get_user', default=True)
     ceo_approval = fields.Boolean(string="Ceo Approved", track_visibility='onchange')
-
+    
+    @api.model
+    def create(self, vals):
+        result = super(Holidays, self).create(vals)
+        result.send_mail()
+        return result
+    
+    @api.multi
+    def send_mail(self):
+        if self.state in ['confirm']:
+            config = self.env['mail.template'].sudo().search([('name','=','Leave Approval Request Template')], limit=1)
+            mail_obj = self.env['mail.mail']
+            if config:
+                values = config.generate_email(self.id)
+                mail = mail_obj.create(values)
+                if mail:
+                    mail.send()
+    
     @api.onchange('employee_id')
     def get_user(self):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -251,6 +268,45 @@ class Holidays(models.Model):
             self.compute_field = False
         else:
             self.compute_field = True
+    
+    @api.multi
+    def send_manager_approved_mail(self):
+        config = self.env['mail.template'].sudo().search([('name','=','Leave Manager Approval')], limit=1)
+        mail_obj = self.env['mail.mail']
+        if config:
+            values = config.generate_email(self.id)
+            mail = mail_obj.create(values)
+            if mail:
+                mail.send()
+    
+    @api.multi
+    def send_hr_approved_mail(self):
+        config = self.env['mail.template'].sudo().search([('name','=','Leave HR Approval')], limit=1)
+        mail_obj = self.env['mail.mail']
+        if config:
+            values = config.generate_email(self.id)
+            mail = mail_obj.create(values)
+            if mail:
+                mail.send()
+    
+    @api.multi
+    def send_hr_notification(self):
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_hr_leave_manager')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Leave Request for {} is Ready for Second Approval".format(self.display_name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
+    
+    @api.multi
+    def _check_security_action_validate(self):
+        #current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
     
     @api.multi
     def _check_line_manager(self):
@@ -280,7 +336,7 @@ class Holidays(models.Model):
         # if double_validation: this method is the first approval approval
         # if not double_validation: this method calls action_validate() below
         self._check_security_action_approve()
-        #self._check_line_manager()
+        self._check_line_manager()
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
@@ -288,8 +344,8 @@ class Holidays(models.Model):
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
 
             if holiday.double_validation:
-                #holiday.send_manager_approved_mail()
-                #holiday.send_hr_notification()
+                holiday.send_manager_approved_mail()
+                holiday.send_hr_notification()
                 return holiday.write({'state': 'validate1', 'first_approver_id': current_employee.id})
             else:
                 holiday.action_validate()
