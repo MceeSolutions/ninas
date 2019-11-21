@@ -2529,7 +2529,7 @@ class DecisionForm(models.Model):
             self.application_id.button_approved_app()
             self.approved_by_ceo = True
         else:
-            self.application_id.button_reject_appd()
+            self.application_id.stage_id = 18
     
     '''
     @api.multi
