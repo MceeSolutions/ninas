@@ -308,6 +308,7 @@ class CreateInvoice(models.Model):
     decision_count = fields.Integer(compute="_decision_count",string="Recommendation", store=False)
     
     package_sent = fields.Boolean(string="package sent?")
+    submitted_to_ict = fields.Boolean(string="Sent to ICT?")
     
     @api.multi
     def _invoice_count(self):
@@ -698,8 +699,33 @@ class CreateInvoice(models.Model):
                 user_ids.append(user.id)
                 partner_ids.append(user.partner_id.id)
             self.message_subscribe_users(user_ids=user_ids)
-            subject = "Decision Form has been created and awaiting Approval".format(self.number)
+            subject = "Decision Form for {} has been created and awaiting Approval".format(self.display_name)
             self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
+    
+    @api.multi
+    def send_ict_mail(self):
+        config = self.env['mail.template'].sudo().search([('name','=','ICT Certificate Generation')], limit=1)
+        mail_obj = self.env['mail.mail']
+        if config:
+            values = config.generate_email(self.id)
+            mail = mail_obj.create(values)
+            if mail:
+                mail.send()
+    
+    @api.multi
+    def button_submit_to_ict(self):
+        self.submitted_to_ict = True
+        self.send_ict_mail()
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Applicant lab {} has been accredited and awaiting certificate generation from the ict department".format(self.partner_id.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return False
     
     @api.multi

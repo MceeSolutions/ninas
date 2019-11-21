@@ -2413,7 +2413,8 @@
 				<header>
 	        		<button name="button_aac" string="Submit" type="object" class="btn btn-primary" states="la_recommendation" invisible="1" groups="base.group_user"/>
 	        		<button name="button_da" string="Submit" type="object" class="btn btn-primary" states="aac_recommendation" invisible="1" groups="base.group_user"/>
-	        		<button type="object" name="button_awaiting_approval" string="Approve" groups="ninasmain.group_ceo"/>
+	        		<button type="object" name="button_awaiting_approval" string="Approve" groups="ninasmain.group_ceo" attrs="{'invisible':[('approved_by_ceo','=',True)]}"/>
+	        		<button type="object" name="button_submit_decision" string="Submit To CEO" groups="base.group_user" attrs="{'invisible':[('submitted_to_ceo','=',True)]}"/>
 	        		<button type="object" name="button_overule_approval" string="Overule" attrs="{'invisible':[('overule','=',False)]}" groups="ninasmain.group_ceo"/>
 	        		<field name="state" widget="statusbar" statusbar_visible="da_recommendation" readonly="1"/>
 	        	</header>
@@ -2458,6 +2459,8 @@
                     </div>
                     <field name="update_record" invisible="1"/>
                     <field name="overule" invisible="1"/>
+                    <field name="submitted_to_ceo" invisible="1"/>
+                    <field name="approved_by_ceo" invisible="1"/>
 					<group col="4" colspan="2">
 						<field name="application_id" widget="selection" domain="[('stage_id','=',20)]"/>
 						<button name="button_update_record" icon="fa-arrow-right" string="Update Records" type="object" class="btn btn-primary" states="da_recommendation"/>
@@ -2498,6 +2501,11 @@
 						<field name="date"/>
 					</group>
 				</sheet>
+				<div class="oe_chatter">
+		        	<field name="message_follower_ids" widget="mail_followers"/>
+		            <field name="activity_ids" widget="mail_activity"/>
+			        <field name="message_ids" widget="mail_thread"/>
+			    </div>
 			</form>
 		</field>
 	</record>
@@ -2705,7 +2713,8 @@
 						<p>I am satisfied that the information is sufficient to decide that the requirements
 						for accreditation have been met. Yes<field name="satisfactory_yes"/> No<field name="satisfactory_no"/></p>
 						<group string="Recommendation">
-							<field name="recommendation"  attrs="{'required':[('update_record','=',True)]}"/>
+							<!--<field name="recommendation"  attrs="{'required':[('update_record','=',True)]}"/>-->
+							<field name="recommendation"/>
 						</group>
 	                    <P><b>Note: </b>The period of suspension shall not extend beyond the date of expiry of the
 						Certificate of Accreditation</P>

@@ -121,6 +121,7 @@
 			</xpath>
 			<field name="partner_id" position="before">
                 <field name="package_sent" readonly="1" invisible="1"/>
+                <field name="submitted_to_ict" invisible="1"/>
             </field>
 			<xpath expr="//button[@name='assign_ticket_to_self']" position="after">
                 	<button type="object" name="button_confirm_sponsor" string="Proceed" attrs="{'invisible':[('stage_id','!=',1)]}" confirm="Are you sure all uploaded documents are completed?"/>
@@ -134,10 +135,11 @@
                 	<button type="object" name="button_assessment" string="Submit" attrs="{'invisible':[('stage_id','!=',12)]}" class="btn btn-primary"/>
 					<button type="object" name="button_car" string="Assessment Done?" attrs="{'invisible':[('stage_id','!=',11)]}"/>
                 	<button type="object" name="button_decision_making" string="CAR Sent / Approved" attrs="{'invisible':[('stage_id','!=',13)]}"/>
-                	<button type="object" name="check_ac_members" string="Send Decision Package" attrs="{'invisible':[('stage_id','!=',16), ('package_sent','=',True)]}"/>
-                	<button type="object" name="button_awaiting_approval" string="Proceed" attrs="{'invisible':[('stage_id','!=',16),('package_sent','!=',True)]}"/>
+                	<button type="object" name="check_ac_members" string="Send Decision Package" attrs="{'invisible':['|', ('stage_id','!=',16), ('package_sent','=',True)]}"/>
+                	<button type="object" name="button_awaiting_approval" string="Proceed" attrs="{'invisible':['|', ('stage_id','!=',16),('package_sent','!=',True)]}"/>
                 	<button type="object" name="button_submit_decision" string="Submit Decision Form" attrs="{'invisible':[('stage_id','!=',13)]}" class="btn btn-success"/>
                 	<button type="object" name="button_reject_app" string="CEO Reject" invisible="1" class="btn btn-danger"/>
+                	<button type="object" name="button_submit_to_ict" string="Send to ICT" invisible="0" class="btn btn-success" attrs="{'invisible':['|', ('stage_id','!=',21), ('submitted_to_ict','=',True)]}"/>
                 	
                 	<!-- <button type="object" name="button_pending_closure" string="Next Stage" attrs="{'invisible':[('stage_id','!=',21)]}"/>
                 	 -->

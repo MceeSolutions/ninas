@@ -2422,7 +2422,7 @@ class AssessmentActivity(models.Model):
 class DecisionForm(models.Model):
     _name = 'ninas.decision_form'
     _description = 'Decision Form'
-    
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     
     #this should pull the application info (rep, assessor, institution)
     application_id = fields.Many2one(
@@ -2516,6 +2516,8 @@ class DecisionForm(models.Model):
     recommendation_count = fields.Integer(compute="_recommendation_count",string="Recommendation", store=False)
     update_record = fields.Boolean(string='Update')
     overule = fields.Boolean(string="overule", default=False)
+    submitted_to_ceo = fields.Boolean(string="Submitted To CEO", default=False)
+    approved_by_ceo = fields.Boolean(string="Approved By CEO", default=False)
     
     @api.multi
     def button_awaiting_approval(self):
@@ -2532,6 +2534,12 @@ class DecisionForm(models.Model):
                 if mylist >= 3:
                     if line.recommendation == '1' and self.ceo == '1':
                         self.application_id.button_approved_app()
+                        self.approved_by_ceo = True
+                        subject = "CEO has Approved for {} ".format(self.display_name)
+                        partner_ids = []
+                        for partner in self.message_partner_ids:
+                            partner_ids.append(partner.id)
+                        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
                     else:
                         self.overule = True
                         raise Warning('Recommendation has not been Approved for this Application')
@@ -2543,6 +2551,19 @@ class DecisionForm(models.Model):
     def button_overule_approval(self):
         if self.overule == True:
             self.application_id.button_approved_app()
+            
+    @api.multi
+    def button_submit_decision(self):
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Decision Form for {} has been created and awaiting Approval".format(self.application_id.display_name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
     
     @api.multi
     def button_update_record(self):
