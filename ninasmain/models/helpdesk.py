@@ -738,6 +738,11 @@ class CreateInvoice(models.Model):
     @api.multi
     def button_reject_app(self):
         self.write({'stage_id': 18})
+        subject = "CEO has Refused accreditation for {} ".format(self.display_name)
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
 #    @api.multi

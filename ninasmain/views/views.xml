@@ -2413,7 +2413,7 @@
 				<header>
 	        		<button name="button_aac" string="Submit" type="object" class="btn btn-primary" states="la_recommendation" invisible="1" groups="base.group_user"/>
 	        		<button name="button_da" string="Submit" type="object" class="btn btn-primary" states="aac_recommendation" invisible="1" groups="base.group_user"/>
-	        		<button type="object" name="button_awaiting_approval" string="Approve" groups="ninasmain.group_ceo" attrs="{'invisible':[('approved_by_ceo','=',True)]}"/>
+	        		<button type="object" name="button_awaiting_approval" string="Submit" groups="ninasmain.group_ceo" attrs="{'invisible':[('approved_by_ceo','=',True)]}"/>
 	        		<button type="object" name="button_submit_decision" string="Submit To CEO" groups="base.group_user" attrs="{'invisible':[('submitted_to_ceo','=',True)]}"/>
 	        		<button type="object" name="button_overule_approval" string="Overule" attrs="{'invisible':[('overule','=',False)]}" groups="ninasmain.group_ceo"/>
 	        		<field name="state" widget="statusbar" statusbar_visible="da_recommendation" readonly="1"/>
