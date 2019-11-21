@@ -736,7 +736,7 @@ class CreateInvoice(models.Model):
         return {}
     
     @api.multi
-    def button_reject_app(self):
+    def button_reject_appd(self):
         self.write({'stage_id': 18})
         subject = "CEO has Refused accreditation for {} ".format(self.display_name)
         partner_ids = []
