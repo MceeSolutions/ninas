@@ -15,6 +15,10 @@ class PurchaseOrder(models.Model):
     _name = "purchase.order"
     _inherit = ['purchase.order']
     
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        self.partner_ref = self.partner_id.ref
+    
     def _default_employee(self):
         self.env['hr.employee'].search([('user_id','=',self.env.uid)])
         return self.env['hr.employee'].search([('user_id','=',self.env.uid)])
