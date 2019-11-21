@@ -717,7 +717,7 @@ class CreateInvoice(models.Model):
     def button_submit_to_ict(self):
         self.submitted_to_ict = True
         self.send_ict_mail()
-        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ict')
         user_ids = []
         partner_ids = []
         for user in group_id.users:
