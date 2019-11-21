@@ -1779,6 +1779,7 @@ class ConflictofInterest(models.Model):
         self.write({'state': 'accept'})
         self.printed_name = self._uid
         self.date_signed = date.today()
+        '''
         group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_director_accreditation')
         user_ids = []
         partner_ids = []
@@ -1789,6 +1790,7 @@ class ConflictofInterest(models.Model):
         subject = "Assessor {} has signed Conflict of Interest Form and is awaiting approval".format(self.name.name)
         self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return False
+        '''
     
     @api.multi
     def button_approve(self):
@@ -1851,6 +1853,7 @@ class Confidentiality(models.Model):
         self.write({'state': 'accept'})
         self.signed = self._uid
         self.date_signed = date.today()
+        '''
         group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_director_accreditation')
         user_ids = []
         partner_ids = []
@@ -1861,6 +1864,7 @@ class Confidentiality(models.Model):
         subject = "Assessor {} has signed Confidentiality Form and is awaiting approval".format(self.name.name)
         self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return False
+        '''
     
     @api.multi
     def button_approve(self):
