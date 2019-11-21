@@ -2536,6 +2536,31 @@ class DecisionForm(models.Model):
                 mylist = len(sub)
                 print(mylist)
                 if mylist >= 3:
+                    if self.ceo == '1':
+                        self.application_id.button_approved_app()
+                        self.approved_by_ceo = True
+                    else:
+                        self.application_id.button_reject_app()
+                        #self.overule = True
+                        raise Warning('Recommendation has not been Approved for this Application')
+                else:
+                    raise Warning('Recommendation Form for this Application has being confirmed(Done)')
+            return {}
+    
+    '''
+    @api.multi
+    def button_awaiting_approval(self):
+        sub = self.env['ninas.recommendation.form'].search([('application_id','=',self.application_id.id), ('partner_id', '=', self.partner_id.id), ('state','=','done'),], limit=3)
+        print(sub)
+        if self.recommendation_count == 0:
+            raise Warning('Recommendation Forms has not been Filled!')
+        elif self.recommendation_count < 3:
+            raise Warning('Recommendation Forms has not been Completely Filled!')
+        else:
+            for line in sub:
+                mylist = len(sub)
+                print(mylist)
+                if mylist >= 3:
                     if line.recommendation == '1' and self.ceo == '1':
                         self.application_id.button_approved_app()
                         self.approved_by_ceo = True
@@ -2550,6 +2575,7 @@ class DecisionForm(models.Model):
                 else:
                     raise Warning('Recommendation Form for this Application has being confirmed(Done)')
             return {}
+    '''
     
     @api.multi
     def button_overule_approval(self):
@@ -2558,6 +2584,7 @@ class DecisionForm(models.Model):
             
     @api.multi
     def button_submit_decision(self):
+        self.submitted_to_ceo = True
         group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
         user_ids = []
         partner_ids = []
