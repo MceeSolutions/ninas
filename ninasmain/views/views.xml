@@ -2360,9 +2360,9 @@
 						<page name="day_1" string="Day 1 - LA observed by TTA">
 							<field name="day1_ids" text-align="left">
 								<tree editable="True">
+									<field name="activity"/>
 									<field name="start_time"/>
 									<field name="end_time"/>
-									<field name="activity"/>
 								</tree>
 							</field>
 						</page>
@@ -2378,18 +2378,18 @@
 						<page name="day_3" string="Day 3 - LA partial">
 							<field name="day3_ids" text-align="left">
 								<tree editable="True">
+									<field name="activity"/>
 									<field name="start_time"/>
 									<field name="end_time"/>
-									<field name="activity"/>
 								</tree>
 							</field>
 						</page>
 						<page name="day_4" string="Day 4 - TTA under supervision of LA">
 							<field name="day4_ids" text-align="left">
 								<tree editable="True">
+									<field name="activity"/>
 									<field name="start_time"/>
 									<field name="end_time"/>
-									<field name="activity"/>
 								</tree>
 							</field>
 						</page>

@@ -137,7 +137,7 @@
                 	<button type="object" name="button_decision_making" string="CAR Sent / Approved" attrs="{'invisible':[('stage_id','!=',13)]}"/>
                 	<button type="object" name="check_ac_members" string="Send Decision Package" attrs="{'invisible':['|', ('stage_id','!=',16), ('package_sent','=',True)]}"/>
                 	<button type="object" name="button_awaiting_approval" string="Proceed" attrs="{'invisible':['|', ('stage_id','!=',16),('package_sent','!=',True)]}"/>
-                	<button type="object" name="button_submit_decision" string="Submit Decision Form" attrs="{'invisible':[('stage_id','!=',13)]}" class="btn btn-success"/>
+                	<button type="object" name="button_submit_decision" string="Submit Decision Form" attrs="{'invisible':[('stage_id','!=',13)]}" class="btn btn-success" invisible="1"/>
                 	<button type="object" name="button_reject_app" string="CEO Reject" invisible="1" class="btn btn-danger"/>
                 	<button type="object" name="button_submit_to_ict" string="Send to ICT" invisible="0" class="btn btn-success" attrs="{'invisible':['|', ('stage_id','!=',21), ('submitted_to_ict','=',True)]}"/>
                 	
