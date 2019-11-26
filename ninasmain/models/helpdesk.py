@@ -94,7 +94,7 @@ class Accreditation(models.Model):
     tech_assessor_id = fields.Many2one(comodel_name='hr.employee', string='Technical Assessor', track_visibility='onchange',)
     
     ac_members = fields.Many2many(comodel_name='res.users',
-                                 string='AC Members')
+                                 string='AAC Members')
     
     re_assessment_date = fields.Date(string='Re-Assessment Date', track_visibility='onchange')
     
@@ -109,6 +109,8 @@ class Accreditation(models.Model):
     document_review = fields.Selection([('yes', 'Yes.')],
                                        string='Document(s) Reviewed?', track_visibility='onchange')
     assessment_date = fields.Date(string='Assessment Date', related='assessment_plan_id.assessment_date', track_visibility='onchange', readonly=True)
+    issue_date = fields.Date(string="Issue Date")
+    
     
     assessment_date_from = fields.Date(track_visibility='onchange')
     assessment_date_to = fields.Date(track_visibility='onchange')
@@ -724,7 +726,7 @@ class CreateInvoice(models.Model):
             user_ids.append(user.id)
             partner_ids.append(user.partner_id.id)
         self.message_subscribe_users(user_ids=user_ids)
-        subject = "Applicant lab {} has been accredited and awaiting certificate generation from the ict department".format(self.partner_id.name)
+        subject = "Applicant lab {} has been accredited and awaiting certificate generation from the ict department".format(self.laboratory_legal_name)
         self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return False
     
@@ -732,6 +734,7 @@ class CreateInvoice(models.Model):
     def button_approved_app(self):
         current_date = date.today() + relativedelta(years=2)
         self.re_assessment_date = current_date
+        self.issue_date = date.today()
         self.write({'stage_id': 21})
         return {}
     
