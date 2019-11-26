@@ -68,6 +68,8 @@
 							<field name="employee_resignation_date" attrs="{'readonly': [('active', '=', False)]}"/>
 							<field name="notice_period" attrs="{'readonly': [('active', '=', False)]}"/>
 							<field name="duties_temporarily_assigned" attrs="{'readonly': [('active', '=', False)]}"/>
+							<field name="duration_served" attrs="{'readonly': [('active', '=', False)]}"/>
+							<field name="resigned" attrs="{'readonly': [('active', '=', False)]}"/>
 						</group>
 						<separator string="Comments on Resignation"/>
 						<field name="comments_on_resignation" attrs="{'readonly': [('active', '=', False)]}"/>
@@ -763,6 +765,14 @@
 	           <field name="search_view_id" ref="view_ninas_documents_archive_filter"/>
 	           <field name="domain">[('logistics','=',True)]</field>
 	           <field name="context">{'default_logistics':1, 'search_default_group_folder':1, 'search_default_group_department':0, 'search_default_my_department':0}</field>
+	</record>
+	<record model="ir.actions.act_window" id="ninas_resigned_hr_employee_menu_action">
+	           <field name="name">Resigned Employees</field>
+	           <field name="res_model">hr.employee</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">kanban,tree,form</field>
+	           <field name="domain">[('resigned','=',True)]</field>
+	           <field name="context">{}</field>
 	</record>
     
     <!-- loan request  tree view-->
@@ -2919,6 +2929,13 @@
     <menuitem name="Logistics Documents" id="logistics_document_menu" parent="fleet.fleet_configuration"
               action="ninas_logistics_documents_archive_action"/>
     
-    
+    <menuitem
+            id="ninas_resigned_hr_employee_menu"
+            name="Employee Resignation"
+            action="ninas_resigned_hr_employee_menu_action"
+            parent="hr.menu_hr_root"
+            sequence="8"
+            groups="hr.group_hr_manager"/>
+            
   </data>
 </odoo>
