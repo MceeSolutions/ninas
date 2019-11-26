@@ -771,7 +771,7 @@
 	           <field name="res_model">hr.employee</field>
 	           <field name="view_type">form</field>
 	           <field name="view_mode">kanban,tree,form</field>
-	           <field name="domain">[('resigned','=',True)]</field>
+	           <field name="domain">[('resigned','=',True), ('active','=',False)]</field>
 	           <field name="context">{}</field>
 	</record>
     
