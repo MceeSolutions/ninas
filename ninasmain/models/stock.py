@@ -201,17 +201,12 @@ class AccountInvoice(models.Model):
     
     @api.multi
     def _onchange_send_validated_message(self):
-        group_id = self.env['ir.model.data'].xmlid_to_object('account.group_account_invoice')
-        user_ids = []
+        subject = "invoice has been validated {} ".format(self.number)
         partner_ids = []
-        for user in group_id.users:
-            user_ids.append(user.id)
-            partner_ids.append(user.partner_id.id)
-        self.message_subscribe_users(user_ids=user_ids)
-        subject = "Invoice {} has been validated".format(self.number)
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
         self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
-        return False
-    
+        return {}
     
     @api.multi
     def onchange_send_paid_message(self):
