@@ -121,7 +121,7 @@ class Employee(models.Model):
     duties_temporarily_assigned = fields.Many2one(comodel_name='hr.employee', string='Duties Temporarily Assigned to')
     notice_period = fields.Char(string='Notice Period', help='notice period given by employee before leaving/resignation')
     emergency_zip_code = fields.Char(string='Zip Code')
-    resigned = fields.Boolean(string='Resigned')
+    resigned = fields.Boolean(string='Resigned', store=True)
     duration_served = fields.Char(string='Duration Served')
     
     @api.model
@@ -132,7 +132,7 @@ class Employee(models.Model):
     
     @api.onchange('resigned')
     def _onchange_partner_id(self):
-        if self.active == True:
+        if self.active == True and self.resigned == False:
             self.active = False
             self.resigned = True
     
