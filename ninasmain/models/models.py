@@ -134,6 +134,7 @@ class Employee(models.Model):
     def _onchange_resigned(self):
         if self.resigned == True:
             self.active = False
+            self.resigned = True
     
     @api.constrains('employee')
     def check_code(self):
