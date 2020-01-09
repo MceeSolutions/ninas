@@ -123,6 +123,13 @@
              <field name="act_window_id" ref="netcom_open_view_employee_profile"/>
         </record>
 
+        <menuitem
+            id="hr.menu_hr_root"
+            name="Employees"
+            groups="hr.group_hr_manager,hr.group_hr_user,base.group_user"
+            web_icon="hr,static/description/icon.png"
+            action="netcom_open_view_employee_list_my"
+            sequence="75"/>
         
         <menuitem
             id="hr.menu_open_view_employee_list_my"

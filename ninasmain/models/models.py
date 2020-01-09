@@ -130,6 +130,11 @@ class Employee(models.Model):
             vals['employee'] = self.env['ir.sequence'].next_by_code('hr.employee') or '/'
         return super(Employee, self).create(vals)
     
+    @api.onchange('resigned')
+    def _onchange_partner_id(self):
+        self.active = False
+        return {}
+    
     @api.constrains('employee')
     def check_code(self):
         if self.employee:
