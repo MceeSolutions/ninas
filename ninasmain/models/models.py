@@ -131,7 +131,7 @@ class Employee(models.Model):
         return super(Employee, self).create(vals)
     
     @api.onchange('resigned')
-    def _onchange_partner_id(self):
+    def _onchange_resigned(self):
         if self.resigned == True:
             self.active = False
     
