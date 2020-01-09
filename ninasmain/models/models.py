@@ -130,7 +130,7 @@ class Employee(models.Model):
             vals['employee'] = self.env['ir.sequence'].next_by_code('hr.employee') or '/'
         return super(Employee, self).create(vals)
     
-    @api.multi
+    @api.onchange('resigned')
     def _onchange_partner_id(self):
         if self.resigned == True:
             self.active = False
