@@ -208,6 +208,10 @@ class Accreditation(models.Model):
         inverse_name='test_name',
         track_visibility='onchange')
     
+    test_char = fields.Char(
+        string='Tests',
+        track_visibility='onchange')
+    
     lab_capabilities=fields.Text(
         string='Laboratory Capabilities:', 
         track_visibility='onchange')
