@@ -331,6 +331,14 @@
 		        
 		        <div class="form-group form-field o_website_form_required">
 	                   <div class="col-md-12 col-sm-8">
+	                   		<!-- <label class="text-left" for="lab_capabilities">Laboratory Capabilities: Please enter a brief description of the types of other tests or calibrations that the laboratory
+							currently conducts which you do not plan to include on your scope of accreditation at this time</label><br/> -->
+	                       <textarea class="form-control o_website_form_input" name="test_char" required="1" widget="html"/>
+	                   </div>
+	               </div>  
+		        
+		        <div class="form-group form-field o_website_form_required">
+	                   <div class="col-md-12 col-sm-8">
 	                   		<label class="text-left" for="lab_capabilities">Laboratory Capabilities: Please enter a brief description of the types of other tests or calibrations that the laboratory
 							currently conducts which you do not plan to include on your scope of accreditation at this time</label><br/>
 	                       <textarea class="form-control o_website_form_input" name="lab_capabilities" required="1" widget="html"/>
@@ -563,7 +571,7 @@
             'name', 'number_of_scopes',
             'description',
             'team_id',
-            'partner_id',
+            'partner_id','test_char',
             'funding',
             'assessment_type_id',
             'applicant_rep_title',

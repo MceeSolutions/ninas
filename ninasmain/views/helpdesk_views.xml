@@ -673,12 +673,14 @@
 							</tbody></table>
            	    		<group string="List the Test Names and Methods below, as in the format shown above, for which your laboratory seeks accreditation:"></group>
            	    		
-           	    		<field name="test">
+           	    		<field name="test_char" readonly="True"/>
+           	    		
+           	    		<!-- <field name="test">
 	           	    		<tree editable="True">
 		           	    		<field name="test_name" readonly="True"/>
 		           	    		<field name="test_method" readonly="True"/>
 	           	    		</tree>
-           	    		</field>
+           	    		</field> -->
            	    		
            	    		<group>
 	           	    		<field name="lab_capabilities" placeholder="Please enter a brief description of the types of other tests or calibrations that the laboratory currently conducts which you do not plan to include on your scope of accreditation at this time" readonly="True"/>
