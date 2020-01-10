@@ -52,7 +52,7 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
     
     currency_id = fields.Many2one(
-        'res.currency', 'Currency', compute='_compute_currency_id', readonly=False)
+        'res.currency', 'Currency', readonly=False)
     
 class DocumentType(models.Model):
     _name = "document.type"
