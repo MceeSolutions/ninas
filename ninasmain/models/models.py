@@ -46,6 +46,13 @@ class Partner(models.Model):
         return action
     
     car_ids = fields.One2many('car.report', 'partner_id', string='CARs', readonly=True, copy=False)
+
+class ProductTemplate(models.Model):
+    _name = "product.template"
+    _inherit = "product.template"
+    
+    currency_id = fields.Many2one(
+        'res.currency', 'Currency', compute='_compute_currency_id', readonly=False)
     
 class DocumentType(models.Model):
     _name = "document.type"
