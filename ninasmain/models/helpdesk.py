@@ -300,8 +300,7 @@ class CreateInvoice(models.Model):
             ('out_refund','Customer Credit Note'),
             ('in_refund','Vendor Credit Note'),
         ], readonly=True, index=True, change_default=True,
-        default='out_invoice',
-        track_visibility='always')
+        default='out_invoice')
     
     invoice_count = fields.Integer(compute="_invoice_count", string="Invoices", store=False)
     checklist_count = fields.Integer(compute="_checklist_count",string="Checklist", store=False)
@@ -633,6 +632,19 @@ class CreateInvoice(models.Model):
     
     @api.multi
     def button_assessment(self):
+        debit_line = self.env['ninas.assessment_plan'].sudo().create({
+                 'application_id': self.id
+            })
+        #plan = self.env['ninas.assessment_plan'].create(plan_dict)
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_assessor')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "A draft assesment template for application {} has been sent".format(self.display_name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         self.write({'stage_id': 11})
         return {}
     
