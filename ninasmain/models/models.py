@@ -219,6 +219,16 @@ class Employee(models.Model):
                             return True
         return
     
+    @api.multi
+    def open_exit_interview_survey(self):
+        self.ensure_one()
+        return {
+                'type': 'ir.actions.act_url',
+                'url': '/survey/start/employee-exit-interview-form-2',
+                'target': 'self',
+                'res_id': self.id,
+            }
+    
 class HrAppraisals(models.Model):
     _inherit = "hr.appraisal"
     
@@ -2507,6 +2517,13 @@ class DecisionForm(models.Model):
     #today's date on change (save)
     date = fields.Date(
         string= 'Date', default=date.today())
+    
+    director_reviews = fields.Selection(
+        [('1','Unconditional accreditation/renewal of accreditation to be granted'),
+        ('2','Accreditation/renewal of accreditation to be deferred until all non-conformances have been cleared'),
+        ('3','Accreditation/renewal of accreditation is not recommended'),
+        ('4','For re-assessment only: Suspension of accreditation status or part thereof')],
+        string = 'Reommendation')
     
     ceo = fields.Selection(
         [('1','Unconditional accreditation/renewal of accreditation to be granted'),
