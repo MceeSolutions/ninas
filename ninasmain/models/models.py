@@ -1406,7 +1406,47 @@ class BankVoucher(models.Model):
      #   string='Total Amount',
       #  )
     
+class HrExpenseSheet(models.Model):
+    _name = "hr.expense.sheet"
+    _inherit = 'hr.expense.sheet'
     
+    state = fields.Selection([('submit', 'Submitted'),
+                              ('approve', 'Approved'),
+                              ('ceo_approve', 'CEO Approval'),
+                              ('post', 'Posted'),
+                              ('done', 'Paid'),
+                              ('cancel', 'Refused')
+                              ], string='Status', index=True, readonly=True, track_visibility='onchange', copy=False, default='submit', required=True,
+    help='Expense Report State')
+    
+    @api.multi
+    def approve_expense_sheets(self):
+        if not self.user_has_groups('hr_expense.group_hr_expense_user'):
+            raise UserError(_("Only HR Officers can approve expenses"))
+        self.write({'state': 'ceo_approve', 'responsible_id': self.env.user.id})
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_ceo')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "An Expense is awaiting your approval".format(self.name)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return False
+    
+    @api.multi
+    def ceo_approval(self):
+        if not self.user_has_groups('ninasmain.group_ceo'):
+            raise UserError(_("Only CEO can approve expense"))
+        self.write({'state': 'approve'})
+        subject = "Expense {} has been Approved".format(self.name)
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return {}
+
 class NinasExpenseClaim(models.Model):
     _name = 'ninas.expense_claim'
     _description = 'Expense Claim form'
