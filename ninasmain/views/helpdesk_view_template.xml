@@ -34,15 +34,15 @@
 			            </li>
 		       		 </ul><br/><br/>-->
 	            	<h1 class="text-center">NIGERIA NATIONAL ACCREDITATION SERVICE</h1>
-					<h3 class="text-center">F 072A APPLICATION FOR ACCREDITATION OF TESTING, CALIBRATION OR MEDICAL
-											LABORATORY ISO/IEC 17025 &amp; ISO 15189</h3>
+					<h3 class="text-center">F 072A APPLICATION FOR ACCREDITATION</h3>
 					<h4 class="text-left">Confidentiality Policy</h4>
-					<h5 class="container">According to the NiNAS Code of Conduct: All NiNAS Assessors, Staff and Committee members are required to keep
+					<h5 class="container text-boxed">According to the NiNAS Code of Conduct: All NiNAS Assessors, Staff and Committee members are required to keep
 					information about your application confidential. Following a successful accreditation, the only information published by
 					NiNAS will be your accredited scope and contact details. NiNAS may be required by law to share other information or may
 					publish information that is already in the public domain.</h5>
 					<strong>
-						Part I. Applicant Information<br/>
+						1. Applicant Data<br/>
+						<p style="color:Red;">PLEASE ENTER THE EXACT DESIGNATION OF THE APPLICANT LEGAL ENTITY</p>
 						Note: fields with asterisk (*) are required
 					</strong>
 				</div>
@@ -51,17 +51,17 @@
 			<xpath expr="//div[hasclass('form-group', 'form-field', 'o_website_form_required')]" position="replace">
 				<div class="container">
             		<div class="form-group form-field o_website_form_required">
-		                &#160;&#160;<label class="control-label" for="partner_name">&#160;&#160;Applicant’s Authorized Representative’s Name</label>
+		               <!--  &#160;&#160;<label class="control-label" for="partner_name">&#160;&#160;Applicant’s Authorized Representative’s Name</label>
 		                <div class="col-md-12 col-sm-8">
 		                    <input type="text" class="form-control o_website_form_input" name="partner_name" t-att-value="default_values.get('name', '')" required="1"/>
-		                </div>
+		                </div>-->  
 		            </div>
-            	</div>                   
+            	</div>                  
        		</xpath>
        		
        		
        		<xpath expr="//div[hasclass('form-group', 'form-field', 'o_website_form_required')]" position="after">
-       			<div class="container">
+       			<!-- <div class="container">
        			<div class="form-group form-field o_website_form_required">
 		              <div class="col-md-12 col-sm-8">
 		              <label class="control-label" for="applicant_rep_title">Authorized Representative’s Title</label>
@@ -76,18 +76,23 @@
 						
 		              </div>
 		          </div>
-		          </div>
+		          </div>-->
 		          
-		          <p class='container'>
+		          <!-- <p class='container'>
 		          	Laboratory’s Legal Name (as it should appear on your Certificate and on the NiNAS web site) and the Legal Status of
 					the laboratory (e.g. Owner operated, Limited Liability Corporation, Corporation, Government Lab, Incorporation by
 					Trustees etc.) If the lab is part of a larger legal entity, include that name and the division to which the lab belongs.
+		          </p>-->
+		          <p class='container'>
+			          <b>
+			          	Name and legal status of the applicant 
+			          	<span style="color:Red;">(please enclose proof of structure and legal status, e.g. certificate of incorporation/registration, excerpt of the commercial register)</span>
+			          </b>
 		          </p>
-		          
 		          <div class="container">
 			          <div class="form-group form-field o_website_form_required">
 	                     <div class="col-md-12 col-sm-8">
-	                   		<label class="control-label" for="laboratory_legal_name">Laboratory’s Legal Name</label><br/>
+	                   		<label class="control-label" for="laboratory_legal_name">Applicant</label><br/>
 	                        <input type="text" class="form-control o_website_form_input" name="laboratory_legal_name" required="1"/>
 	                     </div>
 	                 </div>
@@ -95,7 +100,7 @@
                  
                  <div class="container">
                  <div class="form-group form-field o_website_form_required">
-                 	 &#160;&#160;<label class="control-label" for="laboratory_address">&#160;&#160;Laboratory Address (Number and Street, City, State and Country)</label><br/>
+                 	 <!-- &#160;&#160;<label class="control-label" for="laboratory_address">&#160;&#160;Laboratory Address (Number and Street, City, State and Country)</label><br/> -->
                      <div class="col-md-2 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="lab_number" required="1" placeholder="Number"/>
                      </div>
@@ -119,10 +124,401 @@
 						     </t>
 						 </select>
                      </div>
+                     <div class="col-md-12 col-sm-8">
+	                  		<p></p>
+		                 	<input type="file" class="form-control o_website_form_input" required="1" multiple="" data-show-upload="true" data-show-caption="true" lass="file" data-show-preview="true" for="file_applicant_cac"/>
+		               	</div>
+                 </div>
+                 </div>
+                 <div class="container">
+	                 <div class="form-group form-field">
+		                   <div class="col-md-12 col-sm-8">
+		                   		<label class="control-label" for="name_address_of_owners">Name(s) of authorized representatives of the applicant: <span style="color:Red;">(e. g. registered persons in the certificate of incorporation/registration))</span></label><br/>
+		                       	<textarea class="form-control o_website_form_input" name="name_address_of_owners"/>
+		                   </div>
+		              </div>
+	              </div>
+	              <div class="container">
+                 <div class="form-group form-field o_website_form_required">
+                 	 &#160;&#160;<label class="control-label" for="mailing_address">&#160;&#160;2.	Address for receiving invoices, if different from the address in section 1</label><br/>
+                	 <div class="col-md-6 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="laboratory_company_name" placeholder="Company Name"/>
+                     </div>
+                     <div class="col-md-6 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="partner_name" placeholder="Contact Person"/>
+                     </div><br/><br/>
+                	 <div class="col-md-2 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="mail_number" placeholder="Postal Code"/>
+                     </div>
+                     <div class="col-md-5 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="mail_street" placeholder="Street"/>
+                     </div>
+                     <div class="col-md-5 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="mail_city" placeholder="City"/>
+                     </div><br/><br/>
+                     <div class="col-md-6 col-sm-4">
+                         <select class="form-control" name="mail_state_id">
+						     <t t-foreach="mail_state_id" t-as="mail_state_id">
+						          <option t-attf-value="#{mail_state_id.id}"><t t-esc="mail_state_id.name"/></option>
+						     </t>
+						 </select>
+                     </div>
+                     <div class="col-md-6 col-sm-4">
+                         <select class="form-control" name="mail_country_id">
+                         	<option value="">Country...</option>
+						     <t t-foreach="mail_country_id" t-as="mail_country_id">
+						          <option t-attf-value="#{mail_country_id.id}"><t t-esc="mail_country_id.name"/></option>
+						     </t>
+						 </select>
+                     </div>
                  </div>
                  </div>
                  
                  <div class="container">
+	                 <div class="form-group form-field o_website_form_required">
+	                     <div class="col-md-12 col-sm-8">
+	                     	<label class="control-label" for="type_of_cab">3.	Type of Conformity Assessment Body (CAB) </label><br/>
+	                     	<span style="color:Red;"><b>ONLY ONE TYPE OF CAB CAN BE SELECTED, FOR EVERY TYPE OF CAB A SEPARATE FORM MUST BE USED!</b></span>
+	                        <!-- <input type="radio" class="form-control o_website_form_input" name="type_of_cab" required="1"/> -->
+	                        <select class="form-control o_website_form_input" name="type_of_cab">
+							  <option value="testing_lab">Testing laboratory ISO/IEC 17025</option>
+							  <option value="calibration_lab">Calibration laboratory ISO/IEC 17025</option>
+							  <option value="med_lab">Medical laboratory ISO 15189</option>
+							  <option value="inspection_body_a">Inspection body ISO/IEC 17020 Type A</option>
+							  <option value="inspection_body_b">Inspection body ISO/IEC 17020 Type B</option>
+							  <option value="inspection_body_c">Inspection body ISO/IEC 17020 Type C</option>
+							  <option value="certification_body_mang">Certification body for management systems ISO/IEC 17021-1</option>
+							  <option value="certification_body_persons">Certification body for persons ISO/IEC 17024</option>
+							  <option value="certification_body_products">Certification body for products, processes and services ISO/IEC 17065</option>
+							  <option value="proficiency_test">Proficiency Test Provider ISO/IEC 17043</option>
+							  <option value="validation_verification_body">Validation / Verification body ISO 14065</option>
+							  <option value="producer_ref_material">Producer of Reference Materials ISO Guide 34 (ISO 17034) in conjunction with ISO/IEC 17025</option>						</select>
+	                     </div>
+	                 </div>
+                 </div>
+                 
+                 <div class="container">
+	                 <div class="form-group form-field o_website_form_required">
+	                     <div class="col-md-12 col-sm-8">
+	                     	<label class="control-label" for="application_for"><b>4.	Application for</b></label><br/>
+	                     	<select class="form-control o_website_form_input" name="application_for">
+								  <option value="initial_accreditation">Initial Accreditation</option>
+								  <option value="re_accreditation">Re-Accreditation</option>
+								  <option value="modification_of_accredidtation">Modification of Accreditation (e. g. change of the name of the CAB)</option>
+								  <option value="extension_of_accreditation">Extension of Accreditation (e.g. enlarged scope, new locations, etc.)</option>
+								  <option value="inspection_body_b">Reduction of Accreditation Scope (e.g. reducing of the accredited scope, site closure, etc.)</option>
+							</select>
+	                     </div>
+	                 </div>
+                 </div>
+                 
+                 <div class="container">
+                 <strong>5.	CAB information</strong><br/>
+                 <div class="form-group form-field o_website_form_required">
+                 	 &#160;&#160;<label class="control-label" for="name_of_cab">&#160;&#160;Name of CAB  (if different from the applicant):</label><br/>
+                     <div class="col-md-12 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="name_of_cab" placeholder="Name Of Cab"/>
+                     </div><br/><br/>
+                	 <div class="col-md-2 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="cab_number" placeholder="Postal Code"/>
+                     </div>
+                     <div class="col-md-5 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="cab_street" placeholder="Street"/>
+                     </div>
+                     <div class="col-md-5 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="cab_city" placeholder="City"/>
+                     </div><br/><br/>
+                     <div class="col-md-6 col-sm-4">
+                         <select class="form-control" name="cab_state_id">
+						     <t t-foreach="cab_state_id" t-as="cab_state_id">
+						          <option t-attf-value="#{cab_state_id.id}"><t t-esc="cab_state_id.name"/></option>
+						     </t>
+						 </select>
+                     </div>
+                     <div class="col-md-6 col-sm-4">
+                         <select class="form-control" name="cab_country_id">
+                         	<option value="">Country...</option>
+						     <t t-foreach="cab_country_id" t-as="cab_country_id">
+						          <option t-attf-value="#{cab_country_id.id}"><t t-esc="cab_country_id.name"/></option>
+						     </t>
+						 </select>
+                     </div>
+                 </div>
+                 <div class="form-group form-field">
+                     <div class="col-md-7 col-sm-8 o_website_form_required">
+                   		<label class="control-label" for="head_of_cab">Head of the CAB:</label><br/>
+                       	<input type="text" class="form-control o_website_form_input" name="head_of_cab" required="1"/>
+                     </div>
+                     <div class="col-md-5 col-sm-8">
+                     	<label class="control-label" for="deputy_head_of_cab">Deputy head:</label><br/>
+                        <input type="text" class="form-control o_website_form_input" name="deputy_head_of_cab"/>
+                     </div>                 
+                 </div>
+                 <div class="form-group form-field">
+                 	<div class="col-md-8 col-sm-8 o_website_form_required">
+                       	<input type="text" class="form-control o_website_form_input" name="contact_person_of_cab" required="1" placeholder="Contact Person"/>
+                     </div>
+                     <div class="col-md-4 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="tel_contact_of_cab" placeholder="Tel"/>
+                     </div><br/><br/>
+                     <div class="col-md-9 col-sm-8 o_website_form_required">
+                       	<input type="text" class="form-control o_website_form_input" name="email_contact_of_cab" required="1" placeholder="Email"/>
+                     </div>
+                     <div class="col-md-3 col-sm-8">
+                        <input type="text" class="form-control o_website_form_input" name="fax_contact_of_cab" placeholder="Fax"/>
+                     </div>
+                 </div>
+                 
+                 <div class="form-group form-field o_website_form_required">
+                 	 &#160;&#160;<label class="control-label" for="mailing_address">&#160;&#160;Contact data to be used in the NiNAS database of accredited bodies at www.NiNAS.ng:</label><br/>
+                     <div class="col-md-12 col-sm-8">
+                         <input type="text" class="form-control o_website_form_input" name="partner_name" t-att-value="default_values.get('name', '')" required="1" placeholder="Contact Person"/>
+                     </div><br/><br/>
+                	 <div class="col-md-2 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="tel_contact_of_cab" placeholder="Tel"/>
+                     </div>
+                     <div class="col-md-5 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="email_contact_of_cab" placeholder="Email"/>
+                     </div>
+                     <div class="col-md-5 col-sm-4">
+                         <input type="text" class="form-control o_website_form_input" name="fax_contact_of_cab" placeholder="Fax"/>
+                     </div>
+                 </div>   
+	                 <div class="form-group form-field o_website_form_required">
+	                  	<div class="col-md-12 col-sm-8">
+	                  		<label class="text-left" for="num_of_employees_within_accred">Number of employees within the accreditation field:
+	                  		(including external employees like auditors, inspectors,sampler, etc. / Specify the number of employees per location)
+	                  		</label><br/>
+	                      	<textarea class="form-control o_website_form_input" name="lab_capabilities" required="1" widget="html"/>
+	                  	</div>
+	              	</div>
+	              	<div class="form-group form-field o_website_form_required">
+	                  	<div class="col-md-12 col-sm-8">
+	                  		<label class="text-left" for="description_of_relations">Description of relations to supervisory or subordinated organizations 
+	                  		(legal persons, individual persons, parent company, subsidiaries). Please add organization charts. 
+	                  		</label><br/>
+	                      	<textarea class="form-control o_website_form_input" name="description_of_relations" required="1" widget="html"/>
+	                  	</div>
+	                  	<div class="col-md-12 col-sm-8">
+	                  		<p></p>
+		                 	<input type="file" class="form-control o_website_form_input" required="1" multiple="" data-show-upload="true" data-show-caption="true" lass="file" data-show-preview="true" for="attachment_ids"/>
+		               	</div>
+	              	</div> 
+	              	<div class="form-group form-field o_website_form_required">
+	                     <div class="col-md-12 col-sm-8">
+	                     	<label class="control-label" for="cabs_operate_multiple_sites"><b>Does the CAB operate on several sites within the applied scope of accreditation? </b></label><br/>
+	                     	<select class="form-control o_website_form_input" name="cabs_operate_multiple_sites">
+								  <option value=""></option>
+								  <option value="yes">Yes</option>
+								  <option value="no">No</option>
+							</select>
+	                     </div>
+	                 </div>
+	                 <div class="form-group form-field o_website_form_required">
+	                 	 &#160;&#160;<label class="control-label" for="mailing_address">&#160;&#160;If yes, further locations of CAB:</label><br/>
+	                     <div class="col-md-12 col-sm-8">
+	                         <input type="text" class="form-control o_website_form_input" name="partner_name" placeholder="Number Of Employees"/>
+	                     </div><br/><br/>
+	                	 <div class="col-md-5 col-sm-4">
+	                         <input type="text" class="form-control o_website_form_input" name="further_cab_number" placeholder="Street"/>
+	                     </div>
+	                     <div class="col-md-5 col-sm-4">
+	                         <input type="text" class="form-control o_website_form_input" name="further_cab_street" placeholder="City"/>
+	                     </div>
+	                     <div class="col-md-2 col-sm-4">
+	                         <input type="text" class="form-control o_website_form_input" name="further_cab_city" placeholder="Code"/>
+	                     </div>
+	                 </div>             
+               </div>
+               
+               <div class="container">
+               		<strong>6.	Conformity assessment procedures to be accredited – scope of accreditation</strong><br/>
+               		<b>
+			          	<span style="color:Red;">Please attach a separate list about standards, methods, procedures, schemes for which accreditation as conformity assessment body is applied.</span>
+		          	</b><br/>
+		          	<span><b>Note: See sample provided by NiNAS</b></span><br/>
+		          	<span><b>If applicable, the updated annex of the accreditation certificate can be enclosed.</b></span>
+		          	<div class="col-md-12 col-sm-8">
+	                 	<input type="file" class="form-control o_website_form_input" required="1" multiple="" data-show-upload="true" data-show-caption="true" lass="file" data-show-preview="true" for="file_descrptopn_of_relations"/>
+	               	</div>
+               </div>
+               
+               <div class="container text-boxed">
+               		<br/>
+               		<strong>7.	Accreditation with flexible scope (only for testing, calibration and medical laboratories)</strong><br/>
+               		<span><b>Note:</b></span><br/>
+		          	<span>For the possibility of accreditation with a flexible scope (category I or II) according to the NiNAS rule on flexible scope please contact the Director of Accreditation. </span><br/>
+		          	<span>Applications can be made informally to the Director of Accreditation or Programme Manager in due time before the assessment</span><br/>
+		          	<span>Accreditation with a flexible scope may be not possible in some technical sectors.</span><br/>
+		          	<span>Accreditation for a flexible scope requires increased assessment expenditure because of specific requirements to be fulfilled by the applicant.</span><br/>
+		          	<!--<div class="form-group form-field o_website_form_required">
+			          	<div class="col-md-12 col-sm-8">
+	                     	<label class="control-label" for="telephone_number"><b>Application for Accreditation with Flexible Scope (Category III)</b></label><br/>
+	                     	<select class="form-control o_website_form_input" name="type_of_cab">
+								  <option value=""></option>
+								  <option value="yes">Yes</option>
+								  <option value="no">No</option>
+							</select>
+	                     </div>
+                     </div>-->
+                     <div class="form-group form-field">
+	               	  		<div class="col-md-9 col-sm-1">
+		                   		<label class="control-label" for="accreditation_flexible_scope">Application for Accreditation with Flexible Scope (Category III):</label>
+		                   </div>
+		                   <div class="col-md-1 col-sm-1 pull-left align-left">
+		                   		<input type="checkbox" class="form-control o_website_form_input" name="accreditation_flexible_scope"/>
+		                   </div>
+		              </div>
+               </div>
+               
+               <div class="container">
+               		<br/>
+               		<strong>8.	Application for the use of the accreditation symbol</strong><br/>
+               		<div class="form-group form-field o_website_form_required">
+	                  	<div class="col-md-12 col-sm-8">
+	                     	<label class="text-left" for="application_accreditation_symbol">Application for the use of the accreditation symbol on result reports:
+							(e.g. on test reports, calibration certificates, examination reports, inspection certificates, other reports – regarding to type of CAB)</label><br/>
+	                     	<select class="form-control o_website_form_input" name="application_accreditation_symbol">
+								  <option value=""></option>
+								  <option value="yes">Yes</option>
+								  <option value="no">No</option>
+							</select>
+	                     </div>
+	                     <div class="col-md-12 col-sm-8">
+	                     	<label class="control-label" for="symbol_use_for_other_reason">Moreover, the use of the accreditation symbol is applied for other purposes :</label><br/>
+	                     	<select class="form-control o_website_form_input" name="symbol_use_for_other_reason">
+								  <option value=""></option>
+								  <option value="yes">Yes</option>
+								  <option value="no">No</option>
+							</select>
+	                     </div>
+	                     <div class="col-md-12 col-sm-8">
+	                     	<label class="control-label" for="yes_symbol_use_for_other_reason">If yes, please specify:</label><br/>
+	                     	<input type="text" class="form-control o_website_form_input" name="yes_symbol_use_for_other_reason"/>
+	                     </div>
+	                     <div class="col-md-12 col-sm-8">
+	                     	<label class="control-label" for="combined_accreditation_symbol">Application for a combined accreditation symbol? (ILAC-NiNAS or IAF-NiNAS):</label><br/>
+	                     	<select class="form-control o_website_form_input" name="combined_accreditation_symbol">
+								  <option value=""></option>
+								  <option value="yes">Yes</option>
+								  <option value="no">No</option>
+							</select>
+	                     </div>
+                     </div>
+               </div>
+               
+               
+               <div class="container">
+               		<br/>
+               		<strong>9.	Specifications to former accreditations (only for initial accreditations and reaccreditations)</strong><br/>
+               		<div class="form-group form-field o_website_form_required">
+               		<div class="col-md-12 col-sm-8">
+                     	<label class="control-label" for="further_accreditation_files">Are there further accreditation files for which the applicant is accredited by NiNAS?:</label><br/>
+                     	<select class="form-control o_website_form_input" name="further_accreditation_files">
+							  <option value=""></option>
+							  <option value="yes">Yes</option>
+							  <option value="no">No</option>
+						</select>
+                     </div>
+                     <div class="col-md-12 col-sm-8">
+                     	<label class="control-label" for="yes_further_accreditation_files">If yes, Case No.:</label><br/>
+                     	<input type="text" class="form-control o_website_form_input" name="yes_further_accreditation_files"/>
+                     </div>
+                     <div class="col-md-12 col-sm-8">
+                     	<label class="control-label" for="CAB_accredited_by_another_accreditation_body">Is the CAB already accredited by another accreditation body?:</label><br/>
+                     	<select class="form-control o_website_form_input" name="CAB_accredited_by_another_accreditation_body">
+							  <option value=""></option>
+							  <option value="yes">Yes</option>
+							  <option value="no">No</option>
+						</select>
+                     </div>
+                     <div class="col-md-10 col-sm-8">
+                     	<label class="control-label" for="yes_CAB_accredited_by_another_accreditation_body">If yes, information to the accreditation body:</label><br/>
+                     	<input type="text" class="form-control o_website_form_input" name="yes_CAB_accredited_by_another_accreditation_body"/>
+                     </div>
+                     <div class="col-md-2 col-sm-8">
+                     	<br/><p></p>
+                         <input type="text" class="form-control o_website_form_input" name="case_no_CAB_accredited_by_another_accreditation_body" placeholder="Case No."/>
+                     </div>
+	                  	<div class="col-md-12 col-sm-8">
+	                  		<label class="control-label" for="lab_capabilities">
+	                  		Are there any existing or applied notifications, permissions or applications of the CAB?
+	                  		</label><br/>
+	                      	<textarea class="form-control o_website_form_input" name="existing_or_applied_notifications_cab" required="1" widget="html"/>
+	                  	</div>
+	              	</div>
+               </div>
+               
+               <div class="container">
+               		<br/>
+               		<strong>10.	Questions with regard to the local accreditation body of the applicant</strong><br/>
+               		<div class="form-group form-field o_website_form_required">
+               		<div class="col-md-12 col-sm-8">
+                     	<label class="control-label" for="local_accreditation_body">Is there a local accreditation body?:</label><br/>
+                     	<select class="form-control o_website_form_input" name="local_accreditation_body">
+							  <option value=""></option>
+							  <option value="yes">Yes</option>
+							  <option value="no">No</option>
+						</select>
+                     </div>
+                     <div class="col-md-12 col-sm-8">
+                     	<label class="control-label" for="local_accreditation_body_signatory_to_IAF_MLA_or_ILAC_MRA">Is the local accreditation body a signatory to the IAF MLA or ILAC MRA respectively?:</label><br/>
+                     	<select class="form-control o_website_form_input" name="local_accreditation_body_signatory_to_IAF_MLA_or_ILAC_MRA">
+							  <option value=""></option>
+							  <option value="yes">Yes</option>
+							  <option value="no">No</option>
+						</select>
+                     </div>
+                     <div class="col-md-12 col-sm-8">
+                     	<label class="control-label" for="local_accreditation_body_required_scope">Does the local accreditation body offer the required scope?:</label><br/>
+                     	<select class="form-control o_website_form_input" name="local_accreditation_body_required_scope">
+							  <option value=""></option>
+							  <option value="yes">Yes</option>
+							  <option value="no">No</option>
+						</select>
+                     </div>
+                     <div class="col-md-12 col-sm-8">
+                     	<label class="text-left" for="reason_applying_with_ninas">If the questions above are all answered with yes, what are the reasons for applying for accreditation by NiNAS instead of the local accreditation body?:</label><br/>
+                     	<textarea class="form-control o_website_form_input" name="reason_applying_with_ninas"/>
+                     </div>
+                   </div>
+                   	 <p><b>Note:</b></p>
+                     <p>If there is a local accreditation body as stated in Section 10 above:</p>
+                     <span>NiNAS will inform the local accreditation body about the application;</span><br/>
+                     <span>NiNAS may cooperate with the local accreditation body with regard to:</span><br/>
+                     &#160;&#160;<span>-Exchange of information taking into account factors such as language, local laws and regulations, culture, relevant local accreditation requirements etc., as well as technical competence requirements,</span><br/>
+                     &#160;&#160;<span>-include personnel from the local accreditation body on the assessment team, as observer or for translation service.</span><br/>
+                </div>
+               
+                <div class="container">
+               		<br/>
+               		<strong>11.	Authorization (optional) </strong><br/>
+               		<span><b>Authorized to make arrangements and contractual agreements between NiNAS and the applicant with regard to the accreditation procedure are:</b></span><br/>
+               		&#160;&#160;&#160;&#160;<span><b>The head of the CAB (as specified in section 5.)</b></span><br/>
+               		&#160;&#160;&#160;&#160;<span><b>The contact person (as specified in section 5.)</b></span><br/>
+               		&#160;&#160;&#160;&#160;<span><b>The following person:</b></span><br/>
+               		<div class="form-group form-field o_website_form_required">
+               			<div class="col-md-12 col-sm-8">
+	                         <input type="text" class="form-control o_website_form_input" name="partner_name" placeholder="Contact Person"/>
+	                     </div><br/><br/>
+	                	 <div class="col-md-2 col-sm-4">
+	                         <input type="text" class="form-control o_website_form_input" name="mail_number" placeholder="Postal Code"/>
+	                     </div>
+	                     <div class="col-md-5 col-sm-4">
+	                         <input type="text" class="form-control o_website_form_input" name="mail_street" placeholder="Street"/>
+	                     </div>
+	                     <div class="col-md-5 col-sm-4">
+	                         <input type="text" class="form-control o_website_form_input" name="mail_city" placeholder="Place"/>
+	                     </div><br/><br/>
+	                     <div class="col-md-8 col-sm-4">
+	                         <input type="text" class="form-control o_website_form_input" name="mail_number" placeholder="Email"/>
+	                     </div>
+	                     <div class="col-md-4 col-sm-4">
+	                         <input type="text" class="form-control o_website_form_input" name="mail_street" placeholder="Fax"/>
+	                     </div><br/><br/>
+               		</div>
+               	</div>                
+                 <!-- <div class="container">
 	                 <div class="form-group form-field o_website_form_required">
 	                     <div class="col-md-12 col-sm-8">
 	                     	<label class="control-label" for="telephone_number">Telephone Number(s)</label><br/>
@@ -138,11 +534,11 @@
 	                        <input type="text" class="form-control o_website_form_input" name="email_address" t-att-value="default_values.get('email', '')" required="1" multiple=""/>
 	                     </div>
 	                 </div>
-                 </div>
+                 </div> -->
                  
-                 <div class="container">
+                 <!--<div class="container">
                  <div class="form-group form-field o_website_form_required">
-                 	 &#160;&#160;<label class="control-label" for="mailing_address">&#160;&#160;Mailing Address (if different from the laboratory location – Number, Street, City, State, Country)</label><br/>
+                 	 &#160;&#160;<label class="control-label" for="mailing_address">&#160;&#160;2.	Address for receiving invoices, if different from the address in section 1</label><br/>
                 	 <div class="col-md-2 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="mail_number" placeholder="Number"/>
                      </div>
@@ -170,7 +566,7 @@
                  </div>
                  </div>
                  
-                  <!-- <div class="form-group form-field o_website_form_custom">
+                   <div class="form-group form-field o_website_form_custom">
                 	<div class="col-md-3 col-sm-4 text-right">
                  		<label class="control-label" for="account">account</label>
 	               </div>
@@ -181,24 +577,30 @@
 	               </div>
 	         	</div>  -->
                  
-                 <div class="container">
+                 <!-- <div class="container">
 	                 <div class="form-group form-field">
 		                   <div class="col-md-12 col-sm-8">
-		                   		<label class="control-label" for="name_address_of_owners">Name and Address of Owners (applicable in the case of private ownership)</label><br/>
+		                   		<label class="control-label" for="name_address_of_owners">Name(s) of authorized representatives of the applicant: (e. g. registered persons in the certificate of incorporation/registration))</label><br/>
 		                       	<textarea class="form-control o_website_form_input" name="name_address_of_owners"/>
 		                   </div>
 		              </div>
-	              </div>
+	              </div>-->
 		          
-		          <div class="container">
+		          <!-- <div class="container">
 		          		<strong>
 	                 		<p>
 	                 		<u>Type of Accreditation Requested</u>
 	                 		</p>
 	                 	</strong>
 	               	  <div class="form-group form-field">
-		                   <div class="col-md-3 col-sm-1">
-		                   		<label class="control-label" for="testing_lab">ISO/IEC 17025 Testing Laboratory</label>
+	               	  		<div class="col-md-9 col-sm-1">
+		                   		<label class="control-label" for="testing_lab">Moreover, the use of the accreditation symbol is applied for other purposes :</label>
+		                   </div>
+		                   <div class="col-md-1 col-sm-1 pull-left align-left">
+		                   		<input type="checkbox" class="form-control o_website_form_input" name="testing_lab"/>
+		                   </div>
+		                   <div class="col-md-9 col-sm-1">
+		                   		<label class="control-label" for="testing_lab">Moreover, the use of the accreditation symbol is applied for other purposes :</label>
 		                   </div>
 		                   <div class="col-md-1 col-sm-1 pull-left align-left">
 		                   		<input type="checkbox" class="form-control o_website_form_input" name="testing_lab"/>
@@ -216,9 +618,9 @@
 		                   		<input type="checkbox" class="form-control o_website_form_input" name="med_lab"/>
 		                   </div>
 		              </div>
-		          </div>
+		          </div>-->
                   
-		            <div class="container">
+		            <!-- <div class="container">
 	            		 <strong>
 	                 		<p>
 	                 		<u>Scope of Accreditation Requested</u>
@@ -244,7 +646,7 @@
 			                   		<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="1_to_10" />
 			                   </div>
 			              </div>
-			          </div>     	
+			          </div>-->    	
                  
                 <!-- <div class="form-group form-field">
                 		<input type="radio" class="form-control o_website_form_input" name="number_of_scopes" value="11_to_20"/> (11-20 Tests)<br/>
@@ -266,7 +668,7 @@
                      </div>
                  </div>-->
                  
-    				<p class="container">
+    				<!-- <p class="container">
     					<strong>Tests:</strong> Please list all the fields of testing and the test methods under each field for which the laboratory seeks
     					accreditation. (For more tests add additional lines)
     				</p>
@@ -292,7 +694,7 @@
 					</tbody></table>
 					
 		          <br/>
-		          
+		           -->
 		          <!-- <div class="container">
 			          <strong>
 			          	<u>List the Test Names and Methods below, as in the format shown above, for which your laboratory seeks
@@ -328,16 +730,16 @@
 					     </t>
 	               </div>
 	         	</div> -->
-		        
+		        <!-- 
 		        <div class="form-group form-field o_website_form_required">
 	                   <div class="col-md-12 col-sm-8">
-	                   		<!-- <label class="text-left" for="lab_capabilities">Laboratory Capabilities: Please enter a brief description of the types of other tests or calibrations that the laboratory
-							currently conducts which you do not plan to include on your scope of accreditation at this time</label><br/> -->
+	                   		<label class="text-left" for="lab_capabilities">Laboratory Capabilities: Please enter a brief description of the types of other tests or calibrations that the laboratory
+							currently conducts which you do not plan to include on your scope of accreditation at this time</label><br/>
 	                       <textarea class="form-control o_website_form_input" name="test_char" required="1" widget="html"/>
 	                   </div>
 	               </div>  
 		        
-		        <div class="form-group form-field o_website_form_required">
+		        	<div class="form-group form-field o_website_form_required">
 	                   <div class="col-md-12 col-sm-8">
 	                   		<label class="text-left" for="lab_capabilities">Laboratory Capabilities: Please enter a brief description of the types of other tests or calibrations that the laboratory
 							currently conducts which you do not plan to include on your scope of accreditation at this time</label><br/>
@@ -352,13 +754,29 @@
 	                       <textarea class="form-control o_website_form_input" name="num_of_lab_staff" required="1"/>
 	                   </div>
 	               </div>  
-		          
-		       		<p>
-		       		<strong>
-		       		AGREEMENT
-		       		</strong>
-		       		</p>
-		       		
+		           -->
+		      <div class="container">
+
+	          </div> 
+	          <div class="container">
+	          	 <p><strong>12.  AGREEMENT</strong></p>
+                 <span>I have read, I understand and I agree with the information provided in the <strong>Guide for Laboratories Applying to NiNAS for Accreditation,</strong> and agrees that the laboratory</span><br/>
+                            <span>a) commit to fulfill continually the requirements for accreditation for the scope for which accreditation is sought or granted and commit to provide evidence of fulfillment. This includes agreement to adapt to changes in the requirements for accreditation;</span><br/>
+                            <span>b) cooperate as is necessary to enable the accreditation body to verify fulfillment of requirements for accreditation;</span><br/>
+           	    			<span>c) provide access to conformity assessment body personnel, locations, information, documents and records as necessary to verify fulfillment of requirements for accreditation;</span><br/>
+           	    			<span>d) arrange the witnessing of conformity assessment activities when requested by the accreditation body;  </span><br/>
+           	    			<span>e) have, where applicable, legally enforceable arrangements with their clients that commit the  clients to provide, on request, access to accreditation body assessment teams to assess the conformity assessment body's performance when carrying out conformity assessment activities at the client’s site;</span><br/>
+           	    			<span>f) claim accreditation only with respect to the scope for which it has been granted; </span><br/>
+           	    			<span>g) commit to follow the accreditation body's policy for the use of the accreditation symbol;</span><br/>
+           	    			<span>h) not to use its accreditation in such a manner as to bring the accreditation body into disrepute;</span><br/>
+           	    			<span>i) inform the accreditation body without delay of significant changes relevant to its accreditation such as,<br/>
+							- its legal, commercial, ownership or organizational status,<br/>
+							- the organization, top management and key personnel,<br/>
+							- resources and location(s) other matters that may affect the ability of the conformity assessment body to fulfill requirements for accreditation</span><br/>
+           	    			<span>j) to pay fees as determined by the accreditation body; and</span><br/>
+           	    			<span>k) to assist in the investigation and resolution of any accreditation-related complaints about the conformity assessment body referred to it by the accreditation body.</span><br/>
+           	    			<br/>
+          		       		
 		       		<div class="form-group form-field o_website_form_required">
                      <div class="col-md-12 col-sm-8">
                      	<label class="control-label" for="email_address">Signed by Authorized Representative:</label><br/>
@@ -416,26 +834,9 @@
                      <div class="col-md-3 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="funding_company_rep_num" placeholder="Representative Number"/>
                      </div>
-                 </div>
-	          
-	          <div class="container">
-	          
-                 <span>I have read, I understand and I agree with the information provided in the <strong>Guide for Laboratories Applying to NiNAS for Accreditation,</strong> and agrees that the laboratory</span><br/>
-                            <span>a) commit to fulfill continually the requirements for accreditation for the scope for which accreditation is sought or granted and commit to provide evidence of fulfillment. This includes agreement to adapt to changes in the requirements for accreditation;</span><br/>
-                            <span>b) cooperate as is necessary to enable the accreditation body to verify fulfillment of requirements for accreditation;</span><br/>
-           	    			<span>c) provide access to conformity assessment body personnel, locations, information, documents and records as necessary to verify fulfillment of requirements for accreditation;</span><br/>
-           	    			<span>d) arrange the witnessing of conformity assessment activities when requested by the accreditation body;  </span><br/>
-           	    			<span>e) have, where applicable, legally enforceable arrangements with their clients that commit the  clients to provide, on request, access to accreditation body assessment teams to assess the conformity assessment body's performance when carrying out conformity assessment activities at the client’s site;</span><br/>
-           	    			<span>f) claim accreditation only with respect to the scope for which it has been granted; </span><br/>
-           	    			<span>g) commit to follow the accreditation body's policy for the use of the accreditation symbol;</span><br/>
-           	    			<span>h) not to use its accreditation in such a manner as to bring the accreditation body into disrepute;</span><br/>
-           	    			<span>i) inform the accreditation body without delay of significant changes relevant to its accreditation such as,<br/>
-							- its legal, commercial, ownership or organizational status,<br/>
-							- the organization, top management and key personnel,<br/>
-							- resources and location(s) other matters that may affect the ability of the conformity assessment body to fulfill requirements for accreditation</span><br/>
-           	    			<span>j) to pay fees as determined by the accreditation body; and</span><br/>
-           	    			<span>k) to assist in the investigation and resolution of any accreditation-related complaints about the conformity assessment body referred to it by the accreditation body.</span><br/>
-           	    			<br/>
+                 </div>			
+           	    
+           	    
            	    <p>
            	    <strong>
            	    	Please include the following supporting documentation with the application:<br/><br/>
@@ -452,7 +853,7 @@
                  		<label class="control-label" for="attachments">Attachments (Upload Multiple Attachments at Once)</label>
 	               </div>
 	               <div class="col-md-7 col-sm-8">
-	                 <input type="file" class="form-control o_website_form_input" required="1" multiple="" data-show-upload="true" data-show-caption="true" lass="file" data-show-preview="true"/>
+	                 <input type="file" class="form-control o_website_form_input" required="1" multiple="" data-show-upload="true" data-show-caption="true" lass="file" data-show-preview="true" for="attachment_ids"/>
 	               </div>
 	          </div>
 	          
@@ -568,21 +969,21 @@
         <value eval="[
             'partner_name','name_applicant',
             'partner_email', 'funding_company_name', 'funding_company_rep', 'funding_company_rep_num',
-            'name', 'number_of_scopes',
-            'description',
-            'team_id',
-            'partner_id','test_char',
-            'funding',
-            'assessment_type_id',
-            'applicant_rep_title',
-            'laboratory_address',
-            'laboratory_legal_name',
-            'telephone_number',
-            'email_address',
-            'mailing_address',
+            'name', 'number_of_scopes','name_of_cab','type_of_cab','application_for',
+            'description','cab_number','cab_street','cab_city','cab_state_id',
+            'team_id','cab_country_id','head_of_cab','deputy_head_of_cab','contact_person_of_cab',
+            'partner_id','test_char','email_contact_of_cab','tel_contact_of_cab','fax_contact_of_cab',
+            'funding','num_of_employees_within_accred','description_of_relations','CAB_accredited_by_another_accreditation_body','yes_further_accreditation_files','further_accreditation_files',
+            'assessment_type_id','cabs_operate_multiple_sites','further_cab_number','combined_accreditation_symbol','yes_symbol_use_for_other_reason',
+            'applicant_rep_title','further_cab_street','further_cab_state_id','symbol_use_for_other_reason','application_accreditation_symbol',
+            'laboratory_address','further_cab_city','further_cab_country_id','accreditation_flexible_scope','yes_CAB_accredited_by_another_accreditation_body',
+            'laboratory_legal_name','case_no_CAB_accredited_by_another_accreditation_body','existing_or_applied_notifications_cab',
+            'telephone_number','local_accreditation_body','local_accreditation_body_required_scope',
+            'email_address','local_accreditation_body_signatory_to_IAF_MLA_or_ILAC_MRA','reason_applying_with_ninas',
+            'mailing_address','attachment_ids','laboratory_company_name',
             'account','lab_number','lab_street','lab_city','lab_state_id','lab_country_id',
             'name_address_of_owners','mail_number','mail_street','mail_city','mail_state_id','mail_country_id',
-            'testing_lab','calibration_lab','med_lab',
+            'testing_lab','calibration_lab','med_lab','file_applicant_cac','file_descrptopn_of_relations',
             'tertiary_level_lab','secondary_level_lab','primary_level_lab',
             'lab_capabilities','num_of_lab_staff','signed_by_authorized_rep','place_sign','place_date',
             'print_name_below','telephone','email','fax'
