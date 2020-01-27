@@ -133,6 +133,13 @@ class Accreditation(models.Model):
         #related="partner_id.commercial_company_name",
         track_visibility='onchange')
     
+    laboratory_company_name = fields.Char(
+        string="Company Name",
+        #related="partner_id.commercial_company_name",
+        track_visibility='onchange')
+    
+    name_of_cab = fields.Char(string="Name of CAB  (if different from the applicant):", track_visibility='onchange')
+    
     laboratory_address= fields.Char(
         string='Laboratory Address',
         track_visibility='onchange')
@@ -145,6 +152,43 @@ class Accreditation(models.Model):
         string='City')
     lab_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
     lab_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    
+    cab_address= fields.Char(
+        string='C.A.B Address',
+        track_visibility='onchange')
+    
+    further_cab_number = fields.Char(
+        string='Number')
+    further_cab_street = fields.Char(
+        string='Street')
+    further_cab_city = fields.Char(
+        string='City')
+    further_cab_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
+    further_cab_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    
+    cab_number = fields.Char(
+        string='Number')
+    cab_street = fields.Char(
+        string='Street')
+    cab_city = fields.Char(
+        string='City')
+    cab_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
+    cab_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    
+    head_of_cab = fields.Char(string='Head of the CAB')
+    deputy_head_of_cab = fields.Char(string='Deputy head')
+    contact_person_of_cab = fields.Char(string='Contact person')
+    email_contact_of_cab = fields.Char(string='E-Mail')
+    tel_contact_of_cab = fields.Char(string='Tel')
+    fax_contact_of_cab = fields.Char(string='Fax')
+    
+    num_of_employees_within_accred = fields.Char(string='Number of employees within the accreditation field:')
+    description_of_relations = fields.Char(string='Description of relations to supervisory or subordinated organizations :')
+    
+    cabs_operate_multiple_sites = fields.Selection([('no','No'),('yes', 'Yes')],
+        string='Does the CAB operate on several sites within the applied scope of accreditation? ',
+        track_visibility='onchange')
+    accreditation_flexible_scope = fields.Boolean(string="Application for Accreditation with Flexible Scope (Category III)")
     
     telephone_number = fields.Char(
         string='Telephone Numbers',
@@ -177,15 +221,39 @@ class Accreditation(models.Model):
         track_visibility='onchange')
     
     
-    testing_lab = fields.Boolean(
-        string='ISO/IEC 17025 Testing Laboratory', 
+    testing_lab = fields.Boolean(string='ISO/IEC 17025 Testing Laboratory', track_visibility='onchange')
+    calibration_lab = fields.Boolean(string='ISO/IEC 17025 Calibration Laboratory', track_visibility='onchange')
+    med_lab = fields.Boolean(string='ISO 15189: Medical Laboratory', track_visibility='onchange')
+    
+    file_applicant_cac = fields.Binary(string='Applicant Files')
+    file_descrptopn_of_relations = fields.Binary(string='Description of reations file')
+    
+    
+    type_of_cab = fields.Selection(
+        [('testing_lab','Testing laboratory ISO/IEC 17025'),
+         ('calibration_lab', 'Calibration laboratory ISO/IEC 17025'),
+         ('med_lab', 'Medical laboratory ISO 15189'),
+         ('inspection_body_a', 'Inspection body ISO/IEC 17020 Type A'),
+         ('inspection_body_b', 'Inspection body ISO/IEC 17020 Type B'),
+         ('inspection_body_c', 'Inspection body ISO/IEC 17020 Type C'),
+         ('certification_body_mang', 'Certification body for management systems ISO/IEC 17021-1'),
+         ('certification_body_persons', 'Certification body for persons ISO/IEC 17024'),
+         ('certification_body_products', 'Certification body for products, processes and services ISO/IEC 17065'),
+         ('proficiency_test', 'Proficiency Test Provider ISO/IEC 17043'),
+         ('validation_verification_body', 'Validation / Verification body ISO 14065'),
+         ('producer_ref_material', 'Producer of Reference Materials ISO Guide 34 (ISO 17034) in conjunction with ISO/IEC 17025')],
+        string='Type of Conformity Assessment Body (CAB)',
         track_visibility='onchange')
-    calibration_lab = fields.Boolean(
-        string='ISO/IEC 17025 Calibration Laboratory',
+    
+    application_for = fields.Selection(
+        [('initial_accreditation','Initial Accreditation'),
+         ('re_accreditation', 'Re-Accreditation'),
+         ('modification_of_accredidtation', 'Modification of Accreditation (e. g. change of the name of the CAB)'),
+         ('extension_of_accreditation', 'Extension of Accreditation (e.g. enlarged scope, new locations, etc.)'),
+         ('reduction_of_accreditation', 'Reduction of Accreditation Scope (e.g. reducing of the accredited scope, site closure, etc.)')],
+        string='Application for',
         track_visibility='onchange')
-    med_lab = fields.Boolean(
-        string='ISO 15189: Medical Laboratory',
-        track_visibility='onchange')
+    
     
     tertiary_level_lab = fields.Boolean(
         string='Tertiary level lab/ Tests (>20)',
@@ -202,6 +270,31 @@ class Accreditation(models.Model):
         string='Number of Scopes',
         track_visibility='onchange')
     
+    application_accreditation_symbol = fields.Selection(
+        [('yes','YES'),('no', 'NO')], string='Application for the use of the accreditation symbol on result reports', track_visibility='onchange')
+    symbol_use_for_other_reason = fields.Selection(
+        [('yes','YES'),('no', 'NO')], string='use of the accreditation symbol is applied for other purposes :', track_visibility='onchange')
+    yes_symbol_use_for_other_reason = fields.Char(string='If yes, please specify:',track_visibility='onchange')
+    combined_accreditation_symbol = fields.Selection(
+        [('yes','YES'),('no', 'NO')], string='Application for a combined accreditation symbol? (ILAC-NiNAS or IAF-NiNAS) ', track_visibility='onchange')
+    
+    further_accreditation_files  = fields.Selection(
+        [('yes','YES'),('no', 'NO')], string='Are there further accreditation files for which the applicant is accredited by NiNAS?', track_visibility='onchange')
+    yes_further_accreditation_files  = fields.Char(string='If yes, case no.:', track_visibility='onchange')
+    CAB_accredited_by_another_accreditation_body  = fields.Selection(
+        [('yes','YES'),('no', 'NO')], string='Is the CAB already accredited by another accreditation body?', track_visibility='onchange')
+    yes_CAB_accredited_by_another_accreditation_body  = fields.Char(string='If yes, information to the accreditation body:', track_visibility='onchange')
+    case_no_CAB_accredited_by_another_accreditation_body  = fields.Char(string='Case no:', track_visibility='onchange')
+    existing_or_applied_notifications_cab = fields.Char(string="Are there any existing or applied notifications, permissions or applications of the CAB?")
+    
+    local_accreditation_body = fields.Selection(
+        [('yes','YES'),('no', 'NO')], string='Is there a local accreditation body?', track_visibility='onchange')
+    local_accreditation_body_signatory_to_IAF_MLA_or_ILAC_MRA = fields.Selection(
+        [('yes','YES'),('no', 'NO')], string="Is the local accreditation body a signatory to the IAF MLA or ILAC MRA respectively?", track_visibility='onchange')
+    local_accreditation_body_required_scope = fields.Selection(
+        [('yes','YES'),('no', 'NO')], string='Does the local accreditation body offer the required scope?', track_visibility='onchange')
+    
+    reason_applying_with_ninas = fields.Char(string='If the questions above are all answered with yes, what are the  reasons for applying for accreditation by NiNAS instead of the local accreditation body?')
     
     test = fields.One2many(
         comodel_name='test.method',

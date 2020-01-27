@@ -594,24 +594,39 @@
 	           	    	</span>
            	       	</group>
            	       	
-           	       	<group string="Part I. Application Information" col="4" colspan="4">
-           	       		<field name="partner_name" readonly="True"/>
-           	       		<field name="applicant_rep_title" readonly="True"/>
-           	       	</group>
+           	       	<group string="1. Application Data"/>
+          	       	<span style="color:Red;">PLEASE ENTER THE EXACT DESIGNATION OF THE APPLICANT LEGAL ENTITY</span><br/>
+          	       	<span>Name and legal status of the applicant <span style="color:Red;">(please enclose proof of structure and legal status, e.g. 
+          	       	certificate of incorporation/registration, excerpt of the commercial register)</span></span>
            	       	<group col="4" colspan="4">
-           	       	<field name="laboratory_legal_name" readonly="True"/>
+           	       		<field name="partner_name" readonly="True" invisible="1"/>
+           	       		<field name="applicant_rep_title" readonly="True" invisible="1"/>
+           	       	</group>
+           	       	
+           	       	<group col="4" colspan="4">
+           	       	<field name="laboratory_legal_name" string="Applicant" readonly="True"/>
            	       	
            	       	<label for="laboratory_address" string="Laboratory Address"/>
            	       	<div class="o_address_format">
-                        <field name="lab_number" placeholder="Number..." class="o_address_street" readonly="True"/>
+                        <field name="lab_number" placeholder="Postal Code" class="o_address_street" readonly="True"/>
                         <field name="lab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
                         <field name="lab_city" placeholder="City" class="o_address_city" readonly="True"/>
                         <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
                         <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
                     </div>
+                    <field name="file_applicant_cac" readonly="True" widget="file"/>
+                    </group>
                     
-           	       	<field name="telephone_number" readonly="True"/>
-           	       	<field name="email_address" readonly="True"/>
+                    <span><b>Name(s) of authorized representatives of the applicant:      
+					(e. g. registered persons in the certificate of incorporation/registration)</b></span>
+					
+                    <field name="name_address_of_owners" readonly="True"/>
+                    
+                    <group string="2. Address for receiving invoices, if different from the address in section 1" col="4" colspan="4">
+	                    <field name="laboratory_company_name" string="Company Name" readonly="True"/>
+	                    <field name="partner_name" string="Contact Person" readonly="True" invisible="0"/>
+	           	       	<!-- <field name="telephone_number" readonly="True"/>
+	           	       	<field name="email_address" readonly="True"/> -->
            	       	
            	       	<label for="mailing_address" string="Mailing Address"/>
            	       	<div class="o_address_format">
@@ -623,7 +638,8 @@
                     </div>
            	       	
            	       	</group>
-           	    	<group>
+           	       	
+           	    	<!--<group>
            	    	<field name="account">
            	    		<tree editable="True">
            	    			<field name="contact_name" readonly="True"/>
@@ -633,25 +649,174 @@
            	    		</tree>
            	    	</field>
            	    		<field name="name_address_of_owners" readonly="True"/>
-           	    	</group>
+           	    	</group>-->
            	    	
            	    	<notebook>
-           	    		<page string="Type &amp; Size of Laboratory:">
-	           	    		<group>
-	           	    		<field name="testing_lab" readonly="True"/>
-	           	    		<field name="calibration_lab" readonly="True"/>
-	           	    		<field name="med_lab" readonly="True"/>
+           	    		<page string="3. Type of Conformity Assessment Body (CAB)">
+	           	    		<group style="color:Red;" string="ONLY ONE TYPE OF CAB CAN BE SELECTED, FOR EVERY TYPE OF CAB A SEPARATE FORM MUST BE USED!"/>
+		           	    	<group>
+		           	    		<field name="type_of_cab" readonly="True"/>
+		           	    		<!-- <field name="med_lab" readonly="True"/>-->
+		           	    		
 	           	    		</group>
 	           	    		<!-- <group string="Size of Laboratory (the number of tests being carried out)">
 	           	    			<field name="tertiary_level_lab" readonly="True"/>
 		           	    		<field name="secondary_level_lab" readonly="True"/>
 		           	    		<field name="primary_level_lab" readonly="True"/>
 	           	    		</group>-->
-	           	    		<group string="Number Of Scopes">
-	           	    			<field name="number_of_scopes" readonly="True"/>
+	           	    		<group string="4. Application for">
+	           	    			<!-- <field name="number_of_scopes" readonly="True"/> -->
+	           	    			<field name="application_for" readonly="True"/>
 	           	    		</group>
            	    		</page>
-           	    		<page string="Tests">
+           	    		<page string="5. CAB information">
+           	    			<group string="5. CAB information" col="4" colspan="4">
+			           	       	<field name="name_of_cab" string="Name of CAB  (if different from the applicant):" readonly="True"/>
+			           	       	
+			           	       	<label for="cab_address" string="C.A.B Address"/>
+			           	       	<div class="o_address_format">
+			                        <field name="cab_number" placeholder="Postal Code" class="o_address_street" readonly="True"/>
+			                        <field name="cab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="cab_city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="cab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="cab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                    </div>
+		                    </group>
+		                    <group col="4" colspan="4">
+		                    	<field name="head_of_cab" readonly="True"/>
+		                    	<field name="deputy_head_of_cab" readonly="True"/>
+		                    	<field name="contact_person_of_cab" readonly="True"/>
+		                    	<field name="email_contact_of_cab" readonly="True"/>
+		                    	<field name="tel_contact_of_cab" readonly="True"/>
+		                    	<field name="fax_contact_of_cab" readonly="True"/>
+		                    </group>
+		                    <group string="Contact data to be used in the NiNAS database of accredited bodies at www.NiNAS.ng" col="4" colspan="4">
+		                    	<field name="contact_person_of_cab" readonly="True"/>
+		                    	<field name="email_contact_of_cab" readonly="True"/>
+		                    	<field name="tel_contact_of_cab" readonly="True"/>
+		                    	<field name="fax_contact_of_cab" readonly="True"/>
+		                    </group>
+		                    <span><b>Number of employees within the accreditation field:</b></span>	                    
+		                    <p>(including external employees like auditors, inspectors,
+								sampler, etc. / Specify the number of employees per location)</p>
+							<field name="num_of_employees_within_accred" readonly="True"/>
+							<br/>
+							<span>Description of relations to supervisory or subordinated organizations (legal persons, individual persons, parent company, subsidiaries). 
+							Please add organization charts.</span>
+							<field name="description_of_relations" readonly="True"/><br/>
+							<field name="file_descrptopn_of_relations" readonly="True"/><br/>
+							<span><b>Does the CAB operate on several sites within the applied scope of accreditation?</b></span>
+           	    			<field name="cabs_operate_multiple_sites" readonly="True" widget="radio"/>
+           	    			<span><b>If yes, further locations of CAB:</b></span>
+           	    			<group col="4" colspan="4">
+	           	    			<label for="further_cab_address" string="C.A.B Address"/>
+			           	       	<div class="o_address_format">
+			                        <field name="further_cab_number" placeholder="Postal Code" class="o_address_street" readonly="True"/>
+			                        <field name="further_cab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+			                        <field name="further_cab_city" placeholder="City" class="o_address_city" readonly="True"/>
+			                        <field name="further_cab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+			                        <field name="further_cab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+			                    </div>
+			                    <field name="fax_contact_of_cab" readonly="True"/>
+		                    </group>
+           	    		</page>
+           	    		<page string="6. Conformity assessment procedures to be accredited – scope of accreditation">
+           	    			<group string="6. Conformity assessment procedures to be accredited – scope of accreditation"/>
+	           	    		<span style="color:Red;"><b>Please attach a separate list about standards, methods, procedures, schemes for which accreditation as conformity assessment body is applied.</b></span>
+	           	    		<p><b>Note: See sample provided by NiNAS.</b></p>
+	           	    		<p><b>If applicable, the updated annex of the accreditation certificate can be enclosed. </b></p>
+	           	    		<br/>
+	           	    		
+	           	    		<group string="7.	Accreditation with flexible scope  (only for testing, calibration and medical laboratories)"/>
+	           	    			<span><B>Note:</B></span><br/>
+	           	    			<span><b>For the possibility of accreditation with a flexible scope (category I or II) according to the NiNAS rule on flexible scope please contact the Director of Accreditation</b></span><br/>
+	           	    			<p><b>Applications can be made informally to the Director of Accreditation or Programme Manager in due time before the assessment.</b></p>
+	           	    			<p><b>Accreditation with a flexible scope may be not possible in some technical sectors.</b></p>
+	           	    			<p><b>Accreditation for a flexible scope requires increased assessment expenditure because of specific requirements to be fulfilled by the applicant.</b></p>
+	           	    			<group><field name="accreditation_flexible_scope" readonly="True"/></group>
+	           	    		
+	           	    		
+           	    		</page>
+           	    		<page string="8. Application for the use of the accreditation symbol">
+           	    			<group string="8. Application for the use of the accreditation symbol"/>
+	           	    			<span>Application for the use of the accreditation symbol on result reports: (e.g. on test reports, calibration certificates, 
+	           	    			examination reports, inspection certificates, other reports – regarding to type of CAB)</span><br/>
+	           	    			<b><field name="application_accreditation_symbol" readonly="True"/></b>
+	           	    			<br/><br/>
+	           	    			<span>Moreover, the use of the accreditation symbol is applied for other purposes :</span><br/>
+	           	    			<b><field name="symbol_use_for_other_reason" readonly="True"/></b>
+	           	    			<br/><br/>
+	           	    			<span>If yes, please specify:</span><br/>
+	           	    			<b><field name="yes_symbol_use_for_other_reason" readonly="True"/></b>
+	           	    			<br/><br/>
+	           	    			<span>Application for a combined accreditation symbol? (ILAC-NiNAS or IAF-NiNAS) </span><br/>
+	           	    			<b><field name="combined_accreditation_symbol" readonly="True"/></b>
+	           	    			<br/><br/>
+           	    			
+           	    			<group string="9. Specifications to former accreditations (only for initial accreditations and reaccreditations)"/>
+           	    				<span>Are there further accreditation files for which the applicant is accredited by NiNAS?</span><br/>
+           	    				<b><field name="further_accreditation_files" readonly="True"/></b>
+           	    				<br/><br/>
+           	    				<span>If yes, case no.:</span><br/>
+	           	    			<b><field name="yes_further_accreditation_files" readonly="True"/></b>
+	           	    			<br/><br/>
+	           	    			<span>Is the CAB already accredited by another accreditation body?</span><br/>
+	           	    			<b><field name="CAB_accredited_by_another_accreditation_body" readonly="True"/></b>
+	           	    			<br/><br/>
+	           	    			<span>If yes, information to the accreditation body:</span><br/>
+	           	    			<b><field name="yes_CAB_accredited_by_another_accreditation_body" readonly="True"/></b>
+	           	    			<br/><br/>
+	           	    			<span>Case no:</span><br/>
+	           	    			<b><field name="case_no_CAB_accredited_by_another_accreditation_body" readonly="True"/></b>
+	           	    			<br/><br/>
+	           	    			<span>Are there any existing or applied notifications, permissions or applications of the CAB?</span><br/>
+	           	    			<b><field name="existing_or_applied_notifications_cab" readonly="True"/></b>
+          	    		          	    			
+           	    		</page>
+           	    		<page string="10. Questions with regard to the local accreditation body of the applicant">
+           	    			<group string="10. Questions with regard to the local accreditation body of the applicant"/>
+           	    				<span>Is there a local accreditation body?</span><br/>
+           	    				<b><field name="local_accreditation_body" readonly="True"/></b>
+           	    				<br/><br/>
+           	    				<span>Is the local accreditation body a signatory to the IAF MLA or ILAC MRA respectively?</span><br/>
+           	    				<b><field name="local_accreditation_body_signatory_to_IAF_MLA_or_ILAC_MRA" readonly="True"/></b>
+           	    				<br/><br/>
+           	    				<span>Does the local accreditation body offer the required scope?</span><br/>
+           	    				<b><field name="local_accreditation_body_required_scope" readonly="True"/></b>
+           	    				<br/><br/>
+           	    				<span>If the questions above are all answered with yes, what are the 
+           	    				reasons for applying for accreditation by NiNAS instead of the local accreditation body?</span><br/>
+           	    				<b><field name="reason_applying_with_ninas" readonly="True"/></b>
+           	    				<br/><br/>
+           	    				<span><b>Note: </b></span>
+           	    				<p>If there is a local accreditation body as stated in Section 10 above:</p>
+           	    				<p>	NiNAS will inform the local accreditation body about the application;</p>
+           	    				<p>	NiNAS may cooperate with the local accreditation body with regard to:</p>
+           	    				<span>-	Exchange of information taking into account factors such as language, 
+         	    						local laws and regulations, culture, relevant local accreditation requirements etc., 
+           	    						as well as technical competence requirements,<br/>
+           	    					  - include personnel from the local accreditation body on the assessment 
+           	    						team, as observer or for translation service.</span>
+           	    			<group string="11.	Authorization (optional)"/>
+           	    				<span><b>Authorized to make arrangements and contractual agreements between NiNAS and the applicant with regard to the accreditation procedure are:</b></span><br/>
+           	    				<p>The head of the CAB (as specified in section 5.)</p>
+           	    				<field name="name_of_cab" string="The head of the CAB (as specified in section 5.)" readonly="True"/>
+           	    				<p>The contact person (as specified in section 5.)</p>
+           	    				<field name="name_of_cab" string="The contact person (as specified in section 5.)" readonly="True"/>
+           	    				<p>The following person:</p>
+           	    				<group col="4" colspan="4">
+           	    					<field name="name_of_cab" string="Name of CAB  (if different from the applicant):" readonly="True"/>
+				           	       	<label for="cab_address" string="C.A.B Address"/>
+				           	       	<div class="o_address_format">
+				                        <field name="cab_number" placeholder="Postal Code" class="o_address_street" readonly="True"/>
+				                        <field name="cab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+				                        <field name="cab_city" placeholder="City" class="o_address_city" readonly="True"/>
+				                        <field name="cab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+				                        <field name="cab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+				                    </div>
+           	    				</group>
+           	    		</page>
+           	    		<!-- <page string="Tests">
            	    		<table class="tableizer-table">
 							<thead><tr class="tableizer-firstrow"><th>Example:</th><th>&#160;</th></tr></thead><tbody>
 							 <tr><td><u>FOOD MICROBIOLOGY - Bacteriology</u></td><td>&#160;</td></tr><br/>
@@ -675,32 +840,20 @@
            	    		
            	    		<field name="test_char" readonly="True"/>
            	    		
-           	    		<!-- <field name="test">
+           	    		<field name="test">
 	           	    		<tree editable="True">
 		           	    		<field name="test_name" readonly="True"/>
 		           	    		<field name="test_method" readonly="True"/>
 	           	    		</tree>
-           	    		</field> -->
+           	    		</field>
            	    		
            	    		<group>
 	           	    		<field name="lab_capabilities" placeholder="Please enter a brief description of the types of other tests or calibrations that the laboratory currently conducts which you do not plan to include on your scope of accreditation at this time" readonly="True"/>
 	           	    		<field name="num_of_lab_staff" placeholder="Please enter the total number of laboratory personnel, including those who may conduct testing work off-site." readonly="True"/>
            	    		</group>
-           	    		</page>
-           	    		<page string="Agreement">
-           	    			<group col="4" colspan="4">
-           	    			<field name="signed_by_authorized_rep" readonly="True"/>
-           	    			<field name="place_sign" readonly="True"/>
-           	    			<field name="place_date" readonly="True"/>
-           	    			</group>
-           	    			<group>
-           	    				<field name="print_name_below" readonly="True"/>
-           	    			</group>
-           	    			<group col="6" colspan="3">
-           	    				<field name="telephone" readonly="True"/>
-           	    				<field name="fax" readonly="True"/>
-           	    				<field name="email" readonly="True"/>
-           	    			</group>
+           	    		</page>  -->
+           	    		
+           	    		<page string="12. Agreement">
            	    			<span>I have read, I understand and I agree with the information provided in the Guide for Laboratories Applying to NiNAS for Accreditation, and agrees that the laboratory</span><br/>
                             <span>a) commit to fulfill continually the requirements for accreditation for the scope for which accreditation is sought or granted and commit to provide evidence of fulfillment. This includes agreement to adapt to changes in the requirements for accreditation;</span><br/>
                             <span>b) cooperate as is necessary to enable the accreditation body to verify fulfillment of requirements for accreditation;</span><br/>
@@ -716,16 +869,29 @@
 							- resources and location(s) other matters that may affect the ability of the conformity assessment body to fulfill requirements for accreditation</span><br/>
            	    			<span>j) to pay fees as determined by the accreditation body; and</span><br/>
            	    			<span>k) to assist in the investigation and resolution of any accreditation-related complaints about the conformity assessment body referred to it by the accreditation body.</span><br/>
+           	    			<group col="4" colspan="4">
+	           	    			<field name="signed_by_authorized_rep" readonly="True"/>
+	           	    			<field name="place_sign" readonly="True"/>
+	           	    			<field name="place_date" readonly="True"/>
+           	    			</group>
+           	    			<group>
+           	    				<field name="print_name_below" readonly="True" string="sign"/>
+           	    			</group>
+           	    			<group col="6" colspan="3">
+           	    				<field name="telephone" readonly="True"/>
+           	    				<field name="fax" readonly="True"/>
+           	    				<field name="email" readonly="True"/>
+           	    			</group>
            	    		</page>
-           	    		<page string="Supporting Attachments for Application">
-           	    			<group string="Please include the following supporting documentation with the application:">
+           	    		<page string="Additional Information">
+           	    			<group string="Please include the following supporting documentation with the application:"/>
            	    				<span>☐	A copy of the current version of your quality manual and any operating procedures and work instructions. Electronic copies are preferred.</span><br/>
            	    				<span>☐ An up-to-date laboratory organization chart and identify, by name, the key personnel involved for each function.</span><br/>
            	    				<span>☐	If laboratory is a part of a larger organization, e.g., a manufacturing company or a government department, include a chart of the Laboratory’s position and reporting relationships within that organization.</span><br/>
            	    				<span>☐	The proficiency testing plan and proficiency test results, with any corrective action response (if applicable).</span><br/>
            	    				<span>☐	A list of all equipment used to support the tests or calibrations including in-house (i.e. equipment calibrations that your lab perform) and external calibrations (i.e. those that an external calibration laboratory performs), and rented/borrowed equipment.</span><br/>
-           	    				<span>☐	For Calibration Applicants Only:  a sample of a calibration certificate which you laboratory issues and uncertainty calculations that support the Measurement Uncertainties to be claimed on your scope of accreditation.</span><br/>
-           	    			</group>
+           	    				<span>☐	For Calibration Applicants Only:  a sample of a calibration certificate which you laboratory issues and uncertainty calculations that support the Measurement Uncertainties to be claimed on your scope of accreditation.</span><br/><br/>
+           	    				<span><b>Note: Additional documents requires for a given conformity assessment activity are stipulated in the applicable NiNAS documents. </b></span>
            	    			<group string="Questions?:  Please direct them to: Applications@NiNAS.ng  or call: +234 (0) 81 7976 4868"></group>
            	    		</page>
            	    	</notebook>

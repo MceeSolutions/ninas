@@ -16,6 +16,8 @@ class Accreditation(http.Controller):
         lab_country_id = http.request.env['res.country'].sudo().search([('name','=','Nigeria')])
         mail_state_id = http.request.env['res.country.state'].sudo().search([])
         mail_country_id = http.request.env['res.country'].sudo().search([])
+        cab_state_id = http.request.env['res.country.state'].sudo().search([])
+        cab_country_id = http.request.env['res.country'].sudo().search([])
         account = http.request.env['helpdesk.ticket'].sudo().search([])
         test = http.request.env['helpdesk.ticket'].sudo().search([])
         if request.env.user.partner_id != request.env.ref('base.public_partner'):
@@ -23,7 +25,8 @@ class Accreditation(http.Controller):
             default_values['email'] = request.env.user.partner_id.email
         return http.request.render("ninasmain.ninas_website_helpdesk_form_ticket_submit", {
             'default_values': default_values, 'assessment_type_id':assessment_type_id, 'account':account, 'test':test
-            , 'lab_state_id':lab_state_id, 'lab_country_id':lab_country_id, 'mail_state_id':mail_state_id, 'mail_country_id':mail_country_id})
+            , 'lab_state_id':lab_state_id, 'lab_country_id':lab_country_id, 'mail_state_id':mail_state_id, 
+            'mail_country_id':mail_country_id, 'cab_state_id':cab_state_id, 'cab_country_id':cab_country_id})
         
     
     @http.route('/project/uploaded', type='http', auth="public", methods=['POST'], website=True)
