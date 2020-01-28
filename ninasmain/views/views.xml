@@ -2689,6 +2689,30 @@
 		                        <span class="o_stat_text">C.A.R</span>
 		                    </div>
 		                </button>
+		                <button class="oe_stat_button" type="object" name="open_assessment_report" context="{'default_partner_id': active_id}" icon="fa fa-group">
+		                    <div class="o_stat_info">
+		                        <field name="assement_report_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Assessment Report</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_witness_template" context="{'default_partner_id': active_id}" icon="fa fa-group">
+		                    <div class="o_stat_info">
+		                        <field name="witness_template_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Witness Template</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_proficiency_testing" context="{'default_partner_id': active_id}" icon="fa fa-group">
+		                    <div class="o_stat_info">
+		                        <field name="proficiency_testing_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Proficiency Testing</span>
+		                    </div>
+		                </button>
+		                <button class="oe_stat_button" type="object" name="open_vertical_lab" context="{'default_partner_id': active_id}" icon="fa fa-group">
+		                    <div class="o_stat_info">
+		                        <field name="vertical_lab_count" class="o_stat_value"/>
+		                        <span class="o_stat_text">Vertical Assessment Laboratory</span>
+		                    </div>
+		                </button>
                     </div>
 				 	<span>Accreditation Decision Recommendation Form F 773 A</span>
 				 	<p>This form is to be used by the AAC Members to review assessment reports and

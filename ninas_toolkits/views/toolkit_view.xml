@@ -262,7 +262,7 @@
         <field name="name">ninas.surveillance.report.form</field>
         <field name="model">ninas.surveillance.report</field>
         <field name="arch" type="xml">
-            <form string="Surveillance Report">
+            <form string="Assessment Report">
                 <header>
                     <button name="lead_approve" string="Lead Approve" type="object" class="btn btn-primary" states="new,refused"/>
                     <button name="director_approve" string="Director Approve" type="object" class="btn btn-primary" states="lead_approved"/>
@@ -376,7 +376,7 @@
     
     
     <record model="ir.actions.act_window" id="ninas_surveillance_report_action">
-        <field name="name">Surveillance Report</field>
+        <field name="name">Assessment Report</field>
         <field name="res_model">ninas.surveillance.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -1360,7 +1360,7 @@
     <menuitem name="Assessment Client Feedback" id="assessment_client_feedback_main_menu" action="ninas_assessment_client_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_portal" sequence="1"/>
     <menuitem name="Assessment Feedback" id="assessment_assessor_feedback_main_menu" action="ninas_assessment_assessor_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="2"/>
     <menuitem name="Witness Template" id="witness_template_menu" action="ninas_witness_template_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="3"/>
-    <menuitem name="Surveillance Report" id="surveillance_report_menu" action="ninas_surveillance_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="4"/>
+    <menuitem name="Assessment Report" id="surveillance_report_menu" action="ninas_surveillance_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="4"/>
     <menuitem name="Document Review Report" id="ninas_document_review_report_menu" action="ninas_document_review_report_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="5"/>
     <menuitem name="Vertical Assessment Laboratory" id="ninas_vertical_assessment_lab_menu" action="ninas_vertical_assessment_lab_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="6"/>
     <menuitem name="Proficiency Testing" id="ninas_proficiency_testing_menu" action="ninas_proficiency_testing_action" parent="ninas_toolkit_tools_main_menu" groups="base.group_user" sequence="7"/>
