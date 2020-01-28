@@ -3198,6 +3198,10 @@ class RecommendationForm(models.Model):
     car_count = fields.Integer(compute="_car_count",string="C.A.R")
     confidentiality_count = fields.Integer(compute="_confidentiality_count",string="Confidentiality", store=False)
     conflict_count = fields.Integer(compute="_conflict_count",string="Checklist", store=False)
+    assement_report_count = fields.Integer(compute="_assessment_report_count",string="Assessment Report", store=False)
+    witness_template_count = fields.Integer(compute="_witness_template_count",string="Witness Template", store=False)
+    proficiency_testing_count = fields.Integer(compute="_proficiency_testing_count",string="Proficiency Testing", store=False)
+    vertical_lab_count = fields.Integer(compute="_vertical_lab_count",string="Vertical Assessment Laboratory", store=False)
     
     @api.multi
     def button_update_record(self):
@@ -3258,6 +3262,58 @@ class RecommendationForm(models.Model):
         return True
     
     @api.multi
+    def _assessment_report_count(self):
+        assessment_rep = self.env['ninas.surveillance.report']
+        for car in self:
+            domain = [('application_id.partner_id', '=', car.partner_id.id)]
+            car_ids = assessment_rep.search(domain)
+            cars = assessment_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.assement_report_count = car_count
+        return True
+    
+    @api.multi
+    def _witness_template_count(self):
+        assessment_rep = self.env['ninas.witness.template']
+        for car in self:
+            domain = [('application_id.partner_id', '=', car.partner_id.id)]
+            car_ids = assessment_rep.search(domain)
+            cars = assessment_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.witness_template_count = car_count
+        return True
+    
+    @api.multi
+    def _proficiency_testing_count(self):
+        assessment_rep = self.env['ninas.proficiency.testing']
+        for car in self:
+            domain = [('application_id.partner_id', '=', car.partner_id.id)]
+            car_ids = assessment_rep.search(domain)
+            cars = assessment_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.proficiency_testing_count = car_count
+        return True
+    
+    @api.multi
+    def _vertical_lab_count(self):
+        assessment_rep = self.env['ninas.vertical.assessment.lab']
+        for car in self:
+            domain = [('application_id.partner_id', '=', car.partner_id.id)]
+            car_ids = assessment_rep.search(domain)
+            cars = assessment_rep.browse(car_ids)
+            car_count = 0
+            for ca in cars:
+                car_count+=1
+            car.vertical_lab_count = car_count
+        return True
+    
+    @api.multi
     def open_checklist_ticket(self):
         self.ensure_one()
         action = self.env.ref('ninasmain.ninas_checklist_ticket_action').read()[0]
@@ -3287,6 +3343,38 @@ class RecommendationForm(models.Model):
         action = self.env.ref('ninasmain.ninas_car_report_action').read()[0]
         action['domain'] = literal_eval(action['domain'])
         action['domain'].append(('partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_assessment_report(self):
+        self.ensure_one()
+        action = self.env.ref('ninas_toolkits.ninas_surveillance_report_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('application_id.partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_witness_template(self):
+        self.ensure_one()
+        action = self.env.ref('ninas_toolkits.ninas_witness_template_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('application_id.partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_proficiency_testing(self):
+        self.ensure_one()
+        action = self.env.ref('ninas_toolkits.ninas_proficiency_testing_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('application_id.partner_id', 'child_of', self.partner_id.id))
+        return action
+    
+    @api.multi
+    def open_vertical_lab(self):
+        self.ensure_one()
+        action = self.env.ref('ninas_toolkits.ninas_vertical_assessment_lab_action').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('application_id.partner_id', 'child_of', self.partner_id.id))
         return action
     
     @api.multi
