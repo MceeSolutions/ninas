@@ -157,6 +157,8 @@ class Accreditation(models.Model):
         string='C.A.B Address',
         track_visibility='onchange')
     
+    further_cab_number_of_employees = fields.Char(
+        string='Number of Employee')
     further_cab_number = fields.Char(
         string='Number')
     further_cab_street = fields.Char(
@@ -165,6 +167,19 @@ class Accreditation(models.Model):
         string='City')
     further_cab_state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
     further_cab_country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    
+    authorization_contact_name = fields.Char(
+        string='Name:')
+    authorization_number = fields.Char(
+        string='Postal Code')
+    authorization_street = fields.Char(
+        string='Street')
+    authorization_place = fields.Char(
+        string='Place')
+    authorization_email = fields.Char(
+        string='Email')
+    authorization_fax = fields.Char(
+        string='Fax')    
     
     cab_number = fields.Char(
         string='Number')
@@ -182,6 +197,11 @@ class Accreditation(models.Model):
     tel_contact_of_cab = fields.Char(string='Tel')
     fax_contact_of_cab = fields.Char(string='Fax')
     
+    contact_name_ninas_db = fields.Char(string='Contact person')
+    email_contact_of_ninas_db = fields.Char(string='E-Mail')
+    tel_contact_of_cab_ninas_db = fields.Char(string='Tel')
+    fax_contact_of_cab_ninas_db = fields.Char(string='Fax')
+    
     num_of_employees_within_accred = fields.Char(string='Number of employees within the accreditation field:')
     description_of_relations = fields.Char(string='Description of relations to supervisory or subordinated organizations :')
     
@@ -198,6 +218,9 @@ class Accreditation(models.Model):
         track_visibility='onchange')
     mailing_address = fields.Char(
         string='Mailing Address (if different from the laboratory location)')
+    
+    mail_contact_name = fields.Char(
+        string='Contact Person')
     
     mail_number = fields.Char(
         string='Number')
@@ -338,6 +361,10 @@ class Accreditation(models.Model):
         string='Fax',
         track_visibility='onchange')
     email = fields.Char(
+        string='Email',
+        track_visibility='onchange')
+    
+    sign_email = fields.Char(
         string='Email',
         track_visibility='onchange')
     

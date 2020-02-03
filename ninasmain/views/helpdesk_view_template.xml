@@ -111,14 +111,14 @@
                          <input type="text" class="form-control o_website_form_input" name="lab_city" required="1" placeholder="City"/>
                      </div><br/><br/>
                      <div class="col-md-6 col-sm-4">
-                         <select class="form-control" name="lab_state_id">
+                         <select class="form-control" name="lab_state_id" required="1">
 						     <t t-foreach="lab_state_id" t-as="lab_state_id">
 						          <option t-attf-value="#{lab_state_id.id}"><t t-esc="lab_state_id.name"/></option>
 						     </t>
 						 </select>
                      </div>
                      <div class="col-md-6 col-sm-4">
-                         <select class="form-control" name="lab_country_id">
+                         <select class="form-control" name="lab_country_id" required="1">
 						     <t t-foreach="lab_country_id" t-as="lab_country_id">
 						          <option t-attf-value="#{lab_country_id.id}"><t t-esc="lab_country_id.name"/></option>
 						     </t>
@@ -131,10 +131,10 @@
                  </div>
                  </div>
                  <div class="container">
-	                 <div class="form-group form-field">
+	                 <div class="form-group form-field o_website_form_required">
 		                   <div class="col-md-12 col-sm-8">
 		                   		<label class="control-label" for="name_address_of_owners">Name(s) of authorized representatives of the applicant: <span style="color:Red;">(e. g. registered persons in the certificate of incorporation/registration))</span></label><br/>
-		                       	<textarea class="form-control o_website_form_input" name="name_address_of_owners"/>
+		                       	<textarea class="form-control o_website_form_input" name="name_address_of_owners" required="1"/>
 		                   </div>
 		              </div>
 	              </div>
@@ -145,7 +145,7 @@
                          <input type="text" class="form-control o_website_form_input" name="laboratory_company_name" placeholder="Company Name"/>
                      </div>
                      <div class="col-md-6 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="partner_name" placeholder="Contact Person"/>
+                         <input type="text" class="form-control o_website_form_input" name="mail_contact_name" placeholder="Contact Person"/>
                      </div><br/><br/>
                 	 <div class="col-md-2 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="mail_number" placeholder="Postal Code"/>
@@ -180,7 +180,7 @@
 	                     	<label class="control-label" for="type_of_cab">3.	Type of Conformity Assessment Body (CAB) </label><br/>
 	                     	<span style="color:Red;"><b>ONLY ONE TYPE OF CAB CAN BE SELECTED, FOR EVERY TYPE OF CAB A SEPARATE FORM MUST BE USED!</b></span>
 	                        <!-- <input type="radio" class="form-control o_website_form_input" name="type_of_cab" required="1"/> -->
-	                        <select class="form-control o_website_form_input" name="type_of_cab">
+	                        <select class="form-control o_website_form_input" name="type_of_cab" required="1">
 							  <option value="testing_lab">Testing laboratory ISO/IEC 17025</option>
 							  <option value="calibration_lab">Calibration laboratory ISO/IEC 17025</option>
 							  <option value="med_lab">Medical laboratory ISO 15189</option>
@@ -201,7 +201,7 @@
 	                 <div class="form-group form-field o_website_form_required">
 	                     <div class="col-md-12 col-sm-8">
 	                     	<label class="control-label" for="application_for"><b>4.	Application for</b></label><br/>
-	                     	<select class="form-control o_website_form_input" name="application_for">
+	                     	<select class="form-control o_website_form_input" name="application_for" required="1">
 								  <option value="initial_accreditation">Initial Accreditation</option>
 								  <option value="re_accreditation">Re-Accreditation</option>
 								  <option value="modification_of_accredidtation">Modification of Accreditation (e. g. change of the name of the CAB)</option>
@@ -217,26 +217,26 @@
                  <div class="form-group form-field o_website_form_required">
                  	 &#160;&#160;<label class="control-label" for="name_of_cab">&#160;&#160;Name of CAB  (if different from the applicant):</label><br/>
                      <div class="col-md-12 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="name_of_cab" placeholder="Name Of Cab"/>
+                         <input type="text" class="form-control o_website_form_input" name="name_of_cab" placeholder="Name Of Cab" required="1"/>
                      </div><br/><br/>
                 	 <div class="col-md-2 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="cab_number" placeholder="Postal Code"/>
+                         <input type="text" class="form-control o_website_form_input" name="cab_number" placeholder="Postal Code" required="1"/>
                      </div>
                      <div class="col-md-5 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="cab_street" placeholder="Street"/>
+                         <input type="text" class="form-control o_website_form_input" name="cab_street" placeholder="Street" required="1"/>
                      </div>
                      <div class="col-md-5 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="cab_city" placeholder="City"/>
+                         <input type="text" class="form-control o_website_form_input" name="cab_city" placeholder="City" required="1"/>
                      </div><br/><br/>
                      <div class="col-md-6 col-sm-4">
-                         <select class="form-control" name="cab_state_id">
+                         <select class="form-control" name="cab_state_id" required="1">
 						     <t t-foreach="cab_state_id" t-as="cab_state_id">
 						          <option t-attf-value="#{cab_state_id.id}"><t t-esc="cab_state_id.name"/></option>
 						     </t>
 						 </select>
                      </div>
                      <div class="col-md-6 col-sm-4">
-                         <select class="form-control" name="cab_country_id">
+                         <select class="form-control" name="cab_country_id" required="1">
                          	<option value="">Country...</option>
 						     <t t-foreach="cab_country_id" t-as="cab_country_id">
 						          <option t-attf-value="#{cab_country_id.id}"><t t-esc="cab_country_id.name"/></option>
@@ -249,9 +249,9 @@
                    		<label class="control-label" for="head_of_cab">Head of the CAB:</label><br/>
                        	<input type="text" class="form-control o_website_form_input" name="head_of_cab" required="1"/>
                      </div>
-                     <div class="col-md-5 col-sm-8">
+                     <div class="col-md-5 col-sm-8 o_website_form_required">
                      	<label class="control-label" for="deputy_head_of_cab">Deputy head:</label><br/>
-                        <input type="text" class="form-control o_website_form_input" name="deputy_head_of_cab"/>
+                        <input type="text" class="form-control o_website_form_input" name="deputy_head_of_cab" required="1"/>
                      </div>                 
                  </div>
                  <div class="form-group form-field">
@@ -259,10 +259,10 @@
                        	<input type="text" class="form-control o_website_form_input" name="contact_person_of_cab" required="1" placeholder="Contact Person"/>
                      </div>
                      <div class="col-md-4 col-sm-8">
-                        <input type="text" class="form-control o_website_form_input" name="tel_contact_of_cab" placeholder="Tel"/>
+                        <input type="text" class="form-control o_website_form_input" name="tel_contact_of_cab" required="1" placeholder="Tel"/>
                      </div><br/><br/>
                      <div class="col-md-9 col-sm-8 o_website_form_required">
-                       	<input type="text" class="form-control o_website_form_input" name="email_contact_of_cab" required="1" placeholder="Email"/>
+                       	<input type="email" class="form-control o_website_form_input" name="email_contact_of_cab" required="1" placeholder="Email"/>
                      </div>
                      <div class="col-md-3 col-sm-8">
                         <input type="text" class="form-control o_website_form_input" name="fax_contact_of_cab" placeholder="Fax"/>
@@ -272,16 +272,16 @@
                  <div class="form-group form-field o_website_form_required">
                  	 &#160;&#160;<label class="control-label" for="mailing_address">&#160;&#160;Contact data to be used in the NiNAS database of accredited bodies at www.NiNAS.ng:</label><br/>
                      <div class="col-md-12 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="partner_name" t-att-value="default_values.get('name', '')" required="1" placeholder="Contact Person"/>
+                         <input type="text" class="form-control o_website_form_input" name="contact_name_ninas_db" t-att-value="default_values.get('name', '')" required="1" placeholder="Contact Person"/>
                      </div><br/><br/>
                 	 <div class="col-md-2 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="tel_contact_of_cab" placeholder="Tel"/>
+                         <input type="text" class="form-control o_website_form_input" name="tel_contact_of_cab_ninas_db" placeholder="Tel"/>
                      </div>
                      <div class="col-md-5 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="email_contact_of_cab" placeholder="Email"/>
+                         <input type="email" class="form-control o_website_form_input" name="email_contact_of_ninas_db" t-att-value="default_values.get('email', '')" placeholder="Email"/>
                      </div>
                      <div class="col-md-5 col-sm-4">
-                         <input type="text" class="form-control o_website_form_input" name="fax_contact_of_cab" placeholder="Fax"/>
+                         <input type="text" class="form-control o_website_form_input" name="fax_contact_of_cab_ninas_db" placeholder="Fax"/>
                      </div>
                  </div>   
 	                 <div class="form-group form-field o_website_form_required">
@@ -307,7 +307,7 @@
 	              	<div class="form-group form-field o_website_form_required">
 	                     <div class="col-md-12 col-sm-8">
 	                     	<label class="control-label" for="cabs_operate_multiple_sites"><b>Does the CAB operate on several sites within the applied scope of accreditation? </b></label><br/>
-	                     	<select class="form-control o_website_form_input" name="cabs_operate_multiple_sites">
+	                     	<select class="form-control o_website_form_input" name="cabs_operate_multiple_sites" required="1">
 								  <option value=""></option>
 								  <option value="yes">Yes</option>
 								  <option value="no">No</option>
@@ -317,7 +317,7 @@
 	                 <div class="form-group form-field o_website_form_required">
 	                 	 &#160;&#160;<label class="control-label" for="mailing_address">&#160;&#160;If yes, further locations of CAB:</label><br/>
 	                     <div class="col-md-12 col-sm-8">
-	                         <input type="text" class="form-control o_website_form_input" name="partner_name" placeholder="Number Of Employees"/>
+	                         <input type="text" class="form-control o_website_form_input" name="further_cab_number_of_employees" placeholder="Number Of Employees"/>
 	                     </div><br/><br/>
 	                	 <div class="col-md-5 col-sm-4">
 	                         <input type="text" class="form-control o_website_form_input" name="further_cab_number" placeholder="Street"/>
@@ -378,7 +378,7 @@
 	                  	<div class="col-md-12 col-sm-8">
 	                     	<label class="text-left" for="application_accreditation_symbol">Application for the use of the accreditation symbol on result reports:
 							(e.g. on test reports, calibration certificates, examination reports, inspection certificates, other reports – regarding to type of CAB)</label><br/>
-	                     	<select class="form-control o_website_form_input" name="application_accreditation_symbol">
+	                     	<select class="form-control o_website_form_input" name="application_accreditation_symbol" required="1">
 								  <option value=""></option>
 								  <option value="yes">Yes</option>
 								  <option value="no">No</option>
@@ -499,22 +499,22 @@
                		&#160;&#160;&#160;&#160;<span><b>The following person:</b></span><br/>
                		<div class="form-group form-field o_website_form_required">
                			<div class="col-md-12 col-sm-8">
-	                         <input type="text" class="form-control o_website_form_input" name="partner_name" placeholder="Contact Person"/>
+	                         <input type="text" class="form-control o_website_form_input" name="authorization_contact_name" placeholder="Name"/>
 	                     </div><br/><br/>
 	                	 <div class="col-md-2 col-sm-4">
-	                         <input type="text" class="form-control o_website_form_input" name="mail_number" placeholder="Postal Code"/>
+	                         <input type="text" class="form-control o_website_form_input" name="authorization_number" placeholder="Postal Code"/>
 	                     </div>
 	                     <div class="col-md-5 col-sm-4">
-	                         <input type="text" class="form-control o_website_form_input" name="mail_street" placeholder="Street"/>
+	                         <input type="text" class="form-control o_website_form_input" name="authorization_street" placeholder="Street"/>
 	                     </div>
 	                     <div class="col-md-5 col-sm-4">
-	                         <input type="text" class="form-control o_website_form_input" name="mail_city" placeholder="Place"/>
+	                         <input type="text" class="form-control o_website_form_input" name="authorization_place" placeholder="Place"/>
 	                     </div><br/><br/>
 	                     <div class="col-md-8 col-sm-4">
-	                         <input type="text" class="form-control o_website_form_input" name="mail_number" placeholder="Email"/>
+	                         <input type="email" class="form-control o_website_form_input" name="authorization_email" placeholder="Email"/>
 	                     </div>
 	                     <div class="col-md-4 col-sm-4">
-	                         <input type="text" class="form-control o_website_form_input" name="mail_street" placeholder="Fax"/>
+	                         <input type="text" class="form-control o_website_form_input" name="authorization_fax" placeholder="Fax"/>
 	                     </div><br/><br/>
                		</div>
                	</div>                
@@ -807,8 +807,8 @@
                  
                  <div class="form-group form-field o_website_form_required">
                      <div class="col-md-12 col-sm-8">
-                     		<label class="control-label" for="email">Email</label><br/>
-                         	<input type="email" class="form-control o_website_form_input" name="email" t-att-value="default_values.get('email', '')" required="1"/>
+                     		<label class="control-label" for="sign_email">Email</label><br/>
+                         	<input type="email" class="form-control o_website_form_input" name="sign_email" t-att-value="default_values.get('email', '')" required="1"/>
                      </div>
                  </div>
                  
@@ -978,15 +978,15 @@
             'applicant_rep_title','further_cab_street','further_cab_state_id','symbol_use_for_other_reason','application_accreditation_symbol',
             'laboratory_address','further_cab_city','further_cab_country_id','accreditation_flexible_scope','yes_CAB_accredited_by_another_accreditation_body',
             'laboratory_legal_name','case_no_CAB_accredited_by_another_accreditation_body','existing_or_applied_notifications_cab',
-            'telephone_number','local_accreditation_body','local_accreditation_body_required_scope',
+            'telephone_number','local_accreditation_body','local_accreditation_body_required_scope','sign_email',
             'email_address','local_accreditation_body_signatory_to_IAF_MLA_or_ILAC_MRA','reason_applying_with_ninas',
-            'mailing_address','attachment_ids','laboratory_company_name',
-            'account','lab_number','lab_street','lab_city','lab_state_id','lab_country_id',
-            'name_address_of_owners','mail_number','mail_street','mail_city','mail_state_id','mail_country_id',
-            'testing_lab','calibration_lab','med_lab','file_applicant_cac','file_descrptopn_of_relations',
-            'tertiary_level_lab','secondary_level_lab','primary_level_lab',
+            'mailing_address','attachment_ids','laboratory_company_name','email_contact_of_ninas_db','tel_contact_of_cab_ninas_db','fax_contact_of_cab_ninas_db'
+            'account','lab_number','lab_street','lab_city','lab_state_id','lab_country_id','mail_contact_name',
+            'name_address_of_owners','mail_number','mail_street','mail_city','mail_state_id','mail_country_id','sign_email'
+            'testing_lab','calibration_lab','med_lab','file_applicant_cac','file_descrptopn_of_relations','further_cab_number_of_employees',
+            'tertiary_level_lab','secondary_level_lab','primary_level_lab','authorization_place','authorization_email','authorization_fax',
             'lab_capabilities','num_of_lab_staff','signed_by_authorized_rep','place_sign','place_date',
-            'print_name_below','telephone','email','fax'
+            'print_name_below','telephone','email','fax','authorization_contact_name','authorization_number','authorization_street','contact_name_ninas_db',
         ]"/>
     </function>
     
