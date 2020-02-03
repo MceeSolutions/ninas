@@ -638,7 +638,7 @@
                         <field name="lab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
                         <field name="lab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
                     </div>
-                    <field name="file_applicant_cac" readonly="True" widget="file"/>
+                    <field name="file_applicant_cac" readonly="False" widget="file"/>
                     </group>
                     
                     <span><b>Name(s) of authorized representatives of the applicant:      
@@ -648,7 +648,7 @@
                     
                     <group string="2. Address for receiving invoices, if different from the address in section 1" col="4" colspan="4">
 	                    <field name="laboratory_company_name" string="Company Name" readonly="True"/>
-	                    <field name="partner_name" string="Contact Person" readonly="True" invisible="0"/>
+	                    <field name="mail_contact_name" string="Contact Person" readonly="True" invisible="0"/>
 	           	       	<!-- <field name="telephone_number" readonly="True"/>
 	           	       	<field name="email_address" readonly="True"/> -->
            	       	
@@ -715,10 +715,10 @@
 		                    	<field name="fax_contact_of_cab" readonly="True"/>
 		                    </group>
 		                    <group string="Contact data to be used in the NiNAS database of accredited bodies at www.NiNAS.ng" col="4" colspan="4">
-		                    	<field name="contact_person_of_cab" readonly="True"/>
-		                    	<field name="email_contact_of_cab" readonly="True"/>
-		                    	<field name="tel_contact_of_cab" readonly="True"/>
-		                    	<field name="fax_contact_of_cab" readonly="True"/>
+		                    	<field name="contact_name_ninas_db" readonly="True"/>
+		                    	<field name="email_contact_of_ninas_db" readonly="True"/>
+		                    	<field name="tel_contact_of_cab_ninas_db" readonly="True"/>
+		                    	<field name="fax_contact_of_cab_ninas_db" readonly="True"/>
 		                    </group>
 		                    <span><b>Number of employees within the accreditation field:</b></span>	                    
 		                    <p>(including external employees like auditors, inspectors,
@@ -729,10 +729,11 @@
 							Please add organization charts.</span>
 							<field name="description_of_relations" readonly="True"/><br/>
 							<field name="file_descrptopn_of_relations" readonly="True"/><br/>
-							<span><b>Does the CAB operate on several sites within the applied scope of accreditation?</b></span>
-           	    			<field name="cabs_operate_multiple_sites" readonly="True" widget="radio"/>
+							<span><b>Does the CAB operate on several sites within the applied scope of accreditation?</b></span><br/>
+           	    			<b><field name="cabs_operate_multiple_sites" readonly="True" widget="radio"/></b>
            	    			<span><b>If yes, further locations of CAB:</b></span>
            	    			<group col="4" colspan="4">
+           	    				<field name="further_cab_number_of_employees" readonly="True"/><br/>
 	           	    			<label for="further_cab_address" string="C.A.B Address"/>
 			           	       	<div class="o_address_format">
 			                        <field name="further_cab_number" placeholder="Postal Code" class="o_address_street" readonly="True"/>
@@ -829,14 +830,16 @@
            	    				<field name="name_of_cab" string="The contact person (as specified in section 5.)" readonly="True"/>
            	    				<p>The following person:</p>
            	    				<group col="4" colspan="4">
-           	    					<field name="name_of_cab" string="Name of CAB  (if different from the applicant):" readonly="True"/>
+           	    					<field name="authorization_contact_name" string="Name:" readonly="True"/>
 				           	       	<label for="cab_address" string="C.A.B Address"/>
 				           	       	<div class="o_address_format">
-				                        <field name="cab_number" placeholder="Postal Code" class="o_address_street" readonly="True"/>
-				                        <field name="cab_street" placeholder="Street..." class="o_address_street" readonly="True"/>
-				                        <field name="cab_city" placeholder="City" class="o_address_city" readonly="True"/>
-				                        <field name="cab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
-				                        <field name="cab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>
+				                        <field name="authorization_number" placeholder="Postal Code" class="o_address_street" readonly="True"/>
+				                        <field name="authorization_street" placeholder="Street..." class="o_address_street" readonly="True"/>
+				                        <field name="authorization_place" placeholder="City" class="o_address_city" readonly="True"/>
+				                        <field name="authorization_email" placeholder="Email" class="o_address_email" readonly="True"/>
+				                        <field name="authorization_fax" placeholder="Fax" class="o_address_fax" readonly="True"/>
+				                        <!-- <field name="cab_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' readonly="True"/>
+				                        <field name="cab_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="True"/>-->
 				                    </div>
            	    				</group>
            	    		</page>
@@ -904,7 +907,7 @@
            	    			<group col="6" colspan="3">
            	    				<field name="telephone" readonly="True"/>
            	    				<field name="fax" readonly="True"/>
-           	    				<field name="email" readonly="True"/>
+           	    				<field name="sign_email" readonly="True"/>
            	    			</group>
            	    		</page>
            	    		<page string="Additional Information">
