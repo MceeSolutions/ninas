@@ -224,7 +224,7 @@ class Employee(models.Model):
         self.ensure_one()
         return {
                 'type': 'ir.actions.act_url',
-                'url': '/survey/start/employee-exit-interview-form-2',
+                'url': '/survey/start/employee-exit-interview-form-14/phantom',
                 'target': 'self',
                 'res_id': self.id,
             }
