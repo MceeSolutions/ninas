@@ -715,8 +715,8 @@
 		                    	<field name="fax_contact_of_cab" readonly="True"/>
 		                    </group>
 		                    <group string="Contact data to be used in the NiNAS database of accredited bodies at www.NiNAS.ng" col="4" colspan="4">
-		                    	<field name="contact_name_ninas_db" readonly="True"/>
-		                    	<field name="email_contact_of_ninas_db" readonly="True"/>
+		                    	<field name="partner_name" readonly="True"/>
+		                    	<field name="partner_email" readonly="True"/>
 		                    	<field name="tel_contact_of_cab_ninas_db" readonly="True"/>
 		                    	<field name="fax_contact_of_cab_ninas_db" readonly="True"/>
 		                    </group>
