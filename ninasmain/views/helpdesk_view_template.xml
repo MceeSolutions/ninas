@@ -272,13 +272,13 @@
                  <div class="form-group form-field o_website_form_required">
                  	 &#160;&#160;<label class="control-label" for="mailing_address">&#160;&#160;Contact data to be used in the NiNAS database of accredited bodies at www.NiNAS.ng:</label><br/>
                      <div class="col-md-12 col-sm-8">
-                         <input type="text" class="form-control o_website_form_input" name="contact_name_ninas_db" t-att-value="default_values.get('name', '')" required="1" placeholder="Contact Person"/>
+                         <input type="text" class="form-control o_website_form_input" name="partner_name" t-att-value="default_values.get('name', '')" required="1" placeholder="Contact Person"/>
                      </div><br/><br/>
                 	 <div class="col-md-2 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="tel_contact_of_cab_ninas_db" placeholder="Tel"/>
                      </div>
                      <div class="col-md-5 col-sm-4">
-                         <input type="email" class="form-control o_website_form_input" name="email_contact_of_ninas_db" t-att-value="default_values.get('email', '')" placeholder="Email"/>
+                         <input type="email" class="form-control o_website_form_input" name="partner_email" t-att-value="default_values.get('email', '')" placeholder="Email"/>
                      </div>
                      <div class="col-md-5 col-sm-4">
                          <input type="text" class="form-control o_website_form_input" name="fax_contact_of_cab_ninas_db" placeholder="Fax"/>
