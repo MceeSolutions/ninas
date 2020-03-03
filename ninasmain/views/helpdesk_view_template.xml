@@ -967,7 +967,7 @@
         <function model="ir.model.fields" name="formbuilder_whitelist">
         <value>helpdesk.ticket</value>
         <value eval="[
-            'partner_name','name_applicant',
+            'partner_name','name_applicant','partner_id',
             'partner_email', 'funding_company_name', 'funding_company_rep', 'funding_company_rep_num',
             'name', 'number_of_scopes','name_of_cab','type_of_cab','application_for',
             'description','cab_number','cab_street','cab_city','cab_state_id',
