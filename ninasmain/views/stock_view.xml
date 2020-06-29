@@ -344,6 +344,48 @@
      	</field>
     </record>
     
+    <record id="ninas_view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form</field>
+        <field name="model">account.payment</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//button[@name='post']" position="replace">
+				<button name="post" class="oe_highlight" states="approve" string="Validate" type="object" groups="ninasmain.group_admin_finance_officer"/>
+			</xpath>
+			<xpath expr="//button[@name='post']" position="before">
+                <button name="button_submit" states="draft" string="Submit" type="object"/>
+                <button name="ceo_approval" class="oe_highlight" states="submit" string="Approve" type="object" groups="ninasmain.group_ceo"/>
+                <button name="ceo_reject" class="btn btn-danger" states="submit" string="Reject" type="object" groups="ninasmain.group_ceo"/>
+            </xpath>
+           </field>
+    </record>
+    
+    <record id="ninas_view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="priority" eval="7" />
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//button[@name='post']" position="replace">
+				<button name="post" class="oe_highlight" states="approve" string="Validate" type="object" groups="ninasmain.group_admin_finance_officer"/>
+			</xpath>
+			<xpath expr="//button[@name='post']" position="before">
+                <button name="button_submit" states="draft" string="Submit" type="object"/>
+                <button name="ceo_approval" class="oe_highlight" states="submit" string="Approve" type="object" groups="ninasmain.group_ceo"/>
+                <button name="ceo_reject" class="btn btn-danger" states="submit" string="Reject" type="object" groups="ninasmain.group_ceo"/>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+        		<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+        	</xpath>
+           </field>
+    </record>
+    
+    
     <record id="purchase_rfq" model="ir.actions.act_window">
         <field name="name">Requests for Quotation</field>
         <field name="type">ir.actions.act_window</field>

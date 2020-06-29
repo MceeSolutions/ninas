@@ -128,7 +128,8 @@ class Employee(models.Model):
     duties_temporarily_assigned = fields.Many2one(comodel_name='hr.employee', string='Duties Temporarily Assigned to')
     notice_period = fields.Char(string='Notice Period', help='notice period given by employee before leaving/resignation')
     emergency_zip_code = fields.Char(string='Zip Code')
-    resigned = fields.Boolean(string='Resigned', store=False)
+    resign = fields.Boolean(string='Nill')
+    resigned = fields.Boolean(string='Resigned', store=True)
     duration_served = fields.Char(string='Duration Served')
     
     @api.model
@@ -137,11 +138,11 @@ class Employee(models.Model):
             vals['employee'] = self.env['ir.sequence'].next_by_code('hr.employee') or '/'
         return super(Employee, self).create(vals)
     
-    @api.onchange('resigned')
-    def _onchange_resigned(self):
-        if self.resigned == True:
-            self.active = False
-            self.resigned = True
+    #@api.onchange('resigned')
+    #def _onchange_resigned(self):
+    #    if self.resigned == True:
+    #        self.active = False
+    #    return {}
     
     @api.constrains('employee')
     def check_code(self):
@@ -1320,11 +1321,29 @@ class NinasBankVoucher(models.Model):
     @api.multi
     def button_submit(self):
         self.write({'state': 'submit'})
+        self.prepared = self._uid
+        self.date_prepared = date.today()
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_hr_line_manager')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Bank Payment Voucher needs your approval"
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
     @api.multi
     def button_approve(self):
         self.write({'state': 'approve'})
+        self.reviewed = self._uid
+        self.date_reviewed = date.today()
+        subject = "Bank Payment Voucher has been Approved"
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
     @api.multi
@@ -1335,16 +1354,30 @@ class NinasBankVoucher(models.Model):
     @api.multi
     def button_validate(self):
         self.write({'state': 'validate'})
-        self.date_reviewed = date.today()
-        self.reviewed = self._uid
+        self.authorised = self._uid
+        self.date_authorised = date.today()
+        subject = "Bank Payment Voucher has been validated"
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
     @api.multi
     def button_ceo(self):
         self.write({'state': 'ceo'})
-        self.date_authorised = date.today()
-        self.authorised = self._uid
+        subject = "Bank Payment Voucher has been Approved"
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
+    
+    @api.multi
+    def button_confirm_payment(self):
+        self.write({'state': 'confirmed'})
+        return {}
+    
     
     @api.model
     def create(self, vals):
@@ -1352,6 +1385,7 @@ class NinasBankVoucher(models.Model):
             vals['voucher_number'] = self.env['ir.sequence'].next_by_code('ninas.bank_voucher') or '/'
         return super(NinasBankVoucher, self).create(vals)
     
+    @api.one
     @api.depends('bank_voucher.amount')
     def _total_unit(self):
         total_unit_price = 0.0
@@ -1453,10 +1487,11 @@ class NinasExpenseClaim(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
 
     state = fields.Selection(
-        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation'), ('confirmed','Payment Confirmed')],
+        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Approval'), ('confirmed','Payment Confirmed')],
         string='Status',
         default='new',
         track_visibility='onchange')
+    
     #link to actual employee_id
     employee_id = fields.Many2one(
         comodel_name = 'hr.employee',
@@ -1464,49 +1499,32 @@ class NinasExpenseClaim(models.Model):
         required=1
         )
     employee_code = fields.Char(
-        related='employee_id.employee',
+        related='employee_id.employee', readonly=True,
         string='Employee Code'
         )
     ref_number = fields.Integer(
         string='Ref. No. (Receipts to be numbered serially)',
         )
     amount_received = fields.Float(
-        string='Amount Received From Finance'
+        string='Amount Received From Finance', required=1
         )
+    
+    
     prepared = fields.Char(
         string='Prepared by',
         readonly=True
         )
-    item_date = fields.Date(
-        string = 'Date',
-        required=1
+    
+    total = fields.Float(
+        string='Total Amount Spent', compute='_total_unit',
+        readonly=True,
         )
-    item = fields.Char(
-        string='Item (Description)',
-        required=0
-        )
-    unit_code = fields.Char(
-        string='Unit Code',
-        required=1
-        )
-    fund_code = fields.Char(
-        string ='Fund Code'
-        )
-    budget_line = fields.Char(
-        string = 'Activity/Budget Line Code'
-        )
-    account_code = fields.Char(
-        string= 'Account Code'
-        ) 
-    amount = fields.Integer(
-        string = 'Amount (NGN)'
-        )
-    total = fields.Integer(
-        string='Total Amount Spent',
-        )
+    
     balance = fields.Float(
-        string='Balance (Due to)/ Due from Employee'
+        string='Balance (Due to)/ Due from Employee', readonly=True,
+        compute='_total_bal'
         )
+    
     prepared = fields.Char(
         string='Prepared by',
         readonly=True
@@ -1545,7 +1563,7 @@ class NinasExpenseClaim(models.Model):
         )
     
     date = fields.Date(
-        string= 'Date',
+        string= 'Date', default=date.today(),
         readonly=True
         )
     
@@ -1556,7 +1574,7 @@ class NinasExpenseClaim(models.Model):
     
     expense_claim = fields.One2many(
         comodel_name='expense.claim',
-        inverse_name='employee_id',
+        inverse_name='claim_id',
         string='Expense Claim'
         )
     
@@ -1570,13 +1588,29 @@ class NinasExpenseClaim(models.Model):
         self.write({'state': 'submit'})
         self.prepared = self._uid
         self.date_prepared = date.today()
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_hr_line_manager')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Expense claim needs your approval"
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
     @api.multi
     def button_approve(self):
+        if not self.employee_id.parent_id.user_id.id == self._uid:
+            raise UserError(_("Only his/her line manager can validate expense"))
         self.write({'state': 'approve'})
         self.reviewed = self._uid
         self.date_reviewed = date.today()
+        subject = "Expense Claim has been Approved"
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
     @api.multi
@@ -1589,11 +1623,21 @@ class NinasExpenseClaim(models.Model):
         self.write({'state': 'validate'})
         self.authorised = self._uid
         self.date_authorised = date.today()
+        subject = "Expense Claim has been validated"
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
     @api.multi
     def button_ceo(self):
         self.write({'state': 'ceo'})
+        subject = "Expense Claim has been Approved"
+        partner_ids = []
+        for partner in self.message_partner_ids:
+            partner_ids.append(partner.id)
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
     @api.multi
@@ -1601,46 +1645,70 @@ class NinasExpenseClaim(models.Model):
         self.write({'state': 'confirmed'})
         return {}
     
+    @api.one
+    @api.depends('expense_claim.amount')
+    def _total_unit(self):
+        for line in self.expense_claim:
+            self.total += line.amount
+    
+    @api.one
+    @api.depends('total')
+    def _total_bal(self):
+        for line in self:
+            self.balance = line.amount_received - line.total
+    
 class ExpenseClaim(models.Model):
     _name = 'expense.claim'
     
+    claim_id = fields.Many2one(
+        comodel_name = 'ninas.expense_claim',
+        string ='Expense Claim Reference', required=False
+        )
+    
     employee_id = fields.Many2one(
-        comodel_name = 'hr.employee',
-        string ='Name of Payee', required=True
+        comodel_name = 'hr.employee', related='claim_id.employee_id',
+        string ='Name of Payee', required=False
         )
-    ref_number = fields.Integer(
-        string='Ref. No.'
-        )
-    employee_code = fields.Integer(
-        string='Employee Code'
-        )
+    
+    #ref_number = fields.Integer(
+    #    string='Ref. No.'
+    #    )
+    
+    #employee_code = fields.Integer(
+    #    string='Employee Code'
+    #    )
+    
     item_date = fields.Date(
-        string = 'Date',
+        string = 'Date', default=date.today(),
         required=1
         )
     item = fields.Char(
-        string='Item',
-        required=0
+        string='Item (Description)',
+        required=1
         )
+    
     unit_code = fields.Char(
         string='Unit Code',
         required=1
         )
+    
     fund_code = fields.Char(
         string ='Fund Code'
         )
+    
     budget_line = fields.Char(
         string = 'Activity/Budget Line Code'
         )
-    account_code = fields.Char(
-        string= 'Account Code'
-        ) 
-    amount = fields.Integer(
-        string = 'Amount (NGN)'
+    
+    account_code = fields.Many2one(
+        comodel_name = 'account.account',
+        string= 'Account Code', required=1
         )
-    total = fields.Integer(
-        string='Total Amount',
+    
+    amount = fields.Float(
+        string = 'Amount (NGN)', required=1
         )
+    
 
 class StoreReqEdit(models.Model):
     _name = "stock.picking"
