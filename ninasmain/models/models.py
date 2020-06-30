@@ -1323,6 +1323,16 @@ class NinasBankVoucher(models.Model):
         self.write({'state': 'submit'})
         self.prepared = self._uid
         self.date_prepared = date.today()
+        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_hr_line_manager')
+        user_ids = []
+        partner_ids = []
+        for user in group_id.users:
+            user_ids.append(user.id)
+            partner_ids.append(user.partner_id.id)
+        self.message_subscribe_users(user_ids=user_ids)
+        subject = "Bank Payment Voucher awaits review"
+        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
+        return {}
         return {}
     
     @api.multi
