@@ -1213,7 +1213,7 @@ class NinasBankVoucher(models.Model):
         return self.env['hr.employee'].search([('user_id','=',self.env.uid)])
     
     state = fields.Selection(
-        [('new','New'),('submit', 'Submitted'), ('approve','Approved'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
+        [('new','New'),('submit', 'Submitted'), ('approve','Reviewed'), ('reject','Rejected'), ('validate','Validated'), ('ceo','CEO Validation')],
         string='Status',
         default='new',
         track_visibility='onchange')
@@ -1323,15 +1323,6 @@ class NinasBankVoucher(models.Model):
         self.write({'state': 'submit'})
         self.prepared = self._uid
         self.date_prepared = date.today()
-        group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_hr_line_manager')
-        user_ids = []
-        partner_ids = []
-        for user in group_id.users:
-            user_ids.append(user.id)
-            partner_ids.append(user.partner_id.id)
-        self.message_subscribe_users(user_ids=user_ids)
-        subject = "Bank Payment Voucher needs your approval"
-        self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
     @api.multi
