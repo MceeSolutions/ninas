@@ -1322,7 +1322,7 @@ class NinasBankVoucher(models.Model):
     def button_submit(self):
         self.write({'state': 'submit'})
         #self.prepared = self._uid
-        self.date_prepared = date.today()
+        #self.date_prepared = date.today()
         group_id = self.env['ir.model.data'].xmlid_to_object('ninasmain.group_hr_line_manager')
         user_ids = []
         partner_ids = []
