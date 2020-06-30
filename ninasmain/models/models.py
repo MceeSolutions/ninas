@@ -1506,7 +1506,7 @@ class NinasExpenseClaim(models.Model):
         string='Ref. No. (Receipts to be numbered serially)',
         )
     amount_received = fields.Float(
-        string='Amount Received From Finance', required=1
+        string='Amount', required=0
         )
     
     
@@ -1595,7 +1595,7 @@ class NinasExpenseClaim(models.Model):
             user_ids.append(user.id)
             partner_ids.append(user.partner_id.id)
         self.message_subscribe_users(user_ids=user_ids)
-        subject = "Expense claim needs your approval"
+        subject = "Expense claim awaits approval from line manager"
         self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     

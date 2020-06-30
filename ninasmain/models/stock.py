@@ -166,7 +166,8 @@ class account_payment(models.Model):
     
     state = fields.Selection([('draft', 'Draft'), ('submit', 'Submitted'), ('approve', 'Approved'), ('reject', 'Rejected'),
                               ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), 
-                              ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
+                              ('cancelled', 'Cancelled')], track_visibility='onchange',
+                              readonly=True, default='draft', copy=False, string="Status")
 
 
     @api.multi
@@ -180,7 +181,7 @@ class account_payment(models.Model):
             partner_ids.append(user.partner_id.id)
         self.message_subscribe_users(user_ids=user_ids)
         #subject = "Payment '{}' needs your approval".format(self.name)
-        subject = "Payment needs your approval"
+        subject = "Payment awaits CEO approval"
         self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         #return False
         return {}
@@ -267,7 +268,7 @@ class AccountMove(models.Model):
     
     state = fields.Selection([('draft', 'Unposted'), ('submit', 'Submitted'), 
                               ('approve', 'Approved'), ('reject', 'Rejected'), ('posted', 'Posted')], string='Status',
-      required=True, readonly=True, copy=False, default='draft',
+      required=True, readonly=True, copy=False, default='draft', track_visibility='onchange',
       help='All manually created new journal entries are usually in the status \'Unposted\', '
            'but you can set the option to skip that status on the related journal. '
            'In that case, they will behave as journal entries automatically created by the '
@@ -285,7 +286,7 @@ class AccountMove(models.Model):
             partner_ids.append(user.partner_id.id)
         self.message_subscribe_users(user_ids=user_ids)
         #subject = "Payment '{}' needs your approval".format(self.name)
-        subject = "Journal Entries needs your approval"
+        subject = "Payment awaits CEO approval"
         self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         #return False
         return {}

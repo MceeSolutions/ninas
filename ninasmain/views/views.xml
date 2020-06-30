@@ -1089,7 +1089,7 @@
 		</field>
 	</record>
 	
-	<record model="ir.ui.view" id="ninas_advance_request_form_view">
+	<record model="ir.ui.view" id="ninas_advance_requests_form_view">
 		<field name="name">ninas.advance_request.form</field>
 		<field name="model">ninas.advance_request</field>
 		<field name="type">form</field>
@@ -1484,10 +1484,10 @@
 						</field>
 						<group class="oe_subtotal_footer oe_right">
                                 <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <div class="oe_subtotal_footer_separator oe_inline">
+                                <!-- <div class="oe_subtotal_footer_separator oe_inline">
                                     <label for="balance"/>
-                                </div>
-                                <field name="balance" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </div> 
+                                <field name="balance" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/> -->
                             </group>
 						<group col="4" colspan="2">
 							<field name="prepared"/>
