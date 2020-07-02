@@ -1220,7 +1220,7 @@ class NinasBankVoucher(models.Model):
     
     #link to actual employee_id
     employee_id = fields.Many2one(
-        comodel_name = 'res.partner',
+        comodel_name = 'hr.employee',
         string ='Name of Payee',
         required=0)
     
@@ -1338,6 +1338,8 @@ class NinasBankVoucher(models.Model):
     
     @api.multi
     def button_approve(self):
+        if not self.employee_id.parent_id.user_id.id == self._uid:
+            raise UserError(_("Only his/her line manager can validate expense"))
         self.write({'state': 'approve'})
         self.reviewed = self._uid
         self.date_reviewed = date.today()
