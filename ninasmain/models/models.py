@@ -1287,7 +1287,7 @@ class NinasBankVoucher(models.Model):
         string= 'Account Number',
         ) 
     tin = fields.Char(
-        string = 'TIN', related="employee_id.vendor_tin"
+        string = 'TIN',
         )
     bank = fields.Char(
         string ='Bank Name'
