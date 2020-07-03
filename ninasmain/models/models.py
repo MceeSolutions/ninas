@@ -1233,7 +1233,7 @@ class NinasBankVoucher(models.Model):
         string='Reference',
         required=0
         )
-    voucher_number = fields.Char(
+    name = fields.Char(
         string='Voucher Number', readonly=False, required=True, index=True, copy=False, default='New')
     item_date = fields.Date(
         string = 'Date', default=date.today(),
@@ -1339,7 +1339,7 @@ class NinasBankVoucher(models.Model):
     @api.multi
     def button_approve(self):
         if not self.employee_id.parent_id.user_id.id == self._uid:
-            raise UserError(_("Only his/her line manager can validate expense"))
+            raise UserError(_("Only his/her line manager can review payment voucher"))
         self.write({'state': 'approve'})
         self.reviewed = self._uid
         self.date_reviewed = date.today()
@@ -1385,8 +1385,8 @@ class NinasBankVoucher(models.Model):
     
     @api.model
     def create(self, vals):
-        if vals.get('voucher_number', 'New') == 'New':
-            vals['voucher_number'] = self.env['ir.sequence'].next_by_code('ninas.bank_voucher') or '/'
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('ninas.bank_voucher') or '/'
         return super(NinasBankVoucher, self).create(vals)
     
     @api.one

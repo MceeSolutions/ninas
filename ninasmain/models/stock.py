@@ -317,7 +317,28 @@ class AccountMove(models.Model):
         self.message_post(subject=subject,body=subject,partner_ids=partner_ids)
         return {}
     
+
+class AccountAssetCategory(models.Model):
+    _inherit = 'account.asset.category'
+    _description = 'Asset category'
     
+    shorts_code = fields.Char(string="Short Code", track_visibility='onchange')
+    next_number = fields.Integer(string="Next Number")
+    
+class AccountAssetAsset(models.Model):
+    _name = 'account.asset.asset'
+    _description = 'Asset/Revenue Recognition'
+    _inherit = ['account.asset.asset', 'mail.thread']
+    
+    @api.onchange('category_id')
+    def _onchange_project_id(self):
+        self.asset_number = "NINAS/" + str(self.category_id.shorts_code) + "/" + str(self.category_id.next_number)
+        
+    asset_number = fields.Char(string="Asset Number", track_visibility='onchange')
+    serial_number = fields.Char(string="Serial Number & Specification", track_visibility='onchange')
+    location_user = fields.Char(string="Current location or User", track_visibility='onchange')
+    condition = fields.Char(string="Condition When Bought", track_visibility='onchange')
+
 class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice','mail.thread', 'utm.mixin', 'rating.mixin', 'mail.activity.mixin', 'portal.mixin']

@@ -1363,7 +1363,7 @@
 						<field name="employee_id" required="1"/>
 						<field name="method" required="1"/>
 						<field name="chq_number" required="1"/>
-						<field name="voucher_number" required="1"/>
+						<field name="name" required="1" readonly="1"/>
 						<field name="item_date" required="1"/>
 					</group>
 					
