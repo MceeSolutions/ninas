@@ -223,8 +223,8 @@ class account_payment(models.Model):
         """
         for rec in self:
 
-            if rec.state != 'approve':
-                raise UserError(_("Only an approved payment can be posted."))
+            #if rec.state != 'approve':
+            #   raise UserError(_("Only an approved payment can be posted."))
 
             if any(inv.state != 'open' for inv in rec.invoice_ids):
                 raise ValidationError(_("The payment cannot be processed because the invoice is not open!"))
