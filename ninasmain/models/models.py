@@ -471,10 +471,10 @@ class LoanRequest(models.Model):
     
     
     recieved_from = fields.Many2one(
-        comodel_name="hr.employee",
+        comodel_name="res.users",
         string='Recieved Name', readonly=True)
     recieved_from_name = fields.Many2one(
-        comodel_name="hr.employee",
+        comodel_name="res.users",
         string='Name', readonly=True)
     date_recevfrom = fields.Date(string='Date', readonly=True)
     date_recevfromname = fields.Date(string='Date', readonly=True)
